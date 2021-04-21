@@ -16,13 +16,15 @@ public class LintingResults {
     private String maintainer;
     private LocalDateTime lastLint;
     private Long fileCheckId;
+    private Boolean isPublic;
 
-    public LintingResults(Long id, String repoLink, String maintainer, LocalDateTime lastLint, Long fileCheckId) {
+    public LintingResults(Long id, String repoLink, String maintainer, LocalDateTime lastLint, Long fileCheckId, Boolean isPublic) {
         this.id = id;
         this.repoLink = repoLink;
         this.maintainer = maintainer;
         this.lastLint = lastLint;
         this.fileCheckId = fileCheckId;
+        this.isPublic = isPublic;
     }
 
     protected LintingResults() {}
@@ -65,5 +67,13 @@ public class LintingResults {
 
     public void setFileCheckId(Long fileCheckId) {
         this.fileCheckId = fileCheckId;
+    }
+
+    public Boolean getPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(Boolean aPublic) {
+        isPublic = aPublic;
     }
 }
