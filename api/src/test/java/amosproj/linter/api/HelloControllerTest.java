@@ -15,15 +15,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ApiApplicationTests {
+public class HelloControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getHello() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/greeting").accept(MediaType.APPLICATION_JSON))
+        mvc.perform(MockMvcRequestBuilders.get("/").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("{\"id\":69,\"content\":\"Hallo Welt\"}")));
+                .andExpect(content().string(equalTo("Hallo Welt")));
     }
 }
