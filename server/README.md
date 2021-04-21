@@ -20,4 +20,10 @@ If youre on windows, use gradlew.bat instead
 
 ## Docker
 
-TODO
+run:
+
+```shell
+docker build --build-arg JAR_FILE=build/libs/\*.jar -t linter-server .
+docker run linter-server
+```
+
