@@ -1,4 +1,4 @@
-package amosproj.linter.jobs;
+package amosproj.linter.server.jobs;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ScheduledTasks {
 
-    @Scheduled(cron = "0 0 * * *")
+    @Scheduled(fixedRate = 5000) // every 5 sec // TODO use cron to make daily task
     public void dailyLint() {
-        // TODO start lint job her
-        System.out.println("time");
+        System.out.println("hallo");
     }
 }
