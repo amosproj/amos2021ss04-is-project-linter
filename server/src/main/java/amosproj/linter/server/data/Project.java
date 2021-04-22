@@ -14,10 +14,10 @@ public class Project {
     private String name;
     private String url;
 
-    protected Project() {} // only for JPA, dont use directly!
+    protected Project() {
+    } // only for JPA, dont use directly!
 
-    public Project(Long id, String name, String url) {
-        this.id = id;
+    public Project(String name, String url) {
         this.name = name;
         this.url = url;
     }
@@ -44,5 +44,14 @@ public class Project {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }
