@@ -2,7 +2,6 @@ package amosproj.linter.crawler;
 
 import amosproj.linter.server.data.LintingResults;
 
-
 public class Crawler {
   // this main is only for testing purpouses
   public static void main(String[] args) {
@@ -18,7 +17,7 @@ public class Crawler {
 
   private static LintingResults getResultObject(String repoUrl) {
     //todo implement this, ONLY RETURNS FAKE RIGHT NOW
-    return new LintingResults(1L, "https://gitlab.com/altaway/herbstluftwm", "", null, null);
+    return new LintingResults(1L, "https://gitlab.com/altaway/herbstluftwm", "", null, null, null);
   }
 
   public static LintingResults checkEverything(LintingResults result) {
@@ -40,9 +39,10 @@ public class Crawler {
       // hosted by gitlab.example.com (gitlab instance)
       apiUrl = getApiUrlForGitlabInstanceProject(URL);
     }
+    result.setApiLink(apiUrl);
 
     // actually start doing work with the api
-    boolean isPublic = CheckGitlabSettings.isPublic(result, apiUrl);
+    result.setPublic(CheckGitlabSettings.isPublic(result.getApiLink()));
 
     return result;
   }
@@ -75,16 +75,16 @@ public class Crawler {
     // check if url is gitlab.com or gitlab.example.com
     String[] parts = url.split("\\.");
     // return true if gitlab.com, false if not
+    if (parts[0].equals("https://gitlab")) return true;
     return parts[1].equals("gitlab");
-
   }
 
   private static String getApiUrlForGitlabDotComProject(String URL) {
-    //todo implement this
-    return "ups";
+    //todo implement this, ONLY GIVES BACK DUMMY ANSWER
 //    // example ID  URL?: https://gitlab.com/api/v4/projects/26063188
 //    long id = getGitlabDotComProjectId(URL); // i dont know how to do this right now?!
 //    return "https://gitlab.com/api/v4/projects/" + id + "/";
+    return "https://gitlab.com/api/v4/projects/26063188/";
   }
 }
 
