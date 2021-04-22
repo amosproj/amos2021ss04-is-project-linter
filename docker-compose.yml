@@ -1,0 +1,23 @@
+version: "3.8"
+
+services:
+    database:
+        container_name: "amos-linter-postgre-db"
+        image: "postgres:alpine"
+        environment:
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+            - POSTGRES_DB=${POSTGRES_DB}
+        
+    # server:
+    #     container_name: "amos-linter-java-server"
+    #     image: "linter/server"
+    #     environment:
+    #         - TODO=kek
+    #     depends_on:
+    #         - database
+
+    # frontend:
+    #     container_name: "amos-linter-angualar-web"
+    #     image: "nginx:latest"
+    #     depends_on:
+    #         - server
