@@ -27,17 +27,13 @@ public class ServerApplication {
             repository.save(new Project("Herbsluftwm", "https://gitlab.com/altaway/herbstluftwm"));
             // fetch all customers
             log.info("Customers found with findAll():");
-            log.info("-------------------------------");
             for (Project proj : repository.findAll()) {
                 log.info(proj.toString());
             }
-            log.info("");
             // fetch an individual customer by ID
             Project proj = repository.findById(1L);
             log.info("Customer found with findById(1L):");
-            log.info("--------------------------------");
             log.info(proj.toString());
-            log.info("");
         };
     }
 

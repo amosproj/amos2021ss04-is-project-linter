@@ -5,19 +5,34 @@ services:
         container_name: "amos-linter-postgre-db"
         image: "postgres:alpine"
         environment:
+            - POSTGRES_USER=${POSTGRES_USER}
             - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
             - POSTGRES_DB=${POSTGRES_DB}
-        
-    # server:
-    #     container_name: "amos-linter-java-server"
-    #     image: "linter/server"
-    #     environment:
-    #         - TODO=kek
-    #     depends_on:
-    #         - database
 
-    # frontend:
-    #     container_name: "amos-linter-angualar-web"
-    #     image: "nginx:latest"
-    #     depends_on:
-    #         - server
+    backend:
+        container_name: "amos-linter-java-server"
+        image: "amoslinter/server:staging"
+        environment:
+            - spring.datasource.platform=postgres
+            - spring.datasource.url=jdbc:postgresql://database:5432/${POSTGRES_DB}
+            - spring.datasource.username=${POSTGRES_USER}
+            - spring.datasource.password=${POSTGRES_PASSWORD}
+            - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+        depends_on:
+            - database
+        expose:
+            - 8080
+
+    nginx:
+        container_name: "amos-linter-nginx"
+        image: "nginx:stable-alpine"
+        volumes: # more like: load configurations
+            - ./nginx.conf:/etc/nginx/sites-enabled/default
+            - ./angular-frontend/dist/angular-frontend:/usr/share/nginx/html
+        depends_on:
+            - backend
+        ports: # only connection to outside world
+            - 7070:80
+            - 443:443
+        links:
+            - backend

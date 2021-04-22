@@ -15,7 +15,7 @@ public class Crawler {
   // entry point for api
   public static LintingResults getResult(String repoUrl) {
     LintingResults result = getResultObject(repoUrl);
-    result = checkEverything(result);
+//    result = checkEverything(result);
     return result;
   }
 
@@ -24,32 +24,32 @@ public class Crawler {
     return new LintingResults(LocalDateTime.now(), new Project("test", "localhost:1337"));
   }
 
-  public static LintingResults checkEverything(LintingResults result) {
-    String URL = result.getRepoLink();
-
-    // if not valid url --> mission abort
-    if (!CheckBasics.isValidURL(URL)) {
-      //todo: implement this?
-      // removeResultFromDatabase(result); // do we need to do this or does api do this?
-      return result;
-    }
-
-    // get correct API URL
-    String apiUrl;
-    if (hostedByGitlab(URL)) {
-      // hosted by gitlab.com
-      apiUrl = getApiUrlForGitlabDotComProject(URL);
-    } else {
-      // hosted by gitlab.example.com (gitlab instance)
-      apiUrl = getApiUrlForGitlabInstanceProject(URL);
-    }
-    result.setApiLink(apiUrl);
-
-    // actually start doing work with the api
-    result.setPublic(CheckGitlabSettings.isPublic(result.getApiLink()));
-
-    return result;
-  }
+//  public static LintingResults checkEverything(LintingResults result) {
+//    String URL = result.getRepoLink();
+//
+//    // if not valid url --> mission abort
+//    if (!CheckBasics.isValidURL(URL)) {
+//      //todo: implement this?
+//      // removeResultFromDatabase(result); // do we need to do this or does api do this?
+//      return result;
+//    }
+//
+//    // get correct API URL
+//    String apiUrl;
+//    if (hostedByGitlab(URL)) {
+//      // hosted by gitlab.com
+//      apiUrl = getApiUrlForGitlabDotComProject(URL);
+//    } else {
+//      // hosted by gitlab.example.com (gitlab instance)
+//      apiUrl = getApiUrlForGitlabInstanceProject(URL);
+//    }
+//    result.setApiLink(apiUrl);
+//
+//    // actually start doing work with the api
+//    result.setPublic(CheckGitlabSettings.isPublic(result.getApiLink()));
+//
+//    return result;
+//  }
 
   private static String getApiUrlForGitlabInstanceProject(String url) {
     // Insert /api/v4 before the 3rd "/" (cause the first two are https://)
