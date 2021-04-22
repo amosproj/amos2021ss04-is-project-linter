@@ -25,9 +25,9 @@ services:
 
     nginx:
         container_name: "amos-linter-nginx"
-        image: "nginx:stable-alpine"
+        image: "nginx:stable"
         volumes: # more like: load configurations
-            - ./nginx.conf:/etc/nginx/sites-enabled/default
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
             - ./angular-frontend/dist/angular-frontend:/usr/share/nginx/html
         depends_on:
             - backend
