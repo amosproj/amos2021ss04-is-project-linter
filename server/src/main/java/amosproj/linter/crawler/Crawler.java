@@ -1,6 +1,10 @@
 package amosproj.linter.crawler;
 
 import amosproj.linter.server.data.LintingResults;
+import amosproj.linter.server.data.Project;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
+
+import java.time.LocalDateTime;
 
 public class Crawler {
   // this main is only for testing purpouses
@@ -17,7 +21,7 @@ public class Crawler {
 
   private static LintingResults getResultObject(String repoUrl) {
     //todo implement this, ONLY RETURNS FAKE RIGHT NOW
-    return new LintingResults(1L, "https://gitlab.com/altaway/herbstluftwm", "", null, null, null);
+    return new LintingResults(LocalDateTime.now(), new Project("test", "localhost:1337"));
   }
 
   public static LintingResults checkEverything(LintingResults result) {
