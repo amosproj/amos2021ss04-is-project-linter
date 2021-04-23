@@ -1,5 +1,6 @@
-package amosproj.linter.server.data;
+package main.java.amosproj.linter.server.data;
 
+import main.java.amosproj.linter.server.data.LintingResults;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,18 +12,14 @@ public class FileChecks {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long projectId;
-    private Boolean hasReadme;
-    private Boolean hasContributing;
-    private Boolean hasMaintainers;
-    private Boolean hasOwners;
+    private Long lintId;
+    private String fileName;
+    private Boolean exists;
 
-    public FileChecks(Long projectId, Boolean hasReadme, Boolean hasContributing, Boolean hasMaintainers, Boolean hasOwners) {
-        this.projectId = projectId;
-        this.hasReadme = hasReadme;
-        this.hasContributing = hasContributing;
-        this.hasMaintainers = hasMaintainers;
-        this.hasOwners = hasOwners;
+    public FileChecks(LintingResults lintingResults, String fileName, Boolean exists) {
+        this.lintId = lintingResults.getId();
+        this.fileName = fileName;
+        this.exists = exists;
     }
 
     protected FileChecks() { }
@@ -31,11 +28,9 @@ public class FileChecks {
     public String toString() {
         return "FileChecks{" +
                 "id=" + id +
-                ", projectId=" + projectId +
-                ", hasReadme=" + hasReadme +
-                ", hasContributing=" + hasContributing +
-                ", hasMaintainers=" + hasMaintainers +
-                ", hasOwners=" + hasOwners +
+                ", lintId=" + lintId +
+                ", fileName=" + fileName +
+                ", exists=" + exists +
                 '}';
     }
 
@@ -43,40 +38,23 @@ public class FileChecks {
         return id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public Long getLintId() {
+        return lintId;
     }
 
-    public Boolean getHasReadme() {
-        return hasReadme;
+    public String getFileName() {
+        return fileName;
     }
 
-    public void setHasReadme(Boolean hasReadme) {
-        this.hasReadme = hasReadme;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public Boolean getHasContributing() {
-        return hasContributing;
+    public Boolean getExists() {
+        return exists;
     }
 
-    public void setHasContributing(Boolean hasContributing) {
-        this.hasContributing = hasContributing;
+    public void setExists(Boolean exists) {
+        this.exists = exists;
     }
-
-    public Boolean getHasMaintainers() {
-        return hasMaintainers;
-    }
-
-    public void setHasMaintainers(Boolean hasMaintainers) {
-        this.hasMaintainers = hasMaintainers;
-    }
-
-    public Boolean getHasOwners() {
-        return hasOwners;
-    }
-
-    public void setHasOwners(Boolean hasOwners) {
-        this.hasOwners = hasOwners;
-    }
-
 }
