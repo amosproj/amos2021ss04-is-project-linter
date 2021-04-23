@@ -1,6 +1,6 @@
-package amosproj.linter.server.linter;
+package amosproj.server.linter;
 
-import amosproj.linter.server.linter.consumptions.ProjectInformationJson;
+import amosproj.server.linter.consumptions.ProjectInformationJson;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;

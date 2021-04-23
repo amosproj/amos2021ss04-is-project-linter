@@ -1,4 +1,4 @@
-package amosproj.linter.server.linter.consumptions;
+package amosproj.server.linter.consumptions;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

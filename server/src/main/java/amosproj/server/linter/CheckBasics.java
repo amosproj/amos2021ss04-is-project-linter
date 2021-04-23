@@ -1,4 +1,4 @@
-package amosproj.linter.server.linter;
+package amosproj.server.linter;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

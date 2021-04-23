@@ -1,8 +1,8 @@
-package amosproj.linter.server.linter;
+package amosproj.server.linter;
 
-import amosproj.linter.server.data.LintingResult;
-import amosproj.linter.server.data.Project;
-import amosproj.linter.server.data.ProjectRepository;
+import amosproj.server.data.LintingResult;
+import amosproj.server.data.Project;
+import amosproj.server.data.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;

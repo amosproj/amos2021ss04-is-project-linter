@@ -1,7 +1,7 @@
-package amosproj.linter.server.api;
+package amosproj.server.api;
 
-import amosproj.linter.server.data.Project;
-import amosproj.linter.server.data.ProjectRepository;
+import amosproj.server.data.Project;
+import amosproj.server.data.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;

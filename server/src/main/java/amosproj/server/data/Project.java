@@ -1,4 +1,4 @@
-package amosproj.linter.server.data;
+package amosproj.server.data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
