@@ -6,8 +6,8 @@ plugins {
 }
 
 group = 'amosproj.linter'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+version = 'sprint-2-staging'
+sourceCompatibility = '11' // run on java 11
 
 repositories {
     mavenCentral()

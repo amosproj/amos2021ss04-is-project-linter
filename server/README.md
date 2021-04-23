@@ -8,6 +8,12 @@ If youre on windows, use gradlew.bat instead
 
 ## Docker
 Erst Java Projekt builden (siehe oben), dann folgendes ausführen:
+
+Bauen: `docker build -t amoslinter/server:staging .`
+
+Ausführen: `docker run -d --rm amoslinter/server:staging . `
+
+## Ohne Docker Ausführen
 ```shell
-docker build -t amoslinter/server:stating .
+./gradlew bootRun
 ```
