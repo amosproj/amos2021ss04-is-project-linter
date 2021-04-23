@@ -1,0 +1,10 @@
+https://gitlab.com/tnir/www-gitlab-com
+https://gitlab.com/aiakos/python-openid-connect
+https://gitlab.com/sandish/gitlab-ce
+https://gitlab.com/nagyv-gitlab/aws
+https://gitlab.com/JiPaix/all-mangas-reader-2
+https://gitlab.com/weblate/mailman
+https://gitlab.cs.fau.de/i4/tex/i4neo
+https://gitlab.cs.fau.de/alice/MarkingBird
+https://gitlab.cs.fau.de/fsi-inf/evaluationsportal
+https://gitlab.cs.fau.de/it62ajow/chiefexam
