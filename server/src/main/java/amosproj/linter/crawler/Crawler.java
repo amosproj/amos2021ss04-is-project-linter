@@ -1,8 +1,6 @@
 package amosproj.linter.crawler;
 
-import amosproj.linter.server.data.LintingResult;
-import amosproj.linter.server.data.Project;
-import amosproj.linter.server.data.ProjectRepository;
+import amosproj.linter.server.data.*;
 import amosproj.linter.server.services.BeanUtil;
 
 import java.time.LocalDateTime;
@@ -61,13 +59,22 @@ public class Crawler {
       apiUrl = getApiUrlForGitlabInstanceProject(URL);
     }
 
-    // Actually start doing work with the api
+    // Actually start doing work
     // Starting with Gitlab Settings Check
-    // todo: waiting for DB Team to implement SettingsCheck Table so we can save it to a settings Object
-    // will be something like:
-//    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
-//    lintingGitlabSettings.setPublic(CheckGitlabSettings.isPublic(apiUrl));
-    CheckGitlabSettings.isPublic(apiUrl);
+    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
+    settingsCheck.setPublic(CheckGitlabSettings.isPublic(apiUrl));
+
+    // save checked data to db
+    saveSettingsCheckObject(settingsCheck);
+  }
+
+  private static void saveSettingsCheckObject(SettingsCheck settingsCheck) {
+    SettingsCheckRepository settingsCheckRepository = BeanUtil.getBean(SettingsCheckRepository.class);
+    settingsCheckRepository.save(settingsCheck);
+  }
+
+  private static SettingsCheck createSettingsCheckObject(LintingResult lintingResult) {
+    return new SettingsCheck(lintingResult, false, false, false, false, false);
   }
 
   private static String getApiUrlForGitlabInstanceProject(String url) {
