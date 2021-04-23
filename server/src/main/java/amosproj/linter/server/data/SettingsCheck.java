@@ -1,13 +1,12 @@
 package amosproj.linter.server.data;
 
-import amosproj.linter.server.data.LintingResults;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class SettingsChecks {
+public class SettingsCheck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +18,8 @@ public class SettingsChecks {
     private Boolean usesDeveloperRole;
     private Boolean usesGitLabPages;
 
-    public SettingsChecks(LintingResults lintingResults, Boolean isPublic, Boolean hasRequestAccess, Boolean usesGuestRole,
-                          Boolean usesDeveloperRole, Boolean usesGitLabPages){
+    public SettingsCheck(LintingResult lintingResults, Boolean isPublic, Boolean hasRequestAccess, Boolean usesGuestRole,
+                         Boolean usesDeveloperRole, Boolean usesGitLabPages){
         this.lintId = lintingResults.getId();
         this.isPublic = isPublic;
         this.hasRequestAccess = hasRequestAccess;
@@ -29,7 +28,7 @@ public class SettingsChecks {
         this.usesGitLabPages = usesGitLabPages;
     }
 
-    protected SettingsChecks() { }
+    protected SettingsCheck() { }
 
     @Override
     public String toString() {

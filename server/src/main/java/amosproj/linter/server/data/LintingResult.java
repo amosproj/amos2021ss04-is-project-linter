@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import java.time.LocalDateTime;
 
 @Entity
-public class LintingResults {
+public class LintingResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +16,12 @@ public class LintingResults {
     private Long projectId;
     private LocalDateTime lintTime;
 
-    public LintingResults(Project project, LocalDateTime lintTime) {
+    public LintingResult(Project project, LocalDateTime lintTime) {
         this.projectId = project.getId();
         this.lintTime = lintTime;
     }
 
-    protected LintingResults() {    }
+    protected LintingResult() {    }
 
     public Long getId() {
         return id;

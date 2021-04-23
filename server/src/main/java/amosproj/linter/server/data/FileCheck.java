@@ -1,13 +1,13 @@
 package amosproj.linter.server.data;
 
-import amosproj.linter.server.data.LintingResults;
+import amosproj.linter.server.data.LintingResult;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class FileChecks {
+public class FileCheck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,13 +16,13 @@ public class FileChecks {
     private String fileName;
     private Boolean exists;
 
-    public FileChecks(LintingResults lintingResults, String fileName, Boolean exists) {
+    public FileCheck(LintingResult lintingResults, String fileName, Boolean exists) {
         this.lintId = lintingResults.getId();
         this.fileName = fileName;
         this.exists = exists;
     }
 
-    protected FileChecks() { }
+    protected FileCheck() { }
 
     @Override
     public String toString() {
