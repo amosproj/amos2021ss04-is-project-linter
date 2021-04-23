@@ -7,9 +7,10 @@ Linter for inner-source software
 TODO
 
 ## Umgebungsvariablen (Environment variables)
-- `POSTGRES_PASSWORD`: Postgres Passwort
-- `POSTGRES_USER`: Postgres username
-- `POSTGRES_DB`: Postgres database name
+- `DB_PASSWORD`: Postgres Passwort
+- `DB_USER`: Postgres username
+- `DB_NAME`: Postgres database name
+- `PORT`: Der Port auf dem das System erreichbar sein wird (frontend UND api)
  
 
 ## Ausführen (mit docker-compose)
