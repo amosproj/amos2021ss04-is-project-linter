@@ -1,6 +1,6 @@
 package amosproj.linter.server.data;
 
-import main.java.amosproj.linter.server.data.LintingResults;
+import amosproj.linter.server.data.LintingResults;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

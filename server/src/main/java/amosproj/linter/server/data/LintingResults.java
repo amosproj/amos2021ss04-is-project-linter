@@ -1,6 +1,6 @@
-package main.java.amosproj.linter.server.data;
+package amosproj.linter.server.data;
 
-import main.java.amosproj.linter.server.data.Project;
+import amosproj.linter.server.data.Project;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,28 +23,15 @@ public class LintingResults {
 
     protected LintingResults() {    }
 
-    @Override
-    public String toString() {
-        return "LintingResults{" +
-                "id=" + id +
-                ", projectId=" + projectId +
-                ", lintTime=" + lintTime +
-                '}';
-    }
     public Long getId() {
         return id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public LocalDateTime getLintTime() {
+        return lintTime;
     }
 
-    public void setLastLint(LocalDateTime lastLint) {
-        this.lastLint = lastLint;
+    public void setLintTime(LocalDateTime lintTime) {
+        this.lintTime = lintTime;
     }
-
-    public LocalDateTime getLastLint() {
-        return lastLint;
-    }
-
 }

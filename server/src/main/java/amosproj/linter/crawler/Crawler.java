@@ -21,7 +21,8 @@ public class Crawler {
 
   private static LintingResults getResultObject(String repoUrl) {
     //todo implement this, ONLY RETURNS FAKE RIGHT NOW
-    return new LintingResults(LocalDateTime.now(), new Project("test", "localhost:1337"));
+//    return new LintingResults(LocalDateTime.now(), new Project("test", "localhost:1337"));
+    return null;
   }
 
 //  public static LintingResults checkEverything(LintingResults result) {
