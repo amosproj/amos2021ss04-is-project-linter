@@ -17,3 +17,8 @@ Ausführen: `docker run -d --rm amoslinter/server:staging . `
 ```shell
 ./gradlew bootRun
 ```
+
+## Tests ausführen
+```shell
+./gradlew test
+```

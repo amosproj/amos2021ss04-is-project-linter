@@ -2,6 +2,7 @@ package amosproj.linter.server.api;
 
 import amosproj.linter.server.data.Project;
 import amosproj.linter.server.data.ProjectRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 @CrossOrigin
 public class ProjectController {
 
-    private final ProjectRepository repository;
-
-    public ProjectController(ProjectRepository repository) {
-        this.repository = repository;
-    }
+    @Autowired
+    private ProjectRepository repository;
 
     @GetMapping("/projects")
     public Iterable<Project> allProjects() {

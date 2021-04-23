@@ -1,7 +1,6 @@
 plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
-    id 'org.asciidoctor.convert' version '1.5.8'
     id 'java'
 }
 
@@ -11,10 +10,6 @@ sourceCompatibility = '11' // run on java 11
 
 repositories {
     mavenCentral()
-}
-
-ext {
-    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
@@ -30,13 +25,5 @@ dependencies {
 }
 
 test {
-    outputs.dir snippetsDir
     useJUnitPlatform()
-    useJUnit()
-    maxHeapSize = '1G'
-}
-
-asciidoctor {
-    inputs.dir snippetsDir
-    dependsOn test
 }
