@@ -5,37 +5,37 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectInformationJson {
 
-  private long id;
-  private String name;
-  private String visibility;
+    private long id;
+    private String name;
+    private String visibility;
 
-  public ProjectInformationJson() {
+    public ProjectInformationJson() {
 
-  }
+    }
 
-  public long getId() {
-    return id;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public void setId(long id) {
-    this.id = id;
-  }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-  public String getName() {
-    return name;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public String getVisibility() {
-    return visibility;
-  }
+    public String getVisibility() {
+        return visibility;
+    }
 
-  public void setVisibility(String visibility) {
-    this.visibility = visibility;
-  }
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
 }
 
 // example json answer from gitlab
