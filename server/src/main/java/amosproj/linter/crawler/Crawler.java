@@ -2,9 +2,15 @@ package amosproj.linter.crawler;
 
 import amosproj.linter.server.data.LintingResult;
 import amosproj.linter.server.data.Project;
+import amosproj.linter.server.data.ProjectRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 
+@Configuration
+@ComponentScan("amosproj.linter.server")
 public class Crawler {
   // this main is only for testing purpouses
   public static void main(String[] args) {
@@ -23,8 +29,12 @@ public class Crawler {
     return lintingResult;
   }
 
+  @Autowired
+  private ProjectRepository projectRepository;
+
   private static Project getLintingProjectObject(String url) {
     // todo implement this, only returns fake project
+
     Project lintingProject = new Project("test", url);
     return lintingProject;
   }
@@ -58,8 +68,8 @@ public class Crawler {
     // Starting with Gitlab Settings Check
     // todo: waiting for DB Team to implement SettingsCheck Table so we can save it to a settings Object
     // will be something like:
-    //    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
-    //    lintingGitlabSettings.setPublic(CheckGitlabSettings.isPublic(apiUrl));
+//    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
+//    lintingGitlabSettings.setPublic(CheckGitlabSettings.isPublic(apiUrl));
     CheckGitlabSettings.isPublic(apiUrl);
   }
 
