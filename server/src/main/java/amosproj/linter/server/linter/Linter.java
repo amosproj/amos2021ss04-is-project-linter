@@ -1,36 +1,30 @@
-package amosproj.linter.crawler;
+package amosproj.linter.server.linter;
 
 import amosproj.linter.server.data.LintingResult;
 import amosproj.linter.server.data.Project;
 import amosproj.linter.server.data.ProjectRepository;
-import amosproj.linter.server.services.BeanUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.regex.Pattern;
 
 
-public class Crawler {
-    // this function is only for testing purposes
-    public static void testCrawler() {
-        getResult("https://gitlab.com/altaway/herbstluftwm");
-//    getResult("https://gitlab.com/tnir/www-gitlab-com");
-//    getResult("https://gitlab.com/aiakos/python-openid-connect");
-    }
+public class Linter {
+
+    @Autowired
+    private ProjectRepository projectRepository;
 
     // entry point for api
-    public static LintingResult getResult(String repoUrl) {
+    public LintingResult getResult(String repoUrl) {
         // get Objects
         Project lintingProject = getLintingProjectObject(repoUrl);
         LintingResult lintingResult = createNewLintingResultObject(lintingProject);
-
         // start linting
         checkEverything(lintingResult, lintingProject);
 
         return lintingResult;
     }
 
-    private static Project getLintingProjectObject(String url) {
-        ProjectRepository projectRepository = BeanUtil.getBean(ProjectRepository.class);
+    private Project getLintingProjectObject(String url) {
         // save a project so i can get it (only while we dont have a real db)
         Project dummyProject = new Project("test", url);
         projectRepository.save(dummyProject);
@@ -39,12 +33,12 @@ public class Crawler {
         return projectRepository.findByUrl(url);
     }
 
-    private static LintingResult createNewLintingResultObject(Project lintingProject) {
+    private LintingResult createNewLintingResultObject(Project lintingProject) {
         // method for better readability
         return new LintingResult(lintingProject, LocalDateTime.now());
     }
 
-    public static void checkEverything(LintingResult lintingResult, Project project) {
+    public void checkEverything(LintingResult lintingResult, Project project) {
         String URL = project.getUrl();
 
         // if not valid url --> mission abort
@@ -70,20 +64,20 @@ public class Crawler {
         CheckGitlabSettings.isPublic(apiUrl);
     }
 
-    private static String getApiUrlForGitlab(String url) {
-        String result = "";
+    private String getApiUrlForGitlab(String url) {
+        StringBuilder result = new StringBuilder();
         // Insert /api/v4 before the 3rd "/" (cause the first two are https://)
         // and encode the / in the url of the repository to %2F
         String[] parts = url.split("/");
-        result = "https://" + parts[2] + "/api/v4/projects/";
+        result = new StringBuilder("https://" + parts[2] + "/api/v4/projects/");
         for (int i = 3; i < parts.length - 1; i++) {
-            result += parts[i] + "%2F";
+            result.append(parts[i]).append("%2F");
         }
-        result += parts[parts.length - 1];
-        return result;
+        result.append(parts[parts.length - 1]);
+        return result.toString();
     }
 
-//  private static String getApiUrlForGitlabInstanceProject(String url) {
+//  private String getApiUrlForGitlabInstanceProject(String url) {
 //    // Insert /api/v4 before the 3rd "/" (cause the first two are https://)
 //    String[] parts = url.split("/");
 //    String[] newParts = new String[parts.length + 1];
@@ -107,7 +101,7 @@ public class Crawler {
 //    return sb.toString();
 //  }
 
-    private static boolean hostedByGitlab(String url) {
+    private boolean hostedByGitlab(String url) {
         //check if url is gitlab.com
         String[] parts = url.split("/");
         return parts[2].matches("gitlab\\.com") || parts[2].matches("gitlab\\..*\\.com");
@@ -130,4 +124,5 @@ public class Crawler {
 //    return "https://gitlab.com/api/v4/projects/kalilinux%2Fpackages%2Ftyper";
 // //   return "https://gitlab.com/api/v4/projects/26063188/";
 //  }
+
 }

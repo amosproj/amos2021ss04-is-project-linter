@@ -1,8 +1,6 @@
-package amosproj.linter.crawler;
+package amosproj.linter.server.linter;
 
-import amosproj.linter.crawler.consumptions.ProjectInformationJson;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.springframework.web.client.HttpClientErrorException;
+import amosproj.linter.server.linter.consumptions.ProjectInformationJson;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
