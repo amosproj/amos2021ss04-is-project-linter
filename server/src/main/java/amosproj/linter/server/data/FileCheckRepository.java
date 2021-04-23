@@ -1,4 +1,6 @@
 package amosproj.linter.server.data;
 
-public interface FileCheckRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface FileCheckRepository extends CrudRepository<FileCheck, Long> {
 }
