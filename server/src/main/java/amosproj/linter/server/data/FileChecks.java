@@ -1,4 +1,4 @@
-package main.java.amosproj.linter.server.data;
+package amosproj.linter.server.data;
 
 import main.java.amosproj.linter.server.data.LintingResults;
 import javax.persistence.Entity;
