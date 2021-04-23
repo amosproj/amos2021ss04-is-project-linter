@@ -21,6 +21,7 @@ public class CheckBasics {
       con.setRequestMethod("GET");
     } catch (IOException e) {
       e.printStackTrace();
+      return false;
     }
 
     // todo: add something to do like return false when error

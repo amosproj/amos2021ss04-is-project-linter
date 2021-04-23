@@ -2,7 +2,6 @@ package amosproj.linter.crawler;
 
 import amosproj.linter.server.data.LintingResults;
 import amosproj.linter.server.data.Project;
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
 import java.time.LocalDateTime;
 
@@ -14,42 +13,55 @@ public class Crawler {
 
   // entry point for api
   public static LintingResults getResult(String repoUrl) {
-    LintingResults result = getResultObject(repoUrl);
-//    result = checkEverything(result);
-    return result;
+    // get Objects
+    Project lintingProject = getLintingProjectObject(repoUrl);
+    LintingResults lintingResult = createNewLintingResultObject(lintingProject);
+
+    // start linting
+    checkEverything(lintingResult, lintingProject);
+
+    return lintingResult;
   }
 
-  private static LintingResults getResultObject(String repoUrl) {
-    //todo implement this, ONLY RETURNS FAKE RIGHT NOW
-    return new LintingResults(LocalDateTime.now(), new Project("test", "localhost:1337"));
+  private static Project getLintingProjectObject(String url) {
+    // todo implement this, only returns fake project
+    Project lintingProject = new Project("test", url);
+    return lintingProject;
   }
 
-//  public static LintingResults checkEverything(LintingResults result) {
-//    String URL = result.getRepoLink();
-//
-//    // if not valid url --> mission abort
-//    if (!CheckBasics.isValidURL(URL)) {
-//      //todo: implement this?
-//      // removeResultFromDatabase(result); // do we need to do this or does api do this?
-//      return result;
-//    }
-//
-//    // get correct API URL
-//    String apiUrl;
-//    if (hostedByGitlab(URL)) {
-//      // hosted by gitlab.com
-//      apiUrl = getApiUrlForGitlabDotComProject(URL);
-//    } else {
-//      // hosted by gitlab.example.com (gitlab instance)
-//      apiUrl = getApiUrlForGitlabInstanceProject(URL);
-//    }
-//    result.setApiLink(apiUrl);
-//
-//    // actually start doing work with the api
-//    result.setPublic(CheckGitlabSettings.isPublic(result.getApiLink()));
-//
-//    return result;
-//  }
+  private static LintingResults createNewLintingResultObject(Project lintingProject) {
+    // method for better readability
+    return new LintingResults(LocalDateTime.now(), lintingProject);
+  }
+
+  public static void checkEverything(LintingResults lintingResult, Project project) {
+    String URL = project.getUrl();
+
+    // if not valid url --> mission abort
+    if (!CheckBasics.isValidURL(URL)) {
+      //todo: implement this?
+      // removeResultFromDatabase(result); // do we need to do this or does api do this?
+      return;
+    }
+
+    // get correct API URL
+    String apiUrl;
+    if (hostedByGitlab(URL)) {
+      // hosted by gitlab.com
+      apiUrl = getApiUrlForGitlabDotComProject(URL);
+    } else {
+      // hosted by gitlab.example.com (gitlab instance)
+      apiUrl = getApiUrlForGitlabInstanceProject(URL);
+    }
+
+    // Actually start doing work with the api
+    // Starting with Gitlab Settings Check
+    // todo: waiting for DB Team to implement SettingsCheck Table so we can save it to a settings Object
+    // will be something like:
+    //    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
+    //    lintingGitlabSettings.setPublic(CheckGitlabSettings.isPublic(apiUrl));
+    CheckGitlabSettings.isPublic(apiUrl);
+  }
 
   private static String getApiUrlForGitlabInstanceProject(String url) {
     // Insert /api/v4 before the 3rd "/" (cause the first two are https://)
