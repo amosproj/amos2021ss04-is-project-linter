@@ -3,17 +3,14 @@ package amosproj.linter.crawler;
 import amosproj.linter.server.data.LintingResult;
 import amosproj.linter.server.data.Project;
 import amosproj.linter.server.data.ProjectRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import amosproj.linter.server.services.BeanUtil;
 
 import java.time.LocalDateTime;
 
-@Configuration
-@ComponentScan("amosproj.linter.server")
+
 public class Crawler {
-  // this main is only for testing purpouses
-  public static void main(String[] args) {
+  // this function is only for testing purpouses
+  public static void testCrawler() {
     getResult("https://gitlab.com/altaway/herbstluftwm");
   }
 
@@ -29,14 +26,14 @@ public class Crawler {
     return lintingResult;
   }
 
-  @Autowired
-  private ProjectRepository projectRepository;
-
   private static Project getLintingProjectObject(String url) {
-    // todo implement this, only returns fake project
+    ProjectRepository projectRepository = BeanUtil.getBean(ProjectRepository.class);
+    // save a project so i can get it (only while we dont have a real db)
+    Project dummyProject = new Project("test", url);
+    projectRepository.save(dummyProject);
 
-    Project lintingProject = new Project("test", url);
-    return lintingProject;
+    // get project from DB
+    return projectRepository.findByUrl(url);
   }
 
   private static LintingResult createNewLintingResultObject(Project lintingProject) {
@@ -50,7 +47,7 @@ public class Crawler {
     // if not valid url --> mission abort
     if (!CheckBasics.isValidURL(URL)) {
       //todo: implement this?
-      // removeResultFromDatabase(result); // do we need to do this or does api do this?
+      //removeResultFromDatabase(project); // do we need to do this or does api do this?
       return;
     }
 
