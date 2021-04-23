@@ -1,6 +1,6 @@
 package amosproj.linter.crawler;
 
-import amosproj.linter.server.data.LintingResults;
+import amosproj.linter.server.data.LintingResult;
 import amosproj.linter.server.data.Project;
 
 import java.time.LocalDateTime;
@@ -12,10 +12,10 @@ public class Crawler {
   }
 
   // entry point for api
-  public static LintingResults getResult(String repoUrl) {
+  public static LintingResult getResult(String repoUrl) {
     // get Objects
     Project lintingProject = getLintingProjectObject(repoUrl);
-    LintingResults lintingResult = createNewLintingResultObject(lintingProject);
+    LintingResult lintingResult = createNewLintingResultObject(lintingProject);
 
     // start linting
     checkEverything(lintingResult, lintingProject);
@@ -29,12 +29,12 @@ public class Crawler {
     return lintingProject;
   }
 
-  private static LintingResults createNewLintingResultObject(Project lintingProject) {
+  private static LintingResult createNewLintingResultObject(Project lintingProject) {
     // method for better readability
-    return new LintingResults(LocalDateTime.now(), lintingProject);
+    return new LintingResult(lintingProject, LocalDateTime.now());
   }
 
-  public static void checkEverything(LintingResults lintingResult, Project project) {
+  public static void checkEverything(LintingResult lintingResult, Project project) {
     String URL = project.getUrl();
 
     // if not valid url --> mission abort
