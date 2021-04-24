@@ -62,6 +62,7 @@ public class Linter {
 //    SettingsCheck settingsCheck = createSettingsCheckObject(lintingResult);
 //    lintingGitlabSettings.setPublic(CheckGitlabSettings.isPublic(apiUrl));
         CheckGitlabSettings.isPublic(apiUrl);
+        CheckGitlabFiles.checkMdFiles(apiUrl);
     }
 
     private String getApiUrlForGitlab(String url) {
