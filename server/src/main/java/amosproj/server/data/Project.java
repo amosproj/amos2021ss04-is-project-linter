@@ -1,9 +1,9 @@
 package amosproj.server.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.aspectj.weaver.Lint;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Project {
@@ -13,6 +13,9 @@ public class Project {
     private Long id;
     private String name;
     private String url;
+
+    @OneToMany(targetEntity = LintingResult.class)
+    private List<LintingResult> results;
 
     protected Project() {
     } // only for JPA, dont use directly!
@@ -51,4 +54,11 @@ public class Project {
         this.url = url;
     }
 
+    public List<LintingResult> getResults() {
+        return results;
+    }
+
+    public void setResults(List<LintingResult> results) {
+        this.results = results;
+    }
 }
