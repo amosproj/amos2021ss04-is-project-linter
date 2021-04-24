@@ -1,13 +1,15 @@
 package amosproj.server.jobs;
 
+import amosproj.server.crawler.Crawler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ScheduledTasks {
 
-    @Scheduled(fixedRate = 5000) // every 5 sec // TODO use cron to make daily task
-    public void dailyLint() {
-        System.out.println("hallo");
+    @Scheduled(cron =  "0 0 * * * ?") // every 24 hours at midnight
+    public void dailyCrawl() {
     }
+
 }
