@@ -1,13 +1,14 @@
 # ACIDIC - Autonomous Continuous Inner-source Development and Integrity Checker
 
-## Description
+## Beschreibung
 Linter für Inner-Source-Software
 
-## Architecture
-![Softwarearchitektur](https://media.discordapp.net/attachments/831864358018482219/834390880504905758/ecosystem.png)
+## Architektur
+![Softwarearchitektur](assets/architektur.png)
+![Datenbankschema](assets/database.png)
 
 ## Umgebungsvariablen (Environment variables)
-Setzen sie diese Umgebungsvariablen in einer .env datei in der projektwurzel.
+Setzen Sie diese Umgebungsvariablen in einer .env datei in der projektwurzel.
 Umgebungsvariablen werden sowohl von Frontend als auch Backend verwendet.
 
 - `DB_PASSWORD`: Postgres Passwort
