@@ -21,5 +21,5 @@ jobs:
         run: chmod +x server/gradlew
       - name: Build with Gradle
         run: ./server/gradlew build
-      #- name: Run Tests
-        #run: ./server/gradlew test
+      - name: Run Tests
+        run: ./server/gradlew test
