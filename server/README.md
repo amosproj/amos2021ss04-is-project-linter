@@ -1,5 +1,5 @@
 # Getting Started
-
+Currently JDK 16 is not compatible with gradlew.
 
 ## Building
 If youre on windows, use gradlew.bat instead
