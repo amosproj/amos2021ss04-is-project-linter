@@ -1,26 +1,25 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.linter.consumptions.ProjectInformationJson;
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
+import amosproj.server.GitLab;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Visibility;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CheckGitlabSettings {
 
-    public static boolean isPublic(String apiUrl) {
+    @Autowired
+    private GitLab api;
+
+    public boolean isPublic(String apiUrl) {
         // call api
-        java.net.URI test;
-        RestTemplate restTemplate = new RestTemplate();
-        ProjectInformationJson info;
+        org.gitlab4j.api.models.Project project = null;
         try {
-            test = new URI(apiUrl);
-            info = restTemplate.getForObject(test, ProjectInformationJson.class);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return false;
+            project = api.getApi().getProjectApi().getProject(apiUrl);
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
         }
 
-        // if public return true
-        return info != null && info.getVisibility() != null && info.getVisibility().equals("public");
+        assert project != null;
+        return project.getVisibility() == Visibility.PUBLIC;
     }
 }

@@ -12,8 +12,6 @@ public class ServerApplication {
     // Dies ist der Einstiegspunkt des Programms.
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
-        Linter linter = new Linter();
-        linter.getResult("https://gitlab.com/altaway/herbstluftwm");
     }
 
 }

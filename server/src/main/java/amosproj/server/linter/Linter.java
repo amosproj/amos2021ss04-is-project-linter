@@ -1,48 +1,32 @@
 package amosproj.server.linter;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
-import amosproj.server.data.Project;
-import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class Linter {
 
-    @Value("${GITLAB_ACCESS_TOKEN}")
-    private String apitoken;
+    @Autowired
+    private GitLab api;
 
     // entry point for api
     public LintingResult getResult(String repoUrl) {
-        // get Objects
-//        Project lintingProject = projectRepository.findByUrl(repoUrl);
-        // start linting
-        return checkEverything(new Project("herbstluft", repoUrl, 0, "gitlab.com"));
-    }
-
-    public LintingResult checkEverything(Project project) {
-        String URL = project.getUrl();
-        GitLabApi gitLabApi = new GitLabApi("https://gitlab.com", apitoken);
-        gitLabApi.enableRequestResponseLogging();
-
+        org.gitlab4j.api.models.Project proj = null;
         try {
-            var proj = gitLabApi.getProjectApi().getProject("altaway", "herbstluftwm");
+            proj = api.getApi().getProjectApi().getProject(repoUrl);
             System.out.println(proj);
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }
-
-
-//        List<org.gitlab4j.api.models.Project> projects = null;
-//        try {
-//            projects = gitLabApi.getProjectApi().getProjects();
-//        } catch (GitLabApiException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println(projects);
-
-
-        return null;
+        return checkEverything(proj);
     }
 
+    public LintingResult checkEverything(org.gitlab4j.api.models.Project project) {
+        System.out.println(project);
+        return null;
+    }
 
 }
