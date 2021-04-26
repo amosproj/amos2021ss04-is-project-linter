@@ -6,8 +6,6 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Value;
 
-import java.util.List;
-
 public class Linter {
 
     @Value("${GITLAB_ACCESS_TOKEN}")
@@ -23,15 +21,26 @@ public class Linter {
 
     public LintingResult checkEverything(Project project) {
         String URL = project.getUrl();
-        GitLabApi gitLabApi = new GitLabApi("https://gitlab.cs.fau.de", apitoken);
+        GitLabApi gitLabApi = new GitLabApi("https://gitlab.com", apitoken);
         gitLabApi.enableRequestResponseLogging();
-        List<org.gitlab4j.api.models.Project> projects = null;
+
         try {
-            projects = gitLabApi.getProjectApi().getProjects();
+            var proj = gitLabApi.getProjectApi().getProject("altaway", "herbstluftwm");
+            System.out.println(proj);
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }
-        System.out.println(projects);
+
+
+//        List<org.gitlab4j.api.models.Project> projects = null;
+//        try {
+//            projects = gitLabApi.getProjectApi().getProjects();
+//        } catch (GitLabApiException e) {
+//            e.printStackTrace();
+//        }
+//        System.out.println(projects);
+
+
         return null;
     }
 
