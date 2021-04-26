@@ -1,4 +1,4 @@
-package amosproj.server.linter;
+package amosproj.server.linter.checks;
 
 import amosproj.server.linter.consumptions.ProjectInformationJson;
 import org.springframework.web.client.RestTemplate;

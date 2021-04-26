@@ -28,6 +28,24 @@ public class SettingsCheck {
         this.usesGitLabPages = usesGitLabPages;
     }
 
+    public SettingsCheck(LintingResult lintingResults, boolean setAllTo) {
+        // method for easy creating "empty" ojects;
+        this.lintId = lintingResults.getId();
+        if(setAllTo) {
+            this.isPublic = true;
+            this.hasRequestAccess = true;
+            this.usesGuestRole = true;
+            this.usesDeveloperRole = true;
+            this.usesGitLabPages = true;
+        } else {
+            this.isPublic = false;
+            this.hasRequestAccess = false;
+            this.usesGuestRole = false;
+            this.usesDeveloperRole = false;
+            this.usesGitLabPages = false;
+        }
+    }
+
     protected SettingsCheck() { }
 
     @Override
