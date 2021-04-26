@@ -10,9 +10,6 @@ logs
 .vscode
 .idea
 
-server/src/main/resources/application.properties
-
-
 # os files
 .DS_Store
 *.swp
