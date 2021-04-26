@@ -14,7 +14,8 @@ public class Project {
     private Integer projectId;
     private String gitlabInstance;
 
-    @OneToMany(targetEntity = LintingResult.class)
+    @OneToMany(targetEntity = LintingResult.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "projectId")
     private List<LintingResult> results;
 
     protected Project() {
