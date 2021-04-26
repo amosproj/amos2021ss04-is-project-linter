@@ -2,7 +2,7 @@ package amosproj.server.linter;
 
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
-import org.junit.Test;
+import org.junit.jupiter.api.Test; // need JUnit 5
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
