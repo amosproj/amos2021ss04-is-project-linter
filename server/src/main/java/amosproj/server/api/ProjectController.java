@@ -1,7 +1,9 @@
 package amosproj.server.api;
 
+import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
+import amosproj.server.linter.Linter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +19,9 @@ public class ProjectController {
     @Autowired
     private ProjectRepository repository;
 
+    @Autowired
+    private Linter linter;
+
     @GetMapping("/projects")
     public Iterable<Project> allProjects() {
         return repository.findAll();
@@ -27,6 +32,11 @@ public class ProjectController {
         return repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
         );
+    }
+
+    @GetMapping("/result")
+    public LintingResult getLintResult() {
+        return linter.getResult("https://gitlab.com/altaway/herbstluftwm");
     }
 
 }
