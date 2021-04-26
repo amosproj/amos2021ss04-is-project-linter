@@ -26,15 +26,15 @@ public class LinterTest {
         return new String[]{};
     }
 
-    @Test
-    public void testGetResult() {
-        Linter cw = new Linter();
-
-        for (String repo : getTestRepos()) {
-            var actual = cw.getResult(repo);
-            System.out.println(actual);
-        }
-
-    }
+//    @Test
+//    public void testGetResult() {
+//        Linter cw = new Linter();
+//
+//        for (String repo : getTestRepos()) {
+//            var actual = cw.getResult(repo);
+//            System.out.println(actual);
+//        }
+//
+//    }
 
 }

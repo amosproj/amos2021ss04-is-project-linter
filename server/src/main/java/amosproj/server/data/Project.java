@@ -1,7 +1,5 @@
 package amosproj.server.data;
 
-import org.aspectj.weaver.Lint;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -13,6 +11,8 @@ public class Project {
     private Long id;
     private String name;
     private String url;
+    private Integer projectId;
+    private String gitlabInstance;
 
     @OneToMany(targetEntity = LintingResult.class)
     private List<LintingResult> results;
@@ -20,18 +20,11 @@ public class Project {
     protected Project() {
     } // only for JPA, dont use directly!
 
-    public Project(String name, String url) {
+    public Project(String name, String url, Integer projectId, String gitlabInstance) {
         this.name = name;
         this.url = url;
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                '}';
+        this.projectId = projectId;
+        this.gitlabInstance = gitlabInstance;
     }
 
     public Long getId() {
@@ -42,23 +35,42 @@ public class Project {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public Integer getProjectId() {
+        return projectId;
+    }
+
+    public String getGitlabInstance() {
+        return gitlabInstance;
     }
 
     public List<LintingResult> getResults() {
         return results;
     }
 
-    public void setResults(List<LintingResult> results) {
-        this.results = results;
+    public void setName(String name) {
+        this.name = name;
     }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", url='" + url + '\'' +
+                ", projectId=" + projectId +
+                ", gitlabInstance='" + gitlabInstance + '\'' +
+                ", results=" + results +
+                '}';
+    }
+
+
+
 }
