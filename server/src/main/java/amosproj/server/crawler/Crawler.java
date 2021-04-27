@@ -5,6 +5,7 @@ import amosproj.server.linter.Linter;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class Crawler {
     @Autowired
     private Linter linter;
 
-
+    @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight
     public void runCrawler() {
         List<Project> projects = null;
         try {
