@@ -15,9 +15,11 @@ public class LintingResult {
     private LocalDateTime lintTime;
 
     @OneToMany(targetEntity = FileCheck.class)
-    private List fileChecks;
+    @JoinColumn(name = "lintId")
+    private List<FileCheck> fileChecks;
 
     @OneToOne(targetEntity = SettingsCheck.class)
+    @JoinColumn(name = "id")
     private SettingsCheck settingsCheck;
 
     public LintingResult(Project project, LocalDateTime lintTime) {
@@ -39,11 +41,11 @@ public class LintingResult {
         this.lintTime = lintTime;
     }
 
-    public List getFileChecks() {
+    public List<FileCheck> getFileChecks() {
         return fileChecks;
     }
 
-    public void setFileChecks(List fileChecks) {
+    public void setFileChecks(List<FileCheck> fileChecks) {
         this.fileChecks = fileChecks;
     }
 

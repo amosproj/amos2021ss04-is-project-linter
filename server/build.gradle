@@ -13,6 +13,7 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.gitlab4j:gitlab4j-api:4.16.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // database access
     implementation 'org.springframework.boot:spring-boot-starter-web' // rest api
     testImplementation 'org.apache.httpcomponents:httpclient'
@@ -21,7 +22,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // init this project
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // automatically create docs
     testImplementation 'org.awaitility:awaitility:3.1.2' // scheduler
-    testImplementation 'junit:junit:4.13' //testing
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 test {

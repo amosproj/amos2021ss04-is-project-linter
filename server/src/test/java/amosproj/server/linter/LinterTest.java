@@ -1,30 +1,27 @@
 package amosproj.server.linter;
 
-import org.junit.jupiter.api.Test;
+import amosproj.server.data.Project;
+import amosproj.server.data.ProjectRepository;
+import org.junit.jupiter.api.Test; // need JUnit 5
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
+//@RunWith(MockitoJUnitRunner.class)
 public class LinterTest {
 
-    private String[] getTestRepos() {
-        Resource resource = new ClassPathResource("classpath:repoList.txt");
-        try {
-            InputStream inputStream = resource.getInputStream();
-            byte[] binaryData = FileCopyUtils.copyToByteArray(inputStream);
-            String data = new String(binaryData, StandardCharsets.UTF_8);
-            return data.split("\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new String[]{};
-    }
+//    private String[] getTestRepos() {
+//        Resource resource = new ClassPathResource("classpath:repoList.txt");
+//        try {
+//            InputStream inputStream = resource.getInputStream();
+//            byte[] binaryData = FileCopyUtils.copyToByteArray(inputStream);
+//            String data = new String(binaryData, StandardCharsets.UTF_8);
+//            return data.split("\n");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        return new String[]{};
+//    }
 
 //    @Test
 //    public void testGetResult() {
@@ -36,5 +33,23 @@ public class LinterTest {
 //        }
 //
 //    }
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private Linter linter;
+
+    @Test
+    public void isPublicPositive() {
+        var url = "https://gitlab.com/altaway/herbstluftwm";
+        linter.getOrCreateResult(url);
+
+        Project project = projectRepository.findByUrl(url);
+        var result = project.getResults().get(0);
+        var isPublic = result.getSettingsCheck().getPublic();
+        assert isPublic;
+
+    }
 
 }
