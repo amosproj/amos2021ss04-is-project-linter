@@ -19,7 +19,7 @@ public class SettingsCheck {
     private Boolean usesGitLabPages;
 
     public SettingsCheck(LintingResult lintingResults, Boolean isPublic, Boolean hasRequestAccess, Boolean usesGuestRole,
-                         Boolean usesDeveloperRole, Boolean usesGitLabPages){
+                         Boolean usesDeveloperRole, Boolean usesGitLabPages) {
         this.lintId = lintingResults.getId();
         this.isPublic = isPublic;
         this.hasRequestAccess = hasRequestAccess;
@@ -31,7 +31,7 @@ public class SettingsCheck {
     public SettingsCheck(LintingResult lintingResults, boolean setAllTo) {
         // method for easy creating "empty" ojects;
         this.lintId = lintingResults.getId();
-        if(setAllTo) {
+        if (setAllTo) {
             this.isPublic = true;
             this.hasRequestAccess = true;
             this.usesGuestRole = true;
@@ -46,7 +46,8 @@ public class SettingsCheck {
         }
     }
 
-    protected SettingsCheck() { }
+    protected SettingsCheck() {
+    }
 
     @Override
     public String toString() {
