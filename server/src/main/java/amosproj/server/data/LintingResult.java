@@ -1,7 +1,8 @@
 package amosproj.server.data;
 
+import org.gitlab4j.api.utils.JacksonJson;
+
 import javax.persistence.*;
-import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class LintingResult {
         this.lintTime = lintTime;
     }
 
-    protected LintingResult() {    }
+    protected LintingResult() {
+    }
 
     public Long getId() {
         return id;
@@ -56,4 +58,10 @@ public class LintingResult {
     public void setSettingsCheck(SettingsCheck settingsCheck) {
         this.settingsCheck = settingsCheck;
     }
+
+    @Override
+    public String toString() {
+        return JacksonJson.toJsonString(this);
+    }
+
 }

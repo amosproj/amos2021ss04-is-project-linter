@@ -1,58 +1,26 @@
 package amosproj.server.linter.checks;
 
-import org.springframework.web.client.RestTemplate;
-
-import java.net.URI;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
+import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.RepositoryFile;
 
 public class CheckGitlabFiles {
 
-    public static void checkMdFiles(String apiUrl){
-        //TODO: insert the results into the DB
+    private GitLabApi api;
+    private org.gitlab4j.api.models.Project proj;
 
-        existsMdFile(apiUrl, "README.md");
-        existsMdFile(apiUrl, "CONTRIBUTING.md");
-        if(existsMdFile(apiUrl, "MAINTAINERS.md")){
-            List<String> maintainers = extractMaintainers(apiUrl);
-        }
+    public CheckGitlabFiles(GitLabApi api, org.gitlab4j.api.models.Project project) {
+        this.api = api;
+        this.proj = project;
     }
 
-    private static boolean existsMdFile(String url, String filePath){
-        // call api
-        String apiUrl = "";
+    public boolean fileExists(String filepath) {
         try {
-            apiUrl = url + "/repository/files/" + URLEncoder.encode(filePath, "US-ASCII") + "?ref=master";
-            System.out.println(apiUrl);
-        } catch (java.io.UnsupportedEncodingException e){
+            RepositoryFile file = api.getRepositoryFileApi().getFileInfo(proj.getId(), filepath, "master");
+        } catch (GitLabApiException e) {
             return false;
-        }
-        java.net.URI test;
-        RestTemplate restTemplate = new RestTemplate();
-        String info;
-        try {
-            test = new URI(apiUrl);
-            info = restTemplate.getForObject(test, String.class);
-            System.out.println(info);
-        } catch (Exception e) {
-            return  false;
         }
         return true;
     }
 
-    private static List<String> extractMaintainers(String url){
-        List<String> maintainers = new ArrayList<>();
-        String apiUrl = url + "/repository/files/MAINTAINERS%2Emd/raw?ref=master";
-        java.net.URI test;
-        RestTemplate restTemplate = new RestTemplate();
-        String info;
-        try {
-            test = new URI(apiUrl);
-            info = restTemplate.getForObject(test, String.class);
-            //read maintainers out of raw
-        } catch (Exception e) {
-        }
-        return maintainers;
-    }
 }

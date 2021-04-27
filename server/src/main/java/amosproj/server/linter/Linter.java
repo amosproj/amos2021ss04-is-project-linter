@@ -1,11 +1,8 @@
 package amosproj.server.linter;
 
 import amosproj.server.GitLab;
-import amosproj.server.data.LintingResult;
-import amosproj.server.data.LintingResultRepository;
-import amosproj.server.data.Project;
-import amosproj.server.data.SettingsCheck;
-import amosproj.server.linter.checks.CheckGitlabSettings;
+import amosproj.server.data.*;
+import amosproj.server.linter.checks.CheckGitlabFiles;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,6 +20,10 @@ public class Linter {
 
     @Autowired
     private LintingResultRepository lintingResultRepository;
+    @Autowired
+    private FileCheckRepository fileCheckRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
 
     public void runLint(String repoUrl) throws GitLabApiException {
@@ -34,21 +35,22 @@ public class Linter {
     }
 
     private void checkEverything(org.gitlab4j.api.models.Project apiProject) {
-        Project currInternalProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost());
+        // Hole LintingProject
+        Project currLintingProject = projectRepository.findByProjectId(apiProject.getId());
+        if (currLintingProject == null) {
+            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost());
+            projectRepository.save(currLintingProject);
+        }
         // Erstelle neues Linting Result
-        LintingResult res = new LintingResult(currInternalProject, LocalDateTime.now());
-
-        // Führe tests aus:
-
-        // Überprüfe die Einstellungen innerhalb des Repositorys
-        CheckGitlabSettings checkSettings = new CheckGitlabSettings(apiProject);
-        SettingsCheck setCheck = new SettingsCheck(res, checkSettings.isPublic(), checkSettings.hasRequestAccess(), checkSettings.usesGuestRole(),
-                checkSettings.usesDeveloperRole(), checkSettings.usesGitLabPages());
-        // Überprüfe nach Readme.md
-        // Überprüfe nach Maintainers.md
-
+        LintingResult res = new LintingResult(currLintingProject, LocalDateTime.now());
+        // Fuehre Checks aus
+        var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject);
         // speichere ergebnis
         lintingResultRepository.save(res);
+        System.out.print(res.toString());
+        FileCheck fileCheck = new FileCheck(res, "readme.md", filesChecker.fileExists("readme.md"));
+        System.out.println(fileCheck);
+        fileCheckRepository.save(fileCheck);
     }
 
 

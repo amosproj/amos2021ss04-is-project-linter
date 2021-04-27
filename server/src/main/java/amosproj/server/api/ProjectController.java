@@ -34,6 +34,7 @@ public class ProjectController {
     @PostMapping("/projects")
     public @ResponseBody
     String lintProject(@RequestBody String url) {
+        System.out.println(url);
         try {
             linter.runLint(url);
         } catch (GitLabApiException e) {
