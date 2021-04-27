@@ -35,15 +35,15 @@ public class LinterTest {
 //    }
 
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
 
     @Autowired
-    Linter linter;
+    private Linter linter;
 
     @Test
     public void isPublicPositive() {
         var url = "https://gitlab.com/altaway/herbstluftwm";
-        linter.getResult(url);
+        linter.getOrCreateResult(url);
 
         Project project = projectRepository.findByUrl(url);
         var result = project.getResults().get(0);

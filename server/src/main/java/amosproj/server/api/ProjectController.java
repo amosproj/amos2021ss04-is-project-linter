@@ -36,7 +36,7 @@ public class ProjectController {
 
     @GetMapping("/result")
     public LintingResult getLintResult() {
-        return linter.getResult("https://gitlab.com/altaway/herbstluftwm");
+        return linter.getOrCreateResult("https://gitlab.com/altaway/herbstluftwm");
     }
 
 }
