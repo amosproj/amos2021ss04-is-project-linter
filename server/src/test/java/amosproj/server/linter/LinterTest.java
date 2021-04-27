@@ -1,5 +1,6 @@
 package amosproj.server.linter;
 
+import org.gitlab4j.api.GitLabApiException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
 @SpringBootTest
-@TestPropertySource(locations="classpath:test.properties")
+@TestPropertySource(locations = "classpath:test.properties")
 public class LinterTest {
 
     @Autowired
@@ -33,12 +34,11 @@ public class LinterTest {
     }
 
     @Test
-    public void testGetResult() {
+    public void testRunLint() throws GitLabApiException {
         for (String repo : getTestRepos()) {
-            linter.getOrCreateResult(repo);
-            // TODO assertions
+            System.out.println(repo);
+            linter.runLint(repo);
         }
     }
-
 
 }

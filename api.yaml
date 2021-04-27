@@ -1,3 +1,4 @@
+# Besuchen sie editor.swagger.io und pasten Sie den inhalt dieser datei rein, um die Dokumentation graphisch zu sehen.
 openapi: "3.0.0"
 info:
   version: 1.0.0

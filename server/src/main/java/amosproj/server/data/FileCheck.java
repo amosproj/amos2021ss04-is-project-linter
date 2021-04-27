@@ -1,6 +1,11 @@
 package amosproj.server.data;
 
-import javax.persistence.*;
+import org.gitlab4j.api.utils.JacksonJson;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
 public class FileCheck {
@@ -18,17 +23,9 @@ public class FileCheck {
         this.exists = exists;
     }
 
-    protected FileCheck() { }
-
-    @Override
-    public String toString() {
-        return "FileChecks{" +
-                "id=" + id +
-                ", lintId=" + lintId +
-                ", fileName=" + fileName +
-                ", exists=" + exists +
-                '}';
+    protected FileCheck() {
     }
+
 
     public Long getId() {
         return id;
@@ -53,4 +50,10 @@ public class FileCheck {
     public void setExists(Boolean exists) {
         this.exists = exists;
     }
+
+    @Override
+    public String toString() {
+        return JacksonJson.toJsonString(this);
+    }
+
 }

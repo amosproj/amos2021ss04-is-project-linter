@@ -1,21 +1,19 @@
 package amosproj.server.linter.checks;
 
 import amosproj.server.GitLab;
-import org.gitlab4j.api.GitLabApiException;
-//import org.gitlab4j.api.models.Visibility;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.beans.Visibility;
-
-public class CheckGitlabSettings{
+public class CheckGitlabSettings {
 
     @Autowired
     private GitLab api;
     org.gitlab4j.api.models.Project project;
 
-    public CheckGitlabSettings(org.gitlab4j.api.models.Project project){
+    public CheckGitlabSettings(org.gitlab4j.api.models.Project project) {
         this.project = project;
     }
+
+
     /*public boolean isPublic(String apiUrl) {
         // call api
         org.gitlab4j.api.models.Project project = null;
@@ -34,7 +32,7 @@ public class CheckGitlabSettings{
         return false;
     }
 
-    public boolean isPublic(){
+    public boolean isPublic() {
         return project.getPublic();
     }
 
