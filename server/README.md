@@ -1,24 +1,29 @@
 # Getting Started
-Currently JDK 16 is not compatible with gradlew.
 
-## Building
-If youre on windows, use gradlew.bat instead
-- See tasks: `./gradlew tasks`
+Wir nutzen Java 11 für dieses Projekt, es sollte aber auch java 12, 13, 14 und 15 unterstützt sein.
+
+## Bauen
+
+If youre on windows, use `gradlew.bat` instead
+
 - Build: `./gradlew build`
 
 ## Docker
-Erst Java Projekt builden (siehe oben), dann folgendes ausführen:
+
+Erst Java Projekt bauen (siehe oben), dann folgendes ausführen:
 
 Bauen: `docker build -t amoslinter/server:staging .`
 
 Ausführen: `docker run -d --rm amoslinter/server:staging . `
 
 ## Ohne Docker Ausführen
+
 ```shell
 ./gradlew bootRun
 ```
 
 ## Tests ausführen
+
 ```shell
 ./gradlew test
 ```
