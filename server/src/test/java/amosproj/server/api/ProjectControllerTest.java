@@ -13,13 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @Test
     public void testAllProjects() throws Exception {
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk());
-//                .andExpect(content().string(containsString("Hello, World")));
     }
 
 }

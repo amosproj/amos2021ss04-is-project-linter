@@ -1,6 +1,5 @@
 package amosproj.server;
 
-import amosproj.server.linter.Linter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
