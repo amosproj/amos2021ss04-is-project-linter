@@ -47,12 +47,9 @@ public class Linter {
         var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject);
         // speichere ergebnis
         lintingResultRepository.save(res);
-        System.out.print(res.toString());
         FileCheck fileCheck = new FileCheck(res, "readme.md", filesChecker.fileExists("readme.md"));
-        System.out.println(fileCheck);
         fileCheckRepository.save(fileCheck);
     }
-
 
     @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight
     public void runCrawler() {
