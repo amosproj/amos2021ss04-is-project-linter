@@ -26,6 +26,8 @@ public class Linter {
 
     public LintingResult checkEverything(org.gitlab4j.api.models.Project project) {
         System.out.println(project);
+        //String URL = project.getUrl();
+
         return null;
     }
 
