@@ -1,11 +1,14 @@
 package amosproj.server;
 
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest // generates the main application context for testing
 class ServerApplicationTest {
+
+    @Test
+    public void contextLoads() {
+    }
 
 }
