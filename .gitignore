@@ -10,3 +10,9 @@ logs
 .vscode
 .idea
 
+# os files
+.DS_Store
+*.swp
+*.tmp
+
+
