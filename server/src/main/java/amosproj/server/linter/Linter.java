@@ -3,6 +3,7 @@ package amosproj.server.linter;
 import amosproj.server.GitLab;
 import amosproj.server.data.*;
 import amosproj.server.linter.checks.CheckGitlabFiles;
+import amosproj.server.linter.checks.CheckGitlabRoles;
 import amosproj.server.linter.checks.CheckGitlabSettings;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -76,17 +77,23 @@ public class Linter {
         LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
 
         // Fuehre Checks aus
-        var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks"));
-        var fileCheckResults = filesChecker.checkAll(lintingResult);
-        var settingsChecker = new CheckGitlabSettings(api.getApi(), apiProject, config.get("linter").get("settings_checks"));
-        var settingsCheckResults = settingsChecker.checkAll(lintingResult);
+        var fileCheckResults = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks")).checkAll(lintingResult);
 
-        // Speichere in DB ab
+        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), apiProject, config.get("linter").get("settings_checks")).checkAll(lintingResult);
+        // Check GitLab roles
+        var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("linter").get("roles_check")).checkAll();
+
+
+        // Save in Database
         lintingResultRepository.save(lintingResult);
-        for(CheckResult result: fileCheckResults) {
+
+        for (CheckResult result : checkRolesResults) {
             checkResultRepository.save(result);
         }
-        for(CheckResult result: settingsCheckResults) {
+        for (CheckResult result : fileCheckResults) {
+            checkResultRepository.save(result);
+        }
+        for (CheckResult result : settingsCheckResults) {
             checkResultRepository.save(result);
         }
 

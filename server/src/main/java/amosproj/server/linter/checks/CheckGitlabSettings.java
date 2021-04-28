@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.WikisApi;
-import org.gitlab4j.api.models.AccessLevel;
-import org.gitlab4j.api.models.ProjectAccess;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -27,7 +25,7 @@ public class CheckGitlabSettings {
     public ArrayList<CheckResult> checkAll(LintingResult lintingResult) {
         // TODO run tests according to config TODO
         ArrayList<CheckResult> results = new ArrayList<>();
-        for (JsonNode test: config) {
+        for (JsonNode test : config) {
             String testName = test.get("name").textValue();
             boolean enabled = test.get("enabled").booleanValue();
 
@@ -62,14 +60,6 @@ public class CheckGitlabSettings {
 
     public boolean hasRequestAccess() {
         return project.getRequestAccessEnabled();
-    }
-
-    public boolean usesGuestRole() {
-        return project.getPermissions().getProjectAccess().getAccessLevel() == AccessLevel.GUEST; // TODO
-    }
-
-    public boolean usesDeveloperRole() {
-        return project.getPermissions().getProjectAccess().getAccessLevel() == AccessLevel.DEVELOPER; //TODO
     }
 
     public boolean usesGitLabPages() {

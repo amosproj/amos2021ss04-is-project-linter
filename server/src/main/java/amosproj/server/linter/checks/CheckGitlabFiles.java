@@ -25,7 +25,7 @@ public class CheckGitlabFiles {
     public ArrayList<CheckResult> checkAll(LintingResult lintingResult) {
         // TODO run tests according to config TODO
         ArrayList<CheckResult> results = new ArrayList<>();
-        for (JsonNode test: config) {
+        for (JsonNode test : config) {
             String testName = test.get("name").textValue();
             boolean enabled = test.get("enabled").booleanValue();
 

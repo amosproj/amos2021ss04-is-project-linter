@@ -19,6 +19,16 @@
         "name": "isPublic",
         "enabled": false
       }
+    ],
+    "roles_check": [
+      {
+        "name": "guestRoleEnabled",
+        "enabled": true
+      },
+      {
+        "name": "developerRoleEnabled",
+        "enabled": true
+      }
     ]
   }
 }
