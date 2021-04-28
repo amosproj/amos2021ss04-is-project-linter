@@ -3,6 +3,7 @@ package amosproj.server.linter;
 import amosproj.server.GitLab;
 import amosproj.server.data.*;
 import amosproj.server.linter.checks.CheckGitlabFiles;
+import amosproj.server.linter.checks.CheckGitlabSettings;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,13 +73,23 @@ public class Linter {
             projectRepository.save(currLintingProject);
         }
         // Erstelle neues Linting Result
-        LintingResult res = new LintingResult(currLintingProject, LocalDateTime.now());
+        LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
+
         // Fuehre Checks aus
         var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks"));
-        // speichere ergebnis
-        lintingResultRepository.save(res);
-        CheckResult checkResult = new CheckResult(res, "CheckReadmeExistence", filesChecker.fileExists("readme.md"));
-        checkResultRepository.save(checkResult);
+        var fileCheckResults = filesChecker.checkAll(lintingResult);
+        var settingsChecker = new CheckGitlabSettings(apiProject, config.get("linter").get("settings_checks"));
+        var settingsCheckResults = settingsChecker.checkAll(lintingResult);
+
+        // Speichere in DB ab
+        lintingResultRepository.save(lintingResult);
+        for(CheckResult result: fileCheckResults) {
+            checkResultRepository.save(result);
+        }
+        for(CheckResult result: settingsCheckResults) {
+            checkResultRepository.save(result);
+        }
+
     }
 
     @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight

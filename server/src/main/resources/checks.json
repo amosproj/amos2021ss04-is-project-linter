@@ -7,13 +7,17 @@
       },
       {
         "name": "checkContributingExistence",
-        "enabled": true
+        "enabled": false
       }
     ],
     "settings_checks": [
       {
-        "name": "allowMergeRequests",
+        "name": "hasMergeRequestEnabled",
         "enabled": true
+      },
+      {
+        "name": "isPublic",
+        "enabled": false
       }
     ]
   }

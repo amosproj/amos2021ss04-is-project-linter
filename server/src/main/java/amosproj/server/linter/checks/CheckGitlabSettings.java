@@ -1,39 +1,56 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.GitLab;
-import org.springframework.beans.factory.annotation.Autowired;
+import amosproj.server.data.CheckResult;
+import amosproj.server.data.LintingResult;
+import com.fasterxml.jackson.databind.JsonNode;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 
 public class CheckGitlabSettings {
 
-    @Autowired
-    private GitLab api;
-    org.gitlab4j.api.models.Project project;
+    private org.gitlab4j.api.models.Project project;
+    private JsonNode config;
 
-    public CheckGitlabSettings(org.gitlab4j.api.models.Project project) {
+    public CheckGitlabSettings(org.gitlab4j.api.models.Project project, JsonNode config) {
         this.project = project;
+        this.config = config;
     }
 
+    public ArrayList<CheckResult> checkAll(LintingResult lintingResult) {
+        // TODO run tests according to config TODO
+        ArrayList<CheckResult> results = new ArrayList<>();
+        for (JsonNode test: config) {
+            String testName = test.get("name").textValue();
+            boolean enabled = test.get("enabled").booleanValue();
 
-    /*public boolean isPublic(String apiUrl) {
-        // call api
-        org.gitlab4j.api.models.Project project = null;
-        try {
-            project = api.getApi().getProjectApi().getProject(apiUrl);
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
+
+            if (enabled) {
+                java.lang.reflect.Method method = null;
+                boolean checkResultBoolean = false;
+                try {
+                    method = getClass().getMethod(testName);
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    checkResultBoolean = (boolean) method.invoke(this);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+                CheckResult checkResult = new CheckResult(lintingResult, testName, checkResultBoolean);
+                results.add(checkResult);
+            }
         }
-
-        assert project != null;
-        return project.getVisibility() == Visibility.PUBLIC;
-    }*/
-
-
-    public boolean checkValue(org.gitlab4j.api.models.Project project, String field, String expected) {
-        return false;
+        return results;
     }
 
     public boolean isPublic() {
         return project.getPublic();
+    }
+
+    public boolean hasMergeRequestEnabled() {
+        return project.getMergeRequestsEnabled();
     }
 
     public boolean hasRequestAccess() {
@@ -51,4 +68,6 @@ public class CheckGitlabSettings {
     public boolean usesGitLabPages() {
         return false; // muss noch implementiert werden
     }
+
+
 }
