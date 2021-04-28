@@ -37,7 +37,7 @@ public abstract class Check {
             method = getClass().getMethod(testName);
             checkResult = (boolean) method.invoke(this, args);
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            e.printStackTrace();
+            return null;
         }
         return new CheckResult(lintingResult, testName, checkResult);
     }

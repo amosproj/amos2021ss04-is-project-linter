@@ -7,7 +7,7 @@
       },
       {
         "name": "checkContributingExistence",
-        "enabled": false
+        "enabled": true
       }
     ],
     "settings_checks": [
@@ -17,7 +17,11 @@
       },
       {
         "name": "isPublic",
-        "enabled": false
+        "enabled": true
+      },
+      {
+        "name": "gitlabPagesEnabled",
+        "enabled": true
       }
     ],
     "roles_check": [

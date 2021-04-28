@@ -26,7 +26,10 @@ public class CheckGitlabRoles extends Check {
         for (JsonNode c : config) {
             String testName = c.get("name").textValue();
             boolean enabled = c.get("enabled").booleanValue();
-            if (enabled) res.add(runTest(testName));
+            if (enabled) {
+                CheckResult ch = runTest(testName);
+                if (ch != null) res.add(ch);
+            }
         }
         return res;
     }

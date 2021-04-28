@@ -5,50 +5,37 @@ import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.WikisApi;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
-public class CheckGitlabSettings {
+public class CheckGitlabSettings extends Check {
 
     private org.gitlab4j.api.models.Project project;
     private JsonNode config;
-    private GitLabApi api;
 
-    public CheckGitlabSettings(GitLabApi api, org.gitlab4j.api.models.Project project, JsonNode config) {
+    public CheckGitlabSettings(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
+        super(api, lintingResult);
         this.project = project;
         this.config = config;
-        this.api = api;
     }
 
-    public ArrayList<CheckResult> checkAll(LintingResult lintingResult) {
-        // TODO run tests according to config TODO
-        ArrayList<CheckResult> results = new ArrayList<>();
-        for (JsonNode test : config) {
-            String testName = test.get("name").textValue();
-            boolean enabled = test.get("enabled").booleanValue();
-
-
+    public List<CheckResult> checkAll() {
+        LinkedList<CheckResult> res = new LinkedList<>();
+        for (JsonNode c : config) {
+            String testName = c.get("name").textValue();
+            boolean enabled = c.get("enabled").booleanValue();
             if (enabled) {
-                java.lang.reflect.Method method = null;
-                boolean checkResultBoolean = false;
-                try {
-                    method = getClass().getMethod(testName);
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    checkResultBoolean = (boolean) method.invoke(this);
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    e.printStackTrace();
-                }
-                CheckResult checkResult = new CheckResult(lintingResult, testName, checkResultBoolean);
-                results.add(checkResult);
+                CheckResult ch = runTest(testName);
+                if (ch != null) res.add(ch);
             }
         }
-        return results;
+        return res;
     }
+
+    /////////////////
+    ///// TESTS /////
+    /////////////////
 
     public boolean isPublic() {
         return project.getPublic();
@@ -62,9 +49,9 @@ public class CheckGitlabSettings {
         return project.getRequestAccessEnabled();
     }
 
-    public boolean usesGitLabPages() {
+    public boolean gitlabPagesEnabled() {
         try {
-            return !new WikisApi(api).getPages(project).isEmpty();
+            return !(api.getWikisApi().getPages(project).isEmpty());
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }

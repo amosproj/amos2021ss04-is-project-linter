@@ -77,10 +77,8 @@ public class Linter {
         LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
 
         // Fuehre Checks aus
-        var fileCheckResults = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks")).checkAll(lintingResult);
-
-        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), apiProject, config.get("linter").get("settings_checks")).checkAll(lintingResult);
-        // Check GitLab roles
+        var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("linter").get("file_checks")).checkAll();
+        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("linter").get("settings_checks")).checkAll();
         var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("linter").get("roles_check")).checkAll();
 
 
