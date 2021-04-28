@@ -22,6 +22,8 @@ public class Linter {
 
     private final GitLab api;
 
+    protected JsonNode config;
+
     // autowired
     private final LintingResultRepository lintingResultRepository;
     private final CheckResultRepository checkResultRepository;
@@ -47,12 +49,10 @@ public class Linter {
         JsonNode node = null;
         try {
             node = objectMapper.readTree(file);
-        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        this.config = node;
     }
 
 
@@ -74,7 +74,7 @@ public class Linter {
         // Erstelle neues Linting Result
         LintingResult res = new LintingResult(currLintingProject, LocalDateTime.now());
         // Fuehre Checks aus
-        var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject);
+        var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks"));
         // speichere ergebnis
         lintingResultRepository.save(res);
         CheckResult checkResult = new CheckResult(res, "CheckReadmeExistence", filesChecker.fileExists("readme.md"));

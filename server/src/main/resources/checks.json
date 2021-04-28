@@ -2,24 +2,18 @@
   "linter": {
     "file_checks": [
       {
-        "readme": {
-          "name": "checkReadmeExiststence",
-          "enabled": false
-        }
+        "name": "checkReadmeExiststence",
+        "enabled": true
       },
       {
-        "contributing": {
-          "name": "checkContributingExistence",
-          "enabled": true
-        }
+        "name": "checkContributingExistence",
+        "enabled": true
       }
     ],
     "settings_checks": [
       {
-        "merge_requests": {
-          "name": "allowMergeRequests",
-          "enabled": true
-        }
+        "name": "allowMergeRequests",
+        "enabled": true
       }
     ]
   }
