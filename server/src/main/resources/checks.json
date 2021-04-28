@@ -1,0 +1,26 @@
+{
+  "linter": {
+    "file_checks": [
+      {
+        "readme": {
+          "name": "checkReadmeExiststence",
+          "enabled": false
+        }
+      },
+      {
+        "contributing": {
+          "name": "checkContributingExistence",
+          "enabled": true
+        }
+      }
+    ],
+    "settings_checks": [
+      {
+        "merge_requests": {
+          "name": "allowMergeRequests",
+          "enabled": true
+        }
+      }
+    ]
+  }
+}

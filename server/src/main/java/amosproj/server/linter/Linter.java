@@ -3,11 +3,16 @@ package amosproj.server.linter;
 import amosproj.server.GitLab;
 import amosproj.server.data.*;
 import amosproj.server.linter.checks.CheckGitlabFiles;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gitlab4j.api.GitLabApiException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,17 +20,40 @@ import java.util.List;
 @Service
 public class Linter {
 
-    @Autowired
-    private GitLab api;
+    private final GitLab api;
 
-    @Autowired
-    private LintingResultRepository lintingResultRepository;
-    @Autowired
-    private CheckResultRepository checkResultRepository;
-    @Autowired
-    private ProjectRepository projectRepository;
+    // autowired
+    private final LintingResultRepository lintingResultRepository;
+    private final CheckResultRepository checkResultRepository;
+    private final ProjectRepository projectRepository;
+    // end autowired
 
-    
+    public Linter(GitLab api, LintingResultRepository lintingResultRepository, CheckResultRepository checkResultRepository, ProjectRepository projectRepository) {
+        this.api = api;
+        this.lintingResultRepository = lintingResultRepository;
+        this.checkResultRepository = checkResultRepository;
+        this.projectRepository = projectRepository;
+
+
+        // read configuration file.
+        File file = null;
+        try {
+            file = new ClassPathResource("checks.json").getFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        JsonNode node = null;
+        try {
+            node = objectMapper.readTree(file);
+        } catch (com.fasterxml.jackson.core.JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 
     public void runLint(String repoUrl) throws GitLabApiException {
