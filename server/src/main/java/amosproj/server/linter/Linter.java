@@ -21,9 +21,11 @@ public class Linter {
     @Autowired
     private LintingResultRepository lintingResultRepository;
     @Autowired
-    private FileCheckRepository fileCheckRepository;
+    private CheckResultRepository checkResultRepository;
     @Autowired
     private ProjectRepository projectRepository;
+
+    
 
 
     public void runLint(String repoUrl) throws GitLabApiException {
@@ -36,7 +38,7 @@ public class Linter {
 
     private void checkEverything(org.gitlab4j.api.models.Project apiProject) {
         // Hole LintingProject
-        Project currLintingProject = projectRepository.findByProjectId(apiProject.getId());
+        Project currLintingProject = projectRepository.findByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
             currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost());
             projectRepository.save(currLintingProject);
@@ -47,8 +49,8 @@ public class Linter {
         var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject);
         // speichere ergebnis
         lintingResultRepository.save(res);
-        FileCheck fileCheck = new FileCheck(res, "readme.md", filesChecker.fileExists("readme.md"));
-        fileCheckRepository.save(fileCheck);
+        CheckResult checkResult = new CheckResult(res, "CheckReadmeExistence", filesChecker.fileExists("readme.md"));
+        checkResultRepository.save(checkResult);
     }
 
     @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight

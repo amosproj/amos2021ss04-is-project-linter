@@ -11,28 +11,32 @@ public class LintingResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long Id;
     private Long projectId;
     private LocalDateTime lintTime;
 
-    @OneToMany(targetEntity = FileCheck.class)
+    @OneToMany(targetEntity = CheckResult.class)
     @JoinColumn(name = "lintId")
-    private List<FileCheck> fileChecks;
+    private List<CheckResult> checkResults;
 
-    @OneToOne(targetEntity = SettingsCheck.class)
-    @JoinColumn(name = "id")
-    private SettingsCheck settingsCheck;
+    protected LintingResult() {
+    }
 
     public LintingResult(Project project, LocalDateTime lintTime) {
         this.projectId = project.getId();
         this.lintTime = lintTime;
     }
 
-    protected LintingResult() {
+    public Long getId() {
+        return Id;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
     public LocalDateTime getLintTime() {
@@ -43,20 +47,12 @@ public class LintingResult {
         this.lintTime = lintTime;
     }
 
-    public List<FileCheck> getFileChecks() {
-        return fileChecks;
+    public List<CheckResult> getCheckResults() {
+        return checkResults;
     }
 
-    public void setFileChecks(List<FileCheck> fileChecks) {
-        this.fileChecks = fileChecks;
-    }
-
-    public SettingsCheck getSettingsCheck() {
-        return settingsCheck;
-    }
-
-    public void setSettingsCheck(SettingsCheck settingsCheck) {
-        this.settingsCheck = settingsCheck;
+    public void setCheckResults(List<CheckResult> checkResults) {
+        this.checkResults = checkResults;
     }
 
     @Override
