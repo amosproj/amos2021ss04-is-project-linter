@@ -9,7 +9,8 @@ export class AppComponent {
   title = 'angular-frontend';
   value = '';
   http: any;
-  onEnter(value: string) { this.value = value;}
+  onEnter(value: string) { this.value = value;
+  this.forwardLink("serverID",value);}
 
   forwardLink(serverID,gitID){
     this.http.post(serverID,
