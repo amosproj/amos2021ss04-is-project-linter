@@ -2,7 +2,7 @@
   "linter": {
     "file_checks": [
       {
-        "name": "checkReadmeExiststence",
+        "name": "checkReadmeExistence",
         "enabled": true
       },
       {

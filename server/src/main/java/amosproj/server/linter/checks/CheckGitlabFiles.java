@@ -50,7 +50,7 @@ public class CheckGitlabFiles {
         return results;
     }
 
-    public boolean checkReadmeExiststence() {
+    public boolean checkReadmeExistence() {
         // TODO make case insensitive.
         return fileExists("readme.me");
     }

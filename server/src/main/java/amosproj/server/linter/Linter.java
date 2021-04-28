@@ -78,7 +78,7 @@ public class Linter {
         // Fuehre Checks aus
         var filesChecker = new CheckGitlabFiles(api.getApi(), apiProject, config.get("linter").get("file_checks"));
         var fileCheckResults = filesChecker.checkAll(lintingResult);
-        var settingsChecker = new CheckGitlabSettings(apiProject, config.get("linter").get("settings_checks"));
+        var settingsChecker = new CheckGitlabSettings(api.getApi(), apiProject, config.get("linter").get("settings_checks"));
         var settingsCheckResults = settingsChecker.checkAll(lintingResult);
 
         // Speichere in DB ab
