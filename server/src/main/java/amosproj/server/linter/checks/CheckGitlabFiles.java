@@ -38,8 +38,7 @@ public class CheckGitlabFiles extends Check {
     /////////////////
 
     public boolean checkReadmeExistence() {
-        // TODO make case insensitive.
-        return fileExists("readme.me");
+        return proj.getReadmeUrl() != null;
     }
 
     public boolean fileExists(String filepath) {

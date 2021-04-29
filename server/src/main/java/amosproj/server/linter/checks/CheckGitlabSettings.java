@@ -53,9 +53,8 @@ public class CheckGitlabSettings extends Check {
         try {
             return !(api.getWikisApi().getPages(project).isEmpty());
         } catch (GitLabApiException e) {
-            e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
 
