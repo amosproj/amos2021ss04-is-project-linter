@@ -1,9 +1,37 @@
-<body>
-    <div class="mat-headline">ANGULAR PROJECT LINTER</div>
 
-    <br>
-    <input #box (keyup.enter)="onEnter(box.value)">
-    <p>{{value}}</p>
-    <br>
-    <button  mat-raised-button (click)="onEnter(box.value)">Submit</button>
-</body>
+
+<mat-card class="example-card">
+    <mat-card-title >Inner Source Project Linter</mat-card-title>
+    <mat-card-subtitle >Sub title</mat-card-subtitle>
+
+</mat-card>
+
+<mat-card-content class="content-mat">
+   
+        <mat-form-field appearance="fill"
+        [hideRequiredMarker]="hideRequiredControl.value"
+        [floatLabel]="floatLabelControl.value">
+      <input matInput placeholder="Simple placeholder" required>
+    </mat-form-field>
+    &nbsp;
+    <button mat-raised-button color="primary">Suche</button>
+
+
+</mat-card-content>
+  <mat-card class="body">
+
+   
+    <mat-card-actions>
+      <button mat-button>LIKE</button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions>
+  </mat-card>
+  <mat-card class="footer">
+
+   
+    <mat-card-actions>
+      <button mat-button>LIKE</button>
+      <button mat-button>SHARE</button>
+    </mat-card-actions>
+  </mat-card>
+
