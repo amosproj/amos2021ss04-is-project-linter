@@ -38,7 +38,6 @@ public class Linter {
         this.checkResultRepository = checkResultRepository;
         this.projectRepository = projectRepository;
 
-
         // read configuration file.
         File file = null;
         try {

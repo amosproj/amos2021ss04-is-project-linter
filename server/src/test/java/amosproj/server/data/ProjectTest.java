@@ -13,8 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(locations = "classpath:test.properties")
 public class ProjectTest {
 
-    @Autowired
-    ProjectRepository projectRepository;
+    @Autowired ProjectRepository projectRepository;
 
     private Project testProj = null;
 
