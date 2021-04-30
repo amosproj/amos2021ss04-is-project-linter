@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin
 public class ProjectController {
@@ -21,7 +23,12 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public Iterable<Project> allProjects() {
-        return repository.findAll();
+        Iterable<Project> projectList = (List<Project>) repository.findAll();
+        var it = projectList.iterator();
+        while (it.hasNext()) { // FIXME
+            it.next().setResults(null);
+        }
+        return projectList;
     }
 
     @GetMapping("/project/{id}")  // id is the project id in our database
