@@ -10,7 +10,7 @@ import java.util.List;
 public class LintingResult {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     private Long projectId;
     private LocalDateTime lintTime;

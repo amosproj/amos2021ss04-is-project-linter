@@ -11,7 +11,7 @@ import javax.persistence.Id;
 public class CheckResult {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String checkName;  // name of the test asssociated with java
     private Boolean result;
