@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,9 @@ export class AppComponent {
   title = 'angular-frontend';
   value = '';
   http: any;
+  options: FormGroup;
+  hideRequiredControl = new FormControl(false);
+  floatLabelControl = new FormControl('auto');
   onEnter(value: string) { this.value = value;
   this.forwardLink("serverID",value);}
 
@@ -28,6 +32,12 @@ export class AppComponent {
         () => {
             console.log("The POST observable is now completed.");
         });
+}
+constructor(fb: FormBuilder) {
+  this.options = fb.group({
+    hideRequired: this.hideRequiredControl,
+    floatLabel: this.floatLabelControl,
+  });
 }
   }
 
