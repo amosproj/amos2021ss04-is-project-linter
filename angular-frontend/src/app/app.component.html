@@ -1,37 +1,41 @@
 
 
-<mat-card class="example-card">
+<mat-card class="header-card">
     <mat-card-title >Inner Source Project Linter</mat-card-title>
     <mat-card-subtitle >Sub title</mat-card-subtitle>
 
 </mat-card>
 
-<mat-card-content class="content-mat">
+<mat-card-content class="searchBar-mat">
    
         <mat-form-field appearance="fill"
         [hideRequiredMarker]="hideRequiredControl.value"
         [floatLabel]="floatLabelControl.value">
-      <input matInput placeholder="Simple placeholder" required>
+      <input matInput placeholder="Please enter URL" required>
     </mat-form-field>
     &nbsp;
     <button mat-raised-button color="primary">Suche</button>
 
 
 </mat-card-content>
-  <mat-card class="body">
+<mat-card class="body">
 
-   
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
-  </mat-card>
-  <mat-card class="footer">
+  
+  <mat-card-actions>
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
+  <div class="container">
+    <router-outlet></router-outlet>
+  </div>
+</mat-card>
 
-   
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
-  </mat-card>
+<mat-card class="footer">
+
+  
+  <mat-card-actions>
+    <button mat-button>LIKE</button>
+    <button mat-button>SHARE</button>
+  </mat-card-actions>
+</mat-card>
 
