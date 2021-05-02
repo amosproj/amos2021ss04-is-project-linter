@@ -58,6 +58,7 @@ public class Linter {
 
 
     public void runLint(String repoUrl) throws GitLabApiException {
+        repoUrl = repoUrl.replace("\r", "");
         String path = repoUrl.replace(api.getGitlabHost() + "/", "");
 
         org.gitlab4j.api.models.Project proj = api.getApi().getProjectApi().getProject(path);
@@ -111,4 +112,7 @@ public class Linter {
 
     }
 
+    public JsonNode getConfig() {
+        return this.config;
+    }
 }
