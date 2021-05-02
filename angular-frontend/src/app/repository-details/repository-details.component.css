@@ -1,6 +1,8 @@
 .example-card {
-    max-width: 400px;
-    height: 200px;
+   width: 500px;
+    height: 300px;
     background-color: hsl(0, 60%, 32%);
+    margin-right: 50px;
     margin-bottom: 50px;
+    float: left;
   }

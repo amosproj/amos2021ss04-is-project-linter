@@ -22,14 +22,14 @@
 
   
   <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
+    <button type="button" 
+    (click)="addComponent()"
+    class="btn btn-default">Add Repository </button>
   </mat-card-actions>
 
   <div class="container">
-    <button type="button" 
-    (click)="addComponent()"
-    class="btn btn-default">Add Experience </button>
+    
+    <br>
     <div #parent></div> 
 
 
