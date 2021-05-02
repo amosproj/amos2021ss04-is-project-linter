@@ -25,8 +25,15 @@
     <button mat-button>LIKE</button>
     <button mat-button>SHARE</button>
   </mat-card-actions>
+
   <div class="container">
-    <router-outlet></router-outlet>
+    <button type="button" 
+    (click)="addComponent()"
+    class="btn btn-default">Add Experience </button>
+    <div #parent></div> 
+
+
+   
   </div>
 </mat-card>
 

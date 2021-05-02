@@ -1,5 +1,10 @@
+import { ComponentFactoryResolver } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
+import { RepositoryListComponent } from './repository-list/repository-list.component';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +18,7 @@ export class AppComponent {
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
+  @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
   onEnter(value: string) { this.value = value;
   this.forwardLink("serverID",value);}
 
@@ -33,11 +39,22 @@ export class AppComponent {
             console.log("The POST observable is now completed.");
         });
 }
-constructor(fb: FormBuilder) {
+constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver) {
   this.options = fb.group({
     hideRequired: this.hideRequiredControl,
     floatLabel: this.floatLabelControl,
   });
+
+
 }
-  }
+
+ngOnInit(){ }
+
+
+  addComponent(){    
+    var comp = this._cfr.resolveComponentFactory(RepositoryDetailsComponent);
+    var expComponent = this.container.createComponent(comp);
+    expComponent.instance._ref = expComponent;
+}
+}
 
