@@ -5,6 +5,7 @@ import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.RepositoryFile;
 
 import java.util.ArrayList;
@@ -39,6 +40,14 @@ public class CheckGitlabFiles extends Check {
 
     public boolean checkReadmeExistence() {
         return proj.getReadmeUrl() != null;
+    }
+
+    public boolean checkContributingExistence() {
+        return fileExists("CONTRIBUTING.md");
+    }
+
+    public boolean checkMaintainersExistence() {
+        return fileExists("MAINTAINERS.md");
     }
 
     public boolean fileExists(String filepath) {

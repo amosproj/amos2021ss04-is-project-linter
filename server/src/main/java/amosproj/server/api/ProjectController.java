@@ -45,7 +45,7 @@ public class ProjectController {
         try {
             linter.runLint(url);
         } catch (GitLabApiException e) {
-            return new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesen't exist").toString();
+            return new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist").toString();
         }
         return "ok";
     }

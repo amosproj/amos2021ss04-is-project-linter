@@ -13,7 +13,7 @@ public class CheckResult {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String checkName;  // name of the test asssociated with java
+    private String checkName;  // name of the test associated with java
     private Boolean result;
     // FK
     private Long lintId;
