@@ -1,0 +1,16 @@
+<mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>{{details.name}}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image src="{{details.image}}" alt="{{details.name}}">
+    <mat-card-content>
+      <dl>
+        <dt>URL:</dt>
+        <dd>{{details.URL}}</dd>
+        <dt>Owner:</dt>
+        <dd>{{details.owner}}</dd>
+        <dt>Forks:</dt>
+        <dd>{{details.forks}}</dd>
+      </dl>
+    </mat-card-content>
+  </mat-card>

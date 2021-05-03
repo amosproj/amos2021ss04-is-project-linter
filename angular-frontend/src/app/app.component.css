@@ -1,4 +1,4 @@
-.example-card {
+.header-card {
   text-align: center;
   background-color: blue;
   width: 100%;
@@ -8,7 +8,7 @@
   color: white;
 }
 
-.content-mat{
+.searchBar-mat{
   vertical-align: top;
   text-align: center;
   background-color: rgb(41, 177, 41);
@@ -19,9 +19,15 @@
 
 .body{
   text-align: center;
-  height: 80%;
   margin-bottom: 20px;
 }
+
+.container {
+  padding: 20px;
+  overflow: auto;
+
+}
+
 .footer{
 background-color: hotpink;
 padding-top: 20px;
