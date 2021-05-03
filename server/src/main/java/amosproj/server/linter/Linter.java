@@ -80,9 +80,9 @@ public class Linter {
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
-        var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("linter").get("file_checks")).checkAll();
-        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("linter").get("settings_checks")).checkAll();
-        var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("linter").get("roles_check")).checkAll();
+        var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("linter").get("checks").get("file_checks")).checkAll();
+        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("linter").get("checks").get("settings_checks")).checkAll();
+        var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("linter").get("checks").get("roles_checks")).checkAll();
 
 
         for (CheckResult result : checkRolesResults) {
