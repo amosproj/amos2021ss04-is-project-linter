@@ -1,38 +1,44 @@
 {
   "linter": {
-    "file_checks": [
-      {
-        "name": "checkReadmeExistence",
-        "enabled": true
-      },
-      {
-        "name": "checkContributingExistence",
-        "enabled": true
-      }
-    ],
-    "settings_checks": [
-      {
-        "name": "hasMergeRequestEnabled",
-        "enabled": true
-      },
-      {
-        "name": "isPublic",
-        "enabled": true
-      },
-      {
-        "name": "gitlabPagesEnabled",
-        "enabled": true
-      }
-    ],
-    "roles_check": [
-      {
-        "name": "guestRoleEnabled",
-        "enabled": true
-      },
-      {
-        "name": "developerRoleEnabled",
-        "enabled": true
-      }
-    ]
+    "settings": {
+      "scheduler": "* * 0 0 0"
+    },
+    "checks": {
+      "file_checks": [
+        {
+          "name": "checkReadmeExistence",
+          "enabled": true,
+          "severity_level": 5
+        },
+        {
+          "name": "checkContributingExistence",
+          "enabled": true
+        }
+      ],
+      "settings_checks": [
+        {
+          "name": "hasMergeRequestEnabled",
+          "enabled": true
+        },
+        {
+          "name": "isPublic",
+          "enabled": true
+        },
+        {
+          "name": "gitlabPagesEnabled",
+          "enabled": true
+        }
+      ],
+      "roles_checks": [
+        {
+          "name": "guestRoleEnabled",
+          "enabled": true
+        },
+        {
+          "name": "developerRoleEnabled",
+          "enabled": true
+        }
+      ]
+    }
   }
 }

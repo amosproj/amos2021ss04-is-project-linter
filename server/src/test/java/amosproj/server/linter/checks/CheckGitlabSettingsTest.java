@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+
 
 @SpringBootTest
 @TestPropertySource(locations = "classpath:test.properties")
@@ -76,13 +76,13 @@ public class CheckGitlabSettingsTest {
 
     // WE NEED TO UNDERSTAND WHY ISPUBLIC DOES NOT WORK OR FIX IT MANUALLY
     @Test
-    private void test_isPublic_positive() throws GitLabApiException {
+    void test_isPublic_positive() throws GitLabApiException {
         prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
         assertTrue(checkGitlabSettings.isPublic());
     }
 
     @Test
-    private void test_isPublic_negative() throws GitLabApiException {
+    void test_isPublic_negative() throws GitLabApiException {
         prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
         assertFalse(checkGitlabSettings.isPublic());
     }
