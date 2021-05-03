@@ -9,16 +9,13 @@ import org.gitlab4j.api.GitLabApiException;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
-@DataJpaTest
-@AutoConfigureDataJpa
+
+@SpringBootTest
 @TestPropertySource(locations = "classpath:test.properties")
 public class CheckGitlabSettingsTest {
 
