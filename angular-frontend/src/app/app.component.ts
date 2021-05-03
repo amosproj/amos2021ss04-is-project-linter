@@ -16,13 +16,13 @@ export class AppComponent {
   title = 'angular-frontend';
   value = '';
  
-  serverID = "localhost:8080/projects"
+  serverID = "http://localhost:8080/projects"
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
   onEnter(value: string) { this.value = value;
- // this.forwardLink("localhost:8080/projects",value);
+ // this.forwardLink("http://localhost:8080/projects",value);
 
 }
 
