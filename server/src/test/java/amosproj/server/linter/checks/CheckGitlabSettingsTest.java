@@ -47,6 +47,34 @@ public class CheckGitlabSettingsTest {
         this.checkGitlabSettings = new CheckGitlabSettings(api.getApi(), lintingResult, proj, linter.getConfig());
     }
 
+    // Projekte sollen NICHT das feature request access verwenden
+    @Test
+    void test_hasRequestAccessEnabled_positive() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        assertFalse(checkGitlabSettings.hasRequestAccess());
+    }
+
+    @Test
+    void test_hasRequestAccessEnabled_negative() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        assertTrue(checkGitlabSettings.hasRequestAccess());
+    }
+
+    // Projekte sollen merge requests erlauben
+    @Test
+    void test_getMergeRequestsEnabled_positive() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        assertTrue(checkGitlabSettings.hasMergeRequestEnabled());
+    }
+
+    @Test
+    void test_getMergeRequestsEnabled_negative() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        assertFalse(checkGitlabSettings.hasMergeRequestEnabled());
+    }
+
+
+    // WE NEED TO UNDERSTAND WHY ISPUBLIC DOES NOT WORK OR FIX IT MANUALLY
     @Test
     void test_isPublic_positive() throws GitLabApiException {
         prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
