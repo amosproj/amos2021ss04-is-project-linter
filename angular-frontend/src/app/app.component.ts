@@ -27,10 +27,10 @@ export class AppComponent {
 }
 
   forwardLink(serverID,gitID){
-    this.http.post<any>(serverID,
-    {
+    this.http.post<any>(serverID,gitID)
+    /*{ // currently it you can only send the pure URL and not as a JSON
         "data": gitID
-    })
+    })*/
     .subscribe(
         (val) => {
             console.log("POST call successful value returned in body", 
