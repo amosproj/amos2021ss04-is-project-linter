@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { RepositoryListComponent } from './repository-list/repository-list.component';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -14,18 +15,21 @@ import { RepositoryListComponent } from './repository-list/repository-list.compo
 export class AppComponent {
   title = 'angular-frontend';
   value = '';
-  http: any;
+ 
+  serverID = "localhost:8080/projects"
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
   onEnter(value: string) { this.value = value;
-  this.forwardLink("serverID",value);}
+ // this.forwardLink("localhost:8080/projects",value);
+
+}
 
   forwardLink(serverID,gitID){
-    this.http.post(serverID,
+    this.http.post<any>(serverID,
     {
-        "url": gitID
+        "data": gitID
     })
     .subscribe(
         (val) => {
@@ -39,7 +43,7 @@ export class AppComponent {
             console.log("The POST observable is now completed.");
         });
 }
-constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver) {
+constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
   this.options = fb.group({
     hideRequired: this.hideRequiredControl,
     floatLabel: this.floatLabelControl,

@@ -9,7 +9,7 @@ import { Repositories } from '../repositories';
   styleUrls: ['./repository-details.component.css']
 })
 export class RepositoryDetailsComponent implements OnInit {
-  public unique_key: number;
+  
   _ref:any;   
   removeObject(){
     this._ref.destroy();
@@ -19,10 +19,7 @@ export class RepositoryDetailsComponent implements OnInit {
   constructor(public route: ActivatedRoute, public router: Router) { }
 
   ngOnInit(): void {
-    if (this.route.snapshot.paramMap.get('id') !== 'null') {
-      const id = parseInt(this.route.snapshot.paramMap.get('id'), 0);
-      this.details = this.repos.find(x => x.id === id);
-    }
+   
   }
 
 }
