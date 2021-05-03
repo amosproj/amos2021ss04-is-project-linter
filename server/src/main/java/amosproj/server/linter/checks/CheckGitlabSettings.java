@@ -5,6 +5,7 @@ import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Visibility;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,7 +39,7 @@ public class CheckGitlabSettings extends Check {
     /////////////////
 
     public boolean isPublic() {
-        return project.getPublic();
+        return project.getVisibility() == Visibility.PUBLIC;
     }
 
     public boolean hasMergeRequestEnabled() {

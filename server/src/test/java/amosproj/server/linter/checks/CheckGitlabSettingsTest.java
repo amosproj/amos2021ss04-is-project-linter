@@ -7,7 +7,9 @@ import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Linter;
 import org.gitlab4j.api.GitLabApiException;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
@@ -30,6 +32,14 @@ public class CheckGitlabSettingsTest {
 
     private CheckGitlabSettings checkGitlabSettings;
 
+    private void preparePositive() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+    }
+
+    private void prepareNegative() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+    }
+
     private void prepareSettingsCheck(String repoUrl) throws GitLabApiException {
         repoUrl = repoUrl.replace("\r", "");
         String path = repoUrl.replace(api.getGitlabHost() + "/", "");
@@ -50,40 +60,38 @@ public class CheckGitlabSettingsTest {
     // Projekte sollen NICHT das feature request access verwenden
     @Test
     void test_hasRequestAccessEnabled_positive() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        preparePositive();
         assertFalse(checkGitlabSettings.hasRequestAccess());
     }
 
     @Test
     void test_hasRequestAccessEnabled_negative() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        prepareNegative();
         assertTrue(checkGitlabSettings.hasRequestAccess());
     }
 
     // Projekte sollen merge requests erlauben
     @Test
     void test_getMergeRequestsEnabled_positive() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        preparePositive();
         assertTrue(checkGitlabSettings.hasMergeRequestEnabled());
     }
 
     @Test
     void test_getMergeRequestsEnabled_negative() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        prepareNegative();
         assertFalse(checkGitlabSettings.hasMergeRequestEnabled());
     }
 
-
-    // WE NEED TO UNDERSTAND WHY ISPUBLIC DOES NOT WORK OR FIX IT MANUALLY
     @Test
     void test_isPublic_positive() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
+        preparePositive();
         assertTrue(checkGitlabSettings.isPublic());
     }
 
     @Test
     void test_isPublic_negative() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
+        prepareNegative();
         assertFalse(checkGitlabSettings.isPublic());
     }
 
