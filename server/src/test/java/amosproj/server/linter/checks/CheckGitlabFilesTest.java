@@ -57,13 +57,13 @@ public class CheckGitlabFilesTest {
     }
 
     @Test
-    void test_hasRequestAccessEnabled_positive() throws GitLabApiException {
+    void test_hasReadme_positive() throws GitLabApiException {
         preparePositive();
         assertTrue(checkGitlabFiles.checkReadmeExistence());
     }
 
     @Test
-    void test_hasRequestAccessEnabled_negative() throws GitLabApiException {
+    void test_hasReadme_negative() throws GitLabApiException {
         prepareNegative();
         assertFalse(checkGitlabFiles.checkReadmeExistence());
     }
