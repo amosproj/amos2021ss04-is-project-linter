@@ -45,7 +45,7 @@ public class CheckResultTest {
 
     @Test
     void checkResultTest() {
-        CheckResult checkresult = new CheckResult(lintingResult, "readme.md", true);
+        CheckResult checkresult = new CheckResult(lintingResult, "readme.md", true, CheckSeverity.MEDIUM);
         assertNotNull(checkresult);
         checkResultRepository.save(checkresult);
 

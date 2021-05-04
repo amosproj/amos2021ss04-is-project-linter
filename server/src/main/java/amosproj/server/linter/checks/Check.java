@@ -1,6 +1,7 @@
 package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResult;
+import amosproj.server.data.CheckSeverity;
 import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.GitLabApi;
 
@@ -39,7 +40,7 @@ public abstract class Check {
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             return null;
         }
-        return new CheckResult(lintingResult, testName, checkResult);
+        return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.MEDIUM);
     }
 
 }

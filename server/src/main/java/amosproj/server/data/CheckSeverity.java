@@ -5,5 +5,4 @@ public enum CheckSeverity {
     MEDIUM,
     LOW,
     NICE_TO_HAVE,
-    TO_BE_CLARIFIED
 }
