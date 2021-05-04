@@ -10,11 +10,14 @@ import { Repositories } from '../repositories';
 })
 export class RepositoryDetailsComponent implements OnInit {
   
-  _ref:any;   
+  _ref:any;  
+  gitlabInstance = '';
+  name = '';
+  id = 0; 
+  image: '../assets/FinalesLogo.png';
   removeObject(){
     this._ref.destroy();
   }
-  details = { id: null, name: '',    image: '', URL: '', owner:    '', forks:    null };
   repos = Repositories;
   constructor(public route: ActivatedRoute, public router: Router) { }
 

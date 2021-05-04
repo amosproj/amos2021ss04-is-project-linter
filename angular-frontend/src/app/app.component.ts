@@ -15,7 +15,8 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class AppComponent {
   title = 'angular-frontend';
   value = '';
- 
+ public all_projects;
+ test;
   serverID = "http://localhost:8080/projects"
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
@@ -50,7 +51,7 @@ GetProject(serverID, gitID){
       "data": gitID
   })*/
   .subscribe(
-      (val) => {
+      (val:any) => {
           console.log("GET call successful value returned in body", 
                       val);
       },
@@ -70,8 +71,15 @@ GetProjects(serverID){
   })*/
   .subscribe(
       (val) => {
+        
+       all_projects=  JSON.parse(JSON.stringify(val));
+       Object.assign(this.test,this.all_projects);
+       console.log(this.all_projects);
           console.log("GET call successful value returned in body", 
                       val);
+          
+     
+
       },
       response => {
           console.log("GET call in error", response);
@@ -79,6 +87,8 @@ GetProjects(serverID){
       () => {
           console.log("The GET observable is now completed.");
       });
+  console.log(this.test)
+   // this.addComponent(this.all_projects.name,this.all_projects.id,this.all_projects.url);
   
 }
 
@@ -94,10 +104,13 @@ constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http:
 ngOnInit(){ }
 
 
-  addComponent(){    
+  addComponent(name, id, gitlabInstance){    
     var comp = this._cfr.resolveComponentFactory(RepositoryDetailsComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
+    expComponent.instance.name = name;
+    expComponent.instance.id = id;
+    expComponent.instance.gitlabInstance = gitlabInstance;
 }
 }
 

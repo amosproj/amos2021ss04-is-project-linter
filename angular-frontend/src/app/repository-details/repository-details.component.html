@@ -1,16 +1,15 @@
 <mat-card class="example-card">
     <mat-card-header>
-      <mat-card-title>{{details.name}}</mat-card-title>
+      <mat-card-title>{{name}}</mat-card-title>
     </mat-card-header>
-    <img mat-card-image src="{{details.image}}" alt="{{details.name}}">
+    <img mat-card-image src="{{image}}">
     <mat-card-content>
       <dl>
+        
+        <dt>Project name:</dt>
+        <dd>{{name}}</dd>
         <dt>URL:</dt>
-        <dd>{{details.URL}}</dd>
-        <dt>Owner:</dt>
-        <dd>{{details.owner}}</dd>
-        <dt>Forks:</dt>
-        <dd>{{details.forks}}</dd>
+        <dd>{{gitlabInstance}}</dd>
       </dl>
     </mat-card-content>
   </mat-card>
