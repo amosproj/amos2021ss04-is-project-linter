@@ -26,8 +26,8 @@ export class AppComponent {
 
 }
 
-  forwardLink(serverID,gitID){
-    this.http.post<any>(serverID,gitID)
+  forwardLink(serverID,URL){
+    this.http.post<any>(serverID,URL)
     /*{ // currently it you can only send the pure URL and not as a JSON
         "data": gitID
     })*/
@@ -43,6 +43,45 @@ export class AppComponent {
             console.log("The POST observable is now completed.");
         });
 }
+
+GetProject(serverID, gitID){
+  this.http.get(serverID+"/"+gitID)
+  /*{ // currently it you can only send the pure URL and not as a JSON
+      "data": gitID
+  })*/
+  .subscribe(
+      (val) => {
+          console.log("GET call successful value returned in body", 
+                      val);
+      },
+      response => {
+          console.log("GET call in error", response);
+      },
+      () => {
+          console.log("The GET observable is now completed.");
+      });
+  
+}
+
+GetProjects(serverID){
+  this.http.get(serverID)
+  /*{ // currently it you can only send the pure URL and not as a JSON
+      "data": gitID
+  })*/
+  .subscribe(
+      (val) => {
+          console.log("GET call successful value returned in body", 
+                      val);
+      },
+      response => {
+          console.log("GET call in error", response);
+      },
+      () => {
+          console.log("The GET observable is now completed.");
+      });
+  
+}
+
 constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
   this.options = fb.group({
     hideRequired: this.hideRequiredControl,
