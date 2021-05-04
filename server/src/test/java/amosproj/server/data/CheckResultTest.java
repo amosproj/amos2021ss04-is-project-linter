@@ -11,6 +11,7 @@ import org.springframework.test.context.TestPropertySource;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 
 @DataJpaTest
 @AutoConfigureDataJpa
@@ -50,5 +51,14 @@ public class CheckResultTest {
         checkResultRepository.save(checkresult);
 
         assertNotNull(checkResultRepository.findAll());
+        Iterable<CheckResult> lintingResults = checkResultRepository.findAll();
+        Iterator<CheckResult> it = lintingResults.iterator();
+        while (it.hasNext()) {
+            CheckResult checkResultIntegrity = it.next();
+            assertNotNull(checkResultIntegrity);
+            assertEquals(checkresult.getCheckName(), checkResultIntegrity.getCheckName());
+            assertEquals(checkresult.getId(), checkResultIntegrity.getId());
+            assertEquals(checkresult.getResult(), checkResultIntegrity.getResult());
+        }
     }
 }

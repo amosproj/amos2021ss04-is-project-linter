@@ -9,7 +9,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
+import java.util.Iterator;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
@@ -41,6 +43,15 @@ public class LintingResultTest {
         LintingResult lintingResult = new LintingResult(testProj, LocalDateTime.now());
         lintingResultRepository.save(lintingResult);
         assertNotNull(lintingResultRepository.findAll());
+        Iterable<LintingResult> lintingResults = lintingResultRepository.findAll();
+        Iterator<LintingResult> it = lintingResults.iterator();
+        while (it.hasNext()) {
+            LintingResult lintingResult1 = it.next();
+            assertNotNull(lintingResult1);
+            assertNotNull(lintingResult1.getLintTime());
+            assertNotNull(lintingResult1.getId());
+            assertEquals(testProj.getId(), lintingResult1.getProjectId());
+        }
     }
     
 }
