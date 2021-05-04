@@ -7,6 +7,8 @@ import { RepositoryDetailsComponent } from './repository-details/repository-deta
 import { RepositoryListComponent } from './repository-list/repository-list.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,7 +17,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 export class AppComponent {
   title = 'angular-frontend';
   value = '';
- 
+  all_projects:Project[];
   serverID = "http://localhost:8080/projects"
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
@@ -25,12 +27,11 @@ export class AppComponent {
  // this.forwardLink("http://localhost:8080/projects",value);
 
 }
-
-  forwardLink(serverID,gitID){
-    this.http.post<any>(serverID,
-    {
+  forwardLink(serverID,URL){
+    this.http.post<any>(serverID,URL)
+    /*{ // currently it you can only send the pure URL and not as a JSON
         "data": gitID
-    })
+    })*/
     .subscribe(
         (val) => {
             console.log("POST call successful value returned in body", 
@@ -43,6 +44,45 @@ export class AppComponent {
             console.log("The POST observable is now completed.");
         });
 }
+
+GetProject(serverID, gitID){
+  this.http.get(serverID+"/"+gitID)
+  /*{ // currently it you can only send the pure URL and not as a JSON
+      "data": gitID
+  })*/
+  .subscribe(
+      (val:any) => {
+          console.log("GET call successful value returned in body", 
+                      val);
+      },
+      response => {
+          console.log("GET call in error", response);
+      },
+      () => {
+          console.log("The GET observable is now completed.");
+      });
+  
+}
+
+GetProjects(serverID){
+  this.http.get(serverID).subscribe(
+
+    results => {
+      this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
+      console.log(this.all_projects);
+
+      for(let project in this.all_projects){
+       this.addComponent(this.all_projects[project].name,this.all_projects[project].id,this.all_projects[project].gitlabInstance);
+      }
+    }
+
+  );
+  /*{ // currently it you can only send the pure URL and not as a JSON
+      "data": gitID
+  })*/
+  
+    }
+
 constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
   this.options = fb.group({
     hideRequired: this.hideRequiredControl,
@@ -52,13 +92,31 @@ constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http:
 
 }
 
-ngOnInit(){ }
+ngOnInit(){ 
 
 
-  addComponent(){    
+}
+
+
+  addComponent(name, id, gitlabInstance){    
     var comp = this._cfr.resolveComponentFactory(RepositoryDetailsComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
+    expComponent.instance.name = name;
+    expComponent.instance.id = id;
+    expComponent.instance.gitlabInstance = gitlabInstance;
 }
 }
 
+interface Project {
+
+  
+  gitlabInstance: string,
+   gitlabProjectId:number,
+
+   id: number,
+   name: string,
+   results:[],
+   url:string
+
+}
