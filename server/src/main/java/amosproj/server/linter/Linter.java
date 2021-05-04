@@ -45,7 +45,6 @@ public class Linter {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
         JsonNode node = null;
         try {
@@ -56,7 +55,12 @@ public class Linter {
         this.config = node;
     }
 
-
+    /**
+     * entry point to start asynchronous linting process
+     *
+     * @param repoUrl
+     * @throws GitLabApiException
+     */
     public void runLint(String repoUrl) throws GitLabApiException {
         repoUrl = repoUrl.replace("\r", "");
         String path = repoUrl.replace(api.getGitlabHost() + "/", "");
@@ -66,6 +70,11 @@ public class Linter {
         checkEverything(proj);
     }
 
+    /**
+     * internal method that starts all checks, and saves the results
+     *
+     * @param apiProject
+     */
     private void checkEverything(org.gitlab4j.api.models.Project apiProject) {
         // Hole LintingProject
         Project currLintingProject = projectRepository.findByGitlabProjectId(apiProject.getId());
@@ -97,6 +106,9 @@ public class Linter {
 
     }
 
+    /**
+     * scheduled methods that lints every repo in the instance at a specified cron time
+     */
     @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight
     public void runCrawler() {
         List<org.gitlab4j.api.models.Project> projects = null;

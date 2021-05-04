@@ -4,7 +4,7 @@ Wir nutzen Java 11 für dieses Projekt, es sollte aber auch java 12, 13, 14 und 
 
 ## Bauen
 
-If youre on windows, use `gradlew.bat` instead
+Auf Windows, nutze `gradlew.bat`
 
 - Build: `./gradlew build`
 
