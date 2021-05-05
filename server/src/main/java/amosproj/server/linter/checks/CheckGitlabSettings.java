@@ -46,7 +46,7 @@ public class CheckGitlabSettings extends Check {
         return project.getMergeRequestsEnabled();
     }
 
-    public boolean hasRequestAccess() {
+    public boolean hasRequestAccessEnabled() {
         return project.getRequestAccessEnabled();
     }
 

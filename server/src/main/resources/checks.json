@@ -25,6 +25,10 @@
           "enabled": true
         },
         {
+          "name": "hasRequestAccessEnabled",
+          "enabled": false
+        },
+        {
           "name": "hasIssuesEnabled",
           "enabled": true
         },

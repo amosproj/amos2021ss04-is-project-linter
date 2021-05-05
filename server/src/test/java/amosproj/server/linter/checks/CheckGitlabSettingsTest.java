@@ -61,13 +61,13 @@ public class CheckGitlabSettingsTest {
     @Test
     void test_hasRequestAccessEnabled_positive() throws GitLabApiException {
         preparePositive();
-        assertFalse(checkGitlabSettings.hasRequestAccess());
+        assertFalse(checkGitlabSettings.hasRequestAccessEnabled());
     }
 
     @Test
     void test_hasRequestAccessEnabled_negative() throws GitLabApiException {
         prepareNegative();
-        assertTrue(checkGitlabSettings.hasRequestAccess());
+        assertTrue(checkGitlabSettings.hasRequestAccessEnabled());
     }
 
     // Projekte sollen merge requests erlauben
@@ -85,13 +85,13 @@ public class CheckGitlabSettingsTest {
 
     // Projekte sollen issues erlauben
     @Test
-    void test_getIssuesEnabled_postivie() throws GitLabApiException {
+    void test_getIssuesEnabled_positiv() throws GitLabApiException {
         preparePositive();
         assertTrue(checkGitlabSettings.hasIssuesEnabled());
     }
 
     @Test
-    void test_getIssuesEnabled_negativ() throws GitLabApiException {
+    void test_getIssuesEnabled_negative() throws GitLabApiException {
         prepareNegative();
         assertFalse(checkGitlabSettings.hasIssuesEnabled());
     }
