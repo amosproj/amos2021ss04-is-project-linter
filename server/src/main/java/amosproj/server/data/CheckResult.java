@@ -15,20 +15,27 @@ public class CheckResult {
     private Long id;
     private String checkName;  // name of the test associated with java
     private Boolean result;
+    private CheckSeverity severity;
     // FK
     private Long lintId;
 
     protected CheckResult() {
     }
 
-    public CheckResult(LintingResult lintingResult, String checkName, Boolean result) {
-        this.lintId = lintingResult.getId();
+
+    public CheckResult(LintingResult lint, String checkName, Boolean result, CheckSeverity severity) {
         this.checkName = checkName;
         this.result = result;
+        this.severity = severity;
+        this.lintId = lint.getId();
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getLintId() {
+        return lintId;
     }
 
     public String getCheckName() {
@@ -45,6 +52,14 @@ public class CheckResult {
 
     public void setResult(Boolean result) {
         this.result = result;
+    }
+
+    public CheckSeverity getSeverity() {
+        return severity;
+    }
+
+    public void setSeverity(CheckSeverity severity) {
+        this.severity = severity;
     }
 
     @Override
