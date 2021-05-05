@@ -13,11 +13,19 @@
         {
           "name": "checkContributingExistence",
           "enabled": true
+        },
+        {
+          "name": "checkMaintainersExistence",
+          "enabled": true
         }
       ],
       "settings_checks": [
         {
           "name": "hasMergeRequestEnabled",
+          "enabled": true
+        },
+        {
+          "name": "hasIssuesEnabled",
           "enabled": true
         },
         {

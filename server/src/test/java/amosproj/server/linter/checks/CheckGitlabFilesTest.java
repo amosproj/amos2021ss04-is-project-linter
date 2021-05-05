@@ -68,4 +68,28 @@ public class CheckGitlabFilesTest {
         assertFalse(checkGitlabFiles.checkReadmeExistence());
     }
 
+    @Test
+    void test_hasContributing_positive() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabFiles.checkContributingExistence());
+    }
+
+    @Test
+    void test_hasContributing_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabFiles.checkContributingExistence());
+    }
+
+    @Test
+    void test_hasMaintainers_positive() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabFiles.checkMaintainersExistence());
+    }
+
+    @Test
+    void test_hasMaintainers_negative() throws GitLabApiException {
+        preparePositive();
+        assertFalse(checkGitlabFiles.checkMaintainersExistence());
+    }
+
 }

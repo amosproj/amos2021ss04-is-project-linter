@@ -83,6 +83,19 @@ public class CheckGitlabSettingsTest {
         assertFalse(checkGitlabSettings.hasMergeRequestEnabled());
     }
 
+    // Projekte sollen issues erlauben
+    @Test
+    void test_getIssuesEnabled_postivie() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabSettings.hasIssuesEnabled());
+    }
+
+    @Test
+    void test_getIssuesEnabled_negativ() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabSettings.hasIssuesEnabled());
+    }
+
     @Test
     void test_isPublic_positive() throws GitLabApiException {
         preparePositive();

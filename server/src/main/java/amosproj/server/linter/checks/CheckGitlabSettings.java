@@ -50,6 +50,10 @@ public class CheckGitlabSettings extends Check {
         return project.getRequestAccessEnabled();
     }
 
+    public boolean hasIssuesEnabled(){
+        return project.getIssuesEnabled();
+    }
+
     public boolean gitlabPagesEnabled() {
         try {
             return !(api.getWikisApi().getPages(project).isEmpty());
