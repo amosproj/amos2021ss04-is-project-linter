@@ -88,7 +88,7 @@ public class CheckGitlabFilesTest {
 
     @Test
     void test_hasMaintainers_negative() throws GitLabApiException {
-        preparePositive();
+        prepareNegative();
         assertFalse(checkGitlabFiles.checkMaintainersExistence());
     }
 
