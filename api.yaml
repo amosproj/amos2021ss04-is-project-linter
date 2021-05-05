@@ -18,6 +18,24 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
+                  
+    post:
+      summary: force a lint of a repo
+      operationId: LintProject
+      requestBody:
+        description: the url of the repo you want to lint
+        required: true
+        content:
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: just a message saying it started the lint
+          content:
+            text/plain:
+              schema:
+                type: string  
 
   /project/{id}:
     get:
@@ -73,4 +91,3 @@ components:
           type: string
         result:
           type: boolean
-
