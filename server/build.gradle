@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'amosproj.linter'
-version = 'sprint-2-staging'
+version = 'linter-staging'
 sourceCompatibility = '11' // run on java 11
 
 repositories {

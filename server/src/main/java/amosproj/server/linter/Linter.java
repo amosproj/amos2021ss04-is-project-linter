@@ -13,7 +13,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,16 +38,11 @@ public class Linter {
         this.projectRepository = projectRepository;
 
         // read configuration file.
-        File file = null;
-        try {
-            file = new ClassPathResource("checks.json").getFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ClassPathResource file = new ClassPathResource("checks.json");
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
         JsonNode node = null;
         try {
-            node = objectMapper.readTree(file);
+            node = objectMapper.readTree(file.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }

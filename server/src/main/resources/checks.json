@@ -1,7 +1,7 @@
 {
   "linter": {
     "settings": {
-      "scheduler": "* * 0 0 0"
+      "scheduler": "0 0 * * *"
     },
     "checks": {
       "file_checks": [

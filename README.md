@@ -15,6 +15,7 @@ Umgebungsvariablen werden sowohl von Frontend als auch Backend verwendet.
 - `DB_USER`: Postgres username
 - `DB_NAME`: Postgres database name
 - `PORT`: Der Port auf dem das System erreichbar sein wird (frontend UND api)
+- `GITLAB_ACCESS_TOKEN`: Zugriffstoken für eine gitlab Instanz
  
 
 ## Ausführen (mit docker-compose)
