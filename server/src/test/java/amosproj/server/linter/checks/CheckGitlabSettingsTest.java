@@ -85,7 +85,7 @@ public class CheckGitlabSettingsTest {
 
     // Projekte sollen issues erlauben
     @Test
-    void test_getIssuesEnabled_positiv() throws GitLabApiException {
+    void test_getIssuesEnabled_positive() throws GitLabApiException {
         preparePositive();
         assertTrue(checkGitlabSettings.hasIssuesEnabled());
     }
