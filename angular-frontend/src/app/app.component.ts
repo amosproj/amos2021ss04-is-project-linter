@@ -1,11 +1,12 @@
+import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
-import { RepositoryListComponent } from './repository-list/repository-list.component';
+import { RepositoryComponent } from './repository/repository.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {MatDialogModule, MatDialog} from '@angular/material/dialog'; 
 
 
 
@@ -15,6 +16,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  
   title = 'angular-frontend';
   value = '';
   all_projects:Project[];
@@ -25,6 +27,13 @@ export class AppComponent {
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
   onEnter(value: string) { this.value = value;
  // this.forwardLink("http://localhost:8080/projects",value);
+  }
+constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
+  this.options = fb.group({
+    hideRequired: this.hideRequiredControl,
+    floatLabel: this.floatLabelControl,
+  });
+
 
 }
   forwardLink(serverID,URL){
@@ -83,14 +92,8 @@ GetProjects(serverID){
   
     }
 
-constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
-  this.options = fb.group({
-    hideRequired: this.hideRequiredControl,
-    floatLabel: this.floatLabelControl,
-  });
 
 
-}
 
 ngOnInit(){ 
 
@@ -99,15 +102,21 @@ ngOnInit(){
 
 
   addComponent(name, id, gitlabInstance){    
-    var comp = this._cfr.resolveComponentFactory(RepositoryDetailsComponent);
+    var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
     expComponent.instance.name = name;
     expComponent.instance.id = id;
     expComponent.instance.gitlabInstance = gitlabInstance;
-}
+    expComponent.instance.serverID = this.serverID;
 }
 
+
+
+} // end of AppComponent
+
+
+// Interface for the repository component which shows coarse repo infos
 interface Project {
 
   
@@ -120,3 +129,4 @@ interface Project {
    url:string
 
 }
+

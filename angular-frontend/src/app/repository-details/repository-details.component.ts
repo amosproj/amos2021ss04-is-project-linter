@@ -1,28 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AppComponent } from '../app.component';
-import { Repositories } from '../repositories';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialog,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-repository-details',
   templateUrl: './repository-details.component.html',
   styleUrls: ['./repository-details.component.css']
 })
+
 export class RepositoryDetailsComponent implements OnInit {
+
+  serverID = "";
   
-  _ref:any;  
-  gitlabInstance = '';
-  name = '';
-  id = 0; 
-  image: '../assets/FinalesLogo.png';
-  removeObject(){
-    this._ref.destroy();
-  }
-  repos = Repositories;
-  constructor(public route: ActivatedRoute, public router: Router) { }
+  constructor(public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
+  @Inject(MAT_DIALOG_DATA) public data: DialogData){} 
+
 
   ngOnInit(): void {
-   
   }
+  
+  closeDialog(){
+    this.dialogRef.close();
+  }
+}
 
+export interface DialogData {
+  serverID: string;
 }
