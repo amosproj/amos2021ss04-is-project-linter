@@ -81,7 +81,7 @@ GetProjects(serverID){
       console.log(this.all_projects);
 
       for(let project in this.all_projects){
-       this.addComponent(this.all_projects[project].name,this.all_projects[project].id,this.all_projects[project].gitlabInstance);
+       this.addComponent(this.all_projects[project].name,this.all_projects[project].id,this.all_projects[project].url);
       }
     }
 
@@ -96,7 +96,7 @@ GetProjects(serverID){
 
 
 ngOnInit(){ 
-
+  this.GetProjects("http://localhost:8080/projects");
 
 }
 

@@ -6,3 +6,6 @@
     margin-bottom: 50px;
     float: left;
   }
+  .example-card:hover{
+    transform: scale(1.2);
+  }
