@@ -1,27 +1,24 @@
-# ACIDIC - Autonomous Continuous Inner-source Development and Integrity Checker
+<a href="https://github.com/amosproj/amos-ss2021-is-project-linter">
+  <p align="center">
+    <img height=150 src="https://raw.githubusercontent.com/amosproj/amos-ss2021-is-project-linter/main/assets/header.svg"/>
+  </p>
+</a>
+
+<p align="center">
+  <strong>Autonomous Continuous Inner-source Development and Integrity Checker 🚀</strong>
+</p>
+
+<h3 align="center">
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker">Install</a>
+  <span> · </span>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architecture">Architecture</a>
+  <span> · </span>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Configuration</a>
+</h3>
+
+---
 
 ## Beschreibung
 Linter für Inner-Source-Software
-
-## Architektur
-![Softwarearchitektur](assets/architektur.png)
-![Datenbankschema](assets/database.png)
-
-## Umgebungsvariablen (Environment variables)
-Setzen Sie diese Umgebungsvariablen in einer .env datei in der projektwurzel.
-Umgebungsvariablen werden sowohl von Frontend als auch Backend verwendet.
-
-- `DB_PASSWORD`: Postgres Passwort
-- `DB_USER`: Postgres username
-- `DB_NAME`: Postgres database name
-- `PORT`: Der Port auf dem das System erreichbar sein wird (frontend UND api)
-- `GITLAB_ACCESS_TOKEN`: Zugriffstoken für eine gitlab Instanz
  
-
-## Ausführen (mit docker-compose)
-Datei `.env` erstellen (hier in der repo-root) und die Umgebungsvariablen vom vorherigen Kapitel einsetzen.
-
-Gesamte Software-Architektur starten:
-```shell
-docker-compose --env-file .env up
-```
+TODO
