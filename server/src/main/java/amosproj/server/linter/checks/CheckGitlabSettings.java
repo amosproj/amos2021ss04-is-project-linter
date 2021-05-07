@@ -5,6 +5,8 @@ import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.ProjectApi;
+import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
 
 import java.util.LinkedList;
@@ -40,6 +42,35 @@ public class CheckGitlabSettings extends Check {
 
     public boolean isPublic() {
         return project.getVisibility() == Visibility.PUBLIC;
+    }
+
+    public boolean hasForkingEnabled() {
+        // Initialisiere Objekte für namespace
+        var projectApi = api.getProjectApi();
+        Project createproj = new Project();
+        Project forkproj = new Project();
+        boolean hasForksEnabled = false;
+
+        // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
+        try {
+            // erstelle projekt um namespace holen zu können
+            createproj = projectApi.createProject("test123", "test123");
+            // versuche projekt zu forken
+            forkproj = projectApi.forkProject(project, createproj.getNamespace().getFullPath(), "forktest", "forktests");
+            // wenn hier kein fehler kam, is forking erlaubt
+            hasForksEnabled = true;
+        } catch (GitLabApiException e) {
+            System.out.println(e.getReason());
+        } finally {
+            try {
+                // lösche überreste der versuchs zu forken
+                projectApi.deleteProject(createproj.getId());
+                if (hasForksEnabled) projectApi.deleteProject(forkproj.getId());
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
+            }
+        }
+        return hasForksEnabled;
     }
 
     public boolean hasMergeRequestEnabled() {

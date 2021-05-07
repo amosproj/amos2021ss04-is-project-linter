@@ -40,6 +40,11 @@
         "name": "gitlabPagesEnabled",
         "enabled": true,
         "severity": "MEDIUM"
+      },
+      {
+        "name": "hasForkingEnabled",
+        "enabled": true,
+        "severity": "MEDIUM"
       }
     ],
     "roles_checks": [
