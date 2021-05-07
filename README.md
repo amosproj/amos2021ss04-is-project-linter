@@ -2,7 +2,3 @@
 
 ## Beschreibung
 Linter für Inner-Source-Software
-
-## Architektur
-![Softwarearchitektur](assets/architektur.png)
-![Datenbankschema](assets/database.png)
