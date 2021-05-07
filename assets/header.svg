@@ -22,7 +22,7 @@
    inkscape:export-ydpi="127"><metadata
      id="metadata64"><rdf:RDF><cc:Work
          rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title /></cc:Work></rdf:RDF></metadata><defs
      id="defs62"><linearGradient
        inkscape:collect="always"
        id="linearGradient1038"><stop
@@ -723,8 +723,8 @@
      showgrid="false"
      inkscape:snap-global="true"
      inkscape:zoom="1.1531203"
-     inkscape:cx="731.28436"
-     inkscape:cy="296.91204"
+     inkscape:cx="556.5212"
+     inkscape:cy="418.56988"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -765,6 +765,7 @@
        id="tspan4171">CIDIC</tspan></tspan></text>
 
 
+
 <text
    xml:space="preserve"
    id="text2051"
@@ -775,6 +776,7 @@
      id="tspan4178"><tspan
        dx="0 27.929688 16.835938 30.820312 16.835938"
        id="tspan4176">CIDIC</tspan></tspan></text>
+
 
 
 <text
@@ -790,6 +792,7 @@
        id="tspan4181">CIDIC</tspan></tspan></text>
 
 
+
 <g
    style="opacity:1"
    id="g6514"
@@ -802,13 +805,14 @@
    id="text2043"
    y="436.45181"
    x="79.849304"
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:313.37701416px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;fill:#000000;fill-opacity:1;stroke:#ffffd9;stroke-width:3;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:313.37701416px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:5.00000001;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
    xml:space="preserve"><tspan
-     style="stroke-width:3;stroke:#ffffd9;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+     style="stroke-width:5.00000001;stroke:#ffffff;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
      y="436.45181"
      x="79.849304"
      id="tspan2041"
      sodipodi:role="line">A</tspan></text>
+
 
 
 <path
@@ -904,15 +908,16 @@
    inkscape:export-xdpi="96"
    inkscape:export-filename="C:\Users\nico\text2043.png"
    transform="matrix(5.0303415,0,0,4.6248475,-766.54963,-50.754191)"
-   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:80px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;white-space:pre;shape-inside:url(#rect2067);fill:#000000;fill-opacity:1;stroke:#ffffd9;stroke-opacity:1;stroke-width:0.62197626;stroke-miterlimit:4;stroke-dasharray:none"
+   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:80px;line-height:1.25;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;white-space:pre;shape-inside:url(#rect2067);fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:1.03662711;stroke-miterlimit:4;stroke-dasharray:none"
    id="text2065"
    xml:space="preserve"><tspan
-     style="fill:#000000;fill-opacity:1;stroke:#ffffd9;stroke-opacity:1;stroke-width:0.62197626;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:1.03662711;stroke-miterlimit:4;stroke-dasharray:none"
      id="tspan4188"
      y="121.44736"
      x="214.61133"><tspan
        id="tspan4186"
-       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:80px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;fill:#000000;fill-opacity:1;stroke:#ffffd9;stroke-opacity:1;stroke-width:0.62197626;stroke-miterlimit:4;stroke-dasharray:none">CIDIC</tspan></tspan></text>
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:80px;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-opacity:1;stroke-width:1.03662711;stroke-miterlimit:4;stroke-dasharray:none">CIDIC</tspan></tspan></text>
+
 
 
 </g></g></svg>
