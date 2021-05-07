@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AppComponent } from '../app.component';
 import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
 import { Repositories } from '../repositories';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-repository',
@@ -24,7 +25,7 @@ export class RepositoryComponent implements OnInit {
     this._ref.destroy();
   }
   repos = Repositories;
-  constructor(public route: ActivatedRoute, public router: Router, public dialog: MatDialog) { }
+  constructor(public route: ActivatedRoute, public router: Router, public dialog: MatDialog,private http: HttpClient) { }
 
   ngOnInit(): void {
    
@@ -32,7 +33,9 @@ export class RepositoryComponent implements OnInit {
   showDetailsViaDialog()
   {
     //Hier sollte man die details per id getten
-    let dialogRef = this.dialog.open(RepositoryDetailsComponent, {width: '1000px', data: {serverID: this.serverID}})
+    let dialogRef = this.dialog.open(RepositoryDetailsComponent, {width: '1000px', data: {serverID: this.serverID,projectID:this.id}})
 
   }
+  
+  
 }

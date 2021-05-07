@@ -1,0 +1,28 @@
+.progressSpinner{
+    background-color: green;
+}
+
+.ChangeOverTime{
+    background-color: blue;
+}
+.severities{
+    background-color: black;
+}
+
+.checks{
+    
+  
+    overflow:unset;
+}
+
+
+.Warnung{
+    background-color: yellow;
+    height: 33%;
+    width: 100%;
+}
+.Info{
+    background-color: green;
+    height: 33%;
+    width: 100%;
+}

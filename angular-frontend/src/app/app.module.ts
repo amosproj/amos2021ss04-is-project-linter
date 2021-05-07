@@ -10,7 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { RepositoryListComponent } from './repository-list/repository-list.component';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
-import {MatDialogModule} from '@angular/material/dialog'; 
+import {MatDialogModule} from '@angular/material/dialog';
+
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     AppComponent,
     //RepositoryListComponent,
     RepositoryComponent,
-    RepositoryDetailsComponent
+    RepositoryDetailsComponent,
+
   ],
   entryComponents: [RepositoryDetailsComponent],
   imports: [

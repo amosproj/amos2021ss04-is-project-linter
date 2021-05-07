@@ -2,10 +2,43 @@
   <mat-card-title>Insert Project Name</mat-card-title>
   <mat-card-subtitle>URL Or maybe owner?</mat-card-subtitle>
 </mat-card>
-<mat-grid-list cols="2" rowHeight="2:1">
-  <mat-grid-tile rowspan="2">Layout for Checks</mat-grid-tile>
-  <mat-grid-tile>Layout for progress Spinner</mat-grid-tile>
-  <mat-grid-tile>Layout for over time changes</mat-grid-tile>
+<mat-grid-list class="exestenziell" cols="2" rowHeight="100px">
+  <mat-grid-tile colspan="1"
+      rowspan="1"
+      style="background-color: darkblue;">>
+   Info
+  </mat-grid-tile>
+  
+  <mat-grid-tile colspan="1"
+      rowspan="1"
+      style="background-color: red;">
+    Graph
+  </mat-grid-tile>
+
+  <mat-grid-tile colspan="1"
+  rowspan="2"
+  style="background-color: aqua;" class="checks">
+  
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        This is the expansion title
+      </mat-panel-title>
+      <mat-panel-description>
+        This is a summary of the content
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+      <a mat-list-item href="..." *ngFor="let link of checkResults"> {{ link }} </a>
+   </mat-nav-list>
+  </mat-expansion-panel> 
+
+</mat-grid-tile>
+<mat-grid-tile  colspan="1"
+      rowspan="2"
+      style="background-color: green;">
+    Exestenziell
+  </mat-grid-tile>
 </mat-grid-list>
 <mat-card class="footer">
   <mat-card-actions>

@@ -20,7 +20,7 @@ export class AppComponent {
   title = 'angular-frontend';
   value = '';
   all_projects:Project[];
-  serverID = "http://localhost:8080/projects"
+  serverID = "http://localhost:8080/"
   options: FormGroup;
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
@@ -54,24 +54,6 @@ constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http:
         });
 }
 
-GetProject(serverID, gitID){
-  this.http.get(serverID+"/"+gitID)
-  /*{ // currently it you can only send the pure URL and not as a JSON
-      "data": gitID
-  })*/
-  .subscribe(
-      (val:any) => {
-          console.log("GET call successful value returned in body", 
-                      val);
-      },
-      response => {
-          console.log("GET call in error", response);
-      },
-      () => {
-          console.log("The GET observable is now completed.");
-      });
-  
-}
 
 GetProjects(serverID){
   this.http.get(serverID).subscribe(
