@@ -1,9 +1,41 @@
 <template>
-    <div> test </div>
+	<v-container>
+		<v-card class="mx-auto" max-width="344" outlined v-for="proj in projects" :key="proj.id">
+			<v-list-item three-line>
+				<v-list-item-content>
+					<v-list-item-title class="headline mb-1">
+						{{ proj.name }}
+					</v-list-item-title>
+				</v-list-item-content>
+			</v-list-item>
+
+			<v-card-actions>
+				<v-btn outlined rounded text>
+					<router-link to="/todo">Ergebnis</router-link>
+				</v-btn>
+			</v-card-actions>
+		</v-card>
+	</v-container>
 </template>
 
 <script>
+import ax from "@/api";
+
 export default {
-    name: "Dashboard"
-}
+	name: "Dashboard",
+	data() {
+		return {
+			projects: [],
+		};
+	},
+	mounted() {
+		ax.get("/projects")
+			.then((res) => {
+				this.projects = res.data;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	},
+};
 </script>
