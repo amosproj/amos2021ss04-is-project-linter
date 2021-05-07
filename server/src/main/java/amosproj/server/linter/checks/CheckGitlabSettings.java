@@ -27,16 +27,15 @@ public class CheckGitlabSettings extends Check {
     public boolean hasForkingEnabled() {
         // Initialisiere Objekte für namespace
         var projectApi = api.getProjectApi();
-        Project createproj = new Project();
         Project forkproj = new Project();
         boolean hasForksEnabled = false;
 
         // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
         try {
-            // erstelle projekt um namespace holen zu können
-            createproj = projectApi.createProject("test123", "test123");
+            // hole namespace
+            var namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
             // versuche projekt zu forken
-            forkproj = projectApi.forkProject(project, createproj.getNamespace().getFullPath(), "forktest", "forktests");
+            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktests");
             // wenn hier kein fehler kam, is forking erlaubt
             hasForksEnabled = true;
         } catch (GitLabApiException e) {
@@ -44,7 +43,6 @@ public class CheckGitlabSettings extends Check {
         } finally {
             try {
                 // lösche überreste der versuchs zu forken
-                projectApi.deleteProject(createproj.getId());
                 if (hasForksEnabled) projectApi.deleteProject(forkproj.getId());
             } catch (GitLabApiException e) {
                 e.printStackTrace();
