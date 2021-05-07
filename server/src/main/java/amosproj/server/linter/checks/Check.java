@@ -3,6 +3,7 @@ package amosproj.server.linter.checks;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
 import amosproj.server.data.LintingResult;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 
 import java.lang.reflect.InvocationTargetException;
@@ -16,9 +17,10 @@ public abstract class Check {
     private LintingResult lintingResult;
 
     /**
-     * Generic constructor for a test, setting up the api connection.
+     * Generic constructor for Check
      *
-     * @param api Connection GitLab api
+     * @param api
+     * @param lintingResult
      */
     public Check(GitLabApi api, LintingResult lintingResult) {
         this.api = api;
@@ -31,7 +33,7 @@ public abstract class Check {
      * @param testName name of the test to run (see config)
      * @return the check result
      */
-    protected CheckResult runTest(String testName, Object... args) {
+    protected CheckResult runTest(String testName, JsonNode config, Object... args) {
         java.lang.reflect.Method method = null;
         boolean checkResult = false;
         try {
@@ -40,7 +42,13 @@ public abstract class Check {
         } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
             return null;
         }
-        return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.MEDIUM);
+        // return check result
+        JsonNode severity = config.get("severity");
+        if (severity != null) {
+            return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.valueOf(severity.textValue()));
+        } else {
+            return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.NOT_SPECIFIED);
+        }
     }
 
 }

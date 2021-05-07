@@ -27,7 +27,7 @@ public class CheckGitlabRoles extends Check {
             String testName = c.get("name").textValue();
             boolean enabled = c.get("enabled").booleanValue();
             if (enabled) {
-                CheckResult ch = runTest(testName);
+                CheckResult ch = runTest(testName, c);
                 if (ch != null) res.add(ch);
             }
         }

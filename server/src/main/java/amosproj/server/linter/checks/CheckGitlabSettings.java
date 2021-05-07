@@ -27,7 +27,7 @@ public class CheckGitlabSettings extends Check {
             String testName = c.get("name").textValue();
             boolean enabled = c.get("enabled").booleanValue();
             if (enabled) {
-                CheckResult ch = runTest(testName);
+                CheckResult ch = runTest(testName, c);
                 if (ch != null) res.add(ch);
             }
         }
@@ -50,7 +50,7 @@ public class CheckGitlabSettings extends Check {
         return project.getRequestAccessEnabled();
     }
 
-    public boolean hasIssuesEnabled(){
+    public boolean hasIssuesEnabled() {
         return project.getIssuesEnabled();
     }
 

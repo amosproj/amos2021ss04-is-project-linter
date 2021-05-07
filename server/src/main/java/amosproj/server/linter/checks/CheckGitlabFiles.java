@@ -27,7 +27,7 @@ public class CheckGitlabFiles extends Check {
             String testName = test.get("name").textValue();
             boolean enabled = test.get("enabled").booleanValue();
             if (enabled) {
-                CheckResult ch = runTest(testName);
+                CheckResult ch = runTest(testName, test);
                 if (ch != null) results.add(ch);
             }
         }
