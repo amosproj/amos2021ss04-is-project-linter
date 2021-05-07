@@ -96,6 +96,7 @@ public class CheckGitlabSettingsTest {
         assertFalse(checkGitlabSettings.hasIssuesEnabled());
     }
 
+    // Projekte sind public
     @Test
     void test_isPublic_positive() throws GitLabApiException {
         preparePositive();
@@ -106,6 +107,19 @@ public class CheckGitlabSettingsTest {
     void test_isPublic_negative() throws GitLabApiException {
         prepareNegative();
         assertFalse(checkGitlabSettings.isPublic());
+    }
+
+    // Projekte sollen forks erlauben
+    @Test
+    void test_hasForkingEnabled_positive() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabSettings.hasForkingEnabled());
+    }
+
+    @Test
+    void test_hasForkingEnabled_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabSettings.hasForkingEnabled());
     }
 
 }

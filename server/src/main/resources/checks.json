@@ -1,56 +1,63 @@
 {
-  "linter": {
-    "settings": {
-      "scheduler": "0 0 * * *"
-    },
-    "checks": {
-      "file_checks": [
-        {
-          "name": "checkReadmeExistence",
-          "enabled": true,
-          "severity_level": 5
-        },
-        {
-          "name": "checkContributingExistence",
-          "enabled": true
-        },
-        {
-          "name": "checkMaintainersExistence",
-          "enabled": true
-        }
-      ],
-      "settings_checks": [
-        {
-          "name": "hasMergeRequestEnabled",
-          "enabled": true
-        },
-        {
-          "name": "hasRequestAccessEnabled",
-          "enabled": false
-        },
-        {
-          "name": "hasIssuesEnabled",
-          "enabled": true
-        },
-        {
-          "name": "isPublic",
-          "enabled": true
-        },
-        {
-          "name": "gitlabPagesEnabled",
-          "enabled": true
-        }
-      ],
-      "roles_checks": [
-        {
-          "name": "guestRoleEnabled",
-          "enabled": true
-        },
-        {
-          "name": "developerRoleEnabled",
-          "enabled": true
-        }
-      ]
-    }
+  "settings": {
+    "scheduler": "0 0 * * *"
+  },
+  "checks": {
+    "file_checks": [
+      {
+        "name": "checkReadmeExistence",
+        "enabled": true,
+        "severity": "HIGH"
+      },
+      {
+        "name": "checkContributingExistence",
+        "enabled": true,
+        "severity": "MEDIUM"
+      },
+      {
+        "name": "checkMaintainersExistence",
+        "enabled": true,
+        "severity": "MEDIUM"
+      }
+    ],
+    "settings_checks": [
+      {
+        "name": "hasMergeRequestEnabled",
+        "enabled": true,
+        "severity": "LOW"
+      },
+      {
+        "name": "hasIssuesEnabled",
+        "enabled": true,
+        "severity": "MEDIUM"
+      },
+      {
+        "name": "isPublic",
+        "enabled": true,
+        "severity": "HIGH"
+      },
+      {
+        "name": "gitlabPagesEnabled",
+        "enabled": true,
+        "severity": "MEDIUM"
+      },
+      {
+        "name": "hasForkingEnabled",
+        "enabled": true,
+        "severity": "MEDIUM"
+      }
+    ],
+    "roles_checks": [
+      {
+        "name": "guestRoleEnabled",
+        "enabled": true,
+        "severity": "LOW"
+      },
+      {
+        "name": "developerRoleEnabled",
+        "enabled": true,
+        "severity": "LOW"
+      }
+    ]
   }
 }
