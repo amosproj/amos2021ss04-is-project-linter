@@ -1,5 +1,10 @@
 <template>
 	<v-container>
+		<v-form>
+			<v-text-field v-model="repo_url" label="GitLab Repo Url" required></v-text-field>
+			<v-btn class="blue" @click="runLint()">Lint</v-btn>
+		</v-form>
+
 		<v-card class="mx-auto" max-width="344" outlined v-for="proj in projects" :key="proj.id">
 			<v-list-item three-line>
 				<v-list-item-content>
@@ -26,6 +31,7 @@ export default {
 	data() {
 		return {
 			projects: [],
+			repo_url: "",
 		};
 	},
 	mounted() {
@@ -36,6 +42,15 @@ export default {
 			.catch((err) => {
 				console.log(err);
 			});
+	},
+	methods: {
+		runLint() {
+			ax.post("/projects", this.repo_url, {
+				headers: { "Content-Type": "text/plain" },
+			}).catch((err) => {
+				console.log(err);
+			});
+		},
 	},
 };
 </script>
