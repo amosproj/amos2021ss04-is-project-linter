@@ -35,8 +35,9 @@ export class RepositoryDetailsComponent implements OnInit {
         (val:any) => {
             console.log("GET call successful value returned in body", 
                         val);
-              console.log(val.results[10].checkResults);
-              this.checkResults = val.results[10].checkResults;
+              //console.log(val.results[10].checkResults);
+              var last_entry = val.results.length
+              this.checkResults = val.results[last_entry-1].checkResults;
             
         },
         response => {
@@ -47,7 +48,36 @@ export class RepositoryDetailsComponent implements OnInit {
         });
     
   }
-
+  returnEmoji(input){
+    if (input.result)
+      return emojiMap.correct;
+    else
+      return emojiMap.false;
+  }
+  isExistencial(input){
+    if(input.severity =="HIGH"){
+      console.log("isTrue")
+      return true;
+    }
+    console.log("false")
+    return false;
+  }
+  isNonExistencial(input){
+    if(input.severity =="Medium"){
+      return true;
+    }
+    return false;
+  }
+  isInteresting(input){
+    if(input.severity == "NOT_SPECIFIED"){
+      return true;
+    }
+    return false;
+  }
+}
+const emojiMap = {
+  false: "❌",
+  correct: "✅"
 }
 
 export interface DialogData {
@@ -57,7 +87,8 @@ export interface DialogData {
 
 interface CheckResults {
   checkName:string,
-  severity:string
+  severity:string,
+  result:boolean
  // errormessage:string
 
 }

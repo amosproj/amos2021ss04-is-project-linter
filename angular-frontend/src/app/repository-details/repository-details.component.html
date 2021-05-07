@@ -19,6 +19,28 @@
   rowspan="2"
   style="background-color: aqua;" class="checks">
   
+  <mat-expansion-panel hideToggle class="panel">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        This is the expansion title
+      </mat-panel-title>
+      <mat-panel-description>
+        This is a summary of the content
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+      <mat-list-item  *ngFor="let certainTest of checkResults"> 
+        <div *ngIf="isExistencial(certainTest) == true">
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+        <p matLine>
+          <span> {{certainTest.result}} </span>
+        </p>
+        </div>
+
+      </mat-list-item>
+   </mat-nav-list>
+  </mat-expansion-panel> 
+
   <mat-expansion-panel hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -29,7 +51,37 @@
       </mat-panel-description>
     </mat-expansion-panel-header>
     <mat-nav-list>
-      <a mat-list-item href="..." *ngFor="let link of checkResults"> {{ link }} </a>
+      <mat-list-item  *ngFor="let certainTest of checkResults"> 
+        <div *ngIf="isNonExistencial(certainTest) == true">
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+        <p matLine>
+          <span> {{certainTest.result}} </span>
+        </p>
+        </div>
+
+      </mat-list-item>
+   </mat-nav-list>
+  </mat-expansion-panel> 
+
+  <mat-expansion-panel hideToggle>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        This is the expansion title
+      </mat-panel-title>
+      <mat-panel-description>
+        This is a summary of the content
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <mat-nav-list>
+      <mat-list-item  *ngFor="let certainTest of checkResults"> 
+        <div *ngIf="isInteresting(certainTest) == true">
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+        <p matLine>
+          <span> {{certainTest.result}} </span>
+        </p>
+        </div>
+
+      </mat-list-item>
    </mat-nav-list>
   </mat-expansion-panel> 
 

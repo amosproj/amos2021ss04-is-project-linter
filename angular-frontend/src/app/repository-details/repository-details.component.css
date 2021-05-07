@@ -15,6 +15,9 @@
     overflow:unset;
 }
 
+.panel{
+    width: 100%;
+}
 
 .Warnung{
     background-color: yellow;
