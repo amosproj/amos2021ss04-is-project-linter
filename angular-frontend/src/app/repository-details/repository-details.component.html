@@ -2,6 +2,7 @@
   <mat-card-title>Insert Project Name</mat-card-title>
   <mat-card-subtitle>URL Or maybe owner?</mat-card-subtitle>
 </mat-card>
+
 <mat-grid-list class="exestenziell" cols="2" rowHeight="100px">
   <mat-grid-tile colspan="1"
       rowspan="1"
@@ -19,7 +20,9 @@
   rowspan="2"
   style="background-color: aqua;" class="checks">
   
-  <mat-expansion-panel hideToggle class="panel">
+  
+  <mat-accordion>
+  <mat-expansion-panel hideToggle>
     <mat-expansion-panel-header>
       <mat-panel-title>
         This is the expansion title
@@ -84,12 +87,13 @@
       </mat-list-item>
    </mat-nav-list>
   </mat-expansion-panel> 
+</mat-accordion>
 
 </mat-grid-tile>
 <mat-grid-tile  colspan="1"
       rowspan="2"
       style="background-color: green;">
-    Exestenziell
+    Platzhalter
   </mat-grid-tile>
 </mat-grid-list>
 <mat-card class="footer">

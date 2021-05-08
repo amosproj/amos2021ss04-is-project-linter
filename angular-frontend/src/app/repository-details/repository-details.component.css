@@ -29,3 +29,15 @@
     height: 33%;
     width: 100%;
 }
+
+.footer{
+    position: absolute;
+
+    bottom: 0;
+    left: 0;
+    width: 100%;
+
+    background-color: rgb(31, 88, 34);
+
+    padding: 10px 24px;
+}
