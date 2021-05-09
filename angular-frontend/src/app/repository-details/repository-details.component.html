@@ -1,103 +1,69 @@
+
+
 <mat-card class="header-card">
   <mat-card-title>Insert Project Name</mat-card-title>
   <mat-card-subtitle>URL Or maybe owner?</mat-card-subtitle>
+  <button mat-button  (click)="closeDialog()">Close</button>
 </mat-card>
-
-<mat-grid-list class="exestenziell" cols="2" rowHeight="100px">
-  <mat-grid-tile colspan="1"
-      rowspan="1"
-      style="background-color: darkblue;">>
-   Info
-  </mat-grid-tile>
-  
-  <mat-grid-tile colspan="1"
-      rowspan="1"
-      style="background-color: red;">
-    Graph
-  </mat-grid-tile>
-
-  <mat-grid-tile colspan="1"
-  rowspan="2"
-  style="background-color: aqua;" class="checks">
-  
-  
+<br>
+<mat-card class="left">
+<mat-card-content class="leftOne">
   <mat-accordion>
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        This is the expansion title
-      </mat-panel-title>
-      <mat-panel-description>
-        This is a summary of the content
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <mat-nav-list>
-      <mat-list-item  *ngFor="let certainTest of checkResults"> 
-        <div *ngIf="isExistencial(certainTest) == true">
-          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-        <p matLine>
-          <span> {{certainTest.result}} </span>
-        </p>
-        </div>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          This is the expansion title
+        </mat-panel-title>
+        <mat-panel-description>
+          This is a summary of the content
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-nav-list>
+        <mat-list-item  *ngFor="let certainTest of checkResults"> 
+          <div *ngIf="isExistencial(certainTest) == true">
+            <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+          <p matLine>
+            <span> {{certainTest.result}} </span>
+          </p>
+          </div>
+  
+        </mat-list-item>
+     </mat-nav-list>
+    </mat-expansion-panel> 
+  </mat-accordion>
+</mat-card-content>
 
-      </mat-list-item>
-   </mat-nav-list>
-  </mat-expansion-panel> 
+<mat-card-content class="leftTwo">
+  <p>
+    The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+    A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+    bred for hunting.
+  </p>
+</mat-card-content>
+<br>
 
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        This is the expansion title
-      </mat-panel-title>
-      <mat-panel-description>
-        This is a summary of the content
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <mat-nav-list>
-      <mat-list-item  *ngFor="let certainTest of checkResults"> 
-        <div *ngIf="isNonExistencial(certainTest) == true">
-          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-        <p matLine>
-          <span> {{certainTest.result}} </span>
-        </p>
-        </div>
+</mat-card>
+<mat-card class="right">
+  <mat-card-content class="leftOne">
+    <p>
+      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+      bred for hunting.
+    </p>
+  </mat-card-content>
+  <mat-card-content class="leftTwo">
+    <p>
+      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.
+      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally
+      bred for hunting.
+    </p>
+  </mat-card-content>
+  <br>
+  </mat-card>
 
-      </mat-list-item>
-   </mat-nav-list>
-  </mat-expansion-panel> 
-
-  <mat-expansion-panel hideToggle>
-    <mat-expansion-panel-header>
-      <mat-panel-title>
-        This is the expansion title
-      </mat-panel-title>
-      <mat-panel-description>
-        This is a summary of the content
-      </mat-panel-description>
-    </mat-expansion-panel-header>
-    <mat-nav-list>
-      <mat-list-item  *ngFor="let certainTest of checkResults"> 
-        <div *ngIf="isInteresting(certainTest) == true">
-          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-        <p matLine>
-          <span> {{certainTest.result}} </span>
-        </p>
-        </div>
-
-      </mat-list-item>
-   </mat-nav-list>
-  </mat-expansion-panel> 
-</mat-accordion>
-
-</mat-grid-tile>
-<mat-grid-tile  colspan="1"
-      rowspan="2"
-      style="background-color: green;">
-    Platzhalter
-  </mat-grid-tile>
-</mat-grid-list>
-<mat-card class="footer">
+ <mat-card class="footer">
   <mat-card-actions>
-      <button mat-button (click)="closeDialog()">Close</button>
+      
   </mat-card-actions>
 </mat-card>
+

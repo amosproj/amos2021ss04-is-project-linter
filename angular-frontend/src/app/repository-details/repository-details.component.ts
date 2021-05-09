@@ -16,10 +16,8 @@ export class RepositoryDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    
     this.ShowProjectDetails(this.data.serverID,this.data.projectID);
-    
-  
+
   }
   
   closeDialog(){
