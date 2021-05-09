@@ -14,12 +14,14 @@ public class ProjectSchema {
     private Date lastCommit;
     private String name;
     private String url;
+    private Long ID;
     private List<LintingResultSchema> results;
 
     public ProjectSchema(Project proj, GitLab api, boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
         }
+        this.setID(proj.getId());
         BeanUtils.copyProperties(proj, this);
         try {
             org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getUrl());
@@ -30,6 +32,9 @@ public class ProjectSchema {
         }
     }
 
+    public Long getID() { return ID;}
+
+    public void setID(Long ID) {this.ID = ID; }
 
     public String getDescription() {
         return description;

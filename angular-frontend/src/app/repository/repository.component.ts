@@ -32,6 +32,7 @@ export class RepositoryComponent implements OnInit {
   }
   showDetailsViaDialog()
   {
+    console.log(this.id)
     //Hier sollte man die details per id getten
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {width: '1000px',height:"700px", data: {serverID: this.serverID,projectID:this.id}})
 
