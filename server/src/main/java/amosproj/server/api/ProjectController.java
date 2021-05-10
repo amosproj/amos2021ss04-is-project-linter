@@ -36,7 +36,7 @@ public class ProjectController {
             Project projAlt = it.next();
             ProjectSchema proj = new ProjectSchema(projAlt, api, false);
             res.add(proj);
-            System.out.println(proj);
+            System.out.println("proj: " + proj);
         }
         return res;
     }

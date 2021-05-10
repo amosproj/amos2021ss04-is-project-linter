@@ -23,18 +23,22 @@ public class ProjectSchema {
         }
         this.setID(proj.getId());
         BeanUtils.copyProperties(proj, this);
-        try {
-            org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getUrl());
-            description = gitlabProj.getDescription();
-            lastCommit = gitlabProj.getLastActivityAt();
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getUrl());
+//            description = gitlabProj.getDescription();
+//            lastCommit = gitlabProj.getLastActivityAt();
+//        } catch (GitLabApiException e) {
+//            e.printStackTrace();
+//        }
     }
 
-    public Long getID() { return ID;}
+    public Long getID() {
+        return ID;
+    }
 
-    public void setID(Long ID) {this.ID = ID; }
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
 
     public String getDescription() {
         return description;

@@ -39,7 +39,7 @@ public class CheckGitlabSettings extends Check {
             // wenn hier kein fehler kam, is forking erlaubt
             hasForksEnabled = true;
         } catch (GitLabApiException e) {
-            System.out.println(e.getReason());
+            System.out.println("reason: " + e.getReason());
         } finally {
             try {
                 // lösche überreste der versuchs zu forken
