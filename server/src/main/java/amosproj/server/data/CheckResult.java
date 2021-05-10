@@ -12,7 +12,7 @@ public class CheckResult {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long Id;
     private String checkName;  // name of the test associated with java
     private Boolean result;
     private CheckSeverity severity;
@@ -31,7 +31,7 @@ public class CheckResult {
     }
 
     public Long getId() {
-        return id;
+        return Id;
     }
 
     public Long getLintId() {

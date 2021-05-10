@@ -36,16 +36,16 @@ public class ProjectController {
             Project projAlt = it.next();
             ProjectSchema proj = new ProjectSchema(projAlt, api, false);
             res.add(proj);
-            System.out.println("proj: " + proj);
+            //System.out.println("proj: " + proj);
         }
         return res;
     }
 
-    @GetMapping("/project/{id}")  // id is the project id in our database
-    public Project getProject(@PathVariable("id") Long id) {
-        return repository.findById(id).orElseThrow(
+    @GetMapping("/project/{id}")  // id is the project id in _our_ database
+    public ProjectSchema getProject(@PathVariable("id") Long id) {
+        return new ProjectSchema(repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        );
+        ), null, true);
     }
 
     @PostMapping("/projects")
