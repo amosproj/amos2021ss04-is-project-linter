@@ -34,12 +34,13 @@ public abstract class Check {
     /**
      * implementation to run a test via reflection
      *
-     * @param testName name of the test to run (see config)
+     * @param node node of the checks.json
      * @return the check result
      */
-    protected CheckResult runTest(String testName, Object... args) {
+    protected CheckResult runTest(JsonNode node, Object... args) {
         java.lang.reflect.Method method = null;
         boolean checkResult = false;
+        String testName = node.get("name").textValue();
         try {
             method = getClass().getMethod(testName);
             checkResult = (boolean) method.invoke(this, args);
@@ -47,7 +48,7 @@ public abstract class Check {
             return null;
         }
         // return check result
-        JsonNode severity = config.get("severity");
+        JsonNode severity = node.get("severity");
         if (severity != null) {
             return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.valueOf(severity.textValue()));
         } else {
@@ -62,10 +63,9 @@ public abstract class Check {
     public List<CheckResult> checkAll() {
         LinkedList<CheckResult> res = new LinkedList<>();
         for (JsonNode c : config) {
-            String testName = c.get("name").textValue();
             boolean enabled = c.get("enabled").booleanValue();
             if (enabled) {
-                CheckResult ch = runTest(testName);
+                CheckResult ch = runTest(c);
                 if (ch != null) res.add(ch);
             }
         }
