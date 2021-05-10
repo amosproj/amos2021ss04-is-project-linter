@@ -1,6 +1,6 @@
 <mat-card class="header-card">
   <mat-card-title>Inner Source Project Linter</mat-card-title>
-  <mat-card-subtitle>Sub title</mat-card-subtitle>
+  <mat-card-subtitle>https://gitlab.cs.fau.de/ib49uquh/amos-testz</mat-card-subtitle>
 </mat-card>
 
 <mat-card-content class="searchBar-mat">
@@ -9,7 +9,7 @@
     [hideRequiredMarker]="hideRequiredControl.value"
     [floatLabel]="floatLabelControl.value"
   >
-    <input matInput placeholder="Please enter URL" required />
+    <input #suche matInput placeholder="Please enter URL" required />
   </mat-form-field>
   &nbsp;
   <button
@@ -17,7 +17,7 @@
     (click)="
       forwardLink(
         'http://localhost:8080/projects',
-        'https://gitlab.cs.fau.de/ib49uquh/amos-testz'
+        suche.value
       )
     "
     color="primary"

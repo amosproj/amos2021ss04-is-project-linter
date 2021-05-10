@@ -61,7 +61,7 @@ export class RepositoryDetailsComponent implements OnInit {
     return false;
   }
   isNonExistencial(input){
-    if(input.severity =="Medium"){
+    if(input.severity =="MEDIUM"){
       return true;
     }
     return false;
