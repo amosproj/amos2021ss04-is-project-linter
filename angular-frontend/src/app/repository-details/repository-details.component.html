@@ -19,14 +19,11 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checkResults"> 
-          <div *ngIf="isExistencial(certainTest) == true">
-            <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-          <p matLine>
+        <mat-list-item  *ngFor="let certainTest of checksHighSeverity"> 
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+          <p matLine *ngIf="certainTest.result == false">
             <span> if false: error message</span>
           </p>
-          </div>
-  
         </mat-list-item>
      </mat-nav-list>
     </mat-expansion-panel> 
@@ -41,14 +38,11 @@
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checkResults"> 
-          <div *ngIf="isNonExistencial(certainTest) == true">
-            <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-          <p matLine>
-            <span> {{certainTest.result}} </span>
+        <mat-list-item  *ngFor="let certainTest of checksMediumSeverity"> 
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+          <p matLine *ngIf="certainTest.result == false">
+            <span> if false: error message </span>
           </p>
-          </div>
-  
         </mat-list-item>
      </mat-nav-list>
     </mat-expansion-panel> 
@@ -56,20 +50,18 @@
     <mat-expansion-panel hideToggle>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Unknown Severity:
+          Low:
         </mat-panel-title>
         <mat-panel-description>
           Checks with unknown severity
         </mat-panel-description>
       </mat-expansion-panel-header>
       <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checkResults"> 
-          <div *ngIf="isInteresting(certainTest) == true">
+        <mat-list-item  *ngFor="let certainTest of checksLowSeverity"> 
             <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-          <p matLine>
-            <span> {{certainTest.result}} </span>
-          </p>
-          </div>
+            <p matLine *ngIf="certainTest.result == false">
+              <span> if false: error message </span>
+            </p>
   
         </mat-list-item>
      </mat-nav-list>

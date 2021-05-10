@@ -8,18 +8,16 @@
     appearance="fill"
     [hideRequiredMarker]="hideRequiredControl.value"
     [floatLabel]="floatLabelControl.value"
-  >
-    <input #suche matInput placeholder="Please enter URL" required />
+    style="width:420px !important" >
+  <mat-label>Zum Analysieren bitte vollständige Repository URL eingeben</mat-label>
+    <input #suchleiste matInput placeholder="https://gitlab.BEISPIEL.de/TEST/ACIDIC" required />
+    <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request --> 
+    <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{errorMsgForwardLink}}</mat-hint> 
   </mat-form-field>
   &nbsp;
   <button
     mat-raised-button
-    (click)="
-      forwardLink(
-        'http://localhost:8080/projects',
-        suche.value
-      )
-    "
+    (click)="forwardLink('http://localhost:8080/projects', suchleiste.value); suchleiste.value = '';"
     color="primary"
   >
     Suche
