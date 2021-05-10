@@ -57,7 +57,7 @@ public class ProjectController {
         } catch (GitLabApiException e) {
             return new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist").toString();
         }
-        return "ok";
+        return "OK";
     }
 
 }
