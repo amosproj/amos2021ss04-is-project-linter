@@ -1,37 +1,19 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.data.CheckResult;
 import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
-
-import java.util.LinkedList;
-import java.util.List;
 
 public class CheckGitlabSettings extends Check {
 
     private org.gitlab4j.api.models.Project project;
-    private JsonNode config;
 
     public CheckGitlabSettings(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult);
+        super(api, lintingResult, config);
         this.project = project;
-        this.config = config;
-    }
-
-    public List<CheckResult> checkAll() {
-        LinkedList<CheckResult> res = new LinkedList<>();
-        for (JsonNode c : config) {
-            String testName = c.get("name").textValue();
-            boolean enabled = c.get("enabled").booleanValue();
-            if (enabled) {
-                CheckResult ch = runTest(testName);
-                if (ch != null) res.add(ch);
-            }
-        }
-        return res;
     }
 
     /////////////////
@@ -42,6 +24,33 @@ public class CheckGitlabSettings extends Check {
         return project.getVisibility() == Visibility.PUBLIC;
     }
 
+    public boolean hasForkingEnabled() {
+        // Initialisiere Objekte für namespace
+        var projectApi = api.getProjectApi();
+        Project forkproj = new Project();
+        boolean hasForksEnabled = false;
+
+        // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
+        try {
+            // hole namespace
+            var namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
+            // versuche projekt zu forken
+            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktests");
+            // wenn hier kein fehler kam, is forking erlaubt
+            hasForksEnabled = true;
+        } catch (GitLabApiException e) {
+            System.out.println("reason: " + e.getReason());
+        } finally {
+            try {
+                // lösche überreste der versuchs zu forken
+                if (hasForksEnabled) projectApi.deleteProject(forkproj.getId());
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
+            }
+        }
+        return hasForksEnabled;
+    }
+
     public boolean hasMergeRequestEnabled() {
         return project.getMergeRequestsEnabled();
     }
@@ -50,7 +59,7 @@ public class CheckGitlabSettings extends Check {
         return project.getRequestAccessEnabled();
     }
 
-    public boolean hasIssuesEnabled(){
+    public boolean hasIssuesEnabled() {
         return project.getIssuesEnabled();
     }
 

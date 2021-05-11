@@ -1,0 +1,16 @@
+<mat-card class="example-card" (click)="showDetailsViaDialog()">
+    <mat-card-header>
+      <mat-card-title>{{name}}</mat-card-title>
+    </mat-card-header>
+    <!img mat-card-image src="{{image}}">
+    <mat-card-content>
+      <dl>
+        
+        <dt>Project name:</dt>
+        <dd>{{name}}</dd>
+        <dt>URL:</dt>
+        <dd>{{gitlabInstance}}</dd>
+      </dl>
+      <button mat-raised-button (click)="showDetailsViaDialog()">Show Details</button>
+    </mat-card-content>
+  </mat-card>

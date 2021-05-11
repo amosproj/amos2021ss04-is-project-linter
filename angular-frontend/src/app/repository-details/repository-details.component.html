@@ -1,15 +1,99 @@
-<mat-card class="example-card">
-    <mat-card-header>
-      <mat-card-title>{{name}}</mat-card-title>
-    </mat-card-header>
-    <img mat-card-image src="{{image}}">
-    <mat-card-content>
-      <dl>
-        
-        <dt>Project name:</dt>
-        <dd>{{name}}</dd>
-        <dt>URL:</dt>
-        <dd>{{gitlabInstance}}</dd>
-      </dl>
-    </mat-card-content>
+
+
+<mat-card class="header-card">
+  <mat-card-title>Insert Project Name</mat-card-title>
+  <mat-card-subtitle>URL Or maybe owner?</mat-card-subtitle>
+  <button mat-button  (click)="closeDialog()">Close</button>
+</mat-card>
+<br>
+<mat-card class="left">
+<mat-card-content class="leftOne">
+  <mat-accordion>
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Existencial Checks:
+        </mat-panel-title>
+        <mat-panel-description>
+          Checks the project for very important inner source guidelines
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-nav-list>
+        <mat-list-item  *ngFor="let certainTest of checksHighSeverity"> 
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+          <p matLine *ngIf="certainTest.result == false">
+            <span> if false: error message</span>
+          </p>
+        </mat-list-item>
+     </mat-nav-list>
+    </mat-expansion-panel> 
+
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Non-Existencial Checks:
+        </mat-panel-title>
+        <mat-panel-description>
+          Checks the project for inner source guidelines
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-nav-list>
+        <mat-list-item  *ngFor="let certainTest of checksMediumSeverity"> 
+          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+          <p matLine *ngIf="certainTest.result == false">
+            <span> if false: error message </span>
+          </p>
+        </mat-list-item>
+     </mat-nav-list>
+    </mat-expansion-panel> 
+
+    <mat-expansion-panel hideToggle>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Low:
+        </mat-panel-title>
+        <mat-panel-description>
+          Checks with unknown severity
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <mat-nav-list>
+        <mat-list-item  *ngFor="let certainTest of checksLowSeverity"> 
+            <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
+            <p matLine *ngIf="certainTest.result == false">
+              <span> if false: error message </span>
+            </p>
+  
+        </mat-list-item>
+     </mat-nav-list>
+    </mat-expansion-panel> 
+  </mat-accordion>
+</mat-card-content>
+
+<mat-card-content class="leftTwo">
+  <p>
+    Placeholder for Information like: Number of Forks, maintainers, etc...
+  </p>
+</mat-card-content>
+<br>
+
+</mat-card>
+<mat-card class="right">
+  <mat-card-content class="leftOne">
+    <p>
+      Placeholder Info Graphs
+    </p>
+  </mat-card-content>
+  <mat-card-content class="leftTwo">
+    <p>
+      Placeholder Development over Time?
+    </p>
+  </mat-card-content>
+  <br>
   </mat-card>
+
+ <mat-card class="footer">
+  <mat-card-actions>
+      
+  </mat-card-actions>
+</mat-card>
+

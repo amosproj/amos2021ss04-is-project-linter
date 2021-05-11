@@ -1,5 +1,7 @@
 package amosproj.server.api;
 
+import amosproj.server.GitLab;
+import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Linter;
@@ -9,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -21,21 +24,28 @@ public class ProjectController {
     @Autowired
     private Linter linter;
 
+    @Autowired
+    private GitLab api;
+
     @GetMapping("/projects")
-    public Iterable<Project> allProjects() {
-        Iterable<Project> projectList = (List<Project>) repository.findAll();
+    public List<ProjectSchema> allProjects() {
+        var projectList = repository.findAll();
         var it = projectList.iterator();
-        while (it.hasNext()) { // FIXME
-            it.next().setResults(null);
+        var res = new LinkedList<ProjectSchema>();
+        while (it.hasNext()) {
+            Project projAlt = it.next();
+            ProjectSchema proj = new ProjectSchema(projAlt, api, false);
+            res.add(proj);
+            //System.out.println("proj: " + proj);
         }
-        return projectList;
+        return res;
     }
 
-    @GetMapping("/project/{id}")  // id is the project id in our database
-    public Project getProject(@PathVariable("id") Long id) {
-        return repository.findById(id).orElseThrow(
+    @GetMapping("/project/{id}")  // id is the project id in _our_ database
+    public ProjectSchema getProject(@PathVariable("id") Long id) {
+        return new ProjectSchema(repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        );
+        ), null, true);
     }
 
     @PostMapping("/projects")
@@ -47,7 +57,7 @@ public class ProjectController {
         } catch (GitLabApiException e) {
             return new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist").toString();
         }
-        return "ok";
+        return "OK";
     }
 
 }
