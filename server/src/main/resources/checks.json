@@ -37,7 +37,7 @@
         "severity": "HIGH"
       },
       {
-        "name": "gitlabPagesEnabled",
+        "name": "gitlabWikiEnabled",
         "enabled": true,
         "severity": "MEDIUM"
       },

@@ -13,8 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -120,6 +119,26 @@ public class CheckGitlabSettingsTest {
     void test_hasForkingEnabled_negative() throws GitLabApiException {
         prepareNegative();
         assertFalse(checkGitlabSettings.hasForkingEnabled());
+    }
+
+    @Test
+    public void gitlabWikiEnabled_positive() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
+            assertTrue(checkGitlabSettings.gitlabWikiEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void gitlabWikiEnabled_negative() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+            assertFalse(checkGitlabSettings.gitlabWikiEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
     }
 
 }

@@ -63,7 +63,7 @@ public class CheckGitlabSettings extends Check {
         return project.getIssuesEnabled();
     }
 
-    public boolean gitlabPagesEnabled() {
+    public boolean gitlabWikiEnabled() {
         try {
             return !(api.getWikisApi().getPages(project).isEmpty());
         } catch (GitLabApiException e) {
