@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * This class provides a simplified interface to a Check
+ * This class provides an abstract interface to a Check
  */
 public abstract class Check {
 
@@ -58,6 +58,7 @@ public abstract class Check {
 
     /**
      * Runs through all of the checks
+     *
      * @return A LinkedList of CheckResults
      */
     public List<CheckResult> checkAll() {
