@@ -5,6 +5,7 @@ import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public class LintingResultSchema {
     // core attributes
     private Long Id;
-    private Date lintTime;
+    private LocalDateTime lintTime;
     // relations
     private List<CheckResultSchema> checkResults;
     // additional info
@@ -34,11 +35,11 @@ public class LintingResultSchema {
         Id = id;
     }
 
-    public Date getLintTime() {
+    public LocalDateTime getLintTime() {
         return lintTime;
     }
 
-    public void setLintTime(Date lintTime) {
+    public void setLintTime(LocalDateTime lintTime) {
         this.lintTime = lintTime;
     }
 

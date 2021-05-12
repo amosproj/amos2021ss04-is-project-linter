@@ -22,6 +22,7 @@ public class ProjectSchema {
     private List<LintingResultSchema> lintingResults;
     // extra info
     private String description;
+    private Integer forkCount;
     private Date lastCommit;
 
     public ProjectSchema(Project proj, GitLab api, boolean withResults) {
@@ -38,13 +39,9 @@ public class ProjectSchema {
             for (LintingResult lr : proj.getResults())
                 this.lintingResults.add(new LintingResultSchema(lr));
 
-        try {
-            org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getGitlabProjectId());
-            description = gitlabProj.getDescription();
-            lastCommit = gitlabProj.getLastActivityAt();
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
-        }
+        description = proj.getDescription();
+        forkCount = proj.getForkCount();
+        lastCommit = proj.getLastCommit();
     }
 
     public Long getId() {
@@ -109,6 +106,14 @@ public class ProjectSchema {
 
     public void setLastCommit(Date lastCommit) {
         this.lastCommit = lastCommit;
+    }
+
+    public Integer getForkCount() {
+        return forkCount;
+    }
+
+    public void setForkCount(Integer forkCount) {
+        this.forkCount = forkCount;
     }
 
     @Override

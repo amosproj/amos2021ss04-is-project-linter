@@ -73,9 +73,16 @@ public class Linter {
         // Hole LintingProject
         Project currLintingProject = projectRepository.findByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
-            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost());
+            // Erstelle neues Projekt mit Description und ForkCount
+            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt());
             projectRepository.save(currLintingProject);
+        } else {
+            // Update Description, LastActivity und ForkCount
+            currLintingProject.setDescription(apiProject.getDescription());
+            currLintingProject.setForkCount(apiProject.getForksCount());
+            currLintingProject.setLastCommit(apiProject.getLastActivityAt());
         }
+
         // Erstelle neues Linting Result
         LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
 
