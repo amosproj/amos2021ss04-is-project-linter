@@ -45,6 +45,11 @@
         "name": "hasForkingEnabled",
         "enabled": true,
         "severity": "MEDIUM"
+      },
+      {
+        "name": "hasAvatar",
+        "enabled": true,
+        "severity": "NOT_SPECIFIED"
       }
     ],
     "roles_checks": [

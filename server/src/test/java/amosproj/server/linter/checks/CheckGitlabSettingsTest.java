@@ -141,4 +141,23 @@ public class CheckGitlabSettingsTest {
         }
     }
 
+    @Test
+    public void hasAvatar_positive() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+            assertTrue(checkGitlabSettings.hasAvatar());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasAvatar_negative() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/ib49uquh/amos-testz");
+            assertFalse(checkGitlabSettings.hasAvatar());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
 }

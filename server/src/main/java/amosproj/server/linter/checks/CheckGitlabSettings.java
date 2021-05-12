@@ -71,5 +71,8 @@ public class CheckGitlabSettings extends Check {
         }
     }
 
+    public boolean hasAvatar(){
+        return project.getAvatarUrl() != null;
+    }
 
 }
