@@ -4,8 +4,11 @@ import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.MergeRequest;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
+
+import java.util.List;
 
 public class CheckGitlabSettings extends Check {
 
@@ -77,6 +80,25 @@ public class CheckGitlabSettings extends Check {
 
     public boolean hasDescription() {
         return (project.getDescription() != null && project.getDescription() != "");
+    }
+
+    public boolean hasSquashingEnabled() {
+        var mergeRequestsApi = api.getMergeRequestApi();
+        boolean hasSquashingEnabled = false;
+
+        try{
+            //hole alle mergeRequests des Projekts
+            List<MergeRequest> mergeRequestList = mergeRequestsApi.getMergeRequests(project.getId());
+            for (MergeRequest m : mergeRequestList){
+                //wenn in squashing in irgendeinen merge request verwendet wurde ist squashing erlaubt
+                if(m.getSquash()){
+                    return true;
+                }
+            }
+        } catch (GitLabApiException e){
+            System.out.println("reason: " + e.getReason());
+        }
+        return hasSquashingEnabled;
     }
 
 }
