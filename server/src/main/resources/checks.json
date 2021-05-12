@@ -50,6 +50,11 @@
         "name": "hasAvatar",
         "enabled": true,
         "severity": "NOT_SPECIFIED"
+      },
+      {
+        "name": "hasDescription",
+        "enabled": true,
+        "severity": "MEDIUM"
       }
     ],
     "roles_checks": [

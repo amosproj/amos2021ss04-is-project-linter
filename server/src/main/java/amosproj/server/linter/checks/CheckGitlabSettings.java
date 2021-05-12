@@ -75,4 +75,8 @@ public class CheckGitlabSettings extends Check {
         return project.getAvatarUrl() != null;
     }
 
+    public boolean hasDescription() {
+        return (project.getDescription() != null && project.getDescription() != "");
+    }
+
 }

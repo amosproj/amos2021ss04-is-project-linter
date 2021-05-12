@@ -160,4 +160,24 @@ public class CheckGitlabSettingsTest {
             fail();
         }
     }
+
+    @Test
+    public void hasDescription_positive() {
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
+            assertTrue(checkGitlabSettings.hasDescription());
+        } catch (GitLabApiException e){
+            fail();
+        }
+    }
+
+    @Test
+    public void hasDescription_negative() {
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
+            assertFalse(checkGitlabSettings.hasDescription());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
 }
