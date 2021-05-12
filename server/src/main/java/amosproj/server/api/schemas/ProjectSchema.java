@@ -3,6 +3,7 @@ package amosproj.server.api.schemas;
 import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
+import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
@@ -37,13 +38,13 @@ public class ProjectSchema {
             for (LintingResult lr : proj.getResults())
                 this.lintingResults.add(new LintingResultSchema(lr));
 
-        /*try {
-            org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getUrl());
+        try {
+            org.gitlab4j.api.models.Project gitlabProj = api.getApi().getProjectApi().getProject(proj.getGitlabProjectId());
             description = gitlabProj.getDescription();
             lastCommit = gitlabProj.getLastActivityAt();
         } catch (GitLabApiException e) {
             e.printStackTrace();
-        }*/
+        }
     }
 
     public Long getId() {

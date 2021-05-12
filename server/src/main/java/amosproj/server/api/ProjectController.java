@@ -45,7 +45,7 @@ public class ProjectController {
     public ProjectSchema getProject(@PathVariable("id") Long id) {
         return new ProjectSchema(repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        ), null, true);
+        ), api, true);
     }
 
     @PostMapping("/projects")
