@@ -2,6 +2,7 @@ package amosproj.server.linter.checks;
 
 import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.dom4j.Namespace;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.MergeRequest;
@@ -27,22 +28,25 @@ public class CheckGitlabSettings extends Check {
         return project.getVisibility() == Visibility.PUBLIC;
     }
 
-    public boolean hasForkingEnabled() {
+    public boolean hasForkingEnabled() throws GitLabApiException {
         // Initialisiere Objekte für namespace
         var projectApi = api.getProjectApi();
         Project forkproj = new Project();
+        String namespace = "";
         boolean hasForksEnabled = false;
+        boolean forkingConflict = false;
 
         // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
         try {
             // hole namespace
-            var namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
+            namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
             // versuche projekt zu forken
-            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktests");
+            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktest");
             // wenn hier kein fehler kam, is forking erlaubt
             hasForksEnabled = true;
         } catch (GitLabApiException e) {
             System.out.println("reason: " + e.getReason());
+            if (e.getReason().equals("Conflict")) forkingConflict = true;
         } finally {
             try {
                 // lösche überreste der versuchs zu forken
@@ -50,6 +54,10 @@ public class CheckGitlabSettings extends Check {
             } catch (GitLabApiException e) {
                 e.printStackTrace();
             }
+        }
+        if (forkingConflict) {
+            var conflictProject = projectApi.getProject(namespace, "forktest");
+            projectApi.deleteProject(conflictProject);
         }
         return hasForksEnabled;
     }
