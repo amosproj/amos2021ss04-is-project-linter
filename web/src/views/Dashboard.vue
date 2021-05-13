@@ -16,7 +16,7 @@
 
 			<v-card-actions>
 				<v-btn outlined rounded text>
-					<router-link to="/todo">Ergebnis</router-link>
+					<router-link :to="{ name: 'Result', params: { id: proj.id } }">Ergebnis</router-link>
 				</v-btn>
 			</v-card-actions>
 		</v-card>

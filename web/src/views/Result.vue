@@ -1,14 +1,15 @@
 <template>
 	<v-container>
+		{{ project.name }}
 		<v-list>
-			<v-list-item v-for="res in results" :key="res.id">
+			<v-list-item v-for="res in project.results[0].checkResults" :key="res.id">
 				<v-list-item-avatar>
 					<v-icon class="yellow" dark>mdi-triangle</v-icon>
 				</v-list-item-avatar>
 
 				<v-list-item-content>
 					<v-list-item-title v-text="res.checkName"></v-list-item-title>
-					<!-- <v-list-item-subtitle>bbb</v-list-item-subtitle> -->
+					<v-list-item-subtitle>test</v-list-item-subtitle>
 				</v-list-item-content>
 
 				<v-list-item-action>
@@ -22,62 +23,23 @@
 </template>
 
 <script>
+import ax from "@/api";
+
 export default {
 	name: "Result",
 	data() {
 		return {
-			results: [
-				{
-					checkName: "guestRoleEnabled",
-					id: 66,
-					lintId: 64,
-					result: false,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "developerRoleEnabled",
-					id: 68,
-					lintId: 64,
-					result: false,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "checkReadmeExistence",
-					id: 70,
-					lintId: 64,
-					result: false,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "checkContributingExistence",
-					id: 72,
-					lintId: 64,
-					result: false,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "hasMergeRequestEnabled",
-					id: 74,
-					lintId: 64,
-					result: true,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "isPublic",
-					id: 76,
-					lintId: 64,
-					result: true,
-					severity: "MEDIUM",
-				},
-				{
-					checkName: "gitlabPagesEnabled",
-					id: 78,
-					lintId: 64,
-					result: false,
-					severity: "MEDIUM",
-				},
-			],
+			project: {},
 		};
+	},
+	mounted() {
+		ax.get(`/project/${this.$route.params.id}`)
+			.then((res) => {
+				this.project = res.data;
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	},
 };
 </script>
