@@ -87,7 +87,7 @@ public class CheckGitlabSettings extends Check {
     }
 
     public boolean hasDescription() {
-        return (project.getDescription() != null && project.getDescription() != "");
+        return (project.getDescription() != null && project.getDescription().equals(""));
     }
 
     public boolean hasSquashingEnabled() {
@@ -107,6 +107,19 @@ public class CheckGitlabSettings extends Check {
             System.out.println("reason: " + e.getReason());
         }
         return hasSquashingEnabled;
+    }
+
+    public boolean hasBadges() {
+        try {
+            var badgelist = api.getProjectApi().getBadges(project);
+            if (!badgelist.isEmpty()) {
+                return true;
+            }
+
+        } catch (GitLabApiException e) {
+            System.out.println(e.getReason());
+        }
+        return false;
     }
 
 }

@@ -121,6 +121,23 @@ public class CheckGitlabSettingsTest {
         assertFalse(checkGitlabSettings.hasForkingEnabled());
     }
 
+    // Projekte sollen badges verwenden
+    @Test
+    void test_hasBadges_positive() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabSettings.hasBadges());
+    }
+
+    @Test
+    void test_hasBadges_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabSettings.hasBadges());
+    }
+
+
+
+
+
     @Test
     public void gitlabWikiEnabled_positive() {
         try {
