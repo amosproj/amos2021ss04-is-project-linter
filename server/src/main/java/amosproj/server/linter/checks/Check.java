@@ -1,35 +1,29 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
 import amosproj.server.data.LintingResult;
+import amosproj.server.data.Project;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.gitlab4j.api.GitLabApi;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
-import java.util.List;
 
-/**
- * This class provides an abstract interface to a Check
- */
-public abstract class Check {
+public class Check {
 
     protected org.gitlab4j.api.GitLabApi api;
     protected JsonNode config;
     private LintingResult lintingResult;
 
-    /**
-     * Generic constructor for Check
-     *
-     * @param api
-     * @param lintingResult
-     */
-    public Check(GitLabApi api, LintingResult lintingResult, JsonNode config) {
+    // test implementations
+    private CheckGitlabFiles filesCheck;
+    private CheckGitlabRoles rolesCheck;
+    private CheckGitlabSettings settingsCheck;
+
+    public Check(GitLab api) {
         this.api = api;
-        this.lintingResult = lintingResult;
-        this.config = config;
     }
+
 
     /**
      * implementation to run a test via reflection
@@ -37,10 +31,13 @@ public abstract class Check {
      * @param node node of the checks.json
      * @return the check result
      */
-    protected CheckResult runTest(JsonNode node, Object... args) {
+    public CheckResult runTest(String testName, JsonNode node, Object... args) {
+        boolean enabled = node.get("enabled").booleanValue();
+
+        if (!enabled) return null;
+
         java.lang.reflect.Method method = null;
         boolean checkResult = false;
-        String testName = node.get("name").textValue();
         try {
             method = getClass().getMethod(testName);
             checkResult = (boolean) method.invoke(this, args);
@@ -56,21 +53,5 @@ public abstract class Check {
         }
     }
 
-    /**
-     * Runs through all of the checks
-     *
-     * @return A LinkedList of CheckResults
-     */
-    public List<CheckResult> checkAll() {
-        LinkedList<CheckResult> res = new LinkedList<>();
-        for (JsonNode c : config) {
-            boolean enabled = c.get("enabled").booleanValue();
-            if (enabled) {
-                CheckResult ch = runTest(c);
-                if (ch != null) res.add(ch);
-            }
-        }
-        return res;
-    }
 
 }

@@ -10,14 +10,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class CheckGitlabFiles extends Check {
+public class CheckGitlabFiles {
 
     private org.gitlab4j.api.models.Project proj;
-
-    public CheckGitlabFiles(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult, config);
-        this.proj = project;
-    }
+    private GitLabApi api;
 
     /////////////////
     ///// TESTS /////
