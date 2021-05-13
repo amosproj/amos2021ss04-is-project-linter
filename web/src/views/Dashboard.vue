@@ -1,9 +1,22 @@
 <template>
 	<v-container>
 		<v-form>
-			<v-text-field v-model="repo_url" label="GitLab Repo Url" required></v-text-field>
-			<v-btn class="blue" @click="runLint()">Lint</v-btn>
+			<v-row>
+				<v-col cols="10">
+					<v-text-field v-model="repo_url" label="GitLab Repo Url" outlined dense filled required></v-text-field>
+				</v-col>
+				<v-col cols="2">
+					<v-btn class="blue" large @click="runLint()">Lint</v-btn>
+				</v-col>
+			</v-row>
 		</v-form>
+
+		<!-- <v-app-bar>
+			<v-tabs centered>
+				<v-tab to="#">Projekte</v-tab>
+				<v-tab to="#">Statistik</v-tab>
+			</v-tabs>
+		</v-app-bar> -->
 
 		<v-row>
 			<v-col v-for="proj in projects" :key="proj.id" cols="3">
