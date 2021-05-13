@@ -4,12 +4,21 @@
 		<v-list>
 			<v-list-item v-for="res in project.results[0].checkResults" :key="res.id">
 				<v-list-item-avatar>
-					<v-icon class="yellow" dark>mdi-triangle</v-icon>
+					<v-icon
+						dark
+						:class="{
+							red: res.severity == 'HIGH',
+							yellow: res.severity == 'MEDIUM',
+							green: res.severity == 'LOW',
+							blue: res.severity == 'NOT_SPECIFIED',
+						}"
+						>{{ res.result ? "mdi-check" : "mdi-alert" }}</v-icon
+					>
 				</v-list-item-avatar>
 
 				<v-list-item-content>
 					<v-list-item-title v-text="res.checkName"></v-list-item-title>
-					<v-list-item-subtitle>test</v-list-item-subtitle>
+					<v-list-item-subtitle>Beschreibung todo</v-list-item-subtitle>
 				</v-list-item-content>
 
 				<v-list-item-action>
