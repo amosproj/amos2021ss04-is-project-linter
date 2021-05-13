@@ -11,9 +11,14 @@ public class CheckResultSchema {
     private String checkName;
     private Boolean result;
     private CheckSeverity severity;
+    // relations
+    // -
+    // additional info
+    // -
 
     public CheckResultSchema(CheckResult cr) {
         BeanUtils.copyProperties(cr, this);
+        System.out.println(cr);
     }
 
     public Long getId() {
