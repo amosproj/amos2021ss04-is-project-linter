@@ -135,9 +135,6 @@ public class CheckGitlabSettingsTest {
     }
 
 
-
-
-
     @Test
     public void gitlabWikiEnabled_positive() {
         try {
@@ -181,7 +178,7 @@ public class CheckGitlabSettingsTest {
     @Test
     public void hasDescription_positive() {
         try{
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
+            preparePositive();
             assertTrue(checkGitlabSettings.hasDescription());
         } catch (GitLabApiException e){
             fail();
@@ -191,7 +188,7 @@ public class CheckGitlabSettingsTest {
     @Test
     public void hasDescription_negative() {
         try{
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
+            prepareNegative();
             assertFalse(checkGitlabSettings.hasDescription());
         } catch (GitLabApiException e) {
             fail();

@@ -87,7 +87,8 @@ public class CheckGitlabSettings extends Check {
     }
 
     public boolean hasDescription() {
-        return (project.getDescription() != null && project.getDescription().equals(""));
+        var description = project.getDescription();
+        return (description != null && !description.equals(""));
     }
 
     public boolean hasSquashingEnabled() {
