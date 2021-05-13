@@ -85,15 +85,29 @@ public class Linter {
 
         // Erstelle neues Linting Result
         LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-
-        // Save in Database
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
+        JsonNode checks = config.get("checks");
+        assert checks.isArray();
+
+
+
+        for (JsonNode check : checks) {
+            check.get
+            switch (check.get("category").asText()) {
+                case "file_checks":
+                    fileChecks.;
+                case "settings_checks":
+                    break;
+                case "roles_check":
+                    break;
+            }
+        }
+
         var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("checks").get("file_checks")).checkAll();
         var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("checks").get("settings_checks")).checkAll();
         var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("checks").get("roles_checks")).checkAll();
-
 
         for (CheckResult result : checkRolesResults) {
             checkResultRepository.save(result);

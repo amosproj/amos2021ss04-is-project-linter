@@ -12,14 +12,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CheckGitlabFiles extends Check {
+public class CheckGitlabFiles {
 
     private org.gitlab4j.api.models.Project proj;
-
-    public CheckGitlabFiles(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult, config);
-        this.proj = project;
-    }
+    private GitLabApi api;
 
     /////////////////
     ///// TESTS /////

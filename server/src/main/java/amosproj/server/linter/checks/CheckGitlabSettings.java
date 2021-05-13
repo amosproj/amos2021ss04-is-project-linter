@@ -1,8 +1,5 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.data.LintingResult;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.dom4j.Namespace;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.MergeRequest;
@@ -11,14 +8,10 @@ import org.gitlab4j.api.models.Visibility;
 
 import java.util.List;
 
-public class CheckGitlabSettings extends Check {
+public class CheckGitlabSettings {
 
     private org.gitlab4j.api.models.Project project;
-
-    public CheckGitlabSettings(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult, config);
-        this.project = project;
-    }
+    private GitLabApi api;
 
     /////////////////
     ///// TESTS /////
@@ -82,7 +75,7 @@ public class CheckGitlabSettings extends Check {
         }
     }
 
-    public boolean hasAvatar(){
+    public boolean hasAvatar() {
         return project.getAvatarUrl() != null;
     }
 
@@ -95,16 +88,16 @@ public class CheckGitlabSettings extends Check {
         var mergeRequestsApi = api.getMergeRequestApi();
         boolean hasSquashingEnabled = false;
 
-        try{
+        try {
             //hole alle mergeRequests des Projekts
             List<MergeRequest> mergeRequestList = mergeRequestsApi.getMergeRequests(project.getId());
-            for (MergeRequest m : mergeRequestList){
+            for (MergeRequest m : mergeRequestList) {
                 //wenn in squashing in irgendeinen merge request verwendet wurde ist squashing erlaubt
-                if(m.getSquash()){
+                if (m.getSquash()) {
                     return true;
                 }
             }
-        } catch (GitLabApiException e){
+        } catch (GitLabApiException e) {
             System.out.println("reason: " + e.getReason());
         }
         return hasSquashingEnabled;
