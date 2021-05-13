@@ -5,21 +5,24 @@
 			<v-btn class="blue" @click="runLint()">Lint</v-btn>
 		</v-form>
 
-		<v-card class="mx-auto" max-width="344" outlined v-for="proj in projects" :key="proj.id">
-			<v-list-item three-line>
-				<v-list-item-content>
-					<v-list-item-title class="headline mb-1">
-						{{ proj.name }}
-					</v-list-item-title>
-				</v-list-item-content>
-			</v-list-item>
-
-			<v-card-actions>
-				<v-btn outlined rounded text>
-					<router-link :to="{ name: 'Result', params: { id: proj.id } }">Ergebnis</router-link>
-				</v-btn>
-			</v-card-actions>
-		</v-card>
+		<v-row>
+			<v-col v-for="proj in projects" :key="proj.id" cols="3">
+				<v-card class="mx-auto" max-width="344" outlined height="250px">
+					<v-card-title>{{ proj.name }}</v-card-title>
+					<v-card-subtitle>
+						<a :href="proj.url">{{ proj.url }}</a>
+					</v-card-subtitle>
+					<v-card-text>
+						mehr info und so, number of forks
+					</v-card-text>
+					<v-card-actions>
+						<v-btn outlined rounded color="blue" text :to="{ name: 'Result', params: { id: proj.id } }">
+							Ergebnis
+						</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
 	</v-container>
 </template>
 
