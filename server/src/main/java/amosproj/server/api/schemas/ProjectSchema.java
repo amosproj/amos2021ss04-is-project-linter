@@ -1,51 +1,55 @@
-package amosproj.server.data;
+package amosproj.server.api.schemas;
 
+import amosproj.server.GitLab;
+import amosproj.server.data.LintingResult;
+import amosproj.server.data.Project;
+import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.utils.JacksonJson;
+import org.springframework.beans.BeanUtils;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
-@Entity
-public class Project {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class ProjectSchema {
+    // core attributes
     private Long Id;
     private String name;
     private String url;
     private Integer gitlabProjectId;
     private String gitlabInstance;
+    // relations
+    private List<LintingResultSchema> lintingResults;
+    // extra info
     private String description;
     private Integer forkCount;
     private Date lastCommit;
 
-    @OneToMany(targetEntity = LintingResult.class, fetch = FetchType.LAZY)
-    @JoinColumn(name = "projectId")
-    private List<LintingResult> results;
+    public ProjectSchema(Project proj, GitLab api, boolean withResults) {
+        if (!withResults) {
+            proj.setResults(null);
+        }
 
-    protected Project() {
-    } // only for JPA, dont use directly!
+        System.out.println(proj.toString());
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance) { // Deprecated
-        this.name = name;
-        this.url = url;
-        this.gitlabProjectId = gitlabProjectId;
-        this.gitlabInstance = gitlabInstance;
-    }
+        BeanUtils.copyProperties(proj, this);
+        this.lintingResults = new LinkedList<>();
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance, String description, Integer forkCount, Date lastCommit) {
-        this.name = name;
-        this.url = url;
-        this.gitlabProjectId = gitlabProjectId;
-        this.gitlabInstance = gitlabInstance;
-        this.description = description;
-        this.forkCount = forkCount;
-        this.lastCommit = lastCommit;
+        if (proj.getResults() != null)
+            for (LintingResult lr : proj.getResults())
+                this.lintingResults.add(new LintingResultSchema(lr));
+
+        description = proj.getDescription();
+        forkCount = proj.getForkCount();
+        lastCommit = proj.getLastCommit();
     }
 
     public Long getId() {
         return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getName() {
@@ -80,12 +84,12 @@ public class Project {
         this.gitlabInstance = gitlabInstance;
     }
 
-    public List<LintingResult> getResults() {
-        return results;
+    public List<LintingResultSchema> getLintingResults() {
+        return lintingResults;
     }
 
-    public void setResults(List<LintingResult> results) {
-        this.results = results;
+    public void setLintingResults(List<LintingResultSchema> lintingResults) {
+        this.lintingResults = lintingResults;
     }
 
     public String getDescription() {
@@ -96,14 +100,6 @@ public class Project {
         this.description = description;
     }
 
-    public Integer getForkCount() {
-        return forkCount;
-    }
-
-    public void setForkCount(Integer forkCount) {
-        this.forkCount = forkCount;
-    }
-
     public Date getLastCommit() {
         return lastCommit;
     }
@@ -112,8 +108,17 @@ public class Project {
         this.lastCommit = lastCommit;
     }
 
+    public Integer getForkCount() {
+        return forkCount;
+    }
+
+    public void setForkCount(Integer forkCount) {
+        this.forkCount = forkCount;
+    }
+
     @Override
     public String toString() {
         return JacksonJson.toJsonString(this);
     }
+
 }

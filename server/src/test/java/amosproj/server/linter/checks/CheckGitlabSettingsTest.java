@@ -13,8 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -122,4 +121,63 @@ public class CheckGitlabSettingsTest {
         assertFalse(checkGitlabSettings.hasForkingEnabled());
     }
 
+    @Test
+    public void gitlabWikiEnabled_positive() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
+            assertTrue(checkGitlabSettings.gitlabWikiEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void gitlabWikiEnabled_negative() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+            assertFalse(checkGitlabSettings.gitlabWikiEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasAvatar_positive() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+            assertTrue(checkGitlabSettings.hasAvatar());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasAvatar_negative() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/ib49uquh/amos-testz");
+            assertFalse(checkGitlabSettings.hasAvatar());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasDescription_positive() {
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
+            assertTrue(checkGitlabSettings.hasDescription());
+        } catch (GitLabApiException e){
+            fail();
+        }
+    }
+
+    @Test
+    public void hasDescription_negative() {
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
+            assertFalse(checkGitlabSettings.hasDescription());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
 }

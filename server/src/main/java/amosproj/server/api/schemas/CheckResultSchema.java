@@ -1,41 +1,27 @@
-package amosproj.server.data;
+package amosproj.server.api.schemas;
 
+import amosproj.server.data.CheckResult;
+import amosproj.server.data.CheckSeverity;
 import org.gitlab4j.api.utils.JacksonJson;
+import org.springframework.beans.BeanUtils;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-public class CheckResult {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+public class CheckResultSchema {
+    // core attributes
     private Long Id;
-    private String checkName;  // name of the test associated with java
+    private String checkName;
     private Boolean result;
     private CheckSeverity severity;
-    // FK
-    private Long lintId;
 
-    protected CheckResult() {
-    }
-
-
-    public CheckResult(LintingResult lint, String checkName, Boolean result, CheckSeverity severity) {
-        this.checkName = checkName;
-        this.result = result;
-        this.severity = severity;
-        this.lintId = lint.getId();
+    public CheckResultSchema(CheckResult cr) {
+        BeanUtils.copyProperties(cr, this);
     }
 
     public Long getId() {
         return Id;
     }
 
-    public Long getLintId() {
-        return lintId;
+    public void setId(Long id) {
+        Id = id;
     }
 
     public String getCheckName() {

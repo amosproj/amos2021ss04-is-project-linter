@@ -1,39 +1,23 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.data.CheckResult;
 import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
+import org.dom4j.Namespace;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
-import org.gitlab4j.api.ProjectApi;
+import org.gitlab4j.api.models.MergeRequest;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class CheckGitlabSettings extends Check {
 
     private org.gitlab4j.api.models.Project project;
-    private JsonNode config;
 
     public CheckGitlabSettings(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult);
+        super(api, lintingResult, config);
         this.project = project;
-        this.config = config;
-    }
-
-    public List<CheckResult> checkAll() {
-        LinkedList<CheckResult> res = new LinkedList<>();
-        for (JsonNode c : config) {
-            String testName = c.get("name").textValue();
-            boolean enabled = c.get("enabled").booleanValue();
-            if (enabled) {
-                CheckResult ch = runTest(testName, c);
-                if (ch != null) res.add(ch);
-            }
-        }
-        return res;
     }
 
     /////////////////
@@ -44,31 +28,36 @@ public class CheckGitlabSettings extends Check {
         return project.getVisibility() == Visibility.PUBLIC;
     }
 
-    public boolean hasForkingEnabled() {
+    public boolean hasForkingEnabled() throws GitLabApiException {
         // Initialisiere Objekte für namespace
         var projectApi = api.getProjectApi();
-        Project createproj = new Project();
         Project forkproj = new Project();
+        String namespace = "";
         boolean hasForksEnabled = false;
+        boolean forkingConflict = false;
 
         // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
         try {
-            // erstelle projekt um namespace holen zu können
-            createproj = projectApi.createProject("test123", "test123");
+            // hole namespace
+            namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
             // versuche projekt zu forken
-            forkproj = projectApi.forkProject(project, createproj.getNamespace().getFullPath(), "forktest", "forktests");
+            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktest");
             // wenn hier kein fehler kam, is forking erlaubt
             hasForksEnabled = true;
         } catch (GitLabApiException e) {
-            System.out.println(e.getReason());
+            System.out.println("reason: " + e.getReason());
+            if (e.getReason().equals("Conflict")) forkingConflict = true;
         } finally {
             try {
                 // lösche überreste der versuchs zu forken
-                projectApi.deleteProject(createproj.getId());
                 if (hasForksEnabled) projectApi.deleteProject(forkproj.getId());
             } catch (GitLabApiException e) {
                 e.printStackTrace();
             }
+        }
+        if (forkingConflict) {
+            var conflictProject = projectApi.getProject(namespace, "forktest");
+            projectApi.deleteProject(conflictProject);
         }
         return hasForksEnabled;
     }
@@ -85,7 +74,7 @@ public class CheckGitlabSettings extends Check {
         return project.getIssuesEnabled();
     }
 
-    public boolean gitlabPagesEnabled() {
+    public boolean gitlabWikiEnabled() {
         try {
             return !(api.getWikisApi().getPages(project).isEmpty());
         } catch (GitLabApiException e) {
@@ -93,5 +82,31 @@ public class CheckGitlabSettings extends Check {
         }
     }
 
+    public boolean hasAvatar(){
+        return project.getAvatarUrl() != null;
+    }
+
+    public boolean hasDescription() {
+        return (project.getDescription() != null && project.getDescription() != "");
+    }
+
+    public boolean hasSquashingEnabled() {
+        var mergeRequestsApi = api.getMergeRequestApi();
+        boolean hasSquashingEnabled = false;
+
+        try{
+            //hole alle mergeRequests des Projekts
+            List<MergeRequest> mergeRequestList = mergeRequestsApi.getMergeRequests(project.getId());
+            for (MergeRequest m : mergeRequestList){
+                //wenn in squashing in irgendeinen merge request verwendet wurde ist squashing erlaubt
+                if(m.getSquash()){
+                    return true;
+                }
+            }
+        } catch (GitLabApiException e){
+            System.out.println("reason: " + e.getReason());
+        }
+        return hasSquashingEnabled;
+    }
 
 }

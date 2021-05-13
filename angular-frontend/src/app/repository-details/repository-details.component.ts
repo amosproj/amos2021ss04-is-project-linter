@@ -10,16 +10,21 @@ import { MatDialog,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialo
 
 export class RepositoryDetailsComponent implements OnInit {
 
-  checkResults:[];
+  checkResults:        CheckResults[];
+  checksHighSeverity:  CheckResults[];
+  checksMediumSeverity:CheckResults[];
+  checksLowSeverity:   CheckResults[];
   constructor(public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
   @Inject(MAT_DIALOG_DATA) public data: DialogData,private http: HttpClient){} 
 
 
   ngOnInit(): void {
-    
+    // initialyze arrays sorted via severity void
+    this.checksHighSeverity = new Array<CheckResults>(); 
+    this.checksMediumSeverity = new Array<CheckResults>(); 
+    this.checksLowSeverity = new Array<CheckResults>(); 
     this.ShowProjectDetails(this.data.serverID,this.data.projectID);
-    
-  
+
   }
   
   closeDialog(){
@@ -35,9 +40,10 @@ export class RepositoryDetailsComponent implements OnInit {
         (val:any) => {
             console.log("GET call successful value returned in body", 
                         val);
-              console.log(val.results[10].checkResults);
-              this.checkResults = val.results[10].checkResults;
-            
+              //console.log(val.results[10].checkResults);
+              var last_entry = val.lintingResults.length
+              this.checkResults = val.lintingResults[last_entry-1].checkResults;
+              this.fillSeverityArrays();
         },
         response => {
             console.log("GET call in error", response);
@@ -48,6 +54,29 @@ export class RepositoryDetailsComponent implements OnInit {
     
   }
 
+  fillSeverityArrays()
+  {
+    for(var i = 0; i < this.checkResults.length; i++){
+      if(this.checkResults[i].severity == "HIGH"){
+        this.checksHighSeverity.push(this.checkResults[i])
+      }else if(this.checkResults[i].severity == "MEDIUM"){
+        this.checksMediumSeverity.push(this.checkResults[i])
+      }else if(this.checkResults[i].severity == "LOW"){
+        this.checksLowSeverity.push(this.checkResults[i])
+      }
+    }
+  }
+
+  returnEmoji(input){
+    if (input.result)
+      return emojiMap.correct;
+    else
+      return emojiMap.false;
+  }
+}
+const emojiMap = {
+  false: "❌",
+  correct: "✅"
 }
 
 export interface DialogData {
@@ -57,7 +86,8 @@ export interface DialogData {
 
 interface CheckResults {
   checkName:string,
-  severity:string
+  severity:string,
+  result:boolean
  // errormessage:string
 
 }

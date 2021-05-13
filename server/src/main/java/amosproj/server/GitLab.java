@@ -1,8 +1,14 @@
 package amosproj.server;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gitlab4j.api.GitLabApi;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 public class GitLab {
@@ -25,4 +31,14 @@ public class GitLab {
     public String getGitlabHost() {
         return gitlabHost;
     }
+
+    public JsonNode makeApiRequest(String url) throws JsonProcessingException {
+        RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        String body = restTemplate.getForObject(url, String.class);
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        JsonNode node = objectMapper.readTree(body);
+        return node;
+    }
+
 }

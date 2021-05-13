@@ -7,56 +7,102 @@
       {
         "name": "checkReadmeExistence",
         "enabled": true,
-        "severity": "HIGH"
+        "severity": "HIGH",
+        "description": "Überprüft ob eine README datei existiert.",
+        "message": "Keine README datei gefunden!",
+        "fix": "Legen Sie eine README datei in der Projektwurzel an."
       },
       {
         "name": "checkContributingExistence",
         "enabled": true,
-        "severity": "MEDIUM"
+        "severity": "MEDIUM",
+        "description": "Überprüft ob eine CONTRIBUTING datei existiert.",
+        "message": "Keine CONTRIBUTING datei gefunden!",
+        "fix": "Legen Sie eine CONTRIBUTING datei in der Projektwurzel an."
       },
       {
         "name": "checkMaintainersExistence",
         "enabled": true,
-        "severity": "MEDIUM"
+        "severity": "MEDIUM",
+        "description": "Überprüft ob eine MAINTAINERS datei existiert.",
+        "message": "Keine MAINTAINERS datei gefunden!",
+        "fix": "Legen Sie eine MAINTAINERS datei in der Projektwurzel an."
       }
     ],
     "settings_checks": [
       {
         "name": "hasMergeRequestEnabled",
         "enabled": true,
-        "severity": "LOW"
+        "severity": "LOW",
+        "description": "Überprüft ob Merge Requests erlaubt sind.",
+        "message": "Merge requests sind nicht erlaubt!",
+        "fix": "Ändern Sie die Einstellungen des Repositories um Merge Requests zu erlauben."
       },
       {
         "name": "hasIssuesEnabled",
         "enabled": true,
-        "severity": "MEDIUM"
+        "severity": "MEDIUM",
+        "description": "Überprüft ob Issues aktiviert sind.",
+        "message": "Issues sind nicht aktiviert!",
+        "fix": "Ändern Sie die Einstellungen des Repositories um Issues zu aktivieren."
       },
       {
         "name": "isPublic",
         "enabled": true,
-        "severity": "HIGH"
+        "severity": "HIGH",
+        "description": "Überprüft ob das Repository öffentlich ist.",
+        "message": "Das Repository ist nicht öffentlich!",
+        "fix": "Ändern Sie die Einstellungen des Repositories um es öffentlich zu machen."
       },
       {
-        "name": "gitlabPagesEnabled",
+        "name": "gitlabWikiEnabled",
         "enabled": true,
-        "severity": "MEDIUM"
+        "severity": "MEDIUM",
+        "description": "Überprüft ob das Repository Wiki Pages nutzt.",
+        "message": "Das Repository nutzt keine Wiki Pages!",
+        "fix": "Ändern Sie die Einstellungen des Repositories um Wiki Pages zu nutzen."
       },
       {
         "name": "hasForkingEnabled",
         "enabled": true,
-        "severity": "MEDIUM"
+        "severity": "MEDIUM",
+        "description": "Überprüft ob Forks erlaubt sind.",
+        "message": "Das Repository erlaubt keine Forks!",
+        "fix": "Ändern Sie die Einstellungen des Repositories um Forks zu erlauben."
+      },
+      {
+        "name": "hasAvatar",
+        "enabled": true,
+        "severity": "NOT_SPECIFIED",
+        "description": "Überprüft ob das Repository ein Avatar (Bild) hat.",
+        "message": "Das Repository hat keinen Avatar!",
+        "fix": "Fügen Sie einen Avatar hinzu."
+      },
+      {
+        "name": "hasDescription",
+        "enabled": true,
+        "severity": "MEDIUM",
+        "description": "Überprüft ob das Repository eine Beschreibung hat.",
+        "message": "Das Repository hat keine Beschreibung!",
+        "fix": "Fügen Sie eine Beschreibung hinzu."
       }
     ],
     "roles_checks": [
       {
         "name": "guestRoleEnabled",
         "enabled": true,
-        "severity": "LOW"
+        "severity": "LOW",
+        "description": "Überprüft ob die Guest Rolle aktiviert ist.",
+        "message": "Das Repository hat die Guest Rolle deaktiviert!",
+        "fix": "Ändern sie die Einstellugen des Repositories um Guests zu erlauben."
       },
       {
         "name": "developerRoleEnabled",
         "enabled": true,
-        "severity": "LOW"
+        "severity": "LOW",
+        "description": "Überprüft ob die Developer Rolle aktiviert ist.",
+        "message": "Das Repository hat die Developer Rolle deaktiviert!",
+        "fix": "Ändern sie die Einstellugen des Repositories um Developers zu erlauben."
       }
     ]
   }

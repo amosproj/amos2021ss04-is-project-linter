@@ -5,9 +5,8 @@ import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { RepositoryComponent } from './repository/repository.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule,HttpHeaders } from '@angular/common/http';
 import {MatDialogModule, MatDialog} from '@angular/material/dialog'; 
-
 
 
 @Component({
@@ -18,40 +17,69 @@ import {MatDialogModule, MatDialog} from '@angular/material/dialog';
 export class AppComponent {
   
   title = 'angular-frontend';
-  value = '';
+  //SearchBarValue = '';
   all_projects:Project[];
   serverID = "http://localhost:8080/"
   options: FormGroup;
+  forwardLinkWorked = true;
+  errorMsgForwardLink = "";
+
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
-  onEnter(value: string) { this.value = value;
- // this.forwardLink("http://localhost:8080/projects",value);
-  }
+  //onEnter(SearchBarValue: string) { this.SearchBarValue = SearchBarValue;
+  //this.forwardLink("http://localhost:8080/projects",SearchBarValue);
+  //}
+ 
 constructor(fb: FormBuilder,private _cfr: ComponentFactoryResolver,private http: HttpClient) {
   this.options = fb.group({
     hideRequired: this.hideRequiredControl,
     floatLabel: this.floatLabelControl,
   });
+}
 
-
+getIfForwardLinkWorked(){
+  return this.forwardLinkWorked;
 }
   forwardLink(serverID,URL){
-    this.http.post<any>(serverID,URL)
-    /*{ // currently it you can only send the pure URL and not as a JSON
-        "data": gitID
-    })*/
+    const headers = { 'Content-Type': 'text/html'}  
+
+    let HTTPOptions:Object = {
+
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json'
+      }),
+      responseType: 'text'
+   }
+
+    this.http.post<String>(serverID,URL,HTTPOptions)
     .subscribe(
-        (val) => {
+        (val:any) => {
             console.log("POST call successful value returned in body", 
                         val);
+            var regex404 = new RegExp("404 NOT_FOUND","i")
+            console.log(val.search(regex404))
+            if(val.search(regex404) != -1){
+              this.errorMsgForwardLink = 'Fehler 404, bitte URL überprüfen'
+              this.forwardLinkWorked = false;
+              console.log(this.forwardLinkWorked)
+
+            }else{
+            this.forwardLinkWorked = true;
+            }
+            console.log(this.forwardLinkWorked)
         },
-        response => {
-            console.log("POST call in error", response);
-        },
-        () => {
+        error => {
+            console.log("POST call in error", error);
+            this.errorMsgForwardLink = 'Internal server error'
+            this.forwardLinkWorked = false;
+        }
+        /*() => {
             console.log("The POST observable is now completed.");
-        });
+            this.errorMsgForwardLink = 'Internal server error'
+            this.forwardLinkWorked = false;
+        }*/
+        );
 }
 
 

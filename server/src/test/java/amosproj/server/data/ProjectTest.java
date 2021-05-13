@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.Date;
 import java.util.Iterator;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ public class ProjectTest {
 
     @BeforeEach
     void setUp() {
-        testProj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 1, "https://gitlab.cs.fau.de");
+        testProj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 1, "https://gitlab.cs.fau.de", "Beschreibung", 1, new Date(15L));
         projectRepository.save(testProj);
     }
 
@@ -50,6 +51,9 @@ public class ProjectTest {
             assertEquals(testProj.getResults(), integrity.getResults());
             assertEquals(testProj.getName(), integrity.getName());
             assertEquals(testProj.getUrl(), integrity.getUrl());
+            assertEquals(testProj.getDescription(), integrity.getDescription());
+            assertEquals(testProj.getForkCount(), integrity.getForkCount());
+            assertEquals(testProj.getLastCommit(), integrity.getLastCommit());
         }
     }
 
