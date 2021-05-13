@@ -2,7 +2,10 @@
 	<v-container>
 		{{ project.name }} - zuletzt gelinted: {{ lastLint }}
 		<v-list>
-			<v-list-item v-for="res in project.results[0].checkResults" :key="res.id">
+			<!-- TODO computed property updated nicht richt -->
+			<v-progress-linear :value="successPercentage" color="blue"></v-progress-linear>
+
+			<v-list-item v-for="res in project.lintingResults[0].checkResults" :key="res.id">
 				<v-list-item-avatar>
 					<v-icon
 						dark
@@ -12,8 +15,9 @@
 							green: res.severity == 'LOW',
 							blue: res.severity == 'NOT_SPECIFIED',
 						}"
-						>{{ res.result ? "mdi-check" : "mdi-alert" }}</v-icon
 					>
+						{{ res.result ? "mdi-check" : "mdi-close" }}
+					</v-icon>
 				</v-list-item-avatar>
 
 				<v-list-item-content>
@@ -41,13 +45,23 @@ export default {
 	data() {
 		return {
 			project: {
-				results: [{}],
+				lintingResults: [{
+					checkResults: [{}]
+				}],
 			},
 		};
 	},
 	computed: {
 		lastLint() {
-			return dayjs(this.project.results[0].lintTime).format("DD.MM.YYYY - H:m");
+			return dayjs(this.project.lintingResults[0].lintTime).format("DD.MM.YYYY - H:m");
+		},
+		successPercentage() {
+			if (!this.project.lintingResults[0]) return 0;
+
+			let succCount = this.project.lintingResults[0].checkResults.filter((res) => {
+				res.result == true;
+			}).length;
+			return succCount / this.project.length;
 		},
 	},
 	mounted() {
