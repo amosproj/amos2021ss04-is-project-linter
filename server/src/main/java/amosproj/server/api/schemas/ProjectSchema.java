@@ -3,7 +3,6 @@ package amosproj.server.api.schemas;
 import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
-import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
@@ -29,8 +28,6 @@ public class ProjectSchema {
         if (!withResults) {
             proj.setResults(null);
         }
-
-        System.out.println(proj.toString());
 
         BeanUtils.copyProperties(proj, this);
         this.lintingResults = new LinkedList<>();

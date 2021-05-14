@@ -15,4 +15,4 @@ logs
 *.swp
 *.tmp
 
-
+node_modules/

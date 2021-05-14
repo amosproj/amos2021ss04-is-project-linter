@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -85,32 +86,38 @@ public class Linter {
 
         // Erstelle neues Linting Result
         LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-
-        // Save in Database
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
-        var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("checks").get("file_checks")).checkAll();
-        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("checks").get("settings_checks")).checkAll();
-        var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("checks").get("roles_checks")).checkAll();
+        JsonNode checks = config.get("checks");
 
+        var fileChecks = new CheckGitlabFiles(api.getApi(), apiProject, lintingResult, checkResultRepository);
+        var settingsChecks = new CheckGitlabSettings(api.getApi(), apiProject, lintingResult, checkResultRepository);
+        var rolesChecks = new CheckGitlabRoles(api.getApi(), apiProject, lintingResult, checkResultRepository);
 
-        for (CheckResult result : checkRolesResults) {
-            checkResultRepository.save(result);
-        }
-        for (CheckResult result : fileCheckResults) {
-            checkResultRepository.save(result);
-        }
-        for (CheckResult result : settingsCheckResults) {
-            checkResultRepository.save(result);
+        for (Iterator<String> it = checks.fieldNames(); it.hasNext(); ) {
+            String testName = it.next();
+            JsonNode check = checks.get(testName);
+            switch (check.get("category").asText()) {
+                case "file_checks":
+                    fileChecks.runTest(testName, check);
+                    break;
+                case "settings_checks":
+                    settingsChecks.runTest(testName, check);
+                    break;
+                case "roles_check":
+                    rolesChecks.runTest(testName, check);
+                    break;
+            }
         }
 
     }
 
     /**
      * scheduled methods that lints every repo in the instance at a specified cron time
+     * Important: The cron syntax is sec - min - h - d - m - weekday
      */
-    @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight
+    @Scheduled(cron = "0 0 0 * * ?") // every 24 hours at midnight
     public void runCrawler() {
         List<org.gitlab4j.api.models.Project> projects = null;
         try {

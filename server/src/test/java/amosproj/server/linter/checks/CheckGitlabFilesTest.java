@@ -1,6 +1,7 @@
 package amosproj.server.linter.checks;
 
 import amosproj.server.GitLab;
+import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
@@ -29,6 +30,9 @@ public class CheckGitlabFilesTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private CheckResultRepository checkResultRepository;
+
     private CheckGitlabFiles checkGitlabFiles;
 
     private void preparePositive() throws GitLabApiException {
@@ -53,7 +57,7 @@ public class CheckGitlabFilesTest {
         }
 
         var lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-        this.checkGitlabFiles = new CheckGitlabFiles(api.getApi(), lintingResult, proj, linter.getConfig());
+        this.checkGitlabFiles = new CheckGitlabFiles(api.getApi(), proj, lintingResult, checkResultRepository);
     }
 
     @Test
@@ -94,25 +98,25 @@ public class CheckGitlabFilesTest {
 
     @Test
     void test_hasLinksInContributing_positive() throws GitLabApiException {
-        preparePositive();
-        assertTrue(checkGitlabFiles.checkContributingHasLinks());
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        assertTrue(checkGitlabFiles.checkNoContributingChain());
     }
 
     @Test
     void test_hasLinksInContributing_negative() throws GitLabApiException {
-        prepareNegative();
-        assertFalse(checkGitlabFiles.checkContributingHasLinks());
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        assertFalse(checkGitlabFiles.checkNoContributingChain());
     }
 
     @Test
     void test_hasLinksInReadme_positive() throws GitLabApiException {
-        preparePositive();
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
         assertTrue(checkGitlabFiles.checkReadmeHasLinks());
     }
 
     @Test
     void test_hasLinksInReadme_negative() throws GitLabApiException {
-        prepareNegative();
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
         assertFalse(checkGitlabFiles.checkReadmeHasLinks());
     }
 

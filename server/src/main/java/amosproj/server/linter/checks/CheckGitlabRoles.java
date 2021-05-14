@@ -1,19 +1,17 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.models.AccessLevel;
+import org.gitlab4j.api.models.Project;
 
 public class CheckGitlabRoles extends Check {
 
-    private org.gitlab4j.api.models.Project project;
-
-
-    public CheckGitlabRoles(GitLabApi api, LintingResult lintingResult, org.gitlab4j.api.models.Project project, JsonNode config) {
-        super(api, lintingResult, config);
-        this.project = project;
+    public CheckGitlabRoles(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        super(api, project, lintingResult, checkResultRepository);
     }
+
 
     /////////////////
     ///// TESTS /////

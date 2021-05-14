@@ -1,46 +1,36 @@
 package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResult;
+import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.CheckSeverity;
 import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.models.Project;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
-import java.util.List;
 
-/**
- * This class provides an abstract interface to a Check
- */
 public abstract class Check {
 
     protected org.gitlab4j.api.GitLabApi api;
-    protected JsonNode config;
-    private LintingResult lintingResult;
+    protected org.gitlab4j.api.models.Project project;
+    private final LintingResult lintingResult;
+    private final CheckResultRepository checkResultRepository;
 
-    /**
-     * Generic constructor for Check
-     *
-     * @param api
-     * @param lintingResult
-     */
-    public Check(GitLabApi api, LintingResult lintingResult, JsonNode config) {
+    protected Check(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
         this.api = api;
+        this.project = project;
         this.lintingResult = lintingResult;
-        this.config = config;
+        this.checkResultRepository = checkResultRepository;
     }
 
-    /**
-     * implementation to run a test via reflection
-     *
-     * @param node node of the checks.json
-     * @return the check result
-     */
-    protected CheckResult runTest(JsonNode node, Object... args) {
+    public CheckResult runTest(String testName, JsonNode node, Object... args) {
+        boolean enabled = node.get("enabled").booleanValue();
+
+        if (!enabled) return null;
+
         java.lang.reflect.Method method = null;
         boolean checkResult = false;
-        String testName = node.get("name").textValue();
         try {
             method = getClass().getMethod(testName);
             checkResult = (boolean) method.invoke(this, args);
@@ -50,27 +40,14 @@ public abstract class Check {
         // return check result
         JsonNode severity = node.get("severity");
         if (severity != null) {
-            return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.valueOf(severity.textValue()));
+            CheckResult cr = new CheckResult(lintingResult, testName, checkResult, CheckSeverity.valueOf(severity.textValue()));
+            checkResultRepository.save(cr);
+            return cr;
         } else {
-            return new CheckResult(lintingResult, testName, checkResult, CheckSeverity.NOT_SPECIFIED);
+            CheckResult cr = new CheckResult(lintingResult, testName, checkResult, CheckSeverity.NOT_SPECIFIED);
+            checkResultRepository.save(cr);
+            return cr;
         }
-    }
-
-    /**
-     * Runs through all of the checks
-     *
-     * @return A LinkedList of CheckResults
-     */
-    public List<CheckResult> checkAll() {
-        LinkedList<CheckResult> res = new LinkedList<>();
-        for (JsonNode c : config) {
-            boolean enabled = c.get("enabled").booleanValue();
-            if (enabled) {
-                CheckResult ch = runTest(c);
-                if (ch != null) res.add(ch);
-            }
-        }
-        return res;
     }
 
 }
