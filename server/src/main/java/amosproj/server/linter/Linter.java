@@ -109,8 +109,9 @@ public class Linter {
 
     /**
      * scheduled methods that lints every repo in the instance at a specified cron time
+     * Important: The cron syntax is sec - min - h - d - m - weekday
      */
-    @Scheduled(cron = "0 0 * * * ?") // every 24 hours at midnight
+    @Scheduled(cron = "0 0 0 * * ?") // every 24 hours at midnight
     public void runCrawler() {
         List<org.gitlab4j.api.models.Project> projects = null;
         try {
