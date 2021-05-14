@@ -1,5 +1,7 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.data.CheckResultRepository;
+import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.MergeRequest;
@@ -8,10 +10,12 @@ import org.gitlab4j.api.models.Visibility;
 
 import java.util.List;
 
-public class CheckGitlabSettings {
+public class CheckGitlabSettings extends Check {
 
-    private org.gitlab4j.api.models.Project project;
-    private GitLabApi api;
+    public CheckGitlabSettings(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        super(api, project, lintingResult, checkResultRepository);
+    }
+
 
     /////////////////
     ///// TESTS /////
