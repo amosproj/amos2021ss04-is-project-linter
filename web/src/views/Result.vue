@@ -60,7 +60,7 @@ export default {
 			let succChecks = this.project.lintingResults[0].checkResults.filter((res) => {
 				return res.result == true;
 			});
-			return 100 * succChecks.length / this.project.lintingResults[0].checkResults.length;
+			return (100 * succChecks.length) / this.project.lintingResults[0].checkResults.length;
 		},
 	},
 	mounted() {
@@ -69,7 +69,7 @@ export default {
 				this.project = res.data;
 			})
 			.catch((err) => {
-				console.log(err);
+				this.$em.emit("error", err);
 			});
 	},
 };

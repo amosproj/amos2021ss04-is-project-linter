@@ -56,7 +56,7 @@ export default {
 				this.projects = res.data;
 			})
 			.catch((err) => {
-				console.log(err);
+				this.$em.emit("error", err);
 			});
 	},
 	methods: {
@@ -64,7 +64,7 @@ export default {
 			ax.post("/projects", this.repo_url, {
 				headers: { "Content-Type": "text/plain" },
 			}).catch((err) => {
-				console.log(err);
+				this.$em.emit("error", err);
 			});
 		},
 	},
