@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -89,34 +90,25 @@ public class Linter {
 
         // Fuehre Checks aus
         JsonNode checks = config.get("checks");
-        assert checks.isArray();
 
+        var fileChecks = new CheckGitlabFiles(api.getApi(), apiProject, lintingResult, checkResultRepository);
+        var settingsChecks = new CheckGitlabSettings(api.getApi(), apiProject, lintingResult, checkResultRepository);
+        var rolesChecks = new CheckGitlabRoles(api.getApi(), apiProject, lintingResult, checkResultRepository);
 
-
-        for (JsonNode check : checks) {
-            check.get
+        for (Iterator<String> it = checks.fieldNames(); it.hasNext(); ) {
+            String testName = it.next();
+            JsonNode check = checks.get(testName);
             switch (check.get("category").asText()) {
                 case "file_checks":
-                    fileChecks.;
+                    fileChecks.runTest(testName, check);
+                    break;
                 case "settings_checks":
+                    settingsChecks.runTest(testName, check);
                     break;
                 case "roles_check":
+                    rolesChecks.runTest(testName, check);
                     break;
             }
-        }
-
-        var fileCheckResults = new CheckGitlabFiles(api.getApi(), lintingResult, apiProject, config.get("checks").get("file_checks")).checkAll();
-        var settingsCheckResults = new CheckGitlabSettings(api.getApi(), lintingResult, apiProject, config.get("checks").get("settings_checks")).checkAll();
-        var checkRolesResults = new CheckGitlabRoles(api.getApi(), lintingResult, apiProject, config.get("checks").get("roles_checks")).checkAll();
-
-        for (CheckResult result : checkRolesResults) {
-            checkResultRepository.save(result);
-        }
-        for (CheckResult result : fileCheckResults) {
-            checkResultRepository.save(result);
-        }
-        for (CheckResult result : settingsCheckResults) {
-            checkResultRepository.save(result);
         }
 
     }

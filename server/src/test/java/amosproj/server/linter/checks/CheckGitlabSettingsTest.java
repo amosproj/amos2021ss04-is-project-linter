@@ -1,6 +1,7 @@
 package amosproj.server.linter.checks;
 
 import amosproj.server.GitLab;
+import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
@@ -29,6 +30,9 @@ public class CheckGitlabSettingsTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private CheckResultRepository checkResultRepository;
+
     private CheckGitlabSettings checkGitlabSettings;
 
     private void preparePositive() throws GitLabApiException {
@@ -53,7 +57,7 @@ public class CheckGitlabSettingsTest {
         }
 
         var lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-        this.checkGitlabSettings = new CheckGitlabSettings(api.getApi(), lintingResult, proj, linter.getConfig());
+        this.checkGitlabSettings = new CheckGitlabSettings(api.getApi(), proj, lintingResult, checkResultRepository);
     }
 
     // Projekte sollen NICHT das feature request access verwenden
@@ -177,17 +181,17 @@ public class CheckGitlabSettingsTest {
 
     @Test
     public void hasDescription_positive() {
-        try{
+        try {
             preparePositive();
             assertTrue(checkGitlabSettings.hasDescription());
-        } catch (GitLabApiException e){
+        } catch (GitLabApiException e) {
             fail();
         }
     }
 
     @Test
     public void hasDescription_negative() {
-        try{
+        try {
             prepareNegative();
             assertFalse(checkGitlabSettings.hasDescription());
         } catch (GitLabApiException e) {
