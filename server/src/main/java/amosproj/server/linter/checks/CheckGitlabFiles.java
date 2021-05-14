@@ -9,6 +9,8 @@ import org.gitlab4j.api.models.RepositoryFile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CheckGitlabFiles {
 
@@ -41,7 +43,11 @@ public class CheckGitlabFiles {
         return true;
     }
 
-    public boolean checkContributingHasLinks(){
+    public boolean checkNoContributingChain(){
+        // generiere regex
+        final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        boolean found = false;
         //lade Datei in java.io.tmp
         File file = getRawFile("CONTRIBUTING.md");
         if(file != null) {
@@ -50,22 +56,30 @@ public class CheckGitlabFiles {
                 //lese Zeile der Datei bis Ende
                 while (scanner.hasNextLine()){
                     String line = scanner.nextLine();
-                    //suche in Zeile nach gewünschten Inhalt
-                    //this needs to be adjusted
-                    if(line.matches(".*CONTRIBUTING.md.*")){
-                        return true;
+                    // führe regex auf zeile aus
+                    final Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        found = true;
                     }
+
                 }
             } catch (FileNotFoundException e) {
-
+                e.printStackTrace();
             }
         }
-        return false;
+        // ergebnis umdrehen weil wir auf NO CHAIN prüfen
+        return !found;
     }
 
     public boolean checkReadmeHasLinks(){
+        // generiere regex
+        final var regex = "(?i)(?>https?://)?online.bk.datev.de/documentation.*";
+        // TODO: ADD REGEX FOR CONFLUENCE LINKS
+        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+        boolean found = false;
+
         //lade Datei in java.io.tmp
-        //adjust this to work with proj.getReadmeUrl() instead of README.md
+        // TODO: adjust this to work with proj.getReadmeUrl() instead of README.md
         File file = getRawFile("README.md");
         if(file != null) {
             try{
@@ -73,25 +87,24 @@ public class CheckGitlabFiles {
                 //lese Zeile der Datei bis Ende
                 while (scanner.hasNextLine()){
                     String line = scanner.nextLine();
-                    //suche in Zeile nach gewünschten Inhalt
-                    //this needs to be adjusted
-                    if(line.matches(".*http://.*\\..*")){
-                        return true;
+                    // führe regex auf zeile aus
+                    final Matcher matcher = pattern.matcher(line);
+                    if (matcher.find()) {
+                        found = true;
                     }
                 }
             } catch (FileNotFoundException e) {
-
+                e.printStackTrace();
             }
         }
-        return false;
+        return found;
     }
 
     public File getRawFile(String filepath) {
         if(fileExists(filepath)) {
             try{
                 //lade die Datei nach java.io.tmp
-                File file = api.getRepositoryFileApi().getRawFile(proj.getId(), proj.getDefaultBranch(), filepath, null);
-                return file;
+                return api.getRepositoryFileApi().getRawFile(proj.getId(), proj.getDefaultBranch(), filepath, null);
             } catch (GitLabApiException e) {
                 System.out.println("reason: " + e.getReason());
             }
