@@ -94,25 +94,25 @@ public class CheckGitlabFilesTest {
 
     @Test
     void test_hasLinksInContributing_positive() throws GitLabApiException {
-        preparePositive();
-        assertTrue(checkGitlabFiles.checkContributingHasLinks());
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+        assertTrue(checkGitlabFiles.checkNoContributingChain());
     }
 
     @Test
     void test_hasLinksInContributing_negative() throws GitLabApiException {
-        prepareNegative();
-        assertFalse(checkGitlabFiles.checkContributingHasLinks());
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
+        assertFalse(checkGitlabFiles.checkNoContributingChain());
     }
 
     @Test
     void test_hasLinksInReadme_positive() throws GitLabApiException {
-        preparePositive();
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
         assertTrue(checkGitlabFiles.checkReadmeHasLinks());
     }
 
     @Test
     void test_hasLinksInReadme_negative() throws GitLabApiException {
-        prepareNegative();
+        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
         assertFalse(checkGitlabFiles.checkReadmeHasLinks());
     }
 
