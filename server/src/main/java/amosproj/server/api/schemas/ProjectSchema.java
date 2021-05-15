@@ -26,7 +26,7 @@ public class ProjectSchema {
     private Integer forkCount;
     private Date lastCommit;
 
-    public ProjectSchema(Project proj, GitLab api, LintingResultRepository lintingResultRepository,boolean withResults) {
+    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository,boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
         }
@@ -38,12 +38,6 @@ public class ProjectSchema {
 
         if (lintingResult != null)
             this.lintingResults.add(new LintingResultSchema(lintingResult));
-
-        /* This is not relevant yet; will be used once we query by start and end date
-        if (proj.getResults() != null)
-            for (LintingResult lr : proj.getResults())
-                this.lintingResults.add(new LintingResultSchema(lr));
-         */
 
         this.description = proj.getDescription();
         this.forkCount = proj.getForkCount();
