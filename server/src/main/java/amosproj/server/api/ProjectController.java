@@ -38,7 +38,7 @@ public class ProjectController {
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
             Project projAlt = it.next();
-            ProjectSchema proj = new ProjectSchema(projAlt, api, lintingResultRepository, false);
+            ProjectSchema proj = new ProjectSchema(projAlt, lintingResultRepository, false);
             res.add(proj);
             //System.out.println("proj: " + proj);
         }
@@ -49,7 +49,7 @@ public class ProjectController {
     public ProjectSchema getProject(@PathVariable("id") Long id) {
         return new ProjectSchema(repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        ), api, lintingResultRepository, true);
+        ), lintingResultRepository, true);
     }
 
     @PostMapping("/projects")
