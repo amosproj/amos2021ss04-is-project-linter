@@ -39,15 +39,7 @@ public class Linter {
         this.projectRepository = projectRepository;
 
         // read configuration file.
-        ClassPathResource file = new ClassPathResource("checks.json");
-        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        JsonNode node = null;
-        try {
-            node = objectMapper.readTree(file.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        this.config = node;
+        this.config = getConfigNode();
     }
 
     /**
@@ -130,6 +122,22 @@ public class Linter {
             checkEverything(proj);
         }
 
+    }
+
+    /**
+     * Gets the config.json and parses it into a JsonNode
+     * @return JsonNode of the parsed config.json
+     */
+    public static JsonNode getConfigNode() {
+        ClassPathResource file = new ClassPathResource("checks.json");
+        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
+        JsonNode node = null;
+        try {
+            node = objectMapper.readTree(file.getInputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return node;
     }
 
     public JsonNode getConfig() {
