@@ -21,13 +21,18 @@
 
 				<v-list-item-content>
 					<v-list-item-title v-text="res.checkName"></v-list-item-title>
-					<v-list-item-subtitle>Beschreibung todo</v-list-item-subtitle>
+					<v-list-item-subtitle v-text="res.description"></v-list-item-subtitle>
 				</v-list-item-content>
 
 				<v-list-item-action>
-					<v-btn icon>
-						<v-icon color="grey lighten-1">mdi-information</v-icon>
-					</v-btn>
+					<v-tooltip bottom>
+						<template v-slot:activator="{ on, attrs }">
+							<v-btn icon v-bind="attrs" v-on="on">
+								<v-icon color="grey lighten-1">mdi-information</v-icon>
+							</v-btn>
+						</template>
+						<span>{{ res.fix }}</span>
+					</v-tooltip>
 				</v-list-item-action>
 			</v-list-item>
 		</v-list>

@@ -126,6 +126,7 @@ public class Linter {
 
     /**
      * Gets the config.json and parses it into a JsonNode
+     *
      * @return JsonNode of the parsed config.json
      */
     public static JsonNode getConfigNode() {

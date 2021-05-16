@@ -26,7 +26,7 @@
 						<a :href="proj.url">{{ proj.url }}</a>
 					</v-card-subtitle>
 					<v-card-text>
-						mehr info und so, number of forks
+						Forks: {{ proj.forkCount }}
 					</v-card-text>
 					<v-card-actions>
 						<v-btn outlined rounded color="blue" text :to="{ name: 'Result', params: { id: proj.id } }">
