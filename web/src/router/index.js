@@ -20,6 +20,7 @@ const routes = [
 				component: () => import("@/views/Stats.vue"),
 			},
 		],
+		redirect: "/projects",
 	},
 	{
 		path: "/result/:id",
