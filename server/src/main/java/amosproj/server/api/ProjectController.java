@@ -1,6 +1,5 @@
 package amosproj.server.api;
 
-import amosproj.server.GitLab;
 import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
@@ -27,9 +26,6 @@ public class ProjectController {
 
     @Autowired
     private Linter linter;
-
-    @Autowired
-    private GitLab api;
 
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects() {
