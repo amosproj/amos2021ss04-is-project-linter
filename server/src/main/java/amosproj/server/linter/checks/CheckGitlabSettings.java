@@ -88,15 +88,14 @@ public class CheckGitlabSettings extends Check {
         return (description != null && !description.equals(""));
     }
 
-    public boolean hasSquashingEnabled() {
+    //das gewünschte Ergebnis ist false
+    public boolean hasSquashedCommitInMergeRequests() {
         var mergeRequestsApi = api.getMergeRequestApi();
-        boolean hasSquashingEnabled = false;
-
         try {
             //hole alle mergeRequests des Projekts
             List<MergeRequest> mergeRequestList = mergeRequestsApi.getMergeRequests(project.getId());
+            //checke ob squashing in irgendeinen merge request verwendet wurde
             for (MergeRequest m : mergeRequestList) {
-                //wenn in squashing in irgendeinen merge request verwendet wurde ist squashing erlaubt
                 if (m.getSquash()) {
                     return true;
                 }
@@ -104,7 +103,7 @@ public class CheckGitlabSettings extends Check {
         } catch (GitLabApiException e) {
             System.out.println("reason: " + e.getReason());
         }
-        return hasSquashingEnabled;
+        return false;
     }
 
     public boolean hasBadges() {

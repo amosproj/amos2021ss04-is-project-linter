@@ -198,4 +198,24 @@ public class CheckGitlabSettingsTest {
             fail();
         }
     }
+
+    @Test
+    public void hasSquashedCommitInMergeRequests_positive(){
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
+            assertFalse(checkGitlabSettings.hasSquashedCommitInMergeRequests());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasSquashedCommitInMergeRequests_negative(){
+        try{
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
+            assertTrue(checkGitlabSettings.hasSquashedCommitInMergeRequests());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
 }

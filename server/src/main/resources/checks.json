@@ -83,6 +83,14 @@
       "message": "Das Repository hat keine Beschreibung!",
       "fix": "Fügen Sie eine Beschreibung hinzu."
     },
+    "hasSquashedCommitInMergeRequests": {
+      "category": "settings_check",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft ob es in irgendeinem merge request commits gesquashed wurden",
+      "message": "Es existiert ein gesquashter commit im repository",
+      "fix": "Kann nicht behoben werden."
+    },
     "guestRoleEnabled": {
       "category": "roles_checks",
       "enabled": true,
