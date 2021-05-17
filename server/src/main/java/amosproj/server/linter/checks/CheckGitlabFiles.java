@@ -2,6 +2,7 @@ package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
@@ -9,6 +10,13 @@ import org.gitlab4j.api.models.RepositoryFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,7 +73,7 @@ public class CheckGitlabFiles extends Check {
                     }
 
                 }
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -81,11 +89,10 @@ public class CheckGitlabFiles extends Check {
         boolean found = false;
 
         //lade Datei in java.io.tmp
-        // TODO: adjust this to work with project.getReadmeUrl() instead of README.md
-        File file = getRawFile("README.md");
-        if (file != null) {
+        URI uri = getRawReadme();
+        if (uri != null) {
             try {
-                Scanner scanner = new Scanner(file);
+                Scanner scanner = new Scanner(uri.toURL().openStream());
                 //lese Zeile der Datei bis Ende
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
@@ -95,11 +102,24 @@ public class CheckGitlabFiles extends Check {
                         found = true;
                     }
                 }
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         return found;
+    }
+
+    public URI getRawReadme() {
+        var readme = project.getReadmeUrl();
+        if (readme != null) {
+            var raw_readme = readme.replace("blob", "raw");
+            try {
+                return new URI(raw_readme);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public File getRawFile(String filepath) {
