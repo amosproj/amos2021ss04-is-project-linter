@@ -59,7 +59,7 @@ export default {
 	},
 	computed: {
 		lastLint() {
-			return dayjs(this.project.lintingResults[0].lintTime).format("DD.MM.YYYY - H:m");
+			return dayjs(this.project.lintingResults[0].lintTime).format("DD.MM.YYYY - H:mm");
 		},
 		successPercentage() {
 			let succChecks = this.project.lintingResults[0].checkResults.filter((res) => {
