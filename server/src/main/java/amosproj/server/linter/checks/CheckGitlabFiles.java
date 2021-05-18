@@ -60,9 +60,15 @@ public class CheckGitlabFiles extends Check {
         boolean found = false;
         //lade Datei in java.io.tmp
         File file = getRawFile("CONTRIBUTING.md");
-        if (file != null) {
+        URL url = null;
+        try {
+            url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        if (url != null) {
             try {
-                Scanner scanner = new Scanner(file);
+                Scanner scanner = new Scanner(url.openStream());
                 //lese Zeile der Datei bis Ende
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
