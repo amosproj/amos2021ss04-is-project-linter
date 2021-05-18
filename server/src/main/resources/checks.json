@@ -106,6 +106,30 @@
       "description": "Überprüft ob die Developer Rolle aktiviert ist.",
       "message": "Das Repository hat die Developer Rolle deaktiviert!",
       "fix": "Ändern sie die Einstellugen des Repositories um Developers zu erlauben."
+    },
+    "hasBadges": {
+      "category": "settings_check",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft ob das Projekt 'Badges' verwendet.",
+      "message": "Im Repository wurden keine Badges gefunden!",
+      "fix": "Fügen sie Badges für z. B. den Build status in den Projekteigenschaften hinzu."
+    },
+    "checkReadmeHasLinks": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft ob in der Readme eine Verlinkung zu Confluence oder anderen Dokus eingetragen ist.",
+      "message": "Keine Verlinkung zu Confluence oder online.bk.datev.de/documentation gefunden!",
+      "fix": "Fügen sie die benötigte Verlinkung in die Readme ein."
+    },
+    "checkNoContributingChain": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft das sich in der CONTRIBUTING-Datei keine links auf andere CONTRIBUTING-Dateien befinden.",
+      "message": "Es wurde ein Link zu einer andere CONTRIBUTING.MD gefunden!",
+      "fix": "Entfernen sie die Verlinkung zu der anderen CONTRIBUTING.MD."
     }
   }
 }
