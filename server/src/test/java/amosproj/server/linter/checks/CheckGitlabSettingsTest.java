@@ -200,20 +200,20 @@ public class CheckGitlabSettingsTest {
     }
 
     @Test
-    public void hasSquashedCommitInMergeRequests_positive(){
-        try{
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
-            assertFalse(checkGitlabSettings.hasSquashedCommitInMergeRequests());
+    public void hasSquashingEnabled_positive(){
+        try {
+            prepareNegative();
+            assertFalse(checkGitlabSettings.hasSquashingEnabled());
         } catch (GitLabApiException e) {
             fail();
         }
     }
 
     @Test
-    public void hasSquashedCommitInMergeRequests_negative(){
-        try{
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
-            assertTrue(checkGitlabSettings.hasSquashedCommitInMergeRequests());
+    public void hasSquashingEnabled_negative(){
+        try {
+            preparePositive();
+            assertTrue(checkGitlabSettings.hasSquashingEnabled());
         } catch (GitLabApiException e) {
             fail();
         }
