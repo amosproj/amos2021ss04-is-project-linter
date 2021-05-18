@@ -97,13 +97,13 @@ public class CheckGitlabFilesTest {
     }
 
     @Test
-    void test_hasLinksInContributing_positive() throws GitLabApiException {
+    void test_hasContributingChain_positive() throws GitLabApiException {
         prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
         assertTrue(checkGitlabFiles.checkNoContributingChain());
     }
 
     @Test
-    void test_hasLinksInContributing_negative() throws GitLabApiException {
+    void test_hasContributingChain_negative() throws GitLabApiException {
         prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_negative");
         assertFalse(checkGitlabFiles.checkNoContributingChain());
     }

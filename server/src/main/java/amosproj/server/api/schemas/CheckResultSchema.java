@@ -2,31 +2,31 @@ package amosproj.server.api.schemas;
 
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
 public class CheckResultSchema {
     // core attributes
-    private Long Id;
     private String checkName;
     private Boolean result;
     private CheckSeverity severity;
+    private String category;
     // relations
     // -
     // additional info
-    // -
+    private String description;
+    private String message;
+    private String fix;
 
-    public CheckResultSchema(CheckResult cr) {
-        BeanUtils.copyProperties(cr, this);
-        System.out.println(cr);
-    }
-
-    public Long getId() {
-        return Id;
-    }
-
-    public void setId(Long id) {
-        Id = id;
+    public CheckResultSchema(CheckResult result, JsonNode node) {
+        this.checkName = result.getCheckName();
+        this.result = result.getResult();
+        this.severity = result.getSeverity();
+        this.category = node.get("category").asText();
+        this.description = node.get("description").asText();
+        this.message = node.get("message").asText();
+        this.fix = node.get("fix").asText();
     }
 
     public String getCheckName() {
@@ -51,6 +51,22 @@ public class CheckResultSchema {
 
     public void setSeverity(CheckSeverity severity) {
         this.severity = severity;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public String getFix() {
+        return fix;
+    }
+
+    public String getCategory() {
+        return category;
     }
 
     @Override

@@ -2,9 +2,11 @@ package amosproj.server.api.schemas;
 
 import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
+import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -24,7 +26,7 @@ public class ProjectSchema {
     private Integer forkCount;
     private Date lastCommit;
 
-    public ProjectSchema(Project proj, GitLab api, boolean withResults) {
+    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository,boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
         }
@@ -32,13 +34,14 @@ public class ProjectSchema {
         BeanUtils.copyProperties(proj, this);
         this.lintingResults = new LinkedList<>();
 
-        if (proj.getResults() != null)
-            for (LintingResult lr : proj.getResults())
-                this.lintingResults.add(new LintingResultSchema(lr));
+        LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
 
-        description = proj.getDescription();
-        forkCount = proj.getForkCount();
-        lastCommit = proj.getLastCommit();
+        if (lintingResult != null)
+            this.lintingResults.add(new LintingResultSchema(lintingResult));
+
+        this.description = proj.getDescription();
+        this.forkCount = proj.getForkCount();
+        this.lastCommit = proj.getLastCommit();
     }
 
     public Long getId() {

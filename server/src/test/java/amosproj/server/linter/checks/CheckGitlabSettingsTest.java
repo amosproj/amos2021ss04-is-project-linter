@@ -198,4 +198,24 @@ public class CheckGitlabSettingsTest {
             fail();
         }
     }
+
+    @Test
+    public void hasSquashingEnabled_positive(){
+        try {
+            prepareNegative();
+            assertFalse(checkGitlabSettings.hasSquashingEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
+
+    @Test
+    public void hasSquashingEnabled_negative(){
+        try {
+            preparePositive();
+            assertTrue(checkGitlabSettings.hasSquashingEnabled());
+        } catch (GitLabApiException e) {
+            fail();
+        }
+    }
 }

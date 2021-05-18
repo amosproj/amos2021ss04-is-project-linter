@@ -2,6 +2,8 @@ package amosproj.server.api.schemas;
 
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.LintingResult;
+import amosproj.server.linter.Linter;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
@@ -22,9 +24,10 @@ public class LintingResultSchema {
     public LintingResultSchema(LintingResult lr) {
         BeanUtils.copyProperties(lr, this);
         this.checkResults = new LinkedList<>();
+        JsonNode config = Linter.getConfigNode();
         if (lr.getCheckResults() != null)
             for (CheckResult cr : lr.getCheckResults())
-                this.checkResults.add(new CheckResultSchema(cr));
+                this.checkResults.add(new CheckResultSchema(cr, config.get("checks").get(cr.getCheckName())));
     }
 
     public Long getId() {
