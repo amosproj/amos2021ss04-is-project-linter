@@ -1,14 +1,3 @@
-.progressSpinner{
-    background-color: green;
-}
-
-.ChangeOverTime{
-    background-color: blue;
-}
-.severities{
-    background-color: black;
-}
-
 .checks{
     overflow:unset;
 }
@@ -18,12 +7,10 @@
 }
 
 .Warnung{
-    background-color: yellow;
     height: 33%;
     width: 100%;
 }
 .Info{
-    background-color: green;
     height: 33%;
     width: 100%;
 }
@@ -35,19 +22,15 @@
     left: 0;
     width: 100%;
 
-    background-color: rgb(31, 88, 34);
-
     padding: 10px 24px;
 }
 
 .leftOne{
-    background-color: blue;
     width: 100%;
     height: 400px;
     overflow: auto;
 }
 .leftTwo{
-    background-color: rgba(240, 41, 240, 0.404);
     width: 100%;
     height: 200px;
     overflow: auto;
@@ -55,7 +38,6 @@
 }
 .left {
     max-width: 425px;
-    background-color: #008000;
     overflow:auto;
     float:left
   }
@@ -63,7 +45,6 @@
     width: 100%;
     max-width: 425px;
     float:right;
-    background-color: black;
     overflow: auto;
   }
  
