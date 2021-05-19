@@ -1,82 +1,46 @@
 
+<!-- Header-->
+<mat-toolbar color="primary">
+  <mat-toolbar-row style="height: 50px;"> 
+    <span style="text-align: left; display:inline-block; width: 100%; font-size: 25px">{{RepoName}}</span>
+  </mat-toolbar-row>
+  <mat-toolbar-row style="height: 20px;">
+    <p style="text-align: left; display:inline-block; width: 100%; font-size: 18px;">URL: {{RepoURL}}</p>
+  </mat-toolbar-row>
+</mat-toolbar>
 
-<mat-card class="header-card">
-  <mat-card-title>Insert Project Name</mat-card-title>
-  <mat-card-subtitle>URL Or maybe owner?</mat-card-subtitle>
-  <button mat-button  (click)="closeDialog()">Close</button>
-</mat-card>
-<br>
+<!-- matCard left Side-->
 <mat-card class="left">
-<mat-card-content class="leftOne">
-  <mat-accordion>
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Existencial Checks:
-        </mat-panel-title>
-        <mat-panel-description>
-          Checks the project for very important inner source guidelines
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checksHighSeverity"> 
-          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-          <p matLine *ngIf="certainTest.result == false">
-            <span> if false: error message</span>
-          </p>
-        </mat-list-item>
-     </mat-nav-list>
-    </mat-expansion-panel> 
 
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Non-Existencial Checks:
-        </mat-panel-title>
-        <mat-panel-description>
-          Checks the project for inner source guidelines
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checksMediumSeverity"> 
-          <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-          <p matLine *ngIf="certainTest.result == false">
-            <span> if false: error message </span>
-          </p>
-        </mat-list-item>
-     </mat-nav-list>
-    </mat-expansion-panel> 
+  <mat-card-content class="leftTwo">
+    <p>
+      Placeholder for Information like: Number of Forks, maintainers, etc...
+    </p>
+  </mat-card-content>
 
-    <mat-expansion-panel hideToggle>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Low:
-        </mat-panel-title>
-        <mat-panel-description>
-          Checks with unknown severity
-        </mat-panel-description>
-      </mat-expansion-panel-header>
-      <mat-nav-list>
-        <mat-list-item  *ngFor="let certainTest of checksLowSeverity"> 
-            <h3 matLine> {{returnEmoji(certainTest)}}  {{certainTest.checkName}}</h3>
-            <p matLine *ngIf="certainTest.result == false">
-              <span> if false: error message </span>
-            </p>
-  
-        </mat-list-item>
-     </mat-nav-list>
-    </mat-expansion-panel> 
-  </mat-accordion>
-</mat-card-content>
-
-<mat-card-content class="leftTwo">
-  <p>
-    Placeholder for Information like: Number of Forks, maintainers, etc...
-  </p>
-</mat-card-content>
-<br>
-
+  <mat-card-content class="leftOne">
+    <mat-accordion>
+      <mat-expansion-panel *ngFor="let category of categories; let i = index">
+        <mat-expansion-panel-header>
+          {{category}}
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]"> 
+            <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}}
+            </h3>
+            <h4 matLine *ngIf="check.result == false">
+              <span> {{check.message}}</span> 
+              <br>
+              <span>Tipp: {{check.fix}}</span>
+            </h4>
+          </mat-list-item>
+      </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </mat-card-content>
 </mat-card>
+
+<!-- matCard right side-->
 <mat-card class="right">
   <mat-card-content class="leftOne">
     <p>

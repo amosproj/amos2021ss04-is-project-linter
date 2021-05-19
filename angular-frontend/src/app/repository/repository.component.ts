@@ -1,10 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
-//import { RepositoryDetailsComponent } from './../repository-details/repository-details.component';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppComponent } from '../app.component';
 import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
-import { Repositories } from '../repositories';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
@@ -24,7 +21,6 @@ export class RepositoryComponent implements OnInit {
   removeObject(){
     this._ref.destroy();
   }
-  repos = Repositories;
   constructor(public route: ActivatedRoute, public router: Router, public dialog: MatDialog,private http: HttpClient) { }
 
   ngOnInit(): void {
