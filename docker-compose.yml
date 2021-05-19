@@ -32,7 +32,7 @@ services:
 
     nginx:
         container_name: "amos-linter-nginx"
-        image: "amoslinter/frontend:new-frontend"
+        image: "amoslinter/frontend:new-frontend" # TODO swap to new new-frontend
         volumes: # more like: load configurations
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:
