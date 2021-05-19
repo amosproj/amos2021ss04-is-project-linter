@@ -17,7 +17,7 @@
   &nbsp;
   <button
     mat-raised-button
-    (click)="forwardLink('http://localhost:8080/projects', suchleiste.value); suchleiste.value = '';"
+    (click)="forwardLink('http://localhost:6969/api/projects', suchleiste.value); suchleiste.value = '';"
     color="primary"
   >
     Suche
@@ -25,7 +25,7 @@
 </mat-card-content>
 <mat-card class="body">
   <mat-card-actions>
-    <button type="button" (click)="GetProjects('http://localhost:8080/projects')" class="btn btn-default">
+    <button type="button" (click)="GetProjects('http://localhost:6969/api/projects')" class="btn btn-default">
       Refresh Projects
     </button>
   </mat-card-actions>
