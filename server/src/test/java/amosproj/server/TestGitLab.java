@@ -19,11 +19,16 @@ public class TestGitLab {
 
     @Test
     void test_makeApiRequest() throws JsonProcessingException {
-        String data = "{\"status\":\"success\",\"data\":{\"id\":1,\"employee_name\":\"Tiger Nixon\",\"employee_salary\":320800,\"employee_age\":61,\"profile_image\":\"\"},\"message\":\"Successfully! Record has been fetched.\"}";
+        String data = "{\n" +
+                "  \"userId\": 1,\n" +
+                "  \"id\": 1,\n" +
+                "  \"title\": \"sunt aut facere repellat provident occaecati excepturi optio reprehenderit\",\n" +
+                "  \"body\": \"quia et suscipit\\nsuscipit recusandae consequuntur expedita et cum\\nreprehenderit molestiae ut ut quas totam\\nnostrum rerum est autem sunt rem eveniet architecto\"\n" +
+                "}";
         ObjectMapper mapper = new ObjectMapper();
         JsonNode expected = mapper.readTree(data);
         assert expected != null;
-        JsonNode actual = api.makeApiRequest("http://dummy.restapiexample.com/api/v1/employee/1");
+        JsonNode actual = api.makeApiRequest("https://jsonplaceholder.typicode.com/posts/1");
         assert actual != null;
 
         assertEquals(expected, actual);
