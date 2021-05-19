@@ -32,7 +32,7 @@ services:
 
     nginx:
         container_name: "amos-linter-nginx"
-        image: "amoslinter/frontend:staging"
+        image: "amoslinter/frontend:new-frontend"
         volumes: # more like: load configurations
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
         depends_on:

@@ -1,9 +1,17 @@
 # web
 
-## Project setup
+## Setup
+NPM-Pakete installieren
 ```
 npm install
+
 ```
+
+## Bauen
+`npm run build`
+
+## Docker
+`docker build -t amoslinter/frontend:new-frontend .`
 
 ### Compiles and hot-reloads for development
 ```
