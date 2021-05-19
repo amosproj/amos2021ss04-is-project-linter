@@ -12,8 +12,8 @@
 		</v-form>
 
 		<v-tabs centered class="ml-n9" color="grey darken-1">
-			<v-tab to="/projects">Projekte</v-tab>
-			<v-tab to="/stats">Statistik</v-tab>
+			<v-tab :to="{ name: 'Projects' }">Projekte</v-tab>
+			<v-tab :to="{ name: 'Stats' }">Statistik</v-tab>
 		</v-tabs>
 
 		<router-view />

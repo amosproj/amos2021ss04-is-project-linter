@@ -1,7 +1,7 @@
 <template>
 	<v-app-bar app color="primary" flat>
 		<v-container class="py-0 fill-height">
-			<v-btn text to="/">
+			<v-btn text :to="{ name: 'Dashboard' }">
 				ACIDIC
 			</v-btn>
 
