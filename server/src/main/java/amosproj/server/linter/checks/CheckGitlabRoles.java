@@ -6,6 +6,9 @@ import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.models.AccessLevel;
 import org.gitlab4j.api.models.Project;
 
+/**
+ * CheckGitlabRoles implementiert die Checks für Rollen in dem Repository.
+ */
 public class CheckGitlabRoles extends Check {
 
     public CheckGitlabRoles(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {

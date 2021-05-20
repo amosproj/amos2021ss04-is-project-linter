@@ -10,6 +10,9 @@ import org.gitlab4j.api.models.Project;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Check ist die Abstrakte Klasse, die das Ausführen der einzelnen Checks vornimmt.
+ */
 public abstract class Check {
 
     protected org.gitlab4j.api.GitLabApi api;

@@ -12,6 +12,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * LintingResultSchema wird benutzt, um die LintingResults aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
+ * Damit wird Redundanz in der Datenbank umgangen.
+ */
 public class LintingResultSchema {
     // core attributes
     private Long Id;

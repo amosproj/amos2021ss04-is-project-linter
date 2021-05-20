@@ -11,6 +11,10 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * GitLab ist dafür zuständig, dass die Verbindung zum Host, der in der config-Datei festgelegt wurde, erstellt wird.
+ * Sie bietet das Interface zum GitLab4J Framework und der GitLab API selbst an.
+ */
 @Service
 public class GitLab {
 

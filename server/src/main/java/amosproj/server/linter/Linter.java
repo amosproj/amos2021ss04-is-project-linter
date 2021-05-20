@@ -18,7 +18,10 @@ import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.List;
 
-
+/**
+ * Linter führt den tatsächlichen Lint-Vorgang durch.
+ * Weiterhin stellt sie eine Methode zur Verfügung, um die config-Datei einzulesen.
+ */
 @Service
 public class Linter {
 

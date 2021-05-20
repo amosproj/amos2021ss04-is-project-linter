@@ -14,6 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Der ProjectController ist die API-Schnittstelle nach außen.
+ */
 @RestController
 @CrossOrigin(origins = "*") // origins, methods, allowedHeaders, exposedHeaders, allowCredentials, maxAge
 public class ProjectController {
