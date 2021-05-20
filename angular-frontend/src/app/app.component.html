@@ -35,7 +35,7 @@
   <mat-tab label="Repositories"> 
     <mat-card class="body">
       <mat-card-actions>
-        <button type="button" (click)="GetProjects('http://localhost:8080/projects')" class="btn btn-default">
+        <button type="button" (click)="GetProjects('http://localhost:8080/projects');removeAllProjectsFromOverview()" class="btn btn-default">
           Refresh Projects
         </button>
       </mat-card-actions>

@@ -81,7 +81,9 @@ getIfForwardLinkWorked(){
         }*/
         );
 }
-
+removeAllProjectsFromOverview(){
+this.container.clear();
+}
 
 GetProjects(serverID){
   this.http.get(serverID).subscribe(
