@@ -140,20 +140,20 @@ public class CheckGitlabSettingsTest {
 
 
     @Test
-    public void gitlabWikiEnabled_positive() {
+    public void gitlabWikiDisabled_negative() {
         try {
             prepareSettingsCheck("https://gitlab.cs.fau.de/it62ajow/chiefexam");
-            assertTrue(checkGitlabSettings.gitlabWikiEnabled());
+            assertFalse(checkGitlabSettings.gitlabWikiDisabled());
         } catch (GitLabApiException e) {
             fail();
         }
     }
 
     @Test
-    public void gitlabWikiEnabled_negative() {
+    public void gitlabWikiDisabled_positive() {
         try {
             prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
-            assertFalse(checkGitlabSettings.gitlabWikiEnabled());
+            assertTrue(checkGitlabSettings.gitlabWikiDisabled());
         } catch (GitLabApiException e) {
             fail();
         }
