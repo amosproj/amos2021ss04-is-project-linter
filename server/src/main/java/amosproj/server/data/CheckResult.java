@@ -7,6 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * CheckResult ist das JPA-Objekt, das die Ergebnisse der einzelnen Checks in der Datenbank speichert.
+ */
 @Entity
 public class CheckResult {
 

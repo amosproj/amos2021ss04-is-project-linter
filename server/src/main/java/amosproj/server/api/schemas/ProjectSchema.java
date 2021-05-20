@@ -12,6 +12,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * ProjectSchema kann benutzt werden, um die Projects aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
+ * Damit kann Redundanz in der Datenbank umgangen werden.
+ */
 public class ProjectSchema {
     // core attributes
     private Long Id;

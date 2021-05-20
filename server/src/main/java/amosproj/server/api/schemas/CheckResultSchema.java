@@ -6,6 +6,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
+/**
+ * CheckResultSchema wird benutzt, um die CheckResults aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
+ * Damit wird Redundanz in der Datenbank umgangen.
+ */
 public class CheckResultSchema {
     // core attributes
     private String checkName;

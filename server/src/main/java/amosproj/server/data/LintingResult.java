@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * LintingResult ist das JPA-Objekt, das die Meta-Daten der Linterausführungen in der Datenbank speichert.
+ */
 @Entity
 public class LintingResult {
 

@@ -13,6 +13,9 @@ import org.gitlab4j.api.models.Visibility;
 
 import java.util.List;
 
+/**
+ * CheckGitlabSettings implementiert die Checks für Einstellungen in dem Repository.
+ */
 public class CheckGitlabSettings extends Check {
 
     public CheckGitlabSettings(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
