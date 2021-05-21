@@ -27,8 +27,6 @@ public class Linter {
 
     private final GitLab api;
 
-    protected JsonNode config;
-
     // autowired
     private final LintingResultRepository lintingResultRepository;
     private final CheckResultRepository checkResultRepository;
@@ -41,8 +39,6 @@ public class Linter {
         this.checkResultRepository = checkResultRepository;
         this.projectRepository = projectRepository;
 
-        // read configuration file.
-        this.config = getConfigNode();
     }
 
     /**
@@ -84,7 +80,7 @@ public class Linter {
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
-        JsonNode checks = config.get("checks");
+        JsonNode checks = getConfigNode().get("checks");
 
         var fileChecks = new CheckGitlabFiles(api.getApi(), apiProject, lintingResult, checkResultRepository);
         var settingsChecks = new CheckGitlabSettings(api.getApi(), apiProject, lintingResult, checkResultRepository);
@@ -129,6 +125,7 @@ public class Linter {
 
     /**
      * Gets the config.json and parses it into a JsonNode
+     *
      * @return JsonNode of the parsed config.json
      */
     public static JsonNode getConfigNode() {
@@ -143,7 +140,4 @@ public class Linter {
         return node;
     }
 
-    public JsonNode getConfig() {
-        return this.config;
-    }
 }
