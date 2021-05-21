@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
-import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
 @AutoConfigureDataJpa
@@ -45,7 +47,7 @@ public class CheckResultTest {
 
     @Test
     void checkResultTest() {
-        CheckResult checkresult = new CheckResult(lintingResult, "readme.md", true, CheckSeverity.MEDIUM);
+        CheckResult checkresult = new CheckResult(lintingResult, "readme.md", true);
         assertNotNull(checkresult);
         checkResultRepository.save(checkresult);
 
