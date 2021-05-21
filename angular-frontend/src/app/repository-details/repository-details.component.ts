@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogModule,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as dayjs from 'dayjs'
 
 @Component({
   selector: 'app-repository-details',
@@ -10,15 +11,32 @@ import { MatDialog,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialo
 
 export class RepositoryDetailsComponent implements OnInit {
 
+  
+  emojiMap = {
+    /*unwichtig:"〰️",
+    warning: "⚠️",
+    false: "❌",
+    correct: "✅"*/
+    notImportant:"🟡",
+    warning:     "🟠",
+    false:       "🔴",
+    correct:     "🟢"
+  }
+
   lastLintTime;
   RepoName = "";
   RepoURL  = "";
+  checksHighSeverity:    CheckResults[];  // currently not in use
+  checksMediumSeverity:  CheckResults[];  // currently not in use
+  checksLowSeverity:     CheckResults[];  // currently not in use
   latestLintingResults:  CheckResults[];
-  checksHighSeverity:  CheckResults[];
-  checksMediumSeverity:CheckResults[];
-  checksLowSeverity:   CheckResults[];
   categories: String[];
   LintingResultsInCategories: CheckResults[][];
+  maxColsForTiles=9
+  tiles: Tile[] = [
+    {text: 'Kategorien',             cols: 5, rows:6, color: 'lightblue'},
+    {text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'lightgreen'},
+  ];
   constructor(public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
   @Inject(MAT_DIALOG_DATA) public data: DialogData,private http: HttpClient){} 
 
@@ -48,12 +66,14 @@ export class RepositoryDetailsComponent implements OnInit {
               // fill linting category array
               var last_entry = val.lintingResults.length;
               this.latestLintingResults = val.lintingResults[last_entry-1].checkResults;
-              this.fillSeverityArrays();
+              //this.fillSeverityArrays(); // currently does not need to be used
               this.groupLintingResultsInCategories();
               // save information
               this.RepoName = val.name;
               this.RepoURL  = val.url;
-              this.lastLintTime = val.lintingResults[last_entry-1].lintTime;
+              this.lastLintTime = dayjs(val.lintingResults[last_entry-1].lintTime).format("DD.MM.YYYY - H:mm");
+              // dynamically create missing tiles for grid list corresponding to their grid list
+              this.addTilesForCategoryGraphAndFooter()
         },
         response => {
             console.log("GET call in error", response);
@@ -113,35 +133,36 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 
+  addTilesForCategoryGraphAndFooter(){
+    for(var i = 0; i < this.categories.length; i++){
+      var t = <Tile>{color: "lightpink", cols: 2, rows:2, text: this.categories[i]};
+      this.tiles.push(t)
+    }
+    //this.tiles.push(<Tile>{color: "lightpink", cols: this.maxColsForTiles, rows:1, text: ""})
+  }
+
   returnEmojiBasedOnSeverity(input){
     if (input.result)
-      return emojiMap.correct;
+      return this.emojiMap.correct;
     else if(input.severity == "HIGH")
-      return emojiMap.false;
+      return this.emojiMap.false;
     else if(input.severity == "MEDIUM")
-      return emojiMap.warning;
+      return this.emojiMap.warning;
     else if(input.severity == "Low")
-      return emojiMap.notImportant
+      return this.emojiMap.notImportant
     //else
     //throw error ? or display error message
   }
-}
-const emojiMap = {
-  /*unwichtig:"〰️",
-  warning: "⚠️",
-  false: "❌",
-  correct: "✅"*/
-  notImportant:"🟡",
-  warning:     "🟠",
-  false:       "🔴",
-  correct:     "🟢"
+  
 }
 
+// For getting the project
 export interface DialogData {
   serverID: string;
   projectID:number;
 }
 
+// For storing the information on the project
 interface CheckResults {
   checkName:string,
   severity:string,
@@ -152,4 +173,12 @@ interface CheckResults {
   message:string // is errormessage
  // errormessage:string
 
+}
+
+// For angular tiles
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
 }

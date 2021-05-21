@@ -1,6 +1,6 @@
 
 <!-- Header-->
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" style=" margin-right: 0; margin-left:0;" >
   <mat-toolbar-row style="height: 50px;"> 
     <span style="text-align: left; display:inline-block; width: 100%; font-size: 25px">{{RepoName}}</span>
   </mat-toolbar-row>
@@ -9,55 +9,47 @@
   </mat-toolbar-row>
 </mat-toolbar>
 
-<!-- matCard left Side-->
-<mat-card class="left">
-
-  <mat-card-content class="leftTwo">
-    <p>
-      Placeholder for Information like: Number of Forks, maintainers, etc...
-    </p>
-  </mat-card-content>
-
-  <mat-card-content class="leftOne">
-    <mat-accordion>
-      <mat-expansion-panel *ngFor="let category of categories; let i = index">
-        <mat-expansion-panel-header>
-          {{category}}
-        </mat-expansion-panel-header>
-        <mat-nav-list>
-          <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]"> 
-            <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}}
-            </h3>
-            <h4 matLine *ngIf="check.result == false">
-              <span> {{check.message}}</span> 
-              <br>
-              <span>Tipp: {{check.fix}}</span>
-            </h4>
-          </mat-list-item>
-      </mat-nav-list>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </mat-card-content>
-</mat-card>
-
-<!-- matCard right side-->
-<mat-card class="right">
-  <mat-card-content class="leftOne">
-    <p>
-      Placeholder Info Graphs
-    </p>
-  </mat-card-content>
-  <mat-card-content class="leftTwo">
-    <p>
-      Placeholder Development over Time?
-    </p>
-  </mat-card-content>
-  <br>
-  </mat-card>
-
- <mat-card class="footer">
-  <mat-card-actions>
-      
-  </mat-card-actions>
-</mat-card>
+<!-- Grid List to for displaying all the information-->
+<mat-grid-list cols={{maxColsForTiles}} rowHeight="100" class="rowClass custom">
+  <mat-grid-tile
+      *ngFor="let tile of tiles; let i = index"
+      [colspan]="tile.cols"
+      [rowspan]="tile.rows"
+      [style.background]="tile.color">
+    <mat-card class="mat-elevation-z0">
+      <mat-card-title >
+        {{tile.text}}:
+      </mat-card-title>
+      <span *ngIf="i==0">
+        <!-- Left side Expansion Panel which shows all test results-->
+          <mat-accordion style="width: 100%;">
+            <mat-expansion-panel *ngFor="let category of categories; let i = index">
+              <mat-expansion-panel-header>
+                {{category}}
+              </mat-expansion-panel-header>
+              <mat-nav-list>
+                <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]"> 
+                  <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}} 
+                  </h3>
+                  <!-- Tooltip integrieren!!-->
+                  <h4 matLine *ngIf="check.result == false">
+                    <span> {{check.message}}</span> 
+                    <br>
+                    <span>Tipp: {{check.fix}}</span>
+                  </h4>
+                </mat-list-item>
+              </mat-nav-list>
+            </mat-expansion-panel>
+          </mat-accordion>
+      </span>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-card-footer style="padding: 1.5%;">
+  <p>{{emojiMap.correct}}: Bestanden</p>
+  <p>{{emojiMap.notImportant}}: unwichtiger Test nicht bestanden</p>
+  <p>{{emojiMap.warning}}: Test nicht bestanden</p>
+  <p>{{emojiMap.false}}: wichtiger Test nicht bestanden</p>
+  <p>Zuletzt gelintet am {{lastLintTime}}</p>
+</mat-card-footer>
 
