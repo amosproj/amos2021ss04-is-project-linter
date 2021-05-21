@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Linter führt den tatsächlichen Lint-Vorgang durch.
  * Weiterhin stellt sie eine Methode zur Verfügung, um die config-Datei einzulesen.
+ * Der Crawler befindet sich hier, da er so direkt die Lint-Vorgänge starten kann.
  */
 @Service
 public class Linter {
