@@ -42,7 +42,6 @@ public class ProjectController {
             Project projAlt = it.next();
             ProjectSchema proj = new ProjectSchema(projAlt, lintingResultRepository, false);
             res.add(proj);
-            //System.out.println("proj: " + proj);
         }
         return res;
     }
@@ -57,13 +56,12 @@ public class ProjectController {
     @PostMapping("/projects")
     public @ResponseBody
     String lintProject(@RequestBody String url) {
-        System.out.println(url);
         try {
             linter.runLint(url);
+            return "OK";
         } catch (GitLabApiException e) {
-            return new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist").toString();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist");
         }
-        return "OK";
     }
 
 }

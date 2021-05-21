@@ -28,7 +28,7 @@ public class CheckResult {
     public CheckResult(LintingResult lint, String checkName, Boolean result) {
         this.checkName = checkName;
         this.result = result;
-        this.lintId = lint.getId();
+        if (lint != null) this.lintId = lint.getId();
     }
 
     public Long getId() {

@@ -30,7 +30,7 @@ public class Project {
     protected Project() {
     } // only for JPA, dont use directly!
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance) { // Deprecated
+    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance) { // Deprecated, still used for testing
         this.name = name;
         this.url = url;
         this.gitlabProjectId = gitlabProjectId;

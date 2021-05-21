@@ -26,7 +26,7 @@ public class LintingResult {
     }
 
     public LintingResult(Project project, LocalDateTime lintTime) {
-        this.projectId = project.getId();
+        if (project != null) this.projectId = project.getId();
         this.lintTime = lintTime;
     }
 

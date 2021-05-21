@@ -38,7 +38,6 @@ public class ProjectSchema {
         this.lintingResults = new LinkedList<>();
 
         LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
-
         if (lintingResult != null)
             this.lintingResults.add(new LintingResultSchema(lintingResult));
 
