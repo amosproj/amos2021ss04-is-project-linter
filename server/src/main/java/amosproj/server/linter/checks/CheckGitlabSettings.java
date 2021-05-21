@@ -126,28 +126,28 @@ public class CheckGitlabSettings extends Check {
     }
 
     //checke if squashing im projekt erlaubt ist, dies sollte falsch ergeben
-    public boolean hasSquashingEnabled(){
+    public boolean hasSquashingEnabled() {
         boolean result = false;
         RepositoryApi repositoryApi = api.getRepositoryApi();
         MergeRequestApi mergeRequestApi = api.getMergeRequestApi();
         Branch demoBranch = null;
         MergeRequest demoMergeRequest = null;
-        try{
+        try {
             //erstelle demo branch und merge request mit squashing erlaubt
             demoBranch = repositoryApi.createBranch(project, "demo", project.getDefaultBranch());
             demoMergeRequest = mergeRequestApi.createMergeRequest(project, demoBranch.getName(), project.getDefaultBranch(), "demoTitle", "demoDescription", null, null, null, null, null, true);
             //squashing ist erlaubt
             result = demoMergeRequest.getSquash();
-        } catch (GitLabApiException e){
+        } catch (GitLabApiException e) {
             //ein fehler ist passiert oder squashing ist nicht erlaubt
             System.out.println(e.getReason());
         } finally {
             try {
                 //lösche die demos falls sie erzeugt werden konnten
-                if(demoBranch != null) {
+                if (demoBranch != null) {
                     repositoryApi.deleteBranch(project, demoBranch.getName());
                 }
-                if(demoMergeRequest != null) {
+                if (demoMergeRequest != null) {
                     mergeRequestApi.deleteMergeRequest(project, demoMergeRequest.getIid());
                 }
             } catch (GitLabApiException e) {

@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Dies ist das Schema Objekt, welches von der API an das Frontend gesendet wird.
  * LintingResultSchema wird benutzt, um die LintingResults aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
  * Damit wird Redundanz in der Datenbank umgangen.
  */

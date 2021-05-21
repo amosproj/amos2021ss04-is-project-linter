@@ -50,7 +50,7 @@ public class CheckGitlabFilesTest {
         org.gitlab4j.api.models.Project proj = api.getApi().getProjectApi().getProject(path);
         assert proj != null;
 
-        Project currLintingProject = projectRepository.findByGitlabProjectId(proj.getId());
+        Project currLintingProject = projectRepository.findFirstByGitlabProjectId(proj.getId());
         if (currLintingProject == null) {
             currLintingProject = new Project(proj.getName(), proj.getWebUrl(), proj.getId(), api.getGitlabHost());
             projectRepository.save(currLintingProject);

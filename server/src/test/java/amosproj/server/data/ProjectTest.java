@@ -37,7 +37,7 @@ public class ProjectTest {
     @Test
     public void checkDataBaseIntegrity() {
         assert testProj != null;
-        assert projectRepository.findByGitlabProjectId(1) != null;
+        assert projectRepository.findFirstByGitlabProjectId(1) != null;
 
         Iterable<Project> projectIterable = projectRepository.findAll();
         Iterator<Project> projectIterator = projectIterable.iterator();

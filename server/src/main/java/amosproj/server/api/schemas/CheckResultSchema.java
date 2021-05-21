@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.utils.JacksonJson;
 
 /**
+ * Dies ist das Schema Objekt, welches von der API an das Frontend gesendet wird.
  * CheckResultSchema wird benutzt, um die CheckResults aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
  * Damit wird Redundanz in der Datenbank umgangen.
  */

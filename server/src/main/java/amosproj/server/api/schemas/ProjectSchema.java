@@ -1,18 +1,17 @@
 package amosproj.server.api.schemas;
 
-import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Dies ist das Schema Objekt, welches von der API an das Frontend gesendet wird.
  * ProjectSchema kann benutzt werden, um die Projects aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
  * Damit kann Redundanz in der Datenbank umgangen werden.
  */
@@ -30,7 +29,7 @@ public class ProjectSchema {
     private Integer forkCount;
     private Date lastCommit;
 
-    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository,boolean withResults) {
+    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository, boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
         }
