@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogModule,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 import * as dayjs from 'dayjs'
 
 @Component({
@@ -20,7 +21,8 @@ export class RepositoryDetailsComponent implements OnInit {
     notImportant:"🟡",
     warning:     "🟠",
     false:       "🔴",
-    correct:     "🟢"
+    correct:     "🟢",
+    bug: "🐛"
   }
 
   lastLintTime;
@@ -34,8 +36,8 @@ export class RepositoryDetailsComponent implements OnInit {
   LintingResultsInCategories: CheckResults[][];
   maxColsForTiles=9
   tiles: Tile[] = [
-    {text: 'Kategorien',             cols: 5, rows:6, color: 'lightblue'},
-    {text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'lightgreen'},
+    {text: 'Kategorien',             cols: 5, rows:6, color: 'white'},
+    {text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white'},
   ];
   constructor(public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
   @Inject(MAT_DIALOG_DATA) public data: DialogData,private http: HttpClient){} 
@@ -135,10 +137,9 @@ export class RepositoryDetailsComponent implements OnInit {
 
   addTilesForCategoryGraphAndFooter(){
     for(var i = 0; i < this.categories.length; i++){
-      var t = <Tile>{color: "lightpink", cols: 2, rows:2, text: this.categories[i]};
+      var t = <Tile>{color: "white", cols: 2, rows:2, text: this.categories[i]};
       this.tiles.push(t)
     }
-    //this.tiles.push(<Tile>{color: "lightpink", cols: this.maxColsForTiles, rows:1, text: ""})
   }
 
   returnEmojiBasedOnSeverity(input){
@@ -150,11 +151,13 @@ export class RepositoryDetailsComponent implements OnInit {
       return this.emojiMap.warning;
     else if(input.severity == "Low")
       return this.emojiMap.notImportant
-    //else
-    //throw error ? or display error message
+    else
+      return this.emojiMap.bug
   }
   
 }
+
+declare const require: any; //used for loading svg
 
 // For getting the project
 export interface DialogData {

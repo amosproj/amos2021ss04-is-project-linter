@@ -24,12 +24,13 @@
         <!-- Left side Expansion Panel which shows all test results-->
           <mat-accordion style="width: 100%;">
             <mat-expansion-panel *ngFor="let category of categories; let i = index">
-              <mat-expansion-panel-header>
+              <mat-expansion-panel-header style="border-bottom:  1px solid  #999999">
                 {{category}}
               </mat-expansion-panel-header>
-              <mat-nav-list>
-                <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]"> 
-                  <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}} 
+              <mat-list>
+                <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]" style="border-bottom:  1px solid  #999999"> 
+                  <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}}  
+                    <mat-icon matTooltip={{check.description}} style="float: right;" color="primary">info</mat-icon>
                   </h3>
                   <!-- Tooltip integrieren!!-->
                   <h4 matLine *ngIf="check.result == false">
@@ -38,14 +39,15 @@
                     <span>Tipp: {{check.fix}}</span>
                   </h4>
                 </mat-list-item>
-              </mat-nav-list>
+                <p></p>
+              </mat-list>
             </mat-expansion-panel>
           </mat-accordion>
       </span>
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
-<mat-card-footer style="padding: 1.5%;">
+<mat-card-footer style="padding-left: 6%;">
   <p>{{emojiMap.correct}}: Bestanden</p>
   <p>{{emojiMap.notImportant}}: unwichtiger Test nicht bestanden</p>
   <p>{{emojiMap.warning}}: Test nicht bestanden</p>

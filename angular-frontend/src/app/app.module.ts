@@ -10,6 +10,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import {MatDialogModule} from '@angular/material/dialog';
+import { MatIconModule } from "@angular/material/icon";
 
 
 
@@ -27,7 +28,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]
