@@ -54,7 +54,7 @@ public class CheckGitlabFiles extends Check {
 
     public boolean checkNoContributingChain() {
         // generiere regex
-        final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";
+        final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";  // FIXME make case insensitive
         final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
         boolean found = false;
         //lade Datei in java.io.tmp

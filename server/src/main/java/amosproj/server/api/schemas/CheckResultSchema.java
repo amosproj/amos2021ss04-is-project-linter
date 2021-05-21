@@ -4,9 +4,9 @@ import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.utils.JacksonJson;
-import org.springframework.beans.BeanUtils;
 
 /**
+ * Dies ist das Schema Objekt, welches von der API an das Frontend gesendet wird.
  * CheckResultSchema wird benutzt, um die CheckResults aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
  * Damit wird Redundanz in der Datenbank umgangen.
  */
@@ -14,11 +14,11 @@ public class CheckResultSchema {
     // core attributes
     private String checkName;
     private Boolean result;
-    private CheckSeverity severity;
     private String category;
     // relations
     // -
     // additional info
+    private CheckSeverity severity;
     private String description;
     private String message;
     private String fix;
@@ -26,7 +26,7 @@ public class CheckResultSchema {
     public CheckResultSchema(CheckResult result, JsonNode node) {
         this.checkName = result.getCheckName();
         this.result = result.getResult();
-        this.severity = result.getSeverity();
+        this.severity = CheckSeverity.valueOf(node.get("severity").asText());
         this.category = node.get("category").asText();
         this.description = node.get("description").asText();
         this.message = node.get("message").asText();

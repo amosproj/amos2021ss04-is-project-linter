@@ -21,13 +21,12 @@ import java.util.List;
 /**
  * Linter führt den tatsächlichen Lint-Vorgang durch.
  * Weiterhin stellt sie eine Methode zur Verfügung, um die config-Datei einzulesen.
+ * Der Crawler befindet sich hier, da er so direkt die Lint-Vorgänge starten kann.
  */
 @Service
 public class Linter {
 
     private final GitLab api;
-
-    protected JsonNode config;
 
     // autowired
     private final LintingResultRepository lintingResultRepository;
@@ -41,8 +40,6 @@ public class Linter {
         this.checkResultRepository = checkResultRepository;
         this.projectRepository = projectRepository;
 
-        // read configuration file.
-        this.config = getConfigNode();
     }
 
     /**
@@ -67,7 +64,7 @@ public class Linter {
      */
     private void checkEverything(org.gitlab4j.api.models.Project apiProject) {
         // Hole LintingProject
-        Project currLintingProject = projectRepository.findByGitlabProjectId(apiProject.getId());
+        Project currLintingProject = projectRepository.findFirstByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
             // Erstelle neues Projekt mit Description und ForkCount
             currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt());
@@ -84,7 +81,7 @@ public class Linter {
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
-        JsonNode checks = config.get("checks");
+        JsonNode checks = getConfigNode().get("checks");
 
         var fileChecks = new CheckGitlabFiles(api.getApi(), apiProject, lintingResult, checkResultRepository);
         var settingsChecks = new CheckGitlabSettings(api.getApi(), apiProject, lintingResult, checkResultRepository);
@@ -129,6 +126,7 @@ public class Linter {
 
     /**
      * Gets the config.json and parses it into a JsonNode
+     *
      * @return JsonNode of the parsed config.json
      */
     public static JsonNode getConfigNode() {
@@ -143,7 +141,4 @@ public class Linter {
         return node;
     }
 
-    public JsonNode getConfig() {
-        return this.config;
-    }
 }
