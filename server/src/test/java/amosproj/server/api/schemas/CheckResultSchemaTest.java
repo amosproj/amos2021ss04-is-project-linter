@@ -1,6 +1,7 @@
 package amosproj.server.api.schemas;
 
 import amosproj.server.data.CheckResult;
+import amosproj.server.data.CheckSeverity;
 import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
@@ -24,7 +25,11 @@ public class CheckResultSchemaTest {
         assertEquals(checkResult.getResult(), checkResultSchema.getResult());
         assertEquals(checkResult.getCheckName(), checkResultSchema.getCheckName());
 
-        assertEquals(checkResultSchema.getDescription(), node.get("description").asText());
-        assertEquals(checkResultSchema.getFix(), node.get("fix").asText());
+        assertEquals(node.get("description").asText(), checkResultSchema.getDescription());
+        assertEquals(node.get("fix").asText(), checkResultSchema.getFix());
+        assertEquals(node.get("tag").asText(), checkResultSchema.getTag());
+        assertEquals(CheckSeverity.valueOf(node.get("severity").asText()), checkResultSchema.getSeverity());
+        assertEquals(node.get("message").asText(), checkResultSchema.getMessage());
+        assertEquals(node.get("category").asText(), checkResultSchema.getCategory());
     }
 }

@@ -10,7 +10,8 @@
       "severity": "HIGH",
       "description": "Überprüft, ob eine README Datei existiert.",
       "message": "Keine README Datei gefunden!",
-      "fix": "Legen Sie eine README Datei in der Projektwurzel an."
+      "fix": "Legen Sie eine README Datei in der Projektwurzel an.",
+      "tag": ""
     },
     "checkContributingExistence": {
       "category": "file_checks",
@@ -18,7 +19,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine CONTRIBUTING Datei existiert.",
       "message": "Keine CONTRIBUTING Datei gefunden!",
-      "fix": "Legen Sie eine CONTRIBUTING Datei in der Projektwurzel an."
+      "fix": "Legen Sie eine CONTRIBUTING Datei in der Projektwurzel an.",
+      "tag": ""
     },
     "checkMaintainersExistence": {
       "category": "file_checks",
@@ -26,7 +28,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine MAINTAINERS Datei existiert.",
       "message": "Keine MAINTAINERS Datei gefunden!",
-      "fix": "Legen Sie eine MAINTAINERS Datei in der Projektwurzel an."
+      "fix": "Legen Sie eine MAINTAINERS Datei in der Projektwurzel an.",
+      "tag": ""
     },
     "hasMergeRequestEnabled": {
       "category": "settings_checks",
@@ -34,7 +37,8 @@
       "severity": "LOW",
       "description": "Überprüft, ob Merge Requests erlaubt sind.",
       "message": "Merge requests sind nicht erlaubt!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Merge Requests zu erlauben."
+      "fix": "Ändern Sie die Einstellungen des Repositories um Merge Requests zu erlauben.",
+      "tag": ""
     },
     "hasIssuesEnabled": {
       "category": "settings_checks",
@@ -42,7 +46,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob Issues aktiviert sind.",
       "message": "Issues sind nicht aktiviert!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Issues zu aktivieren."
+      "fix": "Ändern Sie die Einstellungen des Repositories um Issues zu aktivieren.",
+      "tag": ""
     },
     "isPublic": {
       "category": "settings_checks",
@@ -50,7 +55,8 @@
       "severity": "HIGH",
       "description": "Überprüft, ob das Repository öffentlich ist.",
       "message": "Das Repository ist nicht öffentlich!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um es öffentlich zu machen."
+      "fix": "Ändern Sie die Einstellungen des Repositories um es öffentlich zu machen.",
+      "tag": ""
     },
     "gitlabWikiDisabled": {
       "category": "settings_checks",
@@ -58,7 +64,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository Wiki Pages nutzt.",
       "message": "Das Repository nutzt Wiki Pages!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Wiki Pages zu deaktivieren."
+      "fix": "Ändern Sie die Einstellungen des Repositories um Wiki Pages zu deaktivieren.",
+      "tag": ""
     },
     "hasForkingEnabled": {
       "category": "settings_checks",
@@ -66,7 +73,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob Forks erlaubt sind.",
       "message": "Das Repository erlaubt keine Forks!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Forks zu erlauben."
+      "fix": "Ändern Sie die Einstellungen des Repositories um Forks zu erlauben.",
+      "tag": ""
     },
     "hasAvatar": {
       "category": "settings_checks",
@@ -74,7 +82,8 @@
       "severity": "NOT_SPECIFIED",
       "description": "Überprüft, ob das Repository ein Avatar (Bild) hat.",
       "message": "Das Repository hat keinen Avatar!",
-      "fix": "Fügen Sie einen Avatar hinzu."
+      "fix": "Fügen Sie einen Avatar hinzu.",
+      "tag": ""
     },
     "hasDescription": {
       "category": "settings_checks",
@@ -82,7 +91,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository eine Beschreibung hat.",
       "message": "Das Repository hat keine Beschreibung!",
-      "fix": "Fügen Sie eine Beschreibung hinzu."
+      "fix": "Fügen Sie eine Beschreibung hinzu.",
+      "tag": ""
     },
     "hasSquashingEnabled": {
       "category": "settings_check",
@@ -90,7 +100,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob squashing commits erlaubt ist",
       "message": "Squashing commits sind erlaubt",
-      "fix": "Ändern Sie die Einstellungen des Repositories um squash commits zu verbieten."
+      "fix": "Ändern Sie die Einstellungen des Repositories um squash commits zu verbieten.",
+      "tag": ""
     },
     "guestRoleEnabled": {
       "category": "roles_checks",
@@ -98,7 +109,8 @@
       "severity": "LOW",
       "description": "Überprüft, ob die Guest Rolle aktiviert ist.",
       "message": "Das Repository hat die Guest Rolle deaktiviert!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Guests zu erlauben."
+      "fix": "Ändern Sie die Einstellungen des Repositories um Guests zu erlauben.",
+      "tag": ""
     },
     "developerRoleEnabled": {
       "category": "roles_checks",
@@ -106,7 +118,8 @@
       "severity": "LOW",
       "description": "Überprüft, ob die Developer Rolle aktiviert ist.",
       "message": "Das Repository hat die Developer Rolle deaktiviert!",
-      "fix": "Ändern Sie die Einstellugen des Repositories um Developers zu erlauben."
+      "fix": "Ändern Sie die Einstellugen des Repositories um Developers zu erlauben.",
+      "tag": ""
     },
     "hasBadges": {
       "category": "settings_check",
@@ -114,7 +127,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Projekt 'Badges' verwendet.",
       "message": "Im Repository wurden keine Badges gefunden!",
-      "fix": "Fügen Sie Badges für z. B. den Build status in den Projekteigenschaften hinzu."
+      "fix": "Fügen Sie Badges für z. B. den Build status in den Projekteigenschaften hinzu.",
+      "tag": ""
     },
     "checkReadmeHasLinks": {
       "category": "file_checks",
@@ -122,7 +136,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, ob in der Readme eine Verlinkung zu Confluence oder anderen Dokus eingetragen ist.",
       "message": "Keine Verlinkung zu Confluence oder online.bk.datev.de/documentation gefunden!",
-      "fix": "Fügen Sie die benötigte Verlinkung in die Readme ein."
+      "fix": "Fügen Sie die benötigte Verlinkung in die Readme ein.",
+      "tag": ""
     },
     "checkNoContributingChain": {
       "category": "file_checks",
@@ -130,7 +145,8 @@
       "severity": "MEDIUM",
       "description": "Überprüft, dass sich in der CONTRIBUTING-Datei keine links auf andere CONTRIBUTING-Dateien befinden.",
       "message": "Es wurde ein Link zu einer andere CONTRIBUTING.MD gefunden!",
-      "fix": "Entfernen Sie die Verlinkung zu der anderen CONTRIBUTING.MD."
+      "fix": "Entfernen Sie die Verlinkung zu der anderen CONTRIBUTING.MD.",
+      "tag": ""
     }
   }
 }

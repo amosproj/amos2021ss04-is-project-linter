@@ -22,6 +22,7 @@ public class CheckResultSchema {
     private String description;
     private String message;
     private String fix;
+    private String tag;
 
     public CheckResultSchema(CheckResult result, JsonNode node) {
         this.checkName = result.getCheckName();
@@ -31,30 +32,19 @@ public class CheckResultSchema {
         this.description = node.get("description").asText();
         this.message = node.get("message").asText();
         this.fix = node.get("fix").asText();
+        this.tag = node.get("tag").asText();
     }
 
     public String getCheckName() {
         return checkName;
     }
 
-    public void setCheckName(String checkName) {
-        this.checkName = checkName;
-    }
-
     public Boolean getResult() {
         return result;
     }
 
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
-
     public CheckSeverity getSeverity() {
         return severity;
-    }
-
-    public void setSeverity(CheckSeverity severity) {
-        this.severity = severity;
     }
 
     public String getDescription() {
@@ -71,6 +61,10 @@ public class CheckResultSchema {
 
     public String getCategory() {
         return category;
+    }
+
+    public String getTag() {
+        return tag;
     }
 
     @Override
