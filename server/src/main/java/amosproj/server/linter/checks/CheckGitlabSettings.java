@@ -31,7 +31,14 @@ public class CheckGitlabSettings extends Check {
         return project.getVisibility() == Visibility.PUBLIC;
     }
 
-    public boolean hasForkingEnabled() throws GitLabApiException {
+    /**
+     * Versucht das Projekt zu Forken,
+     * - wenn beim Forken ein Fehler auftritt, ist forking verboten und es wird false zurückgegeben
+     * - wenn forking funktioniert wird das geforkte projekt wieder gelöscht und true zurückgegeben
+     *
+     * @return True || False
+     */
+    public boolean hasForkingEnabled() {
         // Initialisiere Objekte für namespace
         var projectApi = api.getProjectApi();
         Project forkproj = new Project();
@@ -58,9 +65,15 @@ public class CheckGitlabSettings extends Check {
                 e.printStackTrace();
             }
         }
+        // wenn ein conflikt mit bereits geforkten projekten auftritt, diese löschen (überreste aus vorher abgebrochenen projekten)
         if (forkingConflict) {
-            var conflictProject = projectApi.getProject(namespace, "forktest");
-            projectApi.deleteProject(conflictProject);
+            Project conflictProject = null;
+            try {
+                conflictProject = projectApi.getProject(namespace, "forktest");
+                projectApi.deleteProject(conflictProject);
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
+            }
         }
         return hasForksEnabled;
     }
@@ -151,7 +164,7 @@ public class CheckGitlabSettings extends Check {
                     mergeRequestApi.deleteMergeRequest(project, demoMergeRequest.getIid());
                 }
             } catch (GitLabApiException e) {
-
+                e.printStackTrace();
             }
         }
         return result;

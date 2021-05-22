@@ -52,16 +52,24 @@ public class CheckGitlabFiles extends Check {
         return true;
     }
 
+    /**
+     * Überprüft ob in der CONTRIBUTING.MD keine verlinkung auf eine andere CONTRIBUTING.MD ist.
+     *
+     * Lädt sich die Datei aus dem Repository herunter,
+     * überprüft zeile für zeile ob der regex darauf anspringt
+     *
+     * @return True || False
+     */
     public boolean checkNoContributingChain() {
         // generiere regex
-        final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";  // FIXME make case insensitive
+        final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";
         final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
         boolean found = false;
         //lade Datei in java.io.tmp
         File file = getRawFile("CONTRIBUTING.md");
         URL url = null;
         try {
-            url = file.toURI().toURL();
+            if (file != null) url = file.toURI().toURL();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -86,6 +94,13 @@ public class CheckGitlabFiles extends Check {
         return !found;
     }
 
+    /**
+     * Überprüft ob sich in der README.MD ein link zu entweder confluence oder datev documentation befindet
+     *
+     * Lädt die Datein herunter, überprüft zeile für zeile ob der regex anspringt, returned ergebniss
+     *
+     * @return TRUE || FALSE
+     */
     public boolean checkReadmeHasLinks() {
         // generiere regex
         final var regex = "(?i)(?>https?://)?online.bk.datev.de/documentation.*";
