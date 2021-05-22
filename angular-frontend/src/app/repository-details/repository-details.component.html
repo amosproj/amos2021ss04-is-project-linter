@@ -26,6 +26,7 @@
             <mat-expansion-panel *ngFor="let category of categories; let i = index">
               <mat-expansion-panel-header style="border-bottom:  1px solid  #999999">
                 {{category}}
+                
               </mat-expansion-panel-header>
               <mat-list>
                 <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]" style="border-bottom:  1px solid  #999999"> 
@@ -44,14 +45,22 @@
             </mat-expansion-panel>
           </mat-accordion>
       </span>
-    </mat-card>
+      <span *ngIf="i==1">
+      
+<div >
+  <canvas id="canvas"></canvas>
+  </div>
+  
+       
+      </span> 
+       </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
 <mat-card-footer style="padding-left: 6%;">
-  <p>{{emojiMap.correct}}: Bestanden</p>
-  <p>{{emojiMap.notImportant}}: unwichtiger Test nicht bestanden</p>
-  <p>{{emojiMap.warning}}: Test nicht bestanden</p>
-  <p>{{emojiMap.false}}: wichtiger Test nicht bestanden</p>
+  <p>{{emojiMap.correct}} : Bestanden</p>
+  <p>{{emojiMap.notImportant}} : unwichtiger Test nicht bestanden</p>
+  <p>{{emojiMap.warning}} : Test nicht bestanden</p>
+  <p>{{emojiMap.false}} : wichtiger Test nicht bestanden</p>
   <p>Zuletzt gelintet am {{lastLintTime}}</p>
 </mat-card-footer>
 

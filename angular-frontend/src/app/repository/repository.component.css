@@ -4,6 +4,9 @@
     margin-right: 50px;
     margin-bottom: 50px;
     float: left;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
   }
   .example-card:hover{
     transform: scale(1.2);

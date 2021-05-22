@@ -14,11 +14,13 @@ import { MatIconModule } from "@angular/material/icon";
 
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
     RepositoryComponent,
     RepositoryDetailsComponent,
+  
 
   ],
   entryComponents: [RepositoryDetailsComponent],

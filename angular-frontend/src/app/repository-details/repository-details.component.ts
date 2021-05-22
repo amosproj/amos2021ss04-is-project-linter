@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogModule,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
+import {Chart} from "chart.js";
 import * as dayjs from 'dayjs'
 
 @Component({
@@ -44,12 +44,34 @@ export class RepositoryDetailsComponent implements OnInit {
 
 
   ngOnInit(): void {
+
+  
+var myChart = new Chart("myChart", {
+    type: 'doughnut',
+    data:  {
+      labels: [
+        'Red',
+        'Blue',
+        'Yellow'
+      ],
+      datasets: [{
+        label: 'My First Dataset',
+        data: [300, 50, 100],
+        backgroundColor: [
+          'rgb(255, 99, 132)',
+          'rgb(54, 162, 235)',
+          'rgb(255, 205, 86)'
+        ],
+        hoverOffset: 4
+      }]
+    }});
+  
     // initialyze arrays sorted via severity void
     this.checksHighSeverity = new Array<CheckResults>(); 
     this.checksMediumSeverity = new Array<CheckResults>(); 
     this.checksLowSeverity = new Array<CheckResults>(); 
     this.ShowProjectDetails(this.data.serverID,this.data.projectID);
-
+    2
   }
   
   closeDialog(){
