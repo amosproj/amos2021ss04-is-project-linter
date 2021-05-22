@@ -22,12 +22,12 @@ public class ProjectSchema {
     private String url;
     private Integer gitlabProjectId;
     private String gitlabInstance;
-    // relations
-    private List<LintingResultSchema> lintingResults;
-    // extra info
     private String description;
     private Integer forkCount;
     private Date lastCommit;
+    // relations
+    private List<LintingResultSchema> lintingResults;
+    // extra info
 
     public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository, boolean withResults) {
         if (!withResults) {
@@ -40,10 +40,6 @@ public class ProjectSchema {
         LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
         if (lintingResult != null)
             this.lintingResults.add(new LintingResultSchema(lintingResult));
-
-        this.description = proj.getDescription();
-        this.forkCount = proj.getForkCount();
-        this.lastCommit = proj.getLastCommit();
     }
 
     public Long getId() {

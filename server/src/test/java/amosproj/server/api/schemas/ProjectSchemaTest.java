@@ -8,7 +8,10 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.LinkedList;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DataJpaTest
 @AutoConfigureDataJpa
@@ -27,7 +30,7 @@ public class ProjectSchemaTest {
 
         // some assertions
         assertEquals(projectSchema.getId(), project.getId());
-//        assertEquals(projectSchema.getLintingResults(), project.getResults()); FIXME
+        assertEquals(projectSchema.getLintingResults(), new LinkedList<>());
         assertEquals(projectSchema.getGitlabProjectId(), project.getGitlabProjectId());
         assertEquals(projectSchema.getGitlabInstance(), project.getGitlabInstance());
         assertEquals(projectSchema.getName(), project.getName());
