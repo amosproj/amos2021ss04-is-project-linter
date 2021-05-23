@@ -1,10 +1,27 @@
 <!-- Header-->
 <mat-toolbar color="primary">
-  <mat-toolbar-row style="height: 38px;"> 
-    <span style="text-align: center; display:inline-block; width: 100%; font-size: 32px">Inner Source Project Linter</span>
+  <mat-toolbar-row style="height: 38px">
+    <span
+      style="
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        font-size: 32px;
+      "
+      >Inner Source Project Linter</span
+    >
   </mat-toolbar-row>
-  <mat-toolbar-row style="height: 38px;">
-    <p style="text-align: center; display:inline-block; width: 100%; font-size: 14px;">https://gitlab.cs.fau.de/ib49uquh/amos-testz</p>
+  <mat-toolbar-row style="height: 38px">
+    <p
+      style="
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        font-size: 14px;
+      "
+    >
+      https://gitlab.cs.fau.de/ib49uquh/amos-testz
+    </p>
   </mat-toolbar-row>
 </mat-toolbar>
 
@@ -14,16 +31,31 @@
     appearance="fill"
     [hideRequiredMarker]="hideRequiredControl.value"
     [floatLabel]="floatLabelControl.value"
-    style="width:420px !important" >
-  <mat-label>Zum Analysieren bitte vollständige Repository URL eingeben</mat-label>
-    <input #suchleiste matInput placeholder="https://gitlab.BEISPIEL.de/TEST/ACIDIC" required />
-    <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request --> 
-    <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{errorMsgForwardLink}}</mat-hint> 
+    style="width: 420px !important"
+  >
+    <mat-label
+      >Zum Analysieren bitte vollständige Repository URL eingeben</mat-label
+    >
+    <input
+      #suchleiste
+      matInput
+      placeholder="https://gitlab.BEISPIEL.de/TEST/ACIDIC"
+      required
+    />
+    <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
+    <mat-hint
+      *ngIf="getIfForwardLinkWorked() == false"
+      class="errorSearchBar"
+      >{{ errorMsgForwardLink }}</mat-hint
+    >
   </mat-form-field>
   &nbsp;
   <button
     mat-raised-button
-    (click)="forwardLink('http://localhost:8080/projects', suchleiste.value); suchleiste.value = '';"
+    (click)="
+      forwardLink('http://localhost:8080/projects', suchleiste.value);
+      suchleiste.value = ''
+    "
     color="primary"
   >
     Suche
@@ -32,14 +64,21 @@
 
 <!-- Tabs-->
 <mat-tab-group mat-align-tabs="center" color="accent">
-  <mat-tab label="Repositories"> 
+  <mat-tab label="Repositories">
     <mat-card class="body">
       <mat-card-actions>
-        <button type="button" (click)="GetProjects('http://localhost:8080/projects');removeAllProjectsFromOverview()" class="btn btn-default">
+        <button
+          type="button"
+          (click)="
+            GetProjects('http://localhost:8080/projects');
+            removeAllProjectsFromOverview()
+          "
+          class="btn btn-default"
+        >
           Refresh Projects
         </button>
       </mat-card-actions>
-    
+
       <div class="container">
         <br />
         <div #parent></div>
@@ -50,9 +89,25 @@
 </mat-tab-group>
 
 <!-- Footer-->
-<mat-toolbar color="primary" style="position:fixed; bottom : 0%;">
-  <mat-toolbar-row style="height: 24px;"> 
-    <span style="text-align: left; display:inline-block; width: 100%; font-size: 24px">Bei Rückfragen Mail an ...</span>
-    <span style="text-align: right; display:inline-block; width: 100%; font-size: 24px">Powered by ACIDIC</span>
+<mat-toolbar color="primary" style="position: fixed; bottom: 0%">
+  <mat-toolbar-row style="height: 24px">
+    <span
+      style="
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        font-size: 24px;
+      "
+      >Bei Rückfragen Mail an ...</span
+    >
+    <span
+      style="
+        text-align: right;
+        display: inline-block;
+        width: 100%;
+        font-size: 24px;
+      "
+      >Powered by ACIDIC</span
+    >
   </mat-toolbar-row>
 </mat-toolbar>
