@@ -11,7 +11,6 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DataJpaTest
 @AutoConfigureDataJpa
@@ -26,7 +25,7 @@ public class ProjectSchemaTest {
     public void testProjectSchema() {
         // insert test data
         Project project = new Project("amos-testz", "https://gitlab.cs.fau.de/ib49uquh/amos-testz", 69, "gitlab.cs.fau.de");
-        ProjectSchema projectSchema = new ProjectSchema(project, lintingResultRepository, false);
+        ProjectSchema projectSchema = new ProjectSchema(project, false);
 
         // some assertions
         assertEquals(projectSchema.getId(), project.getId());
