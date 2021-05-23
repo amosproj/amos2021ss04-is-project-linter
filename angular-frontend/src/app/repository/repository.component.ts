@@ -16,7 +16,6 @@ export class RepositoryComponent implements OnInit {
   gitlabInstance = '';
   name = '';
   id = 0; 
-  image: '../assets/FinalesLogo.png';
   @ViewChild(RepositoryDetailsComponent) child;
   removeObject(){
     this._ref.destroy();

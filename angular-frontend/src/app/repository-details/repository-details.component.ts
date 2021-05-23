@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogModule,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {Chart} from "chart.js";
+import {Chart} from "../../../node_modules/chart.js";
 import * as dayjs from 'dayjs'
 
 @Component({
@@ -24,7 +24,9 @@ export class RepositoryDetailsComponent implements OnInit {
     correct:     "🟢",
     bug: "🐛"
   }
-
+  
+  canvas;
+  context;
   lastLintTime;
   RepoName = "";
   RepoURL  = "";
@@ -32,8 +34,9 @@ export class RepositoryDetailsComponent implements OnInit {
   checksMediumSeverity:  CheckResults[];  // currently not in use
   checksLowSeverity:     CheckResults[];  // currently not in use
   latestLintingResults:  CheckResults[];
-  categories: String[];
-  LintingResultsInCategories: CheckResults[][];
+  tags: String[];
+  LintingResultsInTags: CheckResults[][];
+  numberOfTestsPerSeverityInTags: number[][]; // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, high, medium, low]
   maxColsForTiles=9
   tiles: Tile[] = [
     {text: 'Kategorien',             cols: 5, rows:6, color: 'white'},
@@ -42,11 +45,23 @@ export class RepositoryDetailsComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
   @Inject(MAT_DIALOG_DATA) public data: DialogData,private http: HttpClient){} 
 
-
   ngOnInit(): void {
+    // initialyze arrays sorted via severity void
+    this.checksHighSeverity = new Array<CheckResults>(); 
+    this.checksMediumSeverity = new Array<CheckResults>(); 
+    this.checksLowSeverity = new Array<CheckResults>(); 
+    this.ShowProjectDetails(this.data.serverID,this.data.projectID);
+  }
 
-  
-var myChart = new Chart("myChart", {
+  ngAfterViewInit(): void {
+    this.renderChart();
+  }
+  renderChart(){
+    const canvas = <HTMLCanvasElement> document.getElementById('myChart');
+  canvas.width = 150;
+  canvas.height = 150;
+  var ctx = canvas.getContext('2d');
+  var myChart = new Chart(ctx, {
     type: 'doughnut',
     data:  {
       labels: [
@@ -64,15 +79,16 @@ var myChart = new Chart("myChart", {
         ],
         hoverOffset: 4
       }]
-    }});
-  
-    // initialyze arrays sorted via severity void
-    this.checksHighSeverity = new Array<CheckResults>(); 
-    this.checksMediumSeverity = new Array<CheckResults>(); 
-    this.checksLowSeverity = new Array<CheckResults>(); 
-    this.ShowProjectDetails(this.data.serverID,this.data.projectID);
-    2
+    },
+    options: {
+      legend: {
+        display: false
+      },
+      maintainAspectRatio: false,
   }
+  });
+  }
+
   
   closeDialog(){
     this.dialogRef.close();
@@ -80,9 +96,6 @@ var myChart = new Chart("myChart", {
 
   ShowProjectDetails(serverID, gitID){
     this.http.get(serverID+"project/"+gitID)
-    /*{ // currently it you can only send the pure URL and not as a JSON
-        "data": gitID
-    })*/
     .subscribe(
         (val:any) => {
             console.log("GET call successful value returned in body", 
@@ -91,7 +104,7 @@ var myChart = new Chart("myChart", {
               var last_entry = val.lintingResults.length;
               this.latestLintingResults = val.lintingResults[last_entry-1].checkResults;
               //this.fillSeverityArrays(); // currently does not need to be used
-              this.groupLintingResultsInCategories();
+              this.groupLintingResultsInTagsAndFillNumTestsPerSeverity();
               // save information
               this.RepoName = val.name;
               this.RepoURL  = val.url;
@@ -108,40 +121,42 @@ var myChart = new Chart("myChart", {
     
   }
 
-  fillCategoriesArray(){
+  fillTagsArray(){
     for(var i = 0; i < this.latestLintingResults.length; i++){
-      var categoryAlreadyThere = false;
-      // Check if categories has entries
-      if(this.categories){
+      var tagAlreadyThere = false;
+      // Check if tags has entries
+      if(this.tags){
         // Check if categories contains the current category
-        for(var j = 0; j < this.categories.length; j++){
-          if(this.categories[j] == this.latestLintingResults[i].category){
-            categoryAlreadyThere = true;
+        for(var j = 0; j < this.tags.length; j++){
+          if(this.tags[j] == this.latestLintingResults[i].tag){
+            tagAlreadyThere = true;
           }
         }
       }else{
-        this.categories = new Array<String>(); 
+        this.tags = new Array<String>(); 
       }
-      if(!categoryAlreadyThere){
-        this.categories.push(this.latestLintingResults[i].category);
+      if(!tagAlreadyThere){
+        this.tags.push(this.latestLintingResults[i].tag);
       }
     }
   }
 
-  groupLintingResultsInCategories(){
-    // Determine categories
-    this.fillCategoriesArray();
-    // Group the linting results to their corresponding categories
-    this.LintingResultsInCategories = new Array(this.categories.length);
+  groupLintingResultsInTagsAndFillNumTestsPerSeverity(){
+    // Determine tags
+    this.fillTagsArray();
+    this.numberOfTestsPerSeverityInTags = new Array(this.tags.length+1).fill(0).map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
+    // Group the linting results to their corresponding tags
+    this.LintingResultsInTags = new Array(this.tags.length);
     for(var i = 0; i < this.latestLintingResults.length; i++){
-      // Get index of category in categories
-      var index = this.categories.indexOf(this.latestLintingResults[i].category);
+      // Get index of tag in tags
+      var index = this.tags.indexOf(this.latestLintingResults[i].tag);
       // Check if array needs to be initialized
-      if(!this.LintingResultsInCategories[index]){
-        this.LintingResultsInCategories[index] = [];
+      if(!this.LintingResultsInTags[index]){
+        this.LintingResultsInTags[index] = [];
       }
       // Push test into category corresponding index
-      this.LintingResultsInCategories[index].push(this.latestLintingResults[i]);
+      this.LintingResultsInTags[index].push(this.latestLintingResults[i]);
+      this.addTestToFillNumTestsPerSeverity(index);
     }
   }
 
@@ -156,10 +171,28 @@ var myChart = new Chart("myChart", {
       }
     }
   }
+  addTestToFillNumTestsPerSeverity(index){
+    if(this.latestLintingResults[index].result){
+      this.numberOfTestsPerSeverityInTags[index][0] +=1;
+    }
+    else if(this.latestLintingResults[index].severity == "MEDIUM"){
+      this.numberOfTestsPerSeverityInTags[index][1] +=1;
+    }
+    else if(this.latestLintingResults[index].severity == "Low"){
+      this.numberOfTestsPerSeverityInTags[index][2] +=1;
+    }
+    else if(this.latestLintingResults[index].severity == "HIGH"){
+      this.numberOfTestsPerSeverityInTags[index][3] +=1;
+    }
+    else{
+      console.log("In Repository Details component: addTestToFillNumTestsPerSeverity() found test which does not have a severity label!")
+    }
+    return;
+  }
 
   addTilesForCategoryGraphAndFooter(){
-    for(var i = 0; i < this.categories.length; i++){
-      var t = <Tile>{color: "white", cols: 2, rows:2, text: this.categories[i]};
+    for(var i = 0; i < this.tags.length; i++){
+      var t = <Tile>{color: "white", cols: 2, rows:2, text: this.tags[i]};
       this.tiles.push(t)
     }
   }
@@ -194,6 +227,7 @@ interface CheckResults {
   result:boolean,
   category:string,
   description:string,
+  tag:string,
   fix:string,
   message:string // is errormessage
  // errormessage:string

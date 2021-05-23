@@ -22,38 +22,35 @@
       </mat-card-title>
       <span *ngIf="i==0">
         <!-- Left side Expansion Panel which shows all test results-->
-          <mat-accordion style="width: 100%;">
-            <mat-expansion-panel *ngFor="let category of categories; let i = index">
-              <mat-expansion-panel-header style="border-bottom:  1px solid  #999999">
-                {{category}}
-                
-              </mat-expansion-panel-header>
-              <mat-list>
-                <mat-list-item  *ngFor="let check of LintingResultsInCategories[i]" style="border-bottom:  1px solid  #999999"> 
-                  <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}}  
-                    <mat-icon matTooltip={{check.description}} style="float: right;" color="primary">info</mat-icon>
-                  </h3>
-                  <!-- Tooltip integrieren!!-->
-                  <h4 matLine *ngIf="check.result == false">
-                    <span> {{check.message}}</span> 
-                    <br>
-                    <span>Tipp: {{check.fix}}</span>
-                  </h4>
-                </mat-list-item>
-                <p></p>
-              </mat-list>
-            </mat-expansion-panel>
-          </mat-accordion>
+        <mat-accordion style="width: 100%;">
+          <mat-expansion-panel *ngFor="let tag of tags; let i = index">
+            <mat-expansion-panel-header style="border-bottom:  1px solid  #999999">
+              {{tag}}
+              
+            </mat-expansion-panel-header>
+            <mat-list>
+              <mat-list-item  *ngFor="let check of LintingResultsInTags[i]" style="border-bottom:  1px solid  #999999"> 
+                <h3 matLine> {{returnEmojiBasedOnSeverity(check)}}  {{check.checkName}}  
+                  <mat-icon matTooltip={{check.description}} style="float: right;" color="primary">info</mat-icon>
+                </h3>
+                <!-- Tooltip integrieren!!-->
+                <h4 matLine *ngIf="check.result == false">
+                  <span> {{check.message}}</span> 
+                  <br>
+                  <span>Tipp: {{check.fix}}</span>
+                </h4>
+              </mat-list-item>
+              <p></p>
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
       </span>
-      <span *ngIf="i==1">
-      
-<div >
-  <canvas id="canvas"></canvas>
-  </div>
-  
-       
+      <span *ngIf="i>0">
+        <div >
+          <canvas id="myChart" ></canvas>
+        </div>
       </span> 
-       </mat-card>
+    </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
 <mat-card-footer style="padding-left: 6%;">
