@@ -1,7 +1,5 @@
 package amosproj.server.api.schemas;
 
-import amosproj.server.data.LintingResult;
-import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
@@ -29,7 +27,7 @@ public class ProjectSchema {
     private List<LintingResultSchema> lintingResults;
     // extra info
 
-    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository, boolean withResults) {
+    public ProjectSchema(Project proj, boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
         }
@@ -37,9 +35,10 @@ public class ProjectSchema {
         BeanUtils.copyProperties(proj, this);
         this.lintingResults = new LinkedList<>();
 
-        LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
-        if (lintingResult != null)
-            this.lintingResults.add(new LintingResultSchema(lintingResult));
+        // TODO
+//        LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
+//        if (lintingResult != null)
+//            this.lintingResults.add(new LintingResultSchema(lintingResult));
     }
 
     public Long getId() {
@@ -82,20 +81,20 @@ public class ProjectSchema {
         this.gitlabInstance = gitlabInstance;
     }
 
-    public List<LintingResultSchema> getLintingResults() {
-        return lintingResults;
-    }
-
-    public void setLintingResults(List<LintingResultSchema> lintingResults) {
-        this.lintingResults = lintingResults;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getForkCount() {
+        return forkCount;
+    }
+
+    public void setForkCount(Integer forkCount) {
+        this.forkCount = forkCount;
     }
 
     public Date getLastCommit() {
@@ -106,12 +105,12 @@ public class ProjectSchema {
         this.lastCommit = lastCommit;
     }
 
-    public Integer getForkCount() {
-        return forkCount;
+    public List<LintingResultSchema> getLintingResults() {
+        return lintingResults;
     }
 
-    public void setForkCount(Integer forkCount) {
-        this.forkCount = forkCount;
+    public void setLintingResults(List<LintingResultSchema> lintingResults) {
+        this.lintingResults = lintingResults;
     }
 
     @Override
