@@ -28,16 +28,11 @@ public class ProjectSchema {
     private List<LintingResultSchema> lintingResults;
     // extra info
 
-    public ProjectSchema(Project proj, boolean withResults) {
-        if (!withResults) {
-            proj.setResults(null);
-            BeanUtils.copyProperties(proj, this);
-            this.lintingResults = new LinkedList<>();
-        } else {
-            BeanUtils.copyProperties(proj, this);
-            for (LintingResult lr : proj.getResults()) {
-                this.lintingResults.add(new LintingResultSchema(lr));
-            }
+    public ProjectSchema(Project proj, List<LintingResult> lintingResults) {
+        BeanUtils.copyProperties(proj, this);
+        this.lintingResults = new LinkedList<>();
+        for (LintingResult lr : lintingResults) {
+            this.lintingResults.add(new LintingResultSchema(lr));
         }
     }
 

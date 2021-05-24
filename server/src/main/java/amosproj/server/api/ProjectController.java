@@ -1,10 +1,12 @@
 package amosproj.server.api;
 
 import amosproj.server.api.schemas.ProjectSchema;
+import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Linter;
+import org.aspectj.weaver.Lint;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,7 +42,7 @@ public class ProjectController {
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
             Project projAlt = it.next();
-            ProjectSchema proj = new ProjectSchema(projAlt, false);
+            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
             res.add(proj);
         }
         return res;
@@ -48,9 +50,11 @@ public class ProjectController {
 
     @GetMapping("/project/{id}")  // id is the project id in _our_ database
     public ProjectSchema getProject(@PathVariable("id") Long id) {
+        LinkedList<LintingResult> list = new LinkedList<>();
+        list.add(lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(id));
         return new ProjectSchema(repository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        ), true);
+        ), list);
     }
 
     @PostMapping("/projects")

@@ -25,7 +25,7 @@ public class ProjectSchemaTest {
     public void testProjectSchema() {
         // insert test data
         Project project = new Project("amos-testz", "https://gitlab.cs.fau.de/ib49uquh/amos-testz", 69, "gitlab.cs.fau.de");
-        ProjectSchema projectSchema = new ProjectSchema(project, false);
+        ProjectSchema projectSchema = new ProjectSchema(project, new LinkedList<>());
 
         // some assertions
         assertEquals(projectSchema.getId(), project.getId());

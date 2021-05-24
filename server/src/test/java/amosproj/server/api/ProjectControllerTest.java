@@ -1,5 +1,7 @@
 package amosproj.server.api;
 
+import amosproj.server.data.LintingResult;
+import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -26,6 +30,9 @@ public class ProjectControllerTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private LintingResultRepository lintingResultRepository;
+
     @Test
     public void testAllProjects() throws Exception {
         // insert test data
@@ -38,6 +45,7 @@ public class ProjectControllerTest {
     public void testGetProject() throws Exception {
         // insert test data
         Project proj = projectRepository.save(new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 420, "gitlab.cs.fau.de"));
+        LintingResult lintingResult = lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
         // do test requests
         this.mockMvc.perform(get("/project/" + proj.getId().toString())).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/project/123")).andDo(print()).andExpect(status().isNotFound());
