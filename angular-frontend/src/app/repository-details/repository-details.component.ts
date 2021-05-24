@@ -39,6 +39,9 @@ export class RepositoryDetailsComponent implements OnInit {
   tags: String[];
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, high, medium, low]
+  //if there should be new tags this has to be extended
+  chartNames : string[] = ['userChart', 'programmerChart', 'totalChart'];
+  //static numberOfTestsPerSeverityInTags: number[][];
   maxColsForTiles = 9;
   tiles: Tile[] = [
     { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },
@@ -59,25 +62,28 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.renderChart();
+   
   }
-  renderChart() {
-    const canvas = <HTMLCanvasElement>document.getElementById('myChart');
+  renderChart(index) {
+    console.log('Print chartName', this.chartNames[index]);
+    console.log('Print numbers for Chart', this.numberOfTestsPerSeverityInTags[index]);
+    const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
     canvas.width = 150;
     canvas.height = 150;
     var ctx = canvas.getContext('2d');
     var myChart = new Chart(ctx, {
       type: 'doughnut',
       data: {
-        labels: ['Red', 'Blue', 'Yellow'],
+        labels: ['Bestanden',  'Test nicht bestanden', 'unwichtiger Test nicht bestanden', 'wichtiger Test nicht bestanden'],
         datasets: [
           {
             label: 'My First Dataset',
-            data: [300, 50, 100],
+            data: this.numberOfTestsPerSeverityInTags[index],
             backgroundColor: [
-              'rgb(255, 99, 132)',
-              'rgb(54, 162, 235)',
-              'rgb(255, 205, 86)',
+              'rgb(3, 252, 40)',
+              'rgb(252, 169, 3)',
+              'rgb(252, 236, 3)',
+              'rgb(252, 32, 3)',
             ],
             hoverOffset: 4,
           },
@@ -114,6 +120,10 @@ export class RepositoryDetailsComponent implements OnInit {
         ).format('DD.MM.YYYY - H:mm');
         // dynamically create missing tiles for grid list corresponding to their grid list
         this.addTilesForCategoryGraphAndFooter();
+        //render the charts
+        for(var i = 0 ; i < this.tags.length + 1; i++){
+          this.renderChart(i);
+        }
       },
       (response) => {
         console.log('GET call in error', response);
@@ -161,7 +171,15 @@ export class RepositoryDetailsComponent implements OnInit {
       }
       // Push test into category corresponding index
       this.LintingResultsInTags[index].push(this.latestLintingResults[i]);
-      this.addTestToFillNumTestsPerSeverity(index);
+      this.addTestToFillNumTestsPerSeverity(i, index);
+    }
+    //the last entry in numberOfTestsPerSeverityInTags is the sum of all previous 
+    for (var i = 0; i < 4; i++){
+      var sum = 0;
+      for(var j = 0; j < this.tags.length; j++){
+        sum += this.numberOfTestsPerSeverityInTags[j][i];
+      }
+      this.numberOfTestsPerSeverityInTags[this.tags.length][i] = sum;
     }
   }
 
@@ -176,14 +194,14 @@ export class RepositoryDetailsComponent implements OnInit {
       }
     }
   }
-  addTestToFillNumTestsPerSeverity(index) {
-    if (this.latestLintingResults[index].result) {
+  addTestToFillNumTestsPerSeverity(i, index) {
+    if (this.latestLintingResults[i].result) {
       this.numberOfTestsPerSeverityInTags[index][0] += 1;
-    } else if (this.latestLintingResults[index].severity == 'MEDIUM') {
+    } else if (this.latestLintingResults[i].severity == 'MEDIUM') {
       this.numberOfTestsPerSeverityInTags[index][1] += 1;
-    } else if (this.latestLintingResults[index].severity == 'Low') {
-      this.numberOfTestsPerSeverityInTags[index][2] += 1;
-    } else if (this.latestLintingResults[index].severity == 'HIGH') {
+    } else if (this.latestLintingResults[i].severity == 'LOW') {
+      this.numberOfTestsPerSeverityInTags[i][2] += 1;
+    } else if (this.latestLintingResults[i].severity == 'HIGH') {
       this.numberOfTestsPerSeverityInTags[index][3] += 1;
     } else {
       console.log(

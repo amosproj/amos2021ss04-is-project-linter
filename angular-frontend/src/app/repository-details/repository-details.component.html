@@ -45,9 +45,20 @@
           </mat-expansion-panel>
         </mat-accordion>
       </span>
-      <span *ngIf="i>0">
+      <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
+      <span *ngIf="i==1">
         <div >
-          <canvas id="myChart" ></canvas>
+          <canvas id="totalChart" ></canvas>
+        </div>
+      </span> 
+      <span *ngIf="i==2">
+        <div >
+          <canvas id="userChart" ></canvas>
+        </div>
+      </span> 
+      <span *ngIf="i==3">
+        <div >
+          <canvas id="programmerChart" ></canvas>
         </div>
       </span> 
     </mat-card>
