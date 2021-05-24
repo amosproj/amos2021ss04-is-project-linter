@@ -8,6 +8,7 @@ import {
 import { Chart } from '../../../node_modules/chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-repository-details',
@@ -15,6 +16,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./repository-details.component.css'],
 })
 export class RepositoryDetailsComponent implements OnInit {
+  getdata = false;
+   myChart;
   emojiMap = {
     /*unwichtig:"〰️",
     warning: "⚠️",
@@ -59,43 +62,54 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.ShowProjectDetails(this.data.projectID);
+  
   }
-
+ 
   ngAfterViewInit(): void {
-   
+    while(!this.getdata){
+      for(var i = 0; i < this.chartNames.length;i++){
+        
+    }
+    }
+    
   }
   renderChart(index) {
-    console.log('Print chartName', this.chartNames[index]);
-    console.log('Print numbers for Chart', this.numberOfTestsPerSeverityInTags[index]);
+    //console.log('Print chartName', this.chartNames[index]);
+   // console.log('Print numbers for Chart', this.numberOfTestsPerSeverityInTags[index]);
     const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
     canvas.width = 150;
     canvas.height = 150;
     var ctx = canvas.getContext('2d');
-    var myChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Bestanden',  'Test nicht bestanden', 'unwichtiger Test nicht bestanden', 'wichtiger Test nicht bestanden'],
-        datasets: [
-          {
-            label: 'My First Dataset',
-            data: this.numberOfTestsPerSeverityInTags[index],
-            backgroundColor: [
-              'rgb(3, 252, 40)',
-              'rgb(252, 169, 3)',
-              'rgb(252, 236, 3)',
-              'rgb(252, 32, 3)',
-            ],
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        legend: {
-          display: false,
+   
+      this.myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Bestanden',  'Test nicht bestanden', 'unwichtiger Test nicht bestanden', 'wichtiger Test nicht bestanden'],
+          datasets: [
+            {
+              label: 'My First Dataset',
+              data: [1,1,1],
+              backgroundColor: [
+                'rgb(3, 252, 40)',
+                'rgb(252, 169, 3)',
+                'rgb(252, 236, 3)',
+                'rgb(252, 32, 3)',
+              ],
+              hoverOffset: 4,
+            },
+          ],
         },
-        maintainAspectRatio: false,
-      },
-    });
+        options: {
+          legend: {
+            display: false,
+          },
+          maintainAspectRatio: false,
+        },
+      });
+    
+    
+    this.myChart.update();
+  
   }
 
   closeDialog() {
@@ -123,13 +137,18 @@ export class RepositoryDetailsComponent implements OnInit {
         //render the charts
         for(var i = 0 ; i < this.tags.length + 1; i++){
           this.renderChart(i);
+          this.myChart.data.datasets[0].data = this.numberOfTestsPerSeverityInTags[i];
+          this.myChart.update();
+
         }
+     
       },
       (response) => {
         console.log('GET call in error', response);
       },
       () => {
         console.log('The GET observable is now completed.');
+        this.getdata = true;
       }
     );
   }
