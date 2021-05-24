@@ -53,7 +53,7 @@
   <button
     mat-raised-button
     (click)="
-      forwardLink('http://localhost:8080/projects', suchleiste.value);
+      forwardLink(suchleiste.value);
       suchleiste.value = ''
     "
     color="primary"
@@ -70,7 +70,7 @@
         <button
           type="button"
           (click)="
-            GetProjects('http://localhost:8080/projects');
+            GetProjects();
             removeAllProjectsFromOverview()
           "
           class="btn btn-default"

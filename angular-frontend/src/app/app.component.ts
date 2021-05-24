@@ -11,6 +11,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -21,17 +22,12 @@ export class AppComponent {
   title = 'angular-frontend';
   //SearchBarValue = '';
   all_projects: Project[];
-  serverID = 'http://localhost:8080/';
   options: FormGroup;
   forwardLinkWorked = true;
   errorMsgForwardLink = '';
-
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
-  //onEnter(SearchBarValue: string) { this.SearchBarValue = SearchBarValue;
-  //this.forwardLink("http://localhost:8080/projects",SearchBarValue);
-  //}
 
   constructor(
     fb: FormBuilder,
@@ -47,7 +43,7 @@ export class AppComponent {
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
-  forwardLink(serverID, URL) {
+  forwardLink(URL) {
     const headers = { 'Content-Type': 'text/html' };
 
     let HTTPOptions: Object = {
@@ -57,7 +53,7 @@ export class AppComponent {
       responseType: 'text',
     };
 
-    this.http.post<String>(serverID, URL, HTTPOptions).subscribe(
+    this.http.post<String>(`${environment.baseURL}/projects`, URL, HTTPOptions).subscribe(
       (val: any) => {
         console.log('POST call successful value returned in body', val);
         var regex404 = new RegExp('404 NOT_FOUND', 'i');
@@ -87,8 +83,8 @@ export class AppComponent {
     this.container.clear();
   }
 
-  GetProjects(serverID) {
-    this.http.get(serverID).subscribe((results) => {
+  GetProjects() {
+    this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
 
@@ -99,14 +95,11 @@ export class AppComponent {
           this.all_projects[project].url
         );
       }
-    });
-    /*{ // currently it you can only send the pure URL and not as a JSON
-      "data": gitID
-  })*/
+    }); // currently it you can only send the pure URL and not as a JSON
   }
 
   ngOnInit() {
-    this.GetProjects('http://localhost:8080/projects');
+    this.GetProjects();
   }
 
   addComponent(name, id, gitlabInstance) {
@@ -116,7 +109,6 @@ export class AppComponent {
     expComponent.instance.name = name;
     expComponent.instance.id = id;
     expComponent.instance.gitlabInstance = gitlabInstance;
-    expComponent.instance.serverID = this.serverID;
   }
 } // end of AppComponent
 
