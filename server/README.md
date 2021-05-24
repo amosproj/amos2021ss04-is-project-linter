@@ -14,7 +14,7 @@ Erst Java Projekt bauen (siehe oben), dann folgendes ausführen:
 
 Bauen: `docker build -t amoslinter/server:staging .`
 
-Ausführen: `docker run -d --rm amoslinter/server:staging . `
+Ausführen: `docker run -d --rm amoslinter/server:staging .`
 
 ## Ohne Docker Ausführen
 

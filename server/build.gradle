@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'jacoco'
 }
 
 group = 'amosproj.linter'
@@ -29,13 +28,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
 }
