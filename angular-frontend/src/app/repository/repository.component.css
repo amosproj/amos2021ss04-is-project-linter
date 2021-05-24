@@ -1,6 +1,6 @@
 .example-card {
    width: 350px;
-    height: 170px;
+    height: 100px;
     margin-right: 50px;
     margin-bottom: 50px;
     float: left;
@@ -9,5 +9,5 @@
     border-radius: 30px;
   }
   .example-card:hover{
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
