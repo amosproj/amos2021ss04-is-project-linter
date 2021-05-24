@@ -1,5 +1,6 @@
 package amosproj.server.api.schemas;
 
+import amosproj.server.data.LintingResult;
 import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
@@ -30,15 +31,14 @@ public class ProjectSchema {
     public ProjectSchema(Project proj, boolean withResults) {
         if (!withResults) {
             proj.setResults(null);
+            BeanUtils.copyProperties(proj, this);
+            this.lintingResults = new LinkedList<>();
+        } else {
+            BeanUtils.copyProperties(proj, this);
+            for (LintingResult lr : proj.getResults()) {
+                this.lintingResults.add(new LintingResultSchema(lr));
+            }
         }
-
-        BeanUtils.copyProperties(proj, this);
-        this.lintingResults = new LinkedList<>();
-
-        // TODO
-//        LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
-//        if (lintingResult != null)
-//            this.lintingResults.add(new LintingResultSchema(lintingResult));
     }
 
     public Long getId() {
