@@ -1,20 +1,18 @@
-<mat-card class="example-card"  (click)="showDetailsViaDialog()">
+<mat-card class="example-card"  >
     <mat-card-header>
 
     </mat-card-header>
     <!img mat-card-image src="{{image}}">
-    <mat-card-content >
+    <mat-card-content (click)="showDetailsViaDialog()" >
 
       <table style="text-align: left;">
-        <caption>     <mat-card-title style="text-align: left;"> {{name}}</mat-card-title></caption>
-      
+        <caption><mat-card-title style="text-align: left;"> {{name}}</mat-card-title></caption>
         <tr>
-          URL:  {{gitlabInstance}}
+          URL:{{gitlabInstance}}
         </tr>
-     
+
       </table>
       <br>
-      
-      <button mat-raised-button (click)="showDetailsViaDialog()">Show Details</button>
+      <button mat-raised-button >Show Details</button>
     </mat-card-content>
   </mat-card>
