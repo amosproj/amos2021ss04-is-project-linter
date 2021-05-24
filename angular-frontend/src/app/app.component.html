@@ -34,13 +34,14 @@
     style="width: 420px !important"
   >
     <mat-label
-      >Zum Analysieren bitte vollständige Repository URL eingeben</mat-label
+      >Zum Suchen eines Projektes Name angeben</mat-label
     >
     <input
       #suchleiste
       matInput
-      placeholder="https://gitlab.BEISPIEL.de/TEST/ACIDIC"
+      placeholder="z.B. Amos Testz"
       required
+      (keyup)="searchProject(suchleiste.value);"
     />
     <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
     <mat-hint
@@ -53,7 +54,7 @@
   <button
     mat-raised-button
     (click)="
-      forwardLink(suchleiste.value);
+    searchProject(suchleiste.value);
       suchleiste.value = ''
     "
     color="primary"

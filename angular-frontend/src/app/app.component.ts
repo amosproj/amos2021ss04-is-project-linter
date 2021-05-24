@@ -13,6 +13,8 @@ import {
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -20,6 +22,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AppComponent {
   title = 'angular-frontend';
+  projectComponents = [];
   //SearchBarValue = '';
   all_projects: Project[];
   options: FormGroup;
@@ -109,8 +112,36 @@ export class AppComponent {
     expComponent.instance.name = name;
     expComponent.instance.id = id;
     expComponent.instance.gitlabInstance = gitlabInstance;
+
+    //For search reasons 
+
+    this.projectComponents.push(expComponent);
+ 
+
   }
+
+  searchProject(value:string){
+    
+    this.removeAllProjectsFromOverview();
+
+    for(let item of this.projectComponents){
+      if(item.instance.name.startsWith(value)|| value ==="" )
+      {
+        var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
+        var expComponent = this.container.createComponent(comp);
+        expComponent.instance._ref = expComponent;
+        expComponent.instance.name = item.instance.name;
+        expComponent.instance.id = item.instance.id;
+        expComponent.instance.gitlabInstance = item.instance.gitlabInstance;
+
+      }
+
+    }
+  }
+
 } // end of AppComponent
+
+
 
 // Interface for the repository component which shows coarse repo infos
 interface Project {
