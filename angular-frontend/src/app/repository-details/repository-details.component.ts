@@ -9,6 +9,7 @@ import { Chart } from '../../../node_modules/chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
 import { timer } from 'rxjs';
+import { NumberValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-repository-details',
@@ -30,6 +31,7 @@ export class RepositoryDetailsComponent implements OnInit {
     bug: '🐛',
   };
 
+  //initFinsished = false;
   canvas;
   context;
   lastLintTime;
@@ -56,26 +58,39 @@ export class RepositoryDetailsComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit(): void {
+  ngOnInit(): void{
     // initialyze arrays sorted via severity void
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.ShowProjectDetails(this.data.projectID);
-  
+    //this.initFinsished = true;
   }
  
   ngAfterViewInit(): void {
-    while(!this.getdata){
-      for(var i = 0; i < this.chartNames.length;i++){
-        
-    }
-    }
-    
+    //while(!this.initFinsished){
+    //    continue;
+    //}
+    //render the charts
+    this.http.get(`${environment.baseURL}/project/${this.data.projectID}`).subscribe(
+      (val: any) => {
+        var tags = this.getTagsArray(val.lintingResults[val.lintingResults.length - 1].checkResults);
+        // ok console.log('in after', val.lintingResults);
+        // ok console.log('tags in after', tags);
+        var numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1])[0];
+        // NICHT OK !!!! console.log('in after', numberOfTestsPerSeverityInTags);
+        for(var i = 0 ; i < this.tags.length + 1; i++){
+          this.renderChart(i, numberOfTestsPerSeverityInTags);
+          this.myChart.update();
+        }
+      }
+    );
+
   }
-  renderChart(index) {
-    //console.log('Print chartName', this.chartNames[index]);
-   // console.log('Print numbers for Chart', this.numberOfTestsPerSeverityInTags[index]);
+
+  renderChart(index, numberOfTestsPerSeverityInTags) {
+    console.log('Print chartName', this.chartNames[index]);
+    console.log('Print numbers for Chart', numberOfTestsPerSeverityInTags[index]);
     const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
     canvas.width = 150;
     canvas.height = 150;
@@ -88,7 +103,8 @@ export class RepositoryDetailsComponent implements OnInit {
           datasets: [
             {
               label: 'My First Dataset',
-              data: [1,1,1],
+              //data: numberOfTestsPerSeverityInTags[index],
+              data: [1,1,1,1],
               backgroundColor: [
                 'rgb(3, 252, 40)',
                 'rgb(252, 169, 3)',
@@ -117,6 +133,31 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   ShowProjectDetails(gitID) {
+    //let data = await this.http.get<GetResponse>(`${environment.baseURL}/project/${gitID}`).toPromise();
+    this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
+      (val: any) => {
+        console.log('GET call successful value returned in body', val);
+        // fill linting category array
+        var last_entry = val.lintingResults.length;
+        this.latestLintingResults =
+         val.lintingResults[last_entry - 1].checkResults;
+        //this.fillSeverityArrays(); // currently does not need to be used
+        this.tags = this.getTagsArray(this.latestLintingResults);
+
+        this.LintingResultsInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(this.tags, this.latestLintingResults)[1];
+        console.log('LintingResultInTags', this.LintingResultsInTags);
+
+        // save information
+        this.RepoName = val.name;
+        this.RepoURL = val.url;
+        this.lastLintTime = dayjs(
+          val.lintingResults[last_entry - 1].lintTime
+        ).format('DD.MM.YYYY - H:mm');
+        // dynamically create missing tiles for grid list corresponding to their grid list
+        this.addTilesForCategoryGraphAndFooter();
+      });
+
+    /*
     this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
       (val: any) => {
         console.log('GET call successful value returned in body', val);
@@ -134,14 +175,6 @@ export class RepositoryDetailsComponent implements OnInit {
         ).format('DD.MM.YYYY - H:mm');
         // dynamically create missing tiles for grid list corresponding to their grid list
         this.addTilesForCategoryGraphAndFooter();
-        //render the charts
-        for(var i = 0 ; i < this.tags.length + 1; i++){
-          this.renderChart(i);
-          this.myChart.data.datasets[0].data = this.numberOfTestsPerSeverityInTags[i];
-          this.myChart.update();
-
-        }
-     
       },
       (response) => {
         console.log('GET call in error', response);
@@ -151,55 +184,65 @@ export class RepositoryDetailsComponent implements OnInit {
         this.getdata = true;
       }
     );
+    */
   }
 
-  fillTagsArray() {
-    for (var i = 0; i < this.latestLintingResults.length; i++) {
+  getTagsArray(latestLintingResults){
+    var tags = [];
+    for (var i = 0; i < latestLintingResults.length; i++) {
       var tagAlreadyThere = false;
       // Check if tags has entries
-      if (this.tags) {
+      if (tags) {
         // Check if categories contains the current category
-        for (var j = 0; j < this.tags.length; j++) {
-          if (this.tags[j] == this.latestLintingResults[i].tag) {
+        for (var j = 0; j < tags.length; j++) {
+          if (tags[j] == latestLintingResults[i].tag) {
             tagAlreadyThere = true;
           }
         }
       } else {
-        this.tags = new Array<String>();
+        tags = new Array<String>();
       }
       if (!tagAlreadyThere) {
-        this.tags.push(this.latestLintingResults[i].tag);
+        tags.push(latestLintingResults[i].tag);
       }
     }
+    return tags;
   }
 
-  groupLintingResultsInTagsAndFillNumTestsPerSeverity() {
-    // Determine tags
-    this.fillTagsArray();
-    this.numberOfTestsPerSeverityInTags = new Array(this.tags.length + 1)
+  groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, latestLintingResults) {
+    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1)
       .fill(0)
       .map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
     // Group the linting results to their corresponding tags
-    this.LintingResultsInTags = new Array(this.tags.length);
-    for (var i = 0; i < this.latestLintingResults.length; i++) {
+
+    // ok console.log('in group latestLint', latestLintingResults);
+
+    var LintingResultsInTags = new Array(tags.length);
+    for (var i = 0; i < latestLintingResults.length; i++) {
       // Get index of tag in tags
-      var index = this.tags.indexOf(this.latestLintingResults[i].tag);
+      var index = tags.indexOf(latestLintingResults[i].tag);
       // Check if array needs to be initialized
-      if (!this.LintingResultsInTags[index]) {
-        this.LintingResultsInTags[index] = [];
+      if (!LintingResultsInTags[index]) {
+        LintingResultsInTags[index] = [];
       }
       // Push test into category corresponding index
-      this.LintingResultsInTags[index].push(this.latestLintingResults[i]);
-      this.addTestToFillNumTestsPerSeverity(i, index);
+      LintingResultsInTags[index].push(latestLintingResults[i]);
+      // ok console.log('index', index);
+      numberOfTestsPerSeverityInTags = this.addTestToFillNumTestsPerSeverity(index, latestLintingResults[i], numberOfTestsPerSeverityInTags);
+      console.log('grouping 1', numberOfTestsPerSeverityInTags);
     }
     //the last entry in numberOfTestsPerSeverityInTags is the sum of all previous 
     for (var i = 0; i < 4; i++){
       var sum = 0;
-      for(var j = 0; j < this.tags.length; j++){
-        sum += this.numberOfTestsPerSeverityInTags[j][i];
+      for(var j = 0; j < tags.length; j++){
+        sum += numberOfTestsPerSeverityInTags[j][i];
       }
-      this.numberOfTestsPerSeverityInTags[this.tags.length][i] = sum;
+      numberOfTestsPerSeverityInTags[tags.length][i] = sum;
     }
+    //console.log('LintingResultsInTags in method', LintingResultsInTags);
+    console.log('grouping 2', numberOfTestsPerSeverityInTags);
+
+    return [numberOfTestsPerSeverityInTags, LintingResultsInTags];
   }
 
   fillSeverityArrays() {
@@ -213,21 +256,22 @@ export class RepositoryDetailsComponent implements OnInit {
       }
     }
   }
-  addTestToFillNumTestsPerSeverity(i, index) {
-    if (this.latestLintingResults[i].result) {
-      this.numberOfTestsPerSeverityInTags[index][0] += 1;
-    } else if (this.latestLintingResults[i].severity == 'MEDIUM') {
-      this.numberOfTestsPerSeverityInTags[index][1] += 1;
-    } else if (this.latestLintingResults[i].severity == 'LOW') {
-      this.numberOfTestsPerSeverityInTags[i][2] += 1;
-    } else if (this.latestLintingResults[i].severity == 'HIGH') {
-      this.numberOfTestsPerSeverityInTags[index][3] += 1;
+  addTestToFillNumTestsPerSeverity(index, lintingResult ,numberOfTestsPerSeverityInTags) {
+    if (lintingResult.result) {
+      numberOfTestsPerSeverityInTags[index][0] += 1;
+    } else if (lintingResult.severity == 'MEDIUM') {
+      numberOfTestsPerSeverityInTags[index][1] += 1;
+    } else if (lintingResult.severity == 'LOW') {
+      numberOfTestsPerSeverityInTags[index][2] += 1;
+    } else if (lintingResult.severity == 'HIGH') {
+      numberOfTestsPerSeverityInTags[index][3] += 1;
     } else {
       console.log(
         'In Repository Details component: addTestToFillNumTestsPerSeverity() found test which does not have a severity label!'
       );
     }
-    return;
+    //console.log('addTest', numberOfTestsPerSeverityInTags);
+    return numberOfTestsPerSeverityInTags;
   }
 
   addTilesForCategoryGraphAndFooter() {
@@ -272,4 +316,19 @@ export interface Tile {
   cols: number;
   rows: number;
   text: string;
+}
+
+// For storing the information of the http get request
+interface GetResponse {
+  lintingResults: LintingResult[];
+  name: string;
+  url: string;
+}
+
+// For storing the information of a LintingResult
+interface LintingResult {
+  projectId: number;
+  id: number;
+  lintTime: string;
+  checkResults: CheckResults[];
 }
