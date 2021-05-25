@@ -122,7 +122,7 @@
       "tag": "Entwicklerfreundlichkeit"
     },
     "hasBadges": {
-      "category": "settings_check",
+      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Projekt 'Badges' verwendet.",
