@@ -15,8 +15,12 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./repository-details.component.css'],
 })
 export class RepositoryDetailsComponent implements OnInit {
-  getdata = false;
-   myChart;
+  // Diese Klasse ist nötig fürs Anzeigen des Dialogs
+  // Aktuell muss man die gleichen Informationen 2-mal getten, da die HTTP-get Aufrufe asynchron sind.
+  //      (1 mal onNGinit für die Erstellung der Tiles (geht nicht später), und 1 mal onngAfterView für die Graphen (Canvas ist davor undefined))
+
+  // TODO: chartNames nicht dynamisch erstellen
+
   emojiMap = {
     /*unwichtig:"〰️",
     warning: "⚠️",
@@ -29,15 +33,17 @@ export class RepositoryDetailsComponent implements OnInit {
     bug: '🐛',
   };
 
-  //initFinsished = false;
+  
+  getdata = false;
+  myChart;
   canvas;
   context;
   lastLintTime;
   RepoName = '';
   RepoURL = '';
-  checksHighSeverity: CheckResults[]; // currently not in use
+  checksHighSeverity: CheckResults[];   // currently not in use
   checksMediumSeverity: CheckResults[]; // currently not in use
-  checksLowSeverity: CheckResults[]; // currently not in use
+  checksLowSeverity: CheckResults[];    // currently not in use
   latestLintingResults: CheckResults[];
   tags: String[];
   LintingResultsInTags: CheckResults[][];
@@ -47,8 +53,9 @@ export class RepositoryDetailsComponent implements OnInit {
   //static numberOfTestsPerSeverityInTags: number[][];
   maxColsForTiles = 9;
   tiles: Tile[] = [
-    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },
-    { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' },
+    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },             // gibt es immer
+    { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
+                                                                          // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
   ];
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
@@ -61,11 +68,11 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
-    this.ShowProjectDetails(this.data.projectID);
+    this.ShowProjectDetails(this.data.projectID); // sends first HTTP Request
   }
  
   ngAfterViewInit(): void {
-    //render the charts
+    // sends second Http request for the Charts
     this.http.get(`${environment.baseURL}/project/${this.data.projectID}`).subscribe(
       (val: any) => {
         var tags = this.getTagsArray(val.lintingResults[val.lintingResults.length - 1].checkResults);
@@ -81,8 +88,9 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   renderChart(index, numberOfTestsPerSeverityInTags) {
-    console.log('Print chartName', this.chartNames[index]);
-    console.log('Print numbers for Chart', numberOfTestsPerSeverityInTags[index]);
+    // rendert eine Chart
+    //console.log('Print chartName', this.chartNames[index]);
+    //console.log('Print numbers for Chart', numberOfTestsPerSeverityInTags[index]);
     const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
     canvas.width = 150;
     canvas.height = 150;
@@ -124,7 +132,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   ShowProjectDetails(gitID) {
-    //let data = await this.http.get<GetResponse>(`${environment.baseURL}/project/${gitID}`).toPromise();
+    // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
     this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
       (val: any) => {
         console.log('GET call successful value returned in body', val);
@@ -145,11 +153,12 @@ export class RepositoryDetailsComponent implements OnInit {
           val.lintingResults[last_entry - 1].lintTime
         ).format('DD.MM.YYYY - H:mm');
         // dynamically create missing tiles for grid list corresponding to their grid list
-        this.addTilesForCategoryGraphAndFooter();
+        this.addTilesForCategoryGraph();
       });
   }
 
   getTagsArray(latestLintingResults){
+    // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
     var tags = [];
     for (var i = 0; i < latestLintingResults.length; i++) {
       var tagAlreadyThere = false;
@@ -172,6 +181,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, latestLintingResults) {
+    // Gibt einmal ein Array der Testergebnisse sortiert nach Kategorien (numberOfTestsPerSeverityInTags) zurück, sowie die Tests soriert nach Kategorien(LintingResultsInTags)
     var numberOfTestsPerSeverityInTags = new Array(tags.length + 1).fill(0).map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
     // Group the linting results to their corresponding tags
     var LintingResultsInTags = new Array(tags.length);
@@ -193,6 +203,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   fillSeverityArrays() {
+    // Zurzeit nicht benutzt
     for (var i = 0; i < this.latestLintingResults.length; i++) {
       if (this.latestLintingResults[i].severity == 'HIGH') {
         this.checksHighSeverity.push(this.latestLintingResults[i]);
@@ -203,7 +214,9 @@ export class RepositoryDetailsComponent implements OnInit {
       }
     }
   }
+
   addTestToFillNumTestsPerSeverity(index, lintingResult ,numberOfTestsPerSeverityInTags) {
+    // Analysiert das Testergebnis
     index = index +1 // since first row is the statistic for all tests
     if (lintingResult.result) {
       numberOfTestsPerSeverityInTags[index][0] += 1;
@@ -225,7 +238,8 @@ export class RepositoryDetailsComponent implements OnInit {
     return numberOfTestsPerSeverityInTags;
   }
 
-  addTilesForCategoryGraphAndFooter() {
+  addTilesForCategoryGraph() {
+    // Erstellt zusätzliche Tiles
     for (var i = 0; i < this.tags.length; i++) {
       var t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
       this.tiles.push(t);
@@ -233,6 +247,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   returnEmojiBasedOnSeverity(input) {
+    // Benutzt die Emojimap
     if (input.result) return this.emojiMap.correct;
     else if (input.severity == 'HIGH') return this.emojiMap.false;
     else if (input.severity == 'MEDIUM') return this.emojiMap.warning;

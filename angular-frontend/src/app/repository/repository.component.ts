@@ -27,8 +27,7 @@ export class RepositoryComponent implements OnInit {
 
   ngOnInit(): void {}
   showDetailsViaDialog() {
-    //console.log(this.id)
-    //Hier sollte man die details per id getten
+    //Erstellt das Dialogfenster
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {
       width: '77%',
       height: '96%',

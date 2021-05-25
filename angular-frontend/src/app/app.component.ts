@@ -1,4 +1,3 @@
-import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
@@ -10,7 +9,6 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 
 
@@ -47,6 +45,7 @@ export class AppComponent {
     return this.forwardLinkWorked;
   }
   forwardLink(URL) {
+    // Wird aktuell nicht benötigt
     const headers = { 'Content-Type': 'text/html' };
 
     let HTTPOptions: Object = {
@@ -75,18 +74,15 @@ export class AppComponent {
         this.errorMsgForwardLink = 'Internal server error';
         this.forwardLinkWorked = false;
       }
-      /*() => {
-            console.log("The POST observable is now completed.");
-            this.errorMsgForwardLink = 'Internal server error'
-            this.forwardLinkWorked = false;
-        }*/
     );
   }
   removeAllProjectsFromOverview() {
+    // Löscht alle angezeigten 
     this.container.clear();
   }
 
   GetProjects() {
+    // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
     this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
@@ -106,6 +102,7 @@ export class AppComponent {
   }
 
   addComponent(name, id, gitlabInstance) {
+    // Fügt eine Komponente unter dem Tab Repositories hinzu
     var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
@@ -121,7 +118,8 @@ export class AppComponent {
   }
 
   searchProject(value:string){
-    
+    // Erstellt alle Komponenten im Repostiories Tab
+    // TODO: Methoden Naming ändern
     this.removeAllProjectsFromOverview();
 
     for(let item of this.projectComponents){
