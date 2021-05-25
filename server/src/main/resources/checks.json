@@ -104,7 +104,7 @@
       "tag": "Entwicklerfreundlichkeit"
     },
     "guestRoleDisabled": {
-      "category": "roles_checks",
+      "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Guest Rolle deaktiviert ist.",
@@ -113,7 +113,7 @@
       "tag": "Benutzerfreundlichkeit"
     },
     "developerRoleDisabled": {
-      "category": "roles_checks",
+      "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Developer Rolle deaktiviert ist.",
