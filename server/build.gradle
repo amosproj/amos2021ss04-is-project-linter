@@ -2,7 +2,6 @@ plugins {
     id 'org.springframework.boot' version '2.4.5'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
-    id 'jacoco'
 }
 
 group = 'amosproj.linter'
@@ -21,7 +20,6 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.h2database:h2'
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // init this project
-    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // automatically create docs
     testImplementation 'org.awaitility:awaitility:3.1.2' // scheduler
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
@@ -29,13 +27,4 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    finalizedBy jacocoTestReport // report is always generated after tests run
-}
-
-jacoco {
-    toolVersion = "0.8.6"
-}
-
-jacocoTestReport {
-    dependsOn test // tests are required to run before generating the report
 }

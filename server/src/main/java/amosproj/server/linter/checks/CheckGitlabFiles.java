@@ -2,25 +2,24 @@ package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.RepositoryFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * CheckGitlabFiles implementiert die Checks für Dateien in dem Repository.
+ */
 public class CheckGitlabFiles extends Check {
 
     public CheckGitlabFiles(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
@@ -53,6 +52,14 @@ public class CheckGitlabFiles extends Check {
         return true;
     }
 
+    /**
+     * Überprüft ob in der CONTRIBUTING.MD keine verlinkung auf eine andere CONTRIBUTING.MD ist.
+     *
+     * Lädt sich die Datei aus dem Repository herunter,
+     * überprüft zeile für zeile ob der regex darauf anspringt
+     *
+     * @return True || False
+     */
     public boolean checkNoContributingChain() {
         // generiere regex
         final var regex = "(?i)(?>https?://)?(?>www.)?(?>[a-zA-Z0-9]+)\\.[a-zA-Z0-9]*\\.[a-z]{3}.*/contributing.md";
@@ -62,7 +69,7 @@ public class CheckGitlabFiles extends Check {
         File file = getRawFile("CONTRIBUTING.md");
         URL url = null;
         try {
-            url = file.toURI().toURL();
+            if (file != null) url = file.toURI().toURL();
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -87,6 +94,13 @@ public class CheckGitlabFiles extends Check {
         return !found;
     }
 
+    /**
+     * Überprüft ob sich in der README.MD ein link zu entweder confluence oder datev documentation befindet
+     *
+     * Lädt die Datein herunter, überprüft zeile für zeile ob der regex anspringt, returned ergebniss
+     *
+     * @return TRUE || FALSE
+     */
     public boolean checkReadmeHasLinks() {
         // generiere regex
         final var regex = "(?i)(?>https?://)?online.bk.datev.de/documentation.*";

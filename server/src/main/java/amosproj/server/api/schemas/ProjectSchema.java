@@ -1,17 +1,19 @@
 package amosproj.server.api.schemas;
 
-import amosproj.server.GitLab;
 import amosproj.server.data.LintingResult;
-import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Dies ist das Schema Objekt, welches von der API an das Frontend gesendet wird.
+ * ProjectSchema kann benutzt werden, um die Projects aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
+ * Damit kann Redundanz in der Datenbank umgangen werden.
+ */
 public class ProjectSchema {
     // core attributes
     private Long Id;
@@ -19,29 +21,19 @@ public class ProjectSchema {
     private String url;
     private Integer gitlabProjectId;
     private String gitlabInstance;
-    // relations
-    private List<LintingResultSchema> lintingResults;
-    // extra info
     private String description;
     private Integer forkCount;
     private Date lastCommit;
+    // relations
+    private List<LintingResultSchema> lintingResults;
+    // extra info
 
-    public ProjectSchema(Project proj, LintingResultRepository lintingResultRepository,boolean withResults) {
-        if (!withResults) {
-            proj.setResults(null);
-        }
-
+    public ProjectSchema(Project proj, List<LintingResult> lintingResults) {
         BeanUtils.copyProperties(proj, this);
         this.lintingResults = new LinkedList<>();
-
-        LintingResult lintingResult = lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(proj.getId());
-
-        if (lintingResult != null)
-            this.lintingResults.add(new LintingResultSchema(lintingResult));
-
-        this.description = proj.getDescription();
-        this.forkCount = proj.getForkCount();
-        this.lastCommit = proj.getLastCommit();
+        for (LintingResult lr : lintingResults) {
+            this.lintingResults.add(new LintingResultSchema(lr));
+        }
     }
 
     public Long getId() {
@@ -84,20 +76,20 @@ public class ProjectSchema {
         this.gitlabInstance = gitlabInstance;
     }
 
-    public List<LintingResultSchema> getLintingResults() {
-        return lintingResults;
-    }
-
-    public void setLintingResults(List<LintingResultSchema> lintingResults) {
-        this.lintingResults = lintingResults;
-    }
-
     public String getDescription() {
         return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getForkCount() {
+        return forkCount;
+    }
+
+    public void setForkCount(Integer forkCount) {
+        this.forkCount = forkCount;
     }
 
     public Date getLastCommit() {
@@ -108,12 +100,12 @@ public class ProjectSchema {
         this.lastCommit = lastCommit;
     }
 
-    public Integer getForkCount() {
-        return forkCount;
+    public List<LintingResultSchema> getLintingResults() {
+        return lintingResults;
     }
 
-    public void setForkCount(Integer forkCount) {
-        this.forkCount = forkCount;
+    public void setLintingResults(List<LintingResultSchema> lintingResults) {
+        this.lintingResults = lintingResults;
     }
 
     @Override

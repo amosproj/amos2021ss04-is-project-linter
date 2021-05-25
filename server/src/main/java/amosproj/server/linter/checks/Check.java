@@ -2,7 +2,6 @@ package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckResultRepository;
-import amosproj.server.data.CheckSeverity;
 import amosproj.server.data.LintingResult;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
@@ -10,6 +9,9 @@ import org.gitlab4j.api.models.Project;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * Check ist die Abstrakte Klasse, die das Ausführen der einzelnen Checks vornimmt.
+ */
 public abstract class Check {
 
     protected org.gitlab4j.api.GitLabApi api;
@@ -24,13 +26,22 @@ public abstract class Check {
         this.checkResultRepository = checkResultRepository;
     }
 
+    /**
+     * Führt einen Test, basierend auf seiner JSON config und seinem TestNamen durch.
+     * Diese Methode arbeitet mit Java Reflection um dies passende Methode zu dem (einzigartigem) TestNamen zu finden.
+     *
+     * @param testName einzigartiger Name des Tests
+     * @param node     Eintrag aus der config JSON-Datei
+     * @param args     parameter die dem Check übergeben werden sollen (beliebige Anzahl / beliebiger Datentyp)
+     * @return Ergebnis, welches automatisch in der Datenbank gespeichert wird.
+     */
     public CheckResult runTest(String testName, JsonNode node, Object... args) {
-        boolean enabled = node.get("enabled").booleanValue();
+        // nur aktivierte tests sollen ausgeführt werden
+        if (!node.get("enabled").booleanValue()) return null;
 
-        if (!enabled) return null;
-
-        java.lang.reflect.Method method = null;
-        boolean checkResult = false;
+        // Start Check per reflection
+        java.lang.reflect.Method method;
+        boolean checkResult;
         try {
             method = getClass().getMethod(testName);
             checkResult = (boolean) method.invoke(this, args);
@@ -38,16 +49,9 @@ public abstract class Check {
             return null;
         }
         // return check result
-        JsonNode severity = node.get("severity");
-        if (severity != null) {
-            CheckResult cr = new CheckResult(lintingResult, testName, checkResult, CheckSeverity.valueOf(severity.textValue()));
-            checkResultRepository.save(cr);
-            return cr;
-        } else {
-            CheckResult cr = new CheckResult(lintingResult, testName, checkResult, CheckSeverity.NOT_SPECIFIED);
-            checkResultRepository.save(cr);
-            return cr;
-        }
+        CheckResult cr = new CheckResult(lintingResult, testName, checkResult);
+        checkResultRepository.save(cr);
+        return cr;
     }
 
 }
