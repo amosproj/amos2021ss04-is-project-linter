@@ -27,7 +27,7 @@ Die ACIDIC Software analysiert und gibt Tips zum Verbessern von Softwareprojekte
 * Existenz von Links innerhalb der benötigten Dateien
 
 Implementiert ist die Software als Web-App mit:
-* <a href="https://www.java.com/">Java</a> und<a href="https://spring.io/projects/spring-boot">Spring Boot</a> im Backend
+* <a href="https://www.java.com/">Java</a> und <a href="https://spring.io/projects/spring-boot">Spring Boot</a> im Backend
 * <a href="https://www.nginx.com/">nginx</a> und <a href="https://angular.io/">Angular</a> im Frontend
 * <a href="https://www.postgresql.org/">PostgreSQL</a> als Datenbank
 * <a href="https://www.docker.com/">Docker</a> für einfaches Deployment
