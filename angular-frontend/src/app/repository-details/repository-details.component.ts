@@ -41,16 +41,15 @@ export class RepositoryDetailsComponent implements OnInit {
   lastLintTime;
   RepoName = '';
   RepoURL = '';
-  checksHighSeverity: CheckResults[];   // currently not in use
-  checksMediumSeverity: CheckResults[]; // currently not in use
-  checksLowSeverity: CheckResults[];    // currently not in use
+  checksHighSeverity: CheckResults[];   // wird momentan nicht benützt
+  checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
+  checksLowSeverity: CheckResults[];    // wird momentan nicht benützt
   latestLintingResults: CheckResults[];
   tags: String[];
   LintingResultsInTags: CheckResults[][];
-  numberOfTestsPerSeverityInTags: number[][]; // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, high, medium, low]
-  //if there should be new tags this has to be extended
+  numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
+  //wenn neue Tags hinzugefügt werden muss folgende Variable erweitert werden
   chartNames : string[] = ['totalChart', 'userChart', 'programmerChart' ];
-  //static numberOfTestsPerSeverityInTags: number[][];
   maxColsForTiles = 9;
   tiles: Tile[] = [
     { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },             // gibt es immer
@@ -64,15 +63,15 @@ export class RepositoryDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void{
-    // initialyze arrays sorted via severity void
+    // initalisiere Arrays sortiert bei severtity void
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
-    this.ShowProjectDetails(this.data.projectID); // sends first HTTP Request
+    this.ShowProjectDetails(this.data.projectID); // sendet erste HTTP Anfrage ans backend
   }
  
   ngAfterViewInit(): void {
-    // sends second Http request for the Charts
+    // sendet zweite Http Anfrage um Daten für die Charts zu bekommen 
     this.http.get(`${environment.baseURL}/project/${this.data.projectID}`).subscribe(
       (val: any) => {
         var tags = this.getTagsArray(val.lintingResults[val.lintingResults.length - 1].checkResults);
@@ -88,9 +87,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   renderChart(index, numberOfTestsPerSeverityInTags) {
-    // rendert eine Chart
-    //console.log('Print chartName', this.chartNames[index]);
-    //console.log('Print numbers for Chart', numberOfTestsPerSeverityInTags[index]);
+    //rendert eine Chart
     const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
     canvas.width = 150;
     canvas.height = 150;
@@ -136,23 +133,23 @@ export class RepositoryDetailsComponent implements OnInit {
     this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
       (val: any) => {
         console.log('GET call successful value returned in body', val);
-        // fill linting category array
+        // fülle linting Kategorien array
         var last_entry = val.lintingResults.length;
         this.latestLintingResults =
          val.lintingResults[last_entry - 1].checkResults;
-        //this.fillSeverityArrays(); // currently does not need to be used
+        //this.fillSeverityArrays(); // muss momentan nicht benützt werden
         this.tags = this.getTagsArray(this.latestLintingResults);
 
         this.LintingResultsInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(this.tags, this.latestLintingResults)[1];
         console.log('LintingResultInTags', this.LintingResultsInTags);
 
-        // save information
+        // Speichere Informationen
         this.RepoName = val.name;
         this.RepoURL = val.url;
         this.lastLintTime = dayjs(
           val.lintingResults[last_entry - 1].lintTime
         ).format('DD.MM.YYYY - H:mm');
-        // dynamically create missing tiles for grid list corresponding to their grid list
+        // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste 
         this.addTilesForCategoryGraph();
       });
   }
@@ -162,9 +159,9 @@ export class RepositoryDetailsComponent implements OnInit {
     var tags = [];
     for (var i = 0; i < latestLintingResults.length; i++) {
       var tagAlreadyThere = false;
-      // Check if tags has entries
+      // Prüfe ob tags Werte hat
       if (tags) {
-        // Check if categories contains the current category
+        // Prüfe ob Kategorien die momentane Kategorie enthält
         for (var j = 0; j < tags.length; j++) {
           if (tags[j] == latestLintingResults[i].tag) {
             tagAlreadyThere = true;
@@ -182,19 +179,18 @@ export class RepositoryDetailsComponent implements OnInit {
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, latestLintingResults) {
     // Gibt einmal ein Array der Testergebnisse sortiert nach Kategorien (numberOfTestsPerSeverityInTags) zurück, sowie die Tests soriert nach Kategorien(LintingResultsInTags)
-    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1).fill(0).map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
-    // Group the linting results to their corresponding tags
+    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1).fill(0).map(() => new Array(4).fill(0)); // 2D array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, niedrig, medium, hoch]
+    // Gruppiere die linting Ergebnisse nach deren korrespondierenden tags
     var LintingResultsInTags = new Array(tags.length);
     for (var i = 0; i < latestLintingResults.length; i++) {
-      // Get index of tag in tags
+      // Hole index des tag in tags
       var index = tags.indexOf(latestLintingResults[i].tag);
-      // Check if array needs to be initialized
+      // Check ob der Array initalisiert werden muss
       if (!LintingResultsInTags[index]) {
         LintingResultsInTags[index] = [];
       }
-      // Push test into category corresponding index
+      // Schiebe test in die Kategorie des korrespondierenden index
       LintingResultsInTags[index].push(latestLintingResults[i]);
-      // ok console.log('index', index);
       numberOfTestsPerSeverityInTags = this.addTestToFillNumTestsPerSeverity(index, latestLintingResults[i], numberOfTestsPerSeverityInTags);
       //this.numberOfTestsPerSeverityInTags= numberOfTestsPerSeverityInTags;
     }
@@ -217,7 +213,7 @@ export class RepositoryDetailsComponent implements OnInit {
 
   addTestToFillNumTestsPerSeverity(index, lintingResult ,numberOfTestsPerSeverityInTags) {
     // Analysiert das Testergebnis
-    index = index +1 // since first row is the statistic for all tests
+    index = index + 1 // da die erste Spalte für die Statistik der gesamten Checks unabhängig von den tags ist 
     if (lintingResult.result) {
       numberOfTestsPerSeverityInTags[index][0] += 1;
       numberOfTestsPerSeverityInTags[0][0] += 1;
@@ -256,14 +252,14 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 }
 
-declare const require: any; //used for loading svg
+declare const require: any; // wird benützt um das svg zu laden
 
-// For getting the project
+// Um das Projekt zu bekommen
 export interface DialogData {
   projectID: number;
 }
 
-// For storing the information on the project
+// Zum speichern der Daten des Projekts
 interface CheckResults {
   checkName: string;
   severity: string;
@@ -272,11 +268,10 @@ interface CheckResults {
   description: string;
   tag: string;
   fix: string;
-  message: string; // is errormessage
-  // errormessage:string
+  message: string; // ist Fehlermeldung
 }
 
-// For angular tiles
+// FÜr angular tiles
 export interface Tile {
   color: string;
   cols: number;
@@ -284,14 +279,14 @@ export interface Tile {
   text: string;
 }
 
-// For storing the information of the http get request
+// Zum speichern der Daten der HTTP Anfrage
 interface GetResponse {
   lintingResults: LintingResult[];
   name: string;
   url: string;
 }
 
-// For storing the information of a LintingResult
+// Zum Speichern der Daten eines LintingResult
 interface LintingResult {
   projectId: number;
   id: number;

@@ -77,7 +77,7 @@ export class AppComponent {
     );
   }
   removeAllProjectsFromOverview() {
-    // Löscht alle angezeigten 
+    // Löscht alle angezeigten Projekte
     this.container.clear();
   }
 
@@ -93,8 +93,8 @@ export class AppComponent {
           this.all_projects[project].id,
           this.all_projects[project].url
         );
-      }
-    }); // currently it you can only send the pure URL and not as a JSON
+      } 
+    }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
 
   ngOnInit() {
@@ -110,7 +110,7 @@ export class AppComponent {
     expComponent.instance.id = id;
     expComponent.instance.gitlabInstance = gitlabInstance;
 
-    //For search reasons 
+    //Zum Suchen
 
     this.projectComponents.push(expComponent);
  
@@ -119,7 +119,7 @@ export class AppComponent {
 
   searchProject(value:string){
     // Erstellt alle Komponenten im Repostiories Tab
-    // TODO: Methoden Naming ändern
+    // TODO: Methoden Benennung ändern
     this.removeAllProjectsFromOverview();
 
     for(let item of this.projectComponents){
@@ -137,11 +137,11 @@ export class AppComponent {
     }
   }
 
-} // end of AppComponent
+} // Ende von AppComponent
 
 
 
-// Interface for the repository component which shows coarse repo infos
+// Interface für die repository Komponente welche grob die Informationen des repository zeigt
 interface Project {
   gitlabInstance: string;
   gitlabProjectId: number;
