@@ -8,8 +8,6 @@ import {
 import { Chart } from '../../../node_modules/chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
-import { timer } from 'rxjs';
-import { NumberValueAccessor } from '@angular/forms';
 
 @Component({
   selector: 'app-repository-details',
@@ -45,7 +43,7 @@ export class RepositoryDetailsComponent implements OnInit {
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, high, medium, low]
   //if there should be new tags this has to be extended
-  chartNames : string[] = ['userChart', 'programmerChart', 'totalChart'];
+  chartNames : string[] = ['totalChart', 'userChart', 'programmerChart' ];
   //static numberOfTestsPerSeverityInTags: number[][];
   maxColsForTiles = 9;
   tiles: Tile[] = [
@@ -64,23 +62,17 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.ShowProjectDetails(this.data.projectID);
-    //this.initFinsished = true;
   }
  
   ngAfterViewInit(): void {
-    //while(!this.initFinsished){
-    //    continue;
-    //}
     //render the charts
     this.http.get(`${environment.baseURL}/project/${this.data.projectID}`).subscribe(
       (val: any) => {
         var tags = this.getTagsArray(val.lintingResults[val.lintingResults.length - 1].checkResults);
-        // ok console.log('in after', val.lintingResults);
-        // ok console.log('tags in after', tags);
-        var numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1])[0];
-        // NICHT OK !!!! console.log('in after', numberOfTestsPerSeverityInTags);
+        this.numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1].checkResults)[0];
+        console.log('in after', this.numberOfTestsPerSeverityInTags);
         for(var i = 0 ; i < this.tags.length + 1; i++){
-          this.renderChart(i, numberOfTestsPerSeverityInTags);
+          this.renderChart(i, this.numberOfTestsPerSeverityInTags);
           this.myChart.update();
         }
       }
@@ -99,17 +91,16 @@ export class RepositoryDetailsComponent implements OnInit {
       this.myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: ['Bestanden',  'Test nicht bestanden', 'unwichtiger Test nicht bestanden', 'wichtiger Test nicht bestanden'],
+          labels: ['Bestanden',  'unwichtiger Test nicht bestanden', 'Test nicht bestanden', 'wichtiger Test nicht bestanden'],
           datasets: [
             {
               label: 'My First Dataset',
-              //data: numberOfTestsPerSeverityInTags[index],
-              data: [1,1,1,1],
+              data: numberOfTestsPerSeverityInTags[index],
               backgroundColor: [
-                'rgb(3, 252, 40)',
-                'rgb(252, 169, 3)',
-                'rgb(252, 236, 3)',
-                'rgb(252, 32, 3)',
+                'rgb(3, 252, 40)',  // green
+                'rgb(252, 236, 3)', // yellow
+                'rgb(252, 169, 3)', // orange
+                'rgb(252, 32, 3)',  // rot
               ],
               hoverOffset: 4,
             },
@@ -156,35 +147,6 @@ export class RepositoryDetailsComponent implements OnInit {
         // dynamically create missing tiles for grid list corresponding to their grid list
         this.addTilesForCategoryGraphAndFooter();
       });
-
-    /*
-    this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
-      (val: any) => {
-        console.log('GET call successful value returned in body', val);
-        // fill linting category array
-        var last_entry = val.lintingResults.length;
-        this.latestLintingResults =
-          val.lintingResults[last_entry - 1].checkResults;
-        //this.fillSeverityArrays(); // currently does not need to be used
-        this.groupLintingResultsInTagsAndFillNumTestsPerSeverity();
-        // save information
-        this.RepoName = val.name;
-        this.RepoURL = val.url;
-        this.lastLintTime = dayjs(
-          val.lintingResults[last_entry - 1].lintTime
-        ).format('DD.MM.YYYY - H:mm');
-        // dynamically create missing tiles for grid list corresponding to their grid list
-        this.addTilesForCategoryGraphAndFooter();
-      },
-      (response) => {
-        console.log('GET call in error', response);
-      },
-      () => {
-        console.log('The GET observable is now completed.');
-        this.getdata = true;
-      }
-    );
-    */
   }
 
   getTagsArray(latestLintingResults){
@@ -210,13 +172,8 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, latestLintingResults) {
-    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1)
-      .fill(0)
-      .map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
+    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1).fill(0).map(() => new Array(4).fill(0)); // 2D array of size [tags+1, 4], 1 dim = tags, 2nd dim [correct, low, medium, high]
     // Group the linting results to their corresponding tags
-
-    // ok console.log('in group latestLint', latestLintingResults);
-
     var LintingResultsInTags = new Array(tags.length);
     for (var i = 0; i < latestLintingResults.length; i++) {
       // Get index of tag in tags
@@ -229,18 +186,8 @@ export class RepositoryDetailsComponent implements OnInit {
       LintingResultsInTags[index].push(latestLintingResults[i]);
       // ok console.log('index', index);
       numberOfTestsPerSeverityInTags = this.addTestToFillNumTestsPerSeverity(index, latestLintingResults[i], numberOfTestsPerSeverityInTags);
-      console.log('grouping 1', numberOfTestsPerSeverityInTags);
+      //this.numberOfTestsPerSeverityInTags= numberOfTestsPerSeverityInTags;
     }
-    //the last entry in numberOfTestsPerSeverityInTags is the sum of all previous 
-    for (var i = 0; i < 4; i++){
-      var sum = 0;
-      for(var j = 0; j < tags.length; j++){
-        sum += numberOfTestsPerSeverityInTags[j][i];
-      }
-      numberOfTestsPerSeverityInTags[tags.length][i] = sum;
-    }
-    //console.log('LintingResultsInTags in method', LintingResultsInTags);
-    console.log('grouping 2', numberOfTestsPerSeverityInTags);
 
     return [numberOfTestsPerSeverityInTags, LintingResultsInTags];
   }
@@ -257,20 +204,24 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
   addTestToFillNumTestsPerSeverity(index, lintingResult ,numberOfTestsPerSeverityInTags) {
+    index = index +1 // since first row is the statistic for all tests
     if (lintingResult.result) {
       numberOfTestsPerSeverityInTags[index][0] += 1;
-    } else if (lintingResult.severity == 'MEDIUM') {
-      numberOfTestsPerSeverityInTags[index][1] += 1;
+      numberOfTestsPerSeverityInTags[0][0] += 1;
     } else if (lintingResult.severity == 'LOW') {
+      numberOfTestsPerSeverityInTags[index][1] += 1;
+      numberOfTestsPerSeverityInTags[0][1] += 1;
+    } else if (lintingResult.severity == 'MEDIUM') {
       numberOfTestsPerSeverityInTags[index][2] += 1;
+      numberOfTestsPerSeverityInTags[0][2] += 1;
     } else if (lintingResult.severity == 'HIGH') {
       numberOfTestsPerSeverityInTags[index][3] += 1;
+      numberOfTestsPerSeverityInTags[0][3] += 1;
     } else {
       console.log(
         'In Repository Details component: addTestToFillNumTestsPerSeverity() found test which does not have a severity label!'
       );
     }
-    //console.log('addTest', numberOfTestsPerSeverityInTags);
     return numberOfTestsPerSeverityInTags;
   }
 
@@ -285,7 +236,7 @@ export class RepositoryDetailsComponent implements OnInit {
     if (input.result) return this.emojiMap.correct;
     else if (input.severity == 'HIGH') return this.emojiMap.false;
     else if (input.severity == 'MEDIUM') return this.emojiMap.warning;
-    else if (input.severity == 'Low') return this.emojiMap.notImportant;
+    else if (input.severity == 'LOW') return this.emojiMap.notImportant;
     else return this.emojiMap.bug;
   }
 }
