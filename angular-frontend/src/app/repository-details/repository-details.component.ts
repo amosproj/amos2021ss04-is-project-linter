@@ -66,11 +66,8 @@ export class RepositoryDetailsComponent implements OnInit {
   }
  
   ngAfterViewInit(): void {
-    while(!this.getdata){
-      for(var i = 0; i < this.chartNames.length;i++){
-        
-    }
-    }
+  
+    
     
   }
   renderChart(index) {
