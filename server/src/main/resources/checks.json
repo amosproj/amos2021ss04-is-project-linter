@@ -103,22 +103,22 @@
       "fix": "Ändern Sie die Einstellungen des Repositories um squash commits zu verbieten.",
       "tag": "Entwicklerfreundlichkeit"
     },
-    "guestRoleEnabled": {
+    "guestRoleDisabled": {
       "category": "roles_checks",
       "enabled": true,
       "severity": "LOW",
-      "description": "Überprüft, ob die Guest Rolle aktiviert ist.",
-      "message": "Das Repository hat die Guest Rolle deaktiviert!",
-      "fix": "Ändern Sie die Einstellungen des Repositories um Guests zu erlauben.",
+      "description": "Überprüft, ob die Guest Rolle deaktiviert ist.",
+      "message": "Das Repository hat die Guest Rolle aktiviert!",
+      "fix": "Ändern Sie die Einstellungen des Repositories um Guests zu verbieten.",
       "tag": "Benutzerfreundlichkeit"
     },
-    "developerRoleEnabled": {
+    "developerRoleDisabled": {
       "category": "roles_checks",
       "enabled": true,
       "severity": "LOW",
-      "description": "Überprüft, ob die Developer Rolle aktiviert ist.",
-      "message": "Das Repository hat die Developer Rolle deaktiviert!",
-      "fix": "Ändern Sie die Einstellugen des Repositories um Developers zu erlauben.",
+      "description": "Überprüft, ob die Developer Rolle deaktiviert ist.",
+      "message": "Das Repository hat die Developer Rolle aktiviert!",
+      "fix": "Ändern Sie die Einstellumgen des Repositories um Developer zu verbieten.",
       "tag": "Entwicklerfreundlichkeit"
     },
     "hasBadges": {

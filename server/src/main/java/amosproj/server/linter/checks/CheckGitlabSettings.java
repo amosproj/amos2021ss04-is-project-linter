@@ -91,11 +91,7 @@ public class CheckGitlabSettings extends Check {
     }
 
     public boolean gitlabWikiDisabled() {
-        try {
-            return (api.getWikisApi().getPages(project).isEmpty());
-        } catch (GitLabApiException e) {
-            return true;
-        }
+        return !project.getWikiEnabled();
     }
 
     public boolean hasAvatar() {
