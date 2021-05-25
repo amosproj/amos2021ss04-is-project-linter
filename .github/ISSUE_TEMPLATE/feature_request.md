@@ -9,10 +9,9 @@ about: Suggest new feature (using user story)
 3. So that {}
 
 ## Acceptance criteria
-* Criterion 1
-* Criterion 2
 * ...
 
 ## Definition of done
-* Added only after week 5
-* The same for all features
+* Approved by product owner
+* Code review by release manager
+* 50% test coverage in backend
