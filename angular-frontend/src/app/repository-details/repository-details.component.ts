@@ -97,7 +97,7 @@ export class RepositoryDetailsComponent implements OnInit {
               label: 'My First Dataset',
               data: numberOfTestsPerSeverityInTags[index],
               backgroundColor: [
-                'rgb(3, 252, 40)',  // green
+                'rgb(51, 209, 40)',  // green
                 'rgb(252, 236, 3)', // yellow
                 'rgb(252, 169, 3)', // orange
                 'rgb(252, 32, 3)',  // rot
