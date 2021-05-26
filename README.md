@@ -9,11 +9,11 @@
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker">Installation</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker-Deployment">Installation</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architecture">Architektur</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architektur">Architektur</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Konfiguration</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Konfiguration der Web-App</a>
 </h3>
 
 ---
