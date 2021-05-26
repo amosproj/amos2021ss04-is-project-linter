@@ -18,7 +18,7 @@ Flag `--prod` setzen für production build.
 
 ## Docker
 
-Erst bauen (siehe oben) dann folgendes Ausführen: `docker build -t amoslinter/frontend:staging .`
+Erst bauen (siehe oben) dann folgendes Ausführen: `docker build -t amoslinter/frontend:<TAG> .` (tag z.B staging oder release)
 
 ## Development server
 

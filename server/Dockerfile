@@ -13,7 +13,7 @@ USER amos
 WORKDIR /home/amos
 
 # copy the compiled jar
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=build/libs/server.jar
 COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT ["dumb-init", "java","-jar","app.jar"]

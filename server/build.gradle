@@ -5,7 +5,6 @@ plugins {
 }
 
 group = 'amosproj.linter'
-version = 'linter-staging'
 sourceCompatibility = '11' // run on java 11
 
 repositories {
