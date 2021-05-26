@@ -109,8 +109,14 @@ public class CheckGitlabFilesTest {
     }
 
     @Test
-    void test_hasLinksInReadme_positive() throws GitLabApiException {
-        prepareSettingsCheck("https://gitlab.cs.fau.de/uv59uxut/linter_positive");
+    void test_hasLinksInReadme_positive1() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+        assertTrue(checkGitlabFiles.checkReadmeHasLinks());
+    }
+
+    @Test
+    void test_hasLinksInReadme_positive2() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/chiefs/amos-testz");
         assertTrue(checkGitlabFiles.checkReadmeHasLinks());
     }
 

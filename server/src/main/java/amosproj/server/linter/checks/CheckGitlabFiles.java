@@ -2,6 +2,8 @@ package amosproj.server.linter.checks;
 
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
+import amosproj.server.linter.Linter;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
@@ -13,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -103,30 +106,32 @@ public class CheckGitlabFiles extends Check {
      */
     public boolean checkReadmeHasLinks() {
         // generiere regex
-        final var regex = "(?i)(?>https?://)?online.bk.datev.de/documentation.*";
-        // TODO: ADD REGEX FOR CONFLUENCE LINKS
-        final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
-        boolean found = false;
+        JsonNode node = Linter.getConfigNode().get("settings").get("readMeLinks");
+        Iterator<JsonNode> it = node.iterator();
+        while(it.hasNext()) {
+            String link = it.next().asText();
+            final Pattern pattern = Pattern.compile(link, Pattern.MULTILINE);
 
-        //lade Datei in java.io.tmp
-        URI uri = getRawReadme();
-        if (uri != null) {
-            try {
-                Scanner scanner = new Scanner(uri.toURL().openStream());
-                //lese Zeile der Datei bis Ende
-                while (scanner.hasNextLine()) {
-                    String line = scanner.nextLine();
-                    // führe regex auf zeile aus
-                    final Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
-                        found = true;
+            //lade Datei in java.io.tmp
+            URI uri = getRawReadme();
+            if (uri != null) {
+                try {
+                    Scanner scanner = new Scanner(uri.toURL().openStream());
+                    //lese Zeile der Datei bis Ende
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        // führe regex auf zeile aus
+                        final Matcher matcher = pattern.matcher(line);
+                        if (matcher.find()) {
+                            return true;
+                        }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
-        return found;
+        return false;
     }
 
     public URI getRawReadme() {

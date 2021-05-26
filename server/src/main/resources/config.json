@@ -1,7 +1,11 @@
 {
   "settings": {
     "scheduler": "0 0 0 * * ?",
-    "gitLabHost": "https://gitlab.cs.fau.de"
+    "gitLabHost": "https://gitlab.cs.fau.de",
+    "readMeLinks": [
+      "https://this.website.com/doesntexist",
+      "https://that.doesnt.either"
+    ]
   },
   "checks": {
     "checkReadmeExistence": {
