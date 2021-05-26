@@ -11,7 +11,7 @@ Wir nutzen Java 11 für dieses Projekt, es sollte aber auch java 12, 13, 14 und 
 
 Erst Java Projekt bauen (siehe oben), dann folgendes ausführen:
 
-Bauen: `docker build -t amoslinter/server:staging .`
+Bauen: `docker build -t amoslinter/server:<TAG> .` (tag z.B staging oder release)
 
 ## Tests ausführen
 
