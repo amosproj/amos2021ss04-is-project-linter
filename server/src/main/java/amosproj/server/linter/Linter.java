@@ -133,7 +133,7 @@ public class Linter {
      * @return JsonNode of the parsed config.json
      */
     public static JsonNode getConfigNode() {
-        ClassPathResource file = new ClassPathResource("checks.json");
+        ClassPathResource file = new ClassPathResource("config.json");
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
         JsonNode node = null;
         try {
