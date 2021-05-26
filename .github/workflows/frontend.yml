@@ -1,4 +1,4 @@
-name: Build, Test and Package Frontend as Docker Image
+name: FrontEnd
 
 on: [push, pull_request]
 
@@ -6,19 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  steps:
-    - uses: actions/checkout@v2
+    steps:
+      - uses: actions/checkout@v2
 
-    - name: Install packages
-      working-directory: ./angular-frontend
-      run: npm install # TODO cache them
+      - name: Install packages
+        working-directory: ./angular-frontend
+        run: npm install # TODO cache them
 
-    - name: Build the FrontEnd
-      working-directory: ./angular-frontend
-      run: ng build --prod
+      - name: Build the FrontEnd
+        working-directory: ./angular-frontend
+        run: ng build --prod
 
-    - name: Build Docker Image
-      run: echo TODO
+      - name: Build Docker Image
+        run: echo TODO
 
-    - name: Push Docker Image
-      run: echo TODO
+      - name: Push Docker Image
+        run: echo TODO

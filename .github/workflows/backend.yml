@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Gradle
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
 
-name: Build, Test and Package Backend as Docker Image
+name: BackEnd
 
 on: [push, pull_request]
 
@@ -20,10 +20,12 @@ jobs:
           architecture: x64
 
       - name: Grant execute permission for gradlew
-        run: chmod +x server/gradlew
+        working-directory: ./server
+        run: chmod +x ./gradlew
 
       - name: Build with Gradle
-        run: ./server/gradlew build -x test
+        working-directory: ./server
+        run: ./gradlew build #-x test
 
       - name: Run Tests
         run: echo TODO
