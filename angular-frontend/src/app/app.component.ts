@@ -1,4 +1,3 @@
-import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { ComponentFactoryResolver } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
@@ -10,7 +9,7 @@ import {
   HttpClientModule,
   HttpHeaders,
 } from '@angular/common/http';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -19,19 +18,15 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 })
 export class AppComponent {
   title = 'angular-frontend';
+  projectComponents = [];
   //SearchBarValue = '';
   all_projects: Project[];
-  serverID = 'http://localhost:6969/api/';
   options: FormGroup;
   forwardLinkWorked = true;
   errorMsgForwardLink = '';
-
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
-  //onEnter(SearchBarValue: string) { this.SearchBarValue = SearchBarValue;
-  //this.forwardLink("http://localhost:6969/api/projects",SearchBarValue);
-  //}
 
   constructor(
     fb: FormBuilder,
@@ -47,7 +42,8 @@ export class AppComponent {
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
-  forwardLink(serverID, URL) {
+  forwardLink(URL) {
+    // Wird aktuell nicht benötigt
     const headers = { 'Content-Type': 'text/html' };
 
     let HTTPOptions: Object = {
@@ -57,35 +53,37 @@ export class AppComponent {
       responseType: 'text',
     };
 
-    this.http.post<String>(serverID, URL, HTTPOptions).subscribe(
-      (val: any) => {
-        console.log('POST call successful value returned in body', val);
-        var regex404 = new RegExp('404 NOT_FOUND', 'i');
-        console.log(val.search(regex404));
-        if (val.search(regex404) != -1) {
-          this.errorMsgForwardLink = 'Fehler 404, bitte URL überprüfen';
-          this.forwardLinkWorked = false;
-          console.log(this.forwardLinkWorked);
-        } else {
-          this.forwardLinkWorked = true;
-        }
-        console.log(this.forwardLinkWorked);
-      },
-      (error) => {
-        console.log('POST call in error', error);
-        this.errorMsgForwardLink = 'Internal server error';
-        this.forwardLinkWorked = false;
-      }
-      /*() => {
-            console.log("The POST observable is now completed.");
-            this.errorMsgForwardLink = 'Internal server error'
+    this.http
+      .post<String>(`${environment.baseURL}/projects`, URL, HTTPOptions)
+      .subscribe(
+        (val: any) => {
+          console.log('POST call successful value returned in body', val);
+          var regex404 = new RegExp('404 NOT_FOUND', 'i');
+          console.log(val.search(regex404));
+          if (val.search(regex404) != -1) {
+            this.errorMsgForwardLink = 'Fehler 404, bitte URL überprüfen';
             this.forwardLinkWorked = false;
-        }*/
-    );
+            console.log(this.forwardLinkWorked);
+          } else {
+            this.forwardLinkWorked = true;
+          }
+          console.log(this.forwardLinkWorked);
+        },
+        (error) => {
+          console.log('POST call in error', error);
+          this.errorMsgForwardLink = 'Internal server error';
+          this.forwardLinkWorked = false;
+        }
+      );
+  }
+  removeAllProjectsFromOverview() {
+    // Löscht alle angezeigten Projekte
+    this.container.clear();
   }
 
-  GetProjects(serverID) {
-    this.http.get(serverID).subscribe((results) => {
+  GetProjects() {
+    // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
+    this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
 
@@ -96,28 +94,46 @@ export class AppComponent {
           this.all_projects[project].url
         );
       }
-    });
-    /*{ // currently it you can only send the pure URL and not as a JSON
-      "data": gitID
-  })*/
+    }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
 
   ngOnInit() {
-    this.GetProjects('http://localhost:6969/api/projects');
+    this.GetProjects();
   }
 
   addComponent(name, id, gitlabInstance) {
+    // Fügt eine Komponente unter dem Tab Repositories hinzu
     var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
     expComponent.instance.name = name;
     expComponent.instance.id = id;
     expComponent.instance.gitlabInstance = gitlabInstance;
-    expComponent.instance.serverID = this.serverID;
-  }
-} // end of AppComponent
 
-// Interface for the repository component which shows coarse repo infos
+    //Zum Suchen
+
+    this.projectComponents.push(expComponent);
+  }
+
+  searchProject(value: string) {
+    // Erstellt alle Komponenten im Repostiories Tab
+    // TODO: Methoden Benennung ändern
+    this.removeAllProjectsFromOverview();
+
+    for (let item of this.projectComponents) {
+      if (item.instance.name.startsWith(value) || value === '') {
+        var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
+        var expComponent = this.container.createComponent(comp);
+        expComponent.instance._ref = expComponent;
+        expComponent.instance.name = item.instance.name;
+        expComponent.instance.id = item.instance.id;
+        expComponent.instance.gitlabInstance = item.instance.gitlabInstance;
+      }
+    }
+  }
+} // Ende von AppComponent
+
+// Interface für die repository Komponente welche grob die Informationen des repository zeigt
 interface Project {
   gitlabInstance: string;
   gitlabProjectId: number;

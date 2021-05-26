@@ -1,47 +1,49 @@
 version: "3.8"
 
 services:
-    database:
-        container_name: "amos-linter-postgres-db"
-        image: "postgres:alpine"
-        restart: always
-        environment:
-            - POSTGRES_USER=${DB_USER}
-            - POSTGRES_PASSWORD=${DB_PASSWORD}
-            - POSTGRES_DB=${DB_NAME}
-        volumes:
-            - postgres-data
-        expose:
-            - 5432
+  database:
+    container_name: "amos-linter-postgres-db"
+    image: "postgres:alpine"
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres-data
+    expose:
+      - 5432
 
-    backend:
-        container_name: "amos-linter-java-server"
-        image: "amoslinter/server:staging"
-        environment:
-            - spring.datasource.platform=postgres
-            - spring.datasource.url=jdbc:postgresql://database:5432/${DB_NAME}
-            - spring.datasource.username=${DB_USER}
-            - spring.datasource.password=${DB_PASSWORD}
-            - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
-            - GITLAB_ACCESS_TOKEN=${GITLAB_ACCESS_TOKEN}
-            - server.port=8080
-        depends_on:
-            - database
-        expose:
-            - 8080
+  backend:
+    container_name: "amos-linter-java-server"
+    image: "amoslinter/server:${ENVIRONMENT}"
+    environment:
+      - spring.datasource.platform=postgres
+      - spring.datasource.url=jdbc:postgresql://database:5432/${DB_NAME}
+      - spring.datasource.username=${DB_USER}
+      - spring.datasource.password=${DB_PASSWORD}
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+      - GITLAB_ACCESS_TOKEN=${GITLAB_ACCESS_TOKEN}
+      - server.port=8080
+    depends_on:
+      - database
+    expose:
+      - 8080
 
-    nginx:
-        container_name: "amos-linter-nginx"
-        image: "amoslinter/frontend:new-frontend" # TODO swap to new new-frontend
-        volumes: # more like: load configurations
-            - ./nginx.conf:/etc/nginx/conf.d/default.conf
-        depends_on:
-            - backend
-        ports: # only connection to outside world
-            - ${PORT}:80
-            - 443:443
-        links:
-            - backend
+  nginx:
+    container_name: "amos-linter-nginx"
+    image: "amoslinter/frontend:${ENVIRONMENT}"
+    volumes: # more like: load configurations
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    # environment: FIXME
+    #     - port=${PORT}
+    depends_on:
+      - backend
+    ports: # only connection to outside world
+      - ${PORT}:80
+      - 443:443
+    links:
+      - backend
 
 volumes:
-    postgres-data:
+  postgres-data:

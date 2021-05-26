@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Project ist das JPA-Objekt, das die Metadaten der einzelnen Repositories in der Datenbank speichert.
+ */
 @Entity
 public class Project {
 
@@ -27,7 +30,7 @@ public class Project {
     protected Project() {
     } // only for JPA, dont use directly!
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance) { // Deprecated
+    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance) { // Deprecated, still used for testing
         this.name = name;
         this.url = url;
         this.gitlabProjectId = gitlabProjectId;

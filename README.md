@@ -5,31 +5,35 @@
 </a>
 
 <p align="center">
-  <strong>Autonomous Continuous Inner-source Development and Integrity Checker 🚀</strong>
+  <strong>Autonomous Continuous Inner-source Development and Integrity Checker</strong>
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker">Install</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker-Deployment">Installation</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architecture">Architecture</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architektur">Architektur</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Configuration</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Konfiguration der Web-App</a>
 </h3>
 
 ---
 
 ## Beschreibung
 Linter für Inner-Source-Software
- 
-The software to be developed shall “lint” (analyze and suggest improvements) software projects on a GitLab instance; at a minimum, the software shall test GitLab projects for
-* Correct settings (see wiki pages)
-* Existence of required files
-* Dead links
 
-Beyond basic linting, students can decide on additional features; these could include, but are not limited to:
-* Analysis of readability of texts and suggestions for improvement
-* Visualisation, aggregation, and analysis of linting results over time In addition, the software shall have an extensible architecture with a defined plugin architecture. The software shall be implemented as a web application with
-* Spring Boot in the backend
-* Angular in the frontend
-* PostgreSQL as the database, and
-* packaged into Docker images
+Die ACIDIC Software analysiert und gibt Tips zum Verbessern von Softwareprojekten auf einer GitLab Instanz. Sie überprüft diese Projekte auf (siehe <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Checks">Wiki</a>): 
+* Korrekte Einstellungen
+* Existenz von benötigten Dateien
+* Existenz von Links innerhalb der benötigten Dateien
+
+Implementiert ist die Software als Web-App mit:
+* <a href="https://www.java.com/">Java</a> und <a href="https://spring.io/projects/spring-boot">Spring Boot</a> im Backend
+* <a href="https://www.nginx.com/">nginx</a> und <a href="https://angular.io/">Angular</a> im Frontend
+* <a href="https://www.postgresql.org/">PostgreSQL</a> als Datenbank
+* <a href="https://www.docker.com/">Docker</a> für einfaches Deployment
+
+## Releases
+Alle bisherigen Release-Versionen sind unter <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/releases">Releases</a> zu finden.
+
+## Weitere Informationen zum Projekt
+Dieses Projekt entsteht im Rahmen des AMOS-Projekts an der Friedrich-Alexander-Universität Erlangen-Nürnberg in Kooperation mit dem Industriepartner DATEV.

@@ -1,5 +1,6 @@
 package amosproj.server;
 
+import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -10,12 +11,16 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+/**
+ * GitLab ist dafür zuständig, dass die Verbindung zum Host, der in der config-Datei festgelegt wurde, erstellt wird.
+ * Sie bietet das Interface zum GitLab4J Framework und der GitLab API selbst an.
+ */
 @Service
 public class GitLab {
 
     private String apitoken;
 
-    private String gitlabHost = "https://gitlab.cs.fau.de";
+    private String gitlabHost = Linter.getConfigNode().get("settings").get("gitLabHost").asText();
 
     private final org.gitlab4j.api.GitLabApi api;
 

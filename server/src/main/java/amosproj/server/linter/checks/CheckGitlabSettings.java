@@ -13,6 +13,9 @@ import org.gitlab4j.api.models.Visibility;
 
 import java.util.List;
 
+/**
+ * CheckGitlabSettings implementiert die Checks für Einstellungen in dem Repository.
+ */
 public class CheckGitlabSettings extends Check {
 
     public CheckGitlabSettings(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
@@ -28,7 +31,14 @@ public class CheckGitlabSettings extends Check {
         return project.getVisibility() == Visibility.PUBLIC;
     }
 
-    public boolean hasForkingEnabled() throws GitLabApiException {
+    /**
+     * Versucht das Projekt zu Forken,
+     * - wenn beim Forken ein Fehler auftritt, ist forking verboten und es wird false zurückgegeben
+     * - wenn forking funktioniert wird das geforkte projekt wieder gelöscht und true zurückgegeben
+     *
+     * @return True || False
+     */
+    public boolean hasForkingEnabled() {
         // Initialisiere Objekte für namespace
         var projectApi = api.getProjectApi();
         Project forkproj = new Project();
@@ -55,9 +65,15 @@ public class CheckGitlabSettings extends Check {
                 e.printStackTrace();
             }
         }
+        // wenn ein conflikt mit bereits geforkten projekten auftritt, diese löschen (überreste aus vorher abgebrochenen projekten)
         if (forkingConflict) {
-            var conflictProject = projectApi.getProject(namespace, "forktest");
-            projectApi.deleteProject(conflictProject);
+            Project conflictProject = null;
+            try {
+                conflictProject = projectApi.getProject(namespace, "forktest");
+                projectApi.deleteProject(conflictProject);
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
+            }
         }
         return hasForksEnabled;
     }
@@ -74,12 +90,8 @@ public class CheckGitlabSettings extends Check {
         return project.getIssuesEnabled();
     }
 
-    public boolean gitlabWikiEnabled() {
-        try {
-            return !(api.getWikisApi().getPages(project).isEmpty());
-        } catch (GitLabApiException e) {
-            return false;
-        }
+    public boolean gitlabWikiDisabled() {
+        return !project.getWikiEnabled();
     }
 
     public boolean hasAvatar() {
@@ -123,32 +135,32 @@ public class CheckGitlabSettings extends Check {
     }
 
     //checke if squashing im projekt erlaubt ist, dies sollte falsch ergeben
-    public boolean hasSquashingEnabled(){
+    public boolean hasSquashingEnabled() {
         boolean result = false;
         RepositoryApi repositoryApi = api.getRepositoryApi();
         MergeRequestApi mergeRequestApi = api.getMergeRequestApi();
         Branch demoBranch = null;
         MergeRequest demoMergeRequest = null;
-        try{
+        try {
             //erstelle demo branch und merge request mit squashing erlaubt
             demoBranch = repositoryApi.createBranch(project, "demo", project.getDefaultBranch());
             demoMergeRequest = mergeRequestApi.createMergeRequest(project, demoBranch.getName(), project.getDefaultBranch(), "demoTitle", "demoDescription", null, null, null, null, null, true);
             //squashing ist erlaubt
             result = demoMergeRequest.getSquash();
-        } catch (GitLabApiException e){
+        } catch (GitLabApiException e) {
             //ein fehler ist passiert oder squashing ist nicht erlaubt
             System.out.println(e.getReason());
         } finally {
             try {
                 //lösche die demos falls sie erzeugt werden konnten
-                if(demoBranch != null) {
+                if (demoBranch != null) {
                     repositoryApi.deleteBranch(project, demoBranch.getName());
                 }
-                if(demoMergeRequest != null) {
+                if (demoMergeRequest != null) {
                     mergeRequestApi.deleteMergeRequest(project, demoMergeRequest.getIid());
                 }
             } catch (GitLabApiException e) {
-
+                e.printStackTrace();
             }
         }
         return result;
