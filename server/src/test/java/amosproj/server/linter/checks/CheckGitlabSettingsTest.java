@@ -116,13 +116,13 @@ public class CheckGitlabSettingsTest {
     @Test
     void test_hasForkingEnabled_positive() throws GitLabApiException {
         preparePositive();
-        assertTrue(checkGitlabSettings.hasForkingEnabled());
+        assertTrue(checkGitlabSettings.hasForkingEnabled(api));
     }
 
     @Test
     void test_hasForkingEnabled_negative() throws GitLabApiException {
         prepareNegative();
-        assertFalse(checkGitlabSettings.hasForkingEnabled());
+        assertFalse(checkGitlabSettings.hasForkingEnabled(api));
     }
 
     // Projekte sollen badges verwenden

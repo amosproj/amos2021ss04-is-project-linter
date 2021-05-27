@@ -102,7 +102,11 @@ public class Linter {
                     fileChecks.runTest(testName, check);
                     break;
                 case "settings_checks":
-                    settingsChecks.runTest(testName, check);
+                    if (testName.equals("hasForkingEnabled")) {
+                        settingsChecks.runTest(testName, check, api);
+                    } else {
+                        settingsChecks.runTest(testName, check);
+                    }
                     break;
                 case "role_checks":
                     roleChecks.runTest(testName, check);
