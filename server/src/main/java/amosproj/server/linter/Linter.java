@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Linter führt den tatsächlichen Lint-Vorgang durch.
@@ -41,12 +40,7 @@ public class Linter {
         this.checkResultRepository = checkResultRepository;
         this.projectRepository = projectRepository;
         // init scheduling
-        scheduler.scheduling(new Runnable() {
-            @Override
-            public void run() {
-                runCrawler();
-            }
-        });
+        scheduler.scheduling(this::runCrawler);
     }
 
     /**
@@ -116,15 +110,16 @@ public class Linter {
      * scheduled method that lints every repo in the instance at a specified cron time
      */
     public void runCrawler() {
-        List<org.gitlab4j.api.models.Project> projects = null;
+        System.out.println("starting crawler and linting all projects");
         try {
-            projects = api.getApi().getProjectApi().getProjects();
+            var projects = api.getApi().getProjectApi().getProjects();
+            for (org.gitlab4j.api.models.Project proj : projects) {
+                checkEverything(proj);
+            }
         } catch (GitLabApiException e) {
             e.printStackTrace();
         }
-        for (org.gitlab4j.api.models.Project proj : projects) {
-            checkEverything(proj);
-        }
+        System.out.println("done crawling");
     }
 
     /**
