@@ -55,7 +55,7 @@ public class CheckGitlabSettings extends Check {
             // wenn hier kein fehler kam, is forking erlaubt
             hasForksEnabled = true;
         } catch (GitLabApiException e) {
-            System.out.println("reason: " + e.getReason());
+            System.out.println("reason: " + e.getReason());  // TODO remove
             if (e.getReason().equals("Conflict")) forkingConflict = true;
         } finally {
             try {
@@ -116,7 +116,7 @@ public class CheckGitlabSettings extends Check {
                 }
             }
         } catch (GitLabApiException e) {
-            System.out.println("reason: " + e.getReason());
+            System.out.println("reason: " + e.getReason()); // TODO remove
         }
         return false;
     }

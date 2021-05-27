@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gitlab4j.api.GitLabApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -26,7 +30,7 @@ public class GitLab {
 
     public GitLab(@Value("${GITLAB_ACCESS_TOKEN}") String token) {
         this.apitoken = token;
-        api = new GitLabApi(gitlabHost, apitoken);
+        this.api = new GitLabApi(gitlabHost, apitoken);
     }
 
     public GitLabApi getApi() {
@@ -37,12 +41,26 @@ public class GitLab {
         return gitlabHost;
     }
 
-    public JsonNode makeApiRequest(String url) throws JsonProcessingException {
+    /**
+     * Makes an authenticated request to the GitlabAPI. Commonly used for features GitLab4J doesen't support.
+     *
+     * @param resource the endpoint of the request i.e "/projects/123" will make an api call to :gitlabHost:/projects/123
+     * @return Json of the result
+     * @throws JsonProcessingException
+     */
+    public JsonNode makeApiRequest(String resource) throws JsonProcessingException {
+        // prepare result storage
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         RestTemplate restTemplate = restTemplateBuilder.build();
-        String body = restTemplate.getForObject(url, String.class);
+        // set auth header
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(apitoken);
+        final HttpEntity<String> entity = new HttpEntity<>(headers);
+        // make request
+        ResponseEntity<String> response = restTemplate.exchange(gitlabHost + "/api/v4" + resource, HttpMethod.GET, entity, String.class);
+        // map to JSON and return
         ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        JsonNode node = objectMapper.readTree(body);
+        JsonNode node = objectMapper.readTree(response.getBody());
         return node;
     }
 
