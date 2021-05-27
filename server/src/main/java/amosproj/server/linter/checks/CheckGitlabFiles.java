@@ -15,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +56,7 @@ public class CheckGitlabFiles extends Check {
 
     /**
      * Überprüft ob in der CONTRIBUTING.MD keine verlinkung auf eine andere CONTRIBUTING.MD ist.
-     *
+     * <p>
      * Lädt sich die Datei aus dem Repository herunter,
      * überprüft zeile für zeile ob der regex darauf anspringt
      *
@@ -99,17 +98,16 @@ public class CheckGitlabFiles extends Check {
 
     /**
      * Überprüft ob sich in der README.MD ein link zu entweder confluence oder datev documentation befindet
-     *
+     * <p>
      * Lädt die Datein herunter, überprüft zeile für zeile ob der regex anspringt, returned ergebniss
      *
      * @return TRUE || FALSE
      */
     public boolean checkReadmeHasLinks() {
         // generiere regex
-        JsonNode node = Linter.getConfigNode().get("settings").get("readMeLinks");
-        Iterator<JsonNode> it = node.iterator();
-        while(it.hasNext()) {
-            String link = it.next().asText();
+        JsonNode links = Linter.getConfigNode().get("settings").get("readMeLinks");
+        for (JsonNode it : links) {
+            String link = it.asText();
             final Pattern pattern = Pattern.compile(link, Pattern.MULTILINE);
 
             //lade Datei in java.io.tmp
