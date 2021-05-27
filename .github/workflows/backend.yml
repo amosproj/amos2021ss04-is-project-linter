@@ -1,0 +1,46 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: BackEnd
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      
+      - name: Setup Java / Gradle
+        uses: actions/setup-java@v2
+        with:
+          java-version: "11"
+          distribution: "adopt"
+          architecture: x64
+      
+      - name: Grant execute permission for gradlew
+        working-directory: ./server
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        working-directory: ./server
+        run: ./gradlew build -x test # FIXME
+
+      - name: Run Tests
+        working-directory: ./server
+        run: echo TODO
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: Push to Docker Hub
+        uses: docker/build-push-action@v2
+        with:
+          context: ./server  # where the dockerfile is located
+          push: true
+          tags: amoslinter/server:staging
