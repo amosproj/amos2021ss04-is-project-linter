@@ -1,7 +1,10 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.MergeRequestApi;
@@ -10,6 +13,8 @@ import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.MergeRequest;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -32,50 +37,23 @@ public class CheckGitlabSettings extends Check {
     }
 
     /**
-     * Versucht das Projekt zu Forken,
-     * - wenn beim Forken ein Fehler auftritt, ist forking verboten und es wird false zurückgegeben
-     * - wenn forking funktioniert wird das geforkte projekt wieder gelöscht und true zurückgegeben
+     * Liest forking_access_level aus und returned, ob es auf disabled gesetzt ist oder nicht.
+     * Dabei spielt es keine Rolle, ob es enabled oder private ist.
      *
-     * @return True || False
+     * @param gitLab GitLab Objekt
+     * @return Ob forking_access_level auf disabled gesetzt ist.
      */
-    public boolean hasForkingEnabled() {
-        // Initialisiere Objekte für namespace
-        var projectApi = api.getProjectApi();
-        Project forkproj = new Project();
-        String namespace = "";
-        boolean hasForksEnabled = false;
-        boolean forkingConflict = false;
-
-        // versuche Projekt zu forken um zu überpürfen ob forks erlaubt sind
+    public boolean hasForkingEnabled(GitLab gitLab) {
         try {
-            // hole namespace
-            namespace = api.getNamespaceApi().getNamespaces().get(0).getFullPath();
-            // versuche projekt zu forken
-            forkproj = projectApi.forkProject(project, namespace, "forktest", "forktest");
-            // wenn hier kein fehler kam, is forking erlaubt
-            hasForksEnabled = true;
-        } catch (GitLabApiException e) {
-            System.out.println("reason: " + e.getReason());  // TODO remove
-            if (e.getReason().equals("Conflict")) forkingConflict = true;
-        } finally {
-            try {
-                // lösche überreste der versuchs zu forken
-                if (hasForksEnabled) projectApi.deleteProject(forkproj.getId());
-            } catch (GitLabApiException e) {
-                e.printStackTrace();
-            }
+            JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
+            String forkingAccessLevel = node.get("forking_access_level").asText();
+            if (forkingAccessLevel.equals("disabled"))
+                return false;
+            return true;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
         }
-        // wenn ein conflikt mit bereits geforkten projekten auftritt, diese löschen (überreste aus vorher abgebrochenen projekten)
-        if (forkingConflict) {
-            Project conflictProject = null;
-            try {
-                conflictProject = projectApi.getProject(namespace, "forktest");
-                projectApi.deleteProject(conflictProject);
-            } catch (GitLabApiException e) {
-                e.printStackTrace();
-            }
-        }
-        return hasForksEnabled;
     }
 
     public boolean hasMergeRequestEnabled() {
