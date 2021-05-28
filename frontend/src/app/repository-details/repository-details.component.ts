@@ -48,10 +48,10 @@ export class RepositoryDetailsComponent implements OnInit {
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
   //wenn neue Tags hinzugefügt werden muss folgende Variable erweitert werden
-  chartNames: string[] = ['totalChart', 'userChart', 'programmerChart'];
+  chartNames: String[];
   maxColsForTiles = 9;
   tiles: Tile[] = [
-    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
+    { text: 'Kategorien', cols: 5, rows: 5, color: 'white' }, // gibt es immer
     { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
     // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
   ];
@@ -82,18 +82,20 @@ export class RepositoryDetailsComponent implements OnInit {
             tags,
             val.lintingResults[val.lintingResults.length - 1].checkResults
           )[0];
+        var chartNames = this.getChartNames(tags);
         console.log('in after', this.numberOfTestsPerSeverityInTags);
         for (var i = 0; i < this.tags.length + 1; i++) {
-          this.renderChart(i, this.numberOfTestsPerSeverityInTags);
+          this.renderChart(chartNames[i], i, this.numberOfTestsPerSeverityInTags);
           this.myChart.update();
         }
       });
   }
 
-  renderChart(index, numberOfTestsPerSeverityInTags) {
+  renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
     //rendert eine Chart
+    console.log(chartName);
     const canvas = <HTMLCanvasElement>(
-      document.getElementById(this.chartNames[index])
+      document.getElementById(String(chartName))
     );
     canvas.width = 150;
     canvas.height = 150;
@@ -164,7 +166,8 @@ export class RepositoryDetailsComponent implements OnInit {
           val.lintingResults[last_entry - 1].lintTime
         ).format('DD.MM.YYYY - H:mm');
         // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
-        this.addTilesForCategoryGraph();
+        this.chartNames = this.getChartNames(this.tags);
+        this.addTilesForCategoryGraphAndTipps();
       });
   }
 
@@ -189,6 +192,19 @@ export class RepositoryDetailsComponent implements OnInit {
       }
     }
     return tags;
+  }
+
+  getChartNames(tags){
+    if (!tags){
+      console.log("Error in getChartNames() in repository-details.components.ts\n  this.tags is empty")
+      return [];
+    }
+    var chartNames :String[] = [];
+    chartNames.push("Alle Tests:")
+    for(var i = 0; i < tags.length; i++){
+      chartNames.push(this.tags[i]);
+    }
+    return chartNames;
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(
@@ -261,12 +277,13 @@ export class RepositoryDetailsComponent implements OnInit {
     return numberOfTestsPerSeverityInTags;
   }
 
-  addTilesForCategoryGraph() {
+  addTilesForCategoryGraphAndTipps() {
     // Erstellt zusätzliche Tiles
     for (var i = 0; i < this.tags.length; i++) {
       var t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
       this.tiles.push(t);
     }
+    this.tiles.push(<Tile>{ color: 'white', cols: this.maxColsForTiles, rows: 1, text: "" });
   }
 
   returnEmojiBasedOnSeverity(input) {
