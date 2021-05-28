@@ -1,32 +1,139 @@
+import { ComponentFactoryResolver } from '@angular/core';
+import { ViewContainerRef } from '@angular/core';
+import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { RepositoryComponent } from './repository/repository.component';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <!--The content below is only a placeholder and can be replaced.-->
-    <div style="text-align:center" class="content">
-      <h1>
-        Welcome to {{title}}!
-      </h1>
-      <span style="display: block">{{ title }} app is running!</span>
-      <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-    </div>
-    <h2>Here are some links to help you start: </h2>
-    <ul>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-      </li>
-      <li>
-        <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-      </li>
-    </ul>
-    <router-outlet></router-outlet>
-  `,
-  styles: []
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'frontend';
+  title = 'angular-frontend';
+  projectComponents = [];
+  //SearchBarValue = '';
+  all_projects: Project[];
+  options: FormGroup;
+  forwardLinkWorked = true;
+  errorMsgForwardLink = '';
+  hideRequiredControl = new FormControl(false);
+  floatLabelControl = new FormControl('auto');
+  @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
+
+  constructor(
+    fb: FormBuilder,
+    private _cfr: ComponentFactoryResolver,
+    private http: HttpClient
+  ) {
+    this.options = fb.group({
+      hideRequired: this.hideRequiredControl,
+      floatLabel: this.floatLabelControl,
+    });
+  }
+
+  getIfForwardLinkWorked() {
+    return this.forwardLinkWorked;
+  }
+  forwardLink(URL) {
+    // Wird aktuell nicht benötigt
+    const headers = { 'Content-Type': 'text/html' };
+
+    let HTTPOptions: Object = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+      responseType: 'text',
+    };
+
+    this.http
+      .post<String>(`${environment.baseURL}/projects`, URL, HTTPOptions)
+      .subscribe(
+        (val: any) => {
+          console.log('POST call successful value returned in body', val);
+          var regex404 = new RegExp('404 NOT_FOUND', 'i');
+          console.log(val.search(regex404));
+          if (val.search(regex404) != -1) {
+            this.errorMsgForwardLink = 'Fehler 404, bitte URL überprüfen';
+            this.forwardLinkWorked = false;
+            console.log(this.forwardLinkWorked);
+          } else {
+            this.forwardLinkWorked = true;
+          }
+          console.log(this.forwardLinkWorked);
+        },
+        (error) => {
+          console.log('POST call in error', error);
+          this.errorMsgForwardLink = 'Internal server error';
+          this.forwardLinkWorked = false;
+        }
+      );
+  }
+  removeAllProjectsFromOverview() {
+    // Löscht alle angezeigten Projekte
+    this.container.clear();
+  }
+
+  GetProjects() {
+    // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
+    this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
+      this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
+      console.log(this.all_projects);
+
+      for (let project in this.all_projects) {
+        this.addComponent(
+          this.all_projects[project].name,
+          this.all_projects[project].id,
+          this.all_projects[project].url
+        );
+      }
+    }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
+  }
+
+  ngOnInit() {
+    this.GetProjects();
+  }
+
+  addComponent(name, id, gitlabInstance) {
+    // Fügt eine Komponente unter dem Tab Repositories hinzu
+    var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
+    var expComponent = this.container.createComponent(comp);
+    expComponent.instance._ref = expComponent;
+    expComponent.instance.name = name;
+    expComponent.instance.id = id;
+    expComponent.instance.gitlabInstance = gitlabInstance;
+    //Zum Suchen
+    this.projectComponents.push(expComponent);
+  }
+
+  searchProject(value: string) {
+    // Erstellt alle Komponenten im Repostiories Tab
+    // TODO: Methoden Benennung ändern
+    this.removeAllProjectsFromOverview();
+
+    for (let item of this.projectComponents) {
+      if (item.instance.name.startsWith(value) || value === '') {
+        var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
+        var expComponent = this.container.createComponent(comp);
+        expComponent.instance._ref = expComponent;
+        expComponent.instance.name = item.instance.name;
+        expComponent.instance.id = item.instance.id;
+        expComponent.instance.gitlabInstance = item.instance.gitlabInstance;
+      }
+    }
+  }
+} // Ende von AppComponent
+
+// Interface für die repository Komponente welche grob die Informationen des repository zeigt
+interface Project {
+  gitlabInstance: string;
+  gitlabProjectId: number;
+
+  id: number;
+  name: string;
+  results: [];
+  url: string;
 }
