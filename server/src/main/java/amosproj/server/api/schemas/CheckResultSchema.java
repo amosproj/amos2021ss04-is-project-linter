@@ -23,6 +23,7 @@ public class CheckResultSchema {
     private String message;
     private String fix;
     private String tag;
+    private int priority;
 
     public CheckResultSchema(CheckResult result, JsonNode node) {
         this.checkName = result.getCheckName();
@@ -33,6 +34,7 @@ public class CheckResultSchema {
         this.message = node.get("message").asText();
         this.fix = node.get("fix").asText();
         this.tag = node.get("tag").asText();
+        this.priority = node.get("priority").asInt();
     }
 
     public String getCheckName() {
@@ -66,6 +68,8 @@ public class CheckResultSchema {
     public String getTag() {
         return tag;
     }
+
+    public int getPriority() { return priority; }
 
     @Override
     public String toString() {
