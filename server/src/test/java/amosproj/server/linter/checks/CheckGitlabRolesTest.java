@@ -45,7 +45,7 @@ public class CheckGitlabRolesTest {
         }
 
         var lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-        this.checkGitlabRoles = new CheckGitlabRoles(api.getApi(), proj, lintingResult, checkResultRepository);
+        this.checkGitlabRoles = new CheckGitlabRoles(api, proj, lintingResult, checkResultRepository);
     }
 
     @Test

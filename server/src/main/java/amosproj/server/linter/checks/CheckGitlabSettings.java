@@ -23,8 +23,10 @@ import java.util.List;
  */
 public class CheckGitlabSettings extends Check {
 
-    public CheckGitlabSettings(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        super(api, project, lintingResult, checkResultRepository);
+    private GitLabApi api;
+    public CheckGitlabSettings(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        super(gitLab, project, lintingResult, checkResultRepository);
+        this.api = gitLab.getApi();
     }
 
 
@@ -40,10 +42,9 @@ public class CheckGitlabSettings extends Check {
      * Liest forking_access_level aus und returned, ob es auf disabled gesetzt ist oder nicht.
      * Dabei spielt es keine Rolle, ob es enabled oder private ist.
      *
-     * @param gitLab GitLab Objekt
      * @return Ob forking_access_level auf disabled gesetzt ist.
      */
-    public boolean hasForkingEnabled(GitLab gitLab) {
+    public boolean hasForkingEnabled() {
         try {
             JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
             String forkingAccessLevel = node.get("forking_access_level").asText();

@@ -1,5 +1,6 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.GitLabApi;
@@ -18,10 +19,10 @@ public class CheckGitlabRoles extends Check {
 
     private List<Member> list;
 
-    public CheckGitlabRoles(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        super(api, project, lintingResult, checkResultRepository);
+    public CheckGitlabRoles(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        super(gitLab, project, lintingResult, checkResultRepository);
         try {
-            this.list = api.getProjectApi().getMembers(project.getId());
+            this.list = gitLab.getApi().getProjectApi().getMembers(project.getId());
         } catch (GitLabApiException e) {
             e.printStackTrace();
             this.list = null;

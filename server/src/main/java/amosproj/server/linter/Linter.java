@@ -84,9 +84,9 @@ public class Linter {
         // Fuehre Checks aus
         JsonNode checks = getConfigNode().get("checks");
 
-        var fileChecks = new CheckGitlabFiles(api.getApi(), apiProject, lintingResult, checkResultRepository);
-        var settingsChecks = new CheckGitlabSettings(api.getApi(), apiProject, lintingResult, checkResultRepository);
-        var roleChecks = new CheckGitlabRoles(api.getApi(), apiProject, lintingResult, checkResultRepository);
+        var fileChecks = new CheckGitlabFiles(api, apiProject, lintingResult, checkResultRepository);
+        var settingsChecks = new CheckGitlabSettings(api, apiProject, lintingResult, checkResultRepository);
+        var roleChecks = new CheckGitlabRoles(api, apiProject, lintingResult, checkResultRepository);
 
         for (Iterator<String> it = checks.fieldNames(); it.hasNext(); ) {
             String testName = it.next();
@@ -96,11 +96,7 @@ public class Linter {
                     fileChecks.runTest(testName, check);
                     break;
                 case "settings_checks":
-                    if (testName.equals("hasForkingEnabled")) {
-                        settingsChecks.runTest(testName, check, api);
-                    } else {
-                        settingsChecks.runTest(testName, check);
-                    }
+                    settingsChecks.runTest(testName, check);
                     break;
                 case "role_checks":
                     roleChecks.runTest(testName, check);

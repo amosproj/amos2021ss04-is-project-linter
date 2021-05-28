@@ -1,5 +1,6 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
 import amosproj.server.linter.Linter;
@@ -24,8 +25,10 @@ import java.util.regex.Pattern;
  */
 public class CheckGitlabFiles extends Check {
 
-    public CheckGitlabFiles(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        super(api, project, lintingResult, checkResultRepository);
+    private GitLabApi api;
+    public CheckGitlabFiles(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        super(gitLab, project, lintingResult, checkResultRepository);
+        this.api = gitLab.getApi();
     }
 
     /////////////////

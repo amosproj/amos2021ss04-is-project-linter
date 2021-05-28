@@ -57,7 +57,7 @@ public class CheckGitlabFilesTest {
         }
 
         var lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-        this.checkGitlabFiles = new CheckGitlabFiles(api.getApi(), proj, lintingResult, checkResultRepository);
+        this.checkGitlabFiles = new CheckGitlabFiles(api, proj, lintingResult, checkResultRepository);
     }
 
     @Test

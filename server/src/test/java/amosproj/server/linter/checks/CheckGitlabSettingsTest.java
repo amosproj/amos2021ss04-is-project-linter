@@ -57,7 +57,7 @@ public class CheckGitlabSettingsTest {
         }
 
         var lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
-        this.checkGitlabSettings = new CheckGitlabSettings(api.getApi(), proj, lintingResult, checkResultRepository);
+        this.checkGitlabSettings = new CheckGitlabSettings(api, proj, lintingResult, checkResultRepository);
     }
 
     // Projekte sollen NICHT das feature request access verwenden
@@ -116,13 +116,13 @@ public class CheckGitlabSettingsTest {
     @Test
     void test_hasForkingEnabled_positive() throws GitLabApiException {
         preparePositive();
-        assertTrue(checkGitlabSettings.hasForkingEnabled(api));
+        assertTrue(checkGitlabSettings.hasForkingEnabled());
     }
 
     @Test
     void test_hasForkingEnabled_negative() throws GitLabApiException {
         prepareNegative();
-        assertFalse(checkGitlabSettings.hasForkingEnabled(api));
+        assertFalse(checkGitlabSettings.hasForkingEnabled());
     }
 
     // Projekte sollen badges verwenden

@@ -1,5 +1,6 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.GitLab;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
@@ -14,13 +15,13 @@ import java.lang.reflect.InvocationTargetException;
  */
 public abstract class Check {
 
-    protected org.gitlab4j.api.GitLabApi api;
+    protected GitLab gitLab;
     protected org.gitlab4j.api.models.Project project;
     private final LintingResult lintingResult;
     private final CheckResultRepository checkResultRepository;
 
-    protected Check(GitLabApi api, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        this.api = api;
+    protected Check(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
+        this.gitLab = gitLab;
         this.project = project;
         this.lintingResult = lintingResult;
         this.checkResultRepository = checkResultRepository;
