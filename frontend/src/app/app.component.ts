@@ -6,6 +6,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RepositoryComponent } from './repository/repository.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { MatChip } from '@angular/material/chips';
 
 @Component({
   selector: 'app-root',
@@ -125,6 +126,9 @@ export class AppComponent {
       }
     }
   }
+  toggleSelection(chip: MatChip) {
+    chip.toggleSelected();
+ }
 } // Ende von AppComponent
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt

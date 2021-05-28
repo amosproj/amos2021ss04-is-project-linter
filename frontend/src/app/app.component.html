@@ -111,7 +111,28 @@
     </mat-toolbar>
   </mat-tab>
   <mat-tab label="Statistiken">
-    Statistiken
+    <mat-card-content style="background-color: green; height: 150px; padding-top: 30px;padding-left: 20px; font-size: large;">
+      Datenbank als CSV exportieren:  <button mat-raised-button> exportieren </button>
+    </mat-card-content>
+    <mat-card-content style="background-color: red; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
+      <mat-card-title>Filter Repositories nach:</mat-card-title>
+      <mat-card-content style="background-color:green; height: 100px;">
+        <mat-chip-list selectable multiple>
+          <mat-chip #c="matChip" *ngFor="let option of options" [value]="option" (click)="toggleSelection(c)">
+            {{option}}
+          </mat-chip>
+        </mat-chip-list>
+    </mat-card-content>
+    <mat-card-content style="background-color:green; height: 100px;">
+      <mat-button-toggle-group>
+        <mat-button-toggle value="button1">Anzahl an bestandenen Checks</mat-button-toggle>
+        <mat-button-toggle value="button2">Anzahl an neu bestandenen Checks seit letztem Monat</mat-button-toggle>
+        <mat-button-toggle value="button3">Anzahl der bestanden Checks pro Kategorie</mat-button-toggle>
+      </mat-button-toggle-group>
+    </mat-card-content>
+    <button mat-raised-button>Filter</button>
+       
+    </mat-card-content>
 
     <!----Footer of statistics-->
     <mat-toolbar color="primary" style="position: fixed; bottom: 0%">
