@@ -1,7 +1,6 @@
 package amosproj.server.linter;
 
 import amosproj.server.GitLab;
-import amosproj.server.Scheduler;
 import amosproj.server.data.*;
 import amosproj.server.linter.checks.CheckGitlabFiles;
 import amosproj.server.linter.checks.CheckGitlabRoles;
@@ -20,27 +19,22 @@ import java.util.Iterator;
 /**
  * Linter führt den tatsächlichen Lint-Vorgang durch.
  * Weiterhin stellt sie eine Methode zur Verfügung, um die config-Datei einzulesen.
- * Der Crawler befindet sich hier, da er so direkt die Lint-Vorgänge starten kann.
  */
 @Service
 public class Linter {
 
     // autowired
     private final GitLab api;
-    private final Scheduler scheduler;
     private final LintingResultRepository lintingResultRepository;
     private final CheckResultRepository checkResultRepository;
     private final ProjectRepository projectRepository;
     // end autowired
 
-    public Linter(GitLab api, Scheduler scheduler, LintingResultRepository lintingResultRepository, CheckResultRepository checkResultRepository, ProjectRepository projectRepository) {
+    public Linter(GitLab api, LintingResultRepository lintingResultRepository, CheckResultRepository checkResultRepository, ProjectRepository projectRepository) {
         this.api = api;
-        this.scheduler = scheduler;
         this.lintingResultRepository = lintingResultRepository;
         this.checkResultRepository = checkResultRepository;
         this.projectRepository = projectRepository;
-        // init scheduling
-        scheduler.scheduling(this::runCrawler);
     }
 
     /**
@@ -63,7 +57,7 @@ public class Linter {
      *
      * @param apiProject
      */
-    private void checkEverything(org.gitlab4j.api.models.Project apiProject) {
+    public void checkEverything(org.gitlab4j.api.models.Project apiProject) {
         // Hole LintingProject
         Project currLintingProject = projectRepository.findFirstByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
@@ -106,21 +100,6 @@ public class Linter {
 
     }
 
-    /**
-     * scheduled method that lints every repo in the instance at a specified cron time
-     */
-    public void runCrawler() {
-        System.out.println("starting crawler and linting all projects");
-        try {
-            var projects = api.getApi().getProjectApi().getProjects();
-            for (org.gitlab4j.api.models.Project proj : projects) {
-                checkEverything(proj);
-            }
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
-        }
-        System.out.println("done crawling");
-    }
 
     /**
      * Gets the config.json and parses it into a JsonNode

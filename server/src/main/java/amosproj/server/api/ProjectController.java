@@ -1,12 +1,13 @@
 package amosproj.server.api;
 
+import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
+import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
-import org.aspectj.weaver.Lint;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,9 @@ public class ProjectController {
 
     @Autowired
     private Linter linter;
+
+    @Autowired
+    private Crawler crawler;
 
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects() {
@@ -66,6 +70,16 @@ public class ProjectController {
         } catch (GitLabApiException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist");
         }
+    }
+
+    @GetMapping("/lintAll")
+    public void lint() {
+        crawler.runCrawler();
+    }
+
+    @GetMapping("/crawler/status")
+    public CrawlerStatusSchema statusCrawler() {
+        return crawler.crawlerStatus();
     }
 
 }
