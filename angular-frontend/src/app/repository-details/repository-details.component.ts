@@ -33,7 +33,6 @@ export class RepositoryDetailsComponent implements OnInit {
     bug: '🐛',
   };
 
-  
   getdata = false;
   myChart;
   canvas;
@@ -41,20 +40,20 @@ export class RepositoryDetailsComponent implements OnInit {
   lastLintTime;
   RepoName = '';
   RepoURL = '';
-  checksHighSeverity: CheckResults[];   // wird momentan nicht benützt
+  checksHighSeverity: CheckResults[]; // wird momentan nicht benützt
   checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
-  checksLowSeverity: CheckResults[];    // wird momentan nicht benützt
+  checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
   latestLintingResults: CheckResults[];
   tags: String[];
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
   //wenn neue Tags hinzugefügt werden muss folgende Variable erweitert werden
-  chartNames : string[] = ['totalChart', 'userChart', 'programmerChart' ];
+  chartNames: string[] = ['totalChart', 'userChart', 'programmerChart'];
   maxColsForTiles = 9;
   tiles: Tile[] = [
-    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },             // gibt es immer
+    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
     { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
-                                                                          // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
+    // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
   ];
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
@@ -62,66 +61,76 @@ export class RepositoryDetailsComponent implements OnInit {
     private http: HttpClient
   ) {}
 
-  ngOnInit(): void{
+  ngOnInit(): void {
     // initalisiere Arrays sortiert bei severtity void
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.ShowProjectDetails(this.data.projectID); // sendet erste HTTP Anfrage ans backend
   }
- 
+
   ngAfterViewInit(): void {
-    // sendet zweite Http Anfrage um Daten für die Charts zu bekommen 
-    this.http.get(`${environment.baseURL}/project/${this.data.projectID}`).subscribe(
-      (val: any) => {
-        var tags = this.getTagsArray(val.lintingResults[val.lintingResults.length - 1].checkResults);
-        this.numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1].checkResults)[0];
+    // sendet zweite Http Anfrage um Daten für die Charts zu bekommen
+    this.http
+      .get(`${environment.baseURL}/project/${this.data.projectID}`)
+      .subscribe((val: any) => {
+        var tags = this.getTagsArray(
+          val.lintingResults[val.lintingResults.length - 1].checkResults
+        );
+        this.numberOfTestsPerSeverityInTags =
+          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+            tags,
+            val.lintingResults[val.lintingResults.length - 1].checkResults
+          )[0];
         console.log('in after', this.numberOfTestsPerSeverityInTags);
-        for(var i = 0 ; i < this.tags.length + 1; i++){
+        for (var i = 0; i < this.tags.length + 1; i++) {
           this.renderChart(i, this.numberOfTestsPerSeverityInTags);
           this.myChart.update();
         }
-      }
-    );
-
+      });
   }
 
   renderChart(index, numberOfTestsPerSeverityInTags) {
     //rendert eine Chart
-    const canvas = <HTMLCanvasElement>document.getElementById(this.chartNames[index]);
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById(this.chartNames[index])
+    );
     canvas.width = 150;
     canvas.height = 150;
     var ctx = canvas.getContext('2d');
-   
-      this.myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Bestanden',  'unwichtiger Test nicht bestanden', 'Test nicht bestanden', 'wichtiger Test nicht bestanden'],
-          datasets: [
-            {
-              label: 'My First Dataset',
-              data: numberOfTestsPerSeverityInTags[index],
-              backgroundColor: [
-                'rgb(51, 209, 40)',  // green
-                'rgb(252, 236, 3)', // yellow
-                'rgb(252, 169, 3)', // orange
-                'rgb(252, 32, 3)',  // rot
-              ],
-              hoverOffset: 4,
-            },
-          ],
-        },
-        options: {
-          legend: {
-            display: false,
+
+    this.myChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Bestanden',
+          'unwichtiger Test nicht bestanden',
+          'Test nicht bestanden',
+          'wichtiger Test nicht bestanden',
+        ],
+        datasets: [
+          {
+            label: 'My First Dataset',
+            data: numberOfTestsPerSeverityInTags[index],
+            backgroundColor: [
+              'rgb(51, 209, 40)', // green
+              'rgb(252, 236, 3)', // yellow
+              'rgb(252, 169, 3)', // orange
+              'rgb(252, 32, 3)', // rot
+            ],
+            hoverOffset: 4,
           },
-          maintainAspectRatio: false,
+        ],
+      },
+      options: {
+        legend: {
+          display: false,
         },
-      });
-    
-    
+        maintainAspectRatio: false,
+      },
+    });
+
     this.myChart.update();
-  
   }
 
   closeDialog() {
@@ -130,17 +139,22 @@ export class RepositoryDetailsComponent implements OnInit {
 
   ShowProjectDetails(gitID) {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
-    this.http.get(`${environment.baseURL}/project/${gitID}`).subscribe(
-      (val: any) => {
+    this.http
+      .get(`${environment.baseURL}/project/${gitID}`)
+      .subscribe((val: any) => {
         console.log('GET call successful value returned in body', val);
         // fülle linting Kategorien array
         var last_entry = val.lintingResults.length;
         this.latestLintingResults =
-         val.lintingResults[last_entry - 1].checkResults;
+          val.lintingResults[last_entry - 1].checkResults;
         //this.fillSeverityArrays(); // muss momentan nicht benützt werden
         this.tags = this.getTagsArray(this.latestLintingResults);
 
-        this.LintingResultsInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(this.tags, this.latestLintingResults)[1];
+        this.LintingResultsInTags =
+          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+            this.tags,
+            this.latestLintingResults
+          )[1];
         console.log('LintingResultInTags', this.LintingResultsInTags);
 
         // Speichere Informationen
@@ -149,12 +163,12 @@ export class RepositoryDetailsComponent implements OnInit {
         this.lastLintTime = dayjs(
           val.lintingResults[last_entry - 1].lintTime
         ).format('DD.MM.YYYY - H:mm');
-        // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste 
+        // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
         this.addTilesForCategoryGraph();
       });
   }
 
-  getTagsArray(latestLintingResults){
+  getTagsArray(latestLintingResults) {
     // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
     var tags = [];
     for (var i = 0; i < latestLintingResults.length; i++) {
@@ -177,9 +191,14 @@ export class RepositoryDetailsComponent implements OnInit {
     return tags;
   }
 
-  groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, latestLintingResults) {
+  groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+    tags,
+    latestLintingResults
+  ) {
     // Gibt einmal ein Array der Testergebnisse sortiert nach Kategorien (numberOfTestsPerSeverityInTags) zurück, sowie die Tests soriert nach Kategorien(LintingResultsInTags)
-    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1).fill(0).map(() => new Array(4).fill(0)); // 2D array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, niedrig, medium, hoch]
+    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1)
+      .fill(0)
+      .map(() => new Array(4).fill(0)); // 2D array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, niedrig, medium, hoch]
     // Gruppiere die linting Ergebnisse nach deren korrespondierenden tags
     var LintingResultsInTags = new Array(tags.length);
     for (var i = 0; i < latestLintingResults.length; i++) {
@@ -191,7 +210,11 @@ export class RepositoryDetailsComponent implements OnInit {
       }
       // Schiebe test in die Kategorie des korrespondierenden index
       LintingResultsInTags[index].push(latestLintingResults[i]);
-      numberOfTestsPerSeverityInTags = this.addTestToFillNumTestsPerSeverity(index, latestLintingResults[i], numberOfTestsPerSeverityInTags);
+      numberOfTestsPerSeverityInTags = this.addTestToFillNumTestsPerSeverity(
+        index,
+        latestLintingResults[i],
+        numberOfTestsPerSeverityInTags
+      );
       //this.numberOfTestsPerSeverityInTags= numberOfTestsPerSeverityInTags;
     }
 
@@ -211,9 +234,13 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 
-  addTestToFillNumTestsPerSeverity(index, lintingResult ,numberOfTestsPerSeverityInTags) {
+  addTestToFillNumTestsPerSeverity(
+    index,
+    lintingResult,
+    numberOfTestsPerSeverityInTags
+  ) {
     // Analysiert das Testergebnis
-    index = index + 1 // da die erste Spalte für die Statistik der gesamten Checks unabhängig von den tags ist 
+    index = index + 1; // da die erste Spalte für die Statistik der gesamten Checks unabhängig von den tags ist
     if (lintingResult.result) {
       numberOfTestsPerSeverityInTags[index][0] += 1;
       numberOfTestsPerSeverityInTags[0][0] += 1;

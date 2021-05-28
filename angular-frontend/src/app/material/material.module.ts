@@ -19,8 +19,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
-
-import {MatRadioModule} from '@angular/material/radio';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -44,15 +43,10 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-const MaterialComponents =[
-  MatButtonModule
-]
+
 @NgModule({
-  
-  imports: [
-    MaterialComponents
-  ],
-  exports:[MaterialComponents,
+  imports: [],
+  exports: [
     A11yModule,
     ClipboardModule,
     CdkStepperModule,
@@ -98,6 +92,7 @@ const MaterialComponents =[
     PortalModule,
     ScrollingModule,
     ReactiveFormsModule,
-    FormsModule]
+    FormsModule,
+  ],
 })
-export class MaterialModule { }
+export class MaterialModule {}

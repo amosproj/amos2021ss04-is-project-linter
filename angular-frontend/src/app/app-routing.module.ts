@@ -12,7 +12,7 @@ const routes: Routes = [
   {
     path: 'details/:id',
     component: RepositoryComponent,
-    data: { title: 'Team Details' }
+    data: { title: 'Team Details' },
   },
   /*{ path: '',
     redirectTo: '/list',
@@ -22,6 +22,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
