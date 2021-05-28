@@ -1,0 +1,14 @@
+.example-card {
+  width: 370px;
+  height: 150px;
+  margin-right: 50px;
+  margin-bottom: 50px;
+  float: left;
+  -moz-border-radius: 30px;
+  -webkit-border-radius: 30px;
+  border-radius: 30px;
+  hyphens: auto;
+}
+.example-card:hover {
+  transform: scale(1.1);
+}

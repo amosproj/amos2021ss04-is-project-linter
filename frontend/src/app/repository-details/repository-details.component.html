@@ -1,0 +1,117 @@
+<!-- Header-->
+<mat-toolbar color="primary" style="margin-right: 0; margin-left: 0">
+  <mat-toolbar-row style="height: 50px">
+    <span
+      style="
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+        border: none;
+      "
+      >{{ RepoName }}</span
+    >
+    <mat-dialog-actions>
+      <button
+        mat-stroked-button
+        mat-dialog-close
+        style="
+          text-align: right;
+          display: inline-block;
+          width: 100%;
+          font-size: 25px;
+        "
+      >
+        X
+      </button>
+    </mat-dialog-actions>
+  </mat-toolbar-row>
+  <mat-toolbar-row style="height: 20px">
+    <p
+      style="
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+      "
+    >
+      URL: {{ RepoURL }}
+    </p>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- Grid List to for displaying all the information-->
+<mat-grid-list
+  cols="{{ maxColsForTiles }}"
+  rowHeight="100"
+  class="rowClass custom"
+>
+  <mat-grid-tile
+    *ngFor="let tile of tiles; let i = index"
+    [colspan]="tile.cols"
+    [rowspan]="tile.rows"
+    [style.background]="tile.color"
+  >
+    <mat-card class="mat-elevation-z0">
+      <mat-card-title> {{ tile.text }}: </mat-card-title>
+      <span *ngIf="i == 0">
+        <!-- Left side Expansion Panel which shows all test results-->
+        <mat-accordion style="width: 100%">
+          <mat-expansion-panel *ngFor="let tag of tags; let i = index">
+            <mat-expansion-panel-header
+              style="border-bottom: 1px solid #999999"
+            >
+              {{ tag }}
+            </mat-expansion-panel-header>
+            <mat-list>
+              <mat-list-item
+                *ngFor="let check of LintingResultsInTags[i]"
+                style="border-bottom: 1px solid #999999"
+              >
+                <h3 matLine>
+                  {{ returnEmojiBasedOnSeverity(check) }} {{ check.checkName }}
+                  <mat-icon
+                    matTooltip="{{ check.description }}"
+                    style="float: right"
+                    color="primary"
+                    >info</mat-icon
+                  >
+                </h3>
+                <!-- Tooltip integrieren!!-->
+                <h4 matLine *ngIf="check.result == false">
+                  <span> {{ check.message }}</span>
+                  <br />
+                  <span>Tipp: {{ check.fix }}</span>
+                </h4>
+              </mat-list-item>
+              <p></p>
+            </mat-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </span>
+      <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
+      <span *ngIf="i == 1">
+        <div>
+          <canvas id="totalChart"></canvas>
+        </div>
+      </span>
+      <span *ngIf="i == 2">
+        <div>
+          <canvas id="userChart"></canvas>
+        </div>
+      </span>
+      <span *ngIf="i == 3">
+        <div>
+          <canvas id="programmerChart"></canvas>
+        </div>
+      </span>
+    </mat-card>
+  </mat-grid-tile>
+</mat-grid-list>
+<mat-card-footer style="padding-left: 6%">
+  <p>{{ emojiMap.correct }} : Bestanden</p>
+  <p>{{ emojiMap.notImportant }} : unwichtiger Test nicht bestanden</p>
+  <p>{{ emojiMap.warning }} : Test nicht bestanden</p>
+  <p>{{ emojiMap.false }} : wichtiger Test nicht bestanden</p>
+  <p>Zuletzt gelintet am {{ lastLintTime }}</p>
+</mat-card-footer>
