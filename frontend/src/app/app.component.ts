@@ -14,7 +14,7 @@ import { MatChip } from '@angular/material/chips';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'angular-frontend';
+  title = 'frontend';
   projectComponents = [];
   //SearchBarValue = '';
   all_projects: Project[];

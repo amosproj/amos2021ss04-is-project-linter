@@ -19,11 +19,11 @@ jobs:
         run: npm install -g @angular/cli
       
       - name: Install packages
-        working-directory: ./angular-frontend
+        working-directory: ./frontend
         run: npm install # TODO cache them
 
       - name: Build the FrontEnd
-        working-directory: ./angular-frontend
+        working-directory: ./-frontend
         run: ng build --prod
         
       - name: Log in to Docker Hub
@@ -35,6 +35,6 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v2
         with:
-          context: ./angular-frontend  # where the dockerfile is located
+          context: ./frontend  # where the dockerfile is located
           push: true
           tags: amoslinter/frontend:staging

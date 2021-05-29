@@ -80,20 +80,20 @@ $md-accentcolor: (
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$angular-frontend-primary: mat-palette($md-primarycolor);
-$angular-frontend-accent: mat-palette($md-accentcolor);
+$frontend-primary: mat-palette($md-primarycolor);
+$frontend-accent: mat-palette($md-accentcolor);
 
 // The warn palette is optional (defaults to red).
-$angular-frontend-warn: mat-palette($mat-red);
+$frontend-warn: mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
-$angular-frontend-theme: mat-light-theme(
+$frontend-theme: mat-light-theme(
   (
     color: (
-      primary: $angular-frontend-primary,
-      accent: $angular-frontend-accent,
-      warn: $angular-frontend-warn,
+      primary: $frontend-primary,
+      accent: $frontend-accent,
+      warn: $frontend-warn,
     ),
   )
 );
@@ -101,4 +101,4 @@ $angular-frontend-theme: mat-light-theme(
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($angular-frontend-theme);
+@include angular-material-theme($frontend-theme);
