@@ -27,7 +27,9 @@ jobs:
 
       - name: Run Tests
         working-directory: ./server
-        run: echo TODO
+        env:
+          GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+        run: ./gradlew test
 
       - name: Log in to Docker Hub
         uses: docker/login-action@v1
