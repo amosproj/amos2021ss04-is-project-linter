@@ -14,7 +14,7 @@ import { OnInit } from '@angular/core';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit, ControlValueAccessor  {
+export class AppComponent implements OnInit  {
   title = 'frontend';
   projectComponents = [];
   chipsControl = new FormControl('');
@@ -27,13 +27,9 @@ export class AppComponent implements OnInit, ControlValueAccessor  {
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
 
-  //chips
-  @Input() opt: string[] = ["a","b"];
+ 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
-  onChange!: (value: string[]) => void;
-  @ViewChild(MatChipList)
-  chipList!: MatChipList;
- value: string[] = [];
+
 
   constructor(
     fb: FormBuilder,
@@ -45,40 +41,7 @@ export class AppComponent implements OnInit, ControlValueAccessor  {
       floatLabel: this.floatLabelControl,
     });
   }
-  registerOnChange(fn: (_: any) => void): void {
-    this.onChange = fn;
-  }
-
-propagateChange(value: string[]) {
-    if (this.onChange) {
-      this.onChange(value);
-    }
-}
-writeValue(value: string[]): void {
-  // When form value set when chips list initialized
-  if (this.chipList && value) {
-    this.selectChips(value);
-  } else if (value) {
-    // When chips not initialized
-    this.value = value;
-  }
-}selectChips(value: string[]) {
-    this.chipList.chips.forEach((chip) => chip.deselect());
-
-    const chipsToSelect = this.chipList.chips.filter((c) =>
-      value.includes(c.value)
-    );
-
-    chipsToSelect.forEach((chip) => chip.select());
-  }
-
-  registerOnTouched(fn: any): void {
-    throw new Error('Method not implemented.');
-  }
-  setDisabledState?(isDisabled: boolean): void {
-    throw new Error('Method not implemented.');
-  }
-
+  
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
