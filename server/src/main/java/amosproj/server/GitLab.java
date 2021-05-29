@@ -13,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -42,13 +44,13 @@ public class GitLab {
     }
 
     /**
-     * Makes an authenticated request to the GitlabAPI. Commonly used for features GitLab4J doesen't support.
+     * Makes an authenticated request to the GitlabAPI. Commonly used for features GitLab4J doesn't support.
      *
      * @param resource the endpoint of the request i.e "/projects/123" will make an api call to :gitlabHost:/projects/123
      * @return Json of the result
-     * @throws JsonProcessingException
+     * @throws HttpStatusCodeException, JsonProcessingException, RestClientException
      */
-    public JsonNode makeApiRequest(String resource) throws JsonProcessingException {
+    public JsonNode makeApiRequest(String resource) throws HttpStatusCodeException, JsonProcessingException, RestClientException {
         // prepare result storage
         RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
         RestTemplate restTemplate = restTemplateBuilder.build();
