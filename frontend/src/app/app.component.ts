@@ -1,21 +1,24 @@
-import { ComponentFactoryResolver } from '@angular/core';
+import { ComponentFactoryResolver, Input } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RepositoryComponent } from './repository/repository.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { MatChip } from '@angular/material/chips';
+import { MatChip, MatChipList } from '@angular/material/chips';
+import { OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, ControlValueAccessor  {
   title = 'frontend';
   projectComponents = [];
+  chipsControl = new FormControl('');
+  chipsValue$ = this.chipsControl.valueChanges;
   //SearchBarValue = '';
   all_projects: Project[];
   options: FormGroup;
@@ -23,7 +26,14 @@ export class AppComponent {
   errorMsgForwardLink = '';
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
+
+  //chips
+  @Input() opt: string[] = ["a","b"];
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
+  onChange!: (value: string[]) => void;
+  @ViewChild(MatChipList)
+  chipList!: MatChipList;
+ value: string[] = [];
 
   constructor(
     fb: FormBuilder,
@@ -34,6 +44,39 @@ export class AppComponent {
       hideRequired: this.hideRequiredControl,
       floatLabel: this.floatLabelControl,
     });
+  }
+  registerOnChange(fn: (_: any) => void): void {
+    this.onChange = fn;
+  }
+
+propagateChange(value: string[]) {
+    if (this.onChange) {
+      this.onChange(value);
+    }
+}
+writeValue(value: string[]): void {
+  // When form value set when chips list initialized
+  if (this.chipList && value) {
+    this.selectChips(value);
+  } else if (value) {
+    // When chips not initialized
+    this.value = value;
+  }
+}selectChips(value: string[]) {
+    this.chipList.chips.forEach((chip) => chip.deselect());
+
+    const chipsToSelect = this.chipList.chips.filter((c) =>
+      value.includes(c.value)
+    );
+
+    chipsToSelect.forEach((chip) => chip.select());
+  }
+
+  registerOnTouched(fn: any): void {
+    throw new Error('Method not implemented.');
+  }
+  setDisabledState?(isDisabled: boolean): void {
+    throw new Error('Method not implemented.');
   }
 
   getIfForwardLinkWorked() {
