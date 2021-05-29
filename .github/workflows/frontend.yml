@@ -23,7 +23,7 @@ jobs:
         run: npm install # TODO cache them
 
       - name: Build the FrontEnd
-        working-directory: ./-frontend
+        working-directory: ./frontend
         run: ng build --prod
         
       - name: Log in to Docker Hub
