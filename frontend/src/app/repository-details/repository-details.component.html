@@ -52,9 +52,9 @@
     [rowspan]="tile.rows"
     [style.background]="tile.color"
   >
-    <mat-card class="mat-elevation-z0">
-      <mat-card-title> {{ tile.text }}: </mat-card-title>
-      <span *ngIf="i == 0">
+    <span *ngIf="i == 0">
+      <mat-card class="mat-elevation-z0">
+        <mat-card-title> {{ tile.text }}: </mat-card-title>
         <!-- Left side Expansion Panel which shows all test results-->
         <mat-accordion style="width: 100%">
           <mat-expansion-panel *ngFor="let tag of tags; let i = index">
@@ -88,19 +88,37 @@
             </mat-list>
           </mat-expansion-panel>
         </mat-accordion>
-      </span>
-      <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
-      <span *ngIf="(i > 0) && (i != tiles.length-1)">
+      </mat-card>
+    </span>
+    <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
+    <span *ngIf="(i > 0) && (i != tiles.length-1)">
+      <mat-card class="mat-elevation-z0">
+        <mat-card-title> {{ tile.text }}: </mat-card-title>
         <div>
           <canvas id={{chartNames[i-1]}}></canvas>
         </div>
-      </span>
-      <span *ngIf="i == tiles.length-1">
-        <div>
-          Tipps:
-        </div>
-      </span>
-    </mat-card>
+      </mat-card>
+    </span>
+    <span *ngIf="i == tiles.length-1">
+      <div style="left:4%; top: 0%; position: absolute;">
+        <!-- <div fxFlex 
+        fxLayoutAlign="start start" >-->
+        <mat-card class="mat-elevation-z0" style="padding-top: 0%;">
+          <mat-card-header style=" text-align: left;">
+            <mat-card-title style=" text-align: left;"> {{ tile.text }}: </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <span *ngFor="let lintingRes of latestLintingResultsSortedPriority; let i = index">
+              <span *ngIf="i < 3">
+                <div>
+                  {{i+1}}: {{lintingRes.fix}}
+                </div>
+              </span>
+            </span>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </span>
   </mat-grid-tile>
 </mat-grid-list>
 <mat-card-footer style="padding-left: 6%">

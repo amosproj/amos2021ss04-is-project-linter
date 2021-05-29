@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import {
-  MatDialogModule,
   MatDialogRef,
   MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
@@ -9,10 +8,13 @@ import { Chart } from '../../../node_modules/chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
 
+//import { FlexLayoutModule } from '@angular/flex-layout';
+
 @Component({
   selector: 'app-repository-details',
   templateUrl: './repository-details.component.html',
   styleUrls: ['./repository-details.component.css'],
+  //imports: [FlexLayoutModule],
 })
 export class RepositoryDetailsComponent implements OnInit {
   // Diese Klasse ist nötig fürs Anzeigen des Dialogs
@@ -44,6 +46,7 @@ export class RepositoryDetailsComponent implements OnInit {
   checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
   checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
   latestLintingResults: CheckResults[];
+  latestLintingResultsSortedPriority: CheckResults[];
   tags: String[];
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
@@ -51,7 +54,7 @@ export class RepositoryDetailsComponent implements OnInit {
   chartNames: String[];
   maxColsForTiles = 9;
   tiles: Tile[] = [
-    { text: 'Kategorien', cols: 5, rows: 5, color: 'white' }, // gibt es immer
+    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
     { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
     // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
   ];
@@ -66,7 +69,8 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
-    this.ShowProjectDetails(this.data.projectID); // sendet erste HTTP Anfrage ans backend
+    this.latestLintingResultsSortedPriority = new Array<CheckResults>();
+    this.initializeClassValuesAndTiles(this.data.projectID); // sendet erste HTTP Anfrage ans backend
   }
 
   ngAfterViewInit(): void {
@@ -77,13 +81,9 @@ export class RepositoryDetailsComponent implements OnInit {
         var tags = this.getTagsArray(
           val.lintingResults[val.lintingResults.length - 1].checkResults
         );
-        this.numberOfTestsPerSeverityInTags =
-          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-            tags,
-            val.lintingResults[val.lintingResults.length - 1].checkResults
-          )[0];
+        this.numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1].checkResults)[0];
         var chartNames = this.getChartNames(tags);
-        console.log('in after', this.numberOfTestsPerSeverityInTags);
+        //console.log('in after', this.numberOfTestsPerSeverityInTags);
         for (var i = 0; i < this.tags.length + 1; i++) {
           this.renderChart(chartNames[i], i, this.numberOfTestsPerSeverityInTags);
           this.myChart.update();
@@ -139,7 +139,7 @@ export class RepositoryDetailsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  ShowProjectDetails(gitID) {
+  initializeClassValuesAndTiles(gitID) {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
     this.http
       .get(`${environment.baseURL}/project/${gitID}`)
@@ -152,12 +152,8 @@ export class RepositoryDetailsComponent implements OnInit {
         //this.fillSeverityArrays(); // muss momentan nicht benützt werden
         this.tags = this.getTagsArray(this.latestLintingResults);
 
-        this.LintingResultsInTags =
-          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-            this.tags,
-            this.latestLintingResults
-          )[1];
-        console.log('LintingResultInTags', this.LintingResultsInTags);
+        this.LintingResultsInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(this.tags, this.latestLintingResults)[1];
+        //console.log('LintingResultInTags', this.LintingResultsInTags);
 
         // Speichere Informationen
         this.RepoName = val.name;
@@ -168,6 +164,9 @@ export class RepositoryDetailsComponent implements OnInit {
         // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
         this.chartNames = this.getChartNames(this.tags);
         this.addTilesForCategoryGraphAndTipps();
+        // sortiere die Checks um die 3 besten Tipps darzustellen
+        this.latestLintingResults.forEach(val => this.latestLintingResultsSortedPriority.push(Object.assign({}, val)));
+        this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
       });
   }
 
@@ -202,7 +201,7 @@ export class RepositoryDetailsComponent implements OnInit {
     var chartNames :String[] = [];
     chartNames.push("Alle Tests:")
     for(var i = 0; i < tags.length; i++){
-      chartNames.push(this.tags[i]);
+      chartNames.push(tags[i]);
     }
     return chartNames;
   }
@@ -283,7 +282,7 @@ export class RepositoryDetailsComponent implements OnInit {
       var t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
       this.tiles.push(t);
     }
-    this.tiles.push(<Tile>{ color: 'white', cols: this.maxColsForTiles, rows: 1, text: "" });
+    this.tiles.push(<Tile>{ color: 'white', cols: this.maxColsForTiles, rows: 1, text: "Top 3 Tipps" });
   }
 
   returnEmojiBasedOnSeverity(input) {
@@ -294,9 +293,18 @@ export class RepositoryDetailsComponent implements OnInit {
     else if (input.severity == 'LOW') return this.emojiMap.notImportant;
     else return this.emojiMap.bug;
   }
+
+  compareCheckResults( a, b ) {
+    if ( a.priority < b.priority ){
+      return -1;
+    }
+    if ( a.priority > b.priority ){
+      return 1;
+    }
+    return 0;
+  }
 }
 
-declare const require: any; // wird benützt um das svg zu laden
 
 // Um das Projekt zu bekommen
 export interface DialogData {
@@ -312,6 +320,7 @@ interface CheckResults {
   description: string;
   tag: string;
   fix: string;
+  priority: number;
   message: string; // ist Fehlermeldung
 }
 
@@ -323,15 +332,8 @@ export interface Tile {
   text: string;
 }
 
-// Zum speichern der Daten der HTTP Anfrage
-interface GetResponse {
-  lintingResults: LintingResult[];
-  name: string;
-  url: string;
-}
-
 // Zum Speichern der Daten eines LintingResult
-interface LintingResult {
+interface LintingResult { // wird gerade nicht benutzt
   projectId: number;
   id: number;
   lintTime: string;

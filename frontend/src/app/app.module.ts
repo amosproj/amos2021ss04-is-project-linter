@@ -10,6 +10,8 @@ import { RepositoryDetailsComponent } from './repository-details/repository-deta
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
+//import { FlexLayoutModule } from '@angular/flex-layout';
+
 @NgModule({
   declarations: [AppComponent, RepositoryComponent, RepositoryDetailsComponent],
   entryComponents: [RepositoryDetailsComponent],
@@ -21,6 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
     MaterialModule,
     MatDialogModule,
     MatIconModule,
+    //FlexLayoutModule 
   ],
   providers: [],
   bootstrap: [AppComponent],
