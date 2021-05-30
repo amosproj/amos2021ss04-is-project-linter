@@ -53,8 +53,8 @@ public class ProjectController {
         return res;
     }
 
-    @GetMapping("/project/{id}/interval")
-    public  ProjectSchema getProjectBetweenDates(@PathVariable("id") Long id) {
+    @GetMapping("/project/{id}/lastMonth")
+    public  ProjectSchema getProjectLintsLastMonth(@PathVariable("id") Long id) {
         LocalDateTime before = LocalDateTime.now();
         LocalDateTime after = before.minusDays(30);
         LinkedList<LintingResult> list = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs(after, before, id);
