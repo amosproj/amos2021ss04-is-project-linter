@@ -127,13 +127,13 @@
         <div>Value: {{chipsValue$ | async}}</div>
     </mat-card-content>
     <mat-card-content style="background-color:green; height: 100px;">
-      <mat-button-toggle-group>
-        <mat-button-toggle value="button1">Anzahl an bestandenen Checks</mat-button-toggle>
-        <mat-button-toggle value="button2">Anzahl an neu bestandenen Checks seit letztem Monat</mat-button-toggle>
-        <mat-button-toggle value="button3">Anzahl der bestanden Checks pro Kategorie</mat-button-toggle>
+      <mat-button-toggle-group [formControl]="kategorie">
+        <mat-button-toggle value="bestandene_tests">Anzahl an bestandenen Checks</mat-button-toggle>
+        <mat-button-toggle value="bestandene_tests_letzter_monat">Anzahl an neu bestandenen Checks seit letztem Monat</mat-button-toggle>
+        <mat-button-toggle value="bestande_checks_pro_kategorie">Anzahl der bestanden Checks pro Kategorie</mat-button-toggle>
       </mat-button-toggle-group>
     </mat-card-content>
-    <button mat-raised-button (click)="createStatistik($event)">Filter</button>
+    <button mat-raised-button  [disabled]="chipsControl.value.length == 0 || kategorie.value.length ==0" (click)="createStatistik($event)">Filter</button>
 
     <mat-card-content style="background-color:green; height: 100px;">
       <table mat-table [dataSource]="data" style="width: 100%;">
