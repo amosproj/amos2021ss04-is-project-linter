@@ -2,7 +2,7 @@ import { ComponentFactoryResolver, Input } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
-import { ControlValueAccessor, FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RepositoryComponent } from './repository/repository.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
@@ -16,7 +16,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit  {
+export class AppComponent implements OnInit {
   title = 'frontend';
   projectComponents = [];
   chipsControl = new FormControl('');
@@ -28,21 +28,18 @@ export class AppComponent implements OnInit  {
   errorMsgForwardLink = '';
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
-
+  kategorie = null;
   chipOptions: string[];
 
   gridInfo: GridInfo[] = new Array<GridInfo>();
 
   dataArray: GridInfo[] = new Array<GridInfo>();
-  displayColumns : string[] = ['project' ,'testsPassed', 'testsPassedPerTag'];
+  displayColumns: string[] = ['project', 'testsPassed', 'testsPassedPerTag'];
 
   columnsToDisplay: string[] = this.displayColumns.slice();
   data = new MatTableDataSource<GridInfo>(this.dataArray);
-  
-  
- 
-  @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
+  @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
   constructor(
     fb: FormBuilder,
@@ -54,7 +51,7 @@ export class AppComponent implements OnInit  {
       floatLabel: this.floatLabelControl,
     });
   }
-  
+
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
@@ -148,17 +145,16 @@ export class AppComponent implements OnInit  {
   }
   getChipOptions() {
     //hole alle verschiedenen tags aus der config.json datei
-    this.chipOptions=[];
+    this.chipOptions = [];
     for (let [key, value] of Object.entries(configFile.checks)) {
-      if(!this.chipOptions.includes(value.tag)){
+      if (!this.chipOptions.includes(value.tag)) {
         this.chipOptions.push(value.tag);
       }
     }
     return this.chipOptions;
-
   }
 
-  createStatistik(event: Event){
+  createStatistik(event: Event) {
     this.getProjectInfoForStatistik();
   }
 
@@ -166,47 +162,59 @@ export class AppComponent implements OnInit  {
     //lade projekte, vlt überflüssig
     this.GetProjects();
     //für jedes projekt
-    for (var i = 0 ; i < this.all_projects.length ; i++){
+    for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
-      this.http.get(`${environment.baseURL}/project/${this.all_projects[i].id}`).subscribe((val: any) => {
-        var checkResults : CheckResults[] = val.lintingResults[val.lintingResults.length - 1].checkResults;
-        //Zähler für erfolgreiche Checks
-        var checksPassed = 0;
-        //Zähler für erfolgreiche Checks pro Tag
-        var checksPassedPerTag:number[] = new Array(this.chipOptions.length);
-        for( var  j = 0 ; j < this.chipOptions.length; j++){
-          checksPassedPerTag[j] = 0;
-        }
-        for (var j = 0; j < checkResults.length; j++){
-          // wenn der Check erfolgreich war erhöhe die Zähler
-          if(checkResults[j].result){
-            checksPassed = checksPassed + 1;
-            checksPassedPerTag[this.chipOptions.indexOf(checkResults[j].tag)] = checksPassedPerTag[this.chipOptions.indexOf(checkResults[j].tag)] + 1;
+      this.http
+        .get(`${environment.baseURL}/project/${this.all_projects[i].id}`)
+        .subscribe((val: any) => {
+          var checkResults: CheckResults[] =
+            val.lintingResults[val.lintingResults.length - 1].checkResults;
+          //Zähler für erfolgreiche Checks
+          var checksPassed = 0;
+          //Zähler für erfolgreiche Checks pro Tag
+          var checksPassedPerTag: number[] = new Array(this.chipOptions.length);
+          for (var j = 0; j < this.chipOptions.length; j++) {
+            checksPassedPerTag[j] = 0;
           }
-        }
-        //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
-        var info : GridInfo = {project : val.name, testsPassed: checksPassed, testsPassedPerTag: checksPassedPerTag};
-        this.gridInfo.push(info);
-      });
+          for (var j = 0; j < checkResults.length; j++) {
+            // wenn der Check erfolgreich war erhöhe die Zähler
+            if (checkResults[j].result) {
+              checksPassed = checksPassed + 1;
+              checksPassedPerTag[
+                this.chipOptions.indexOf(checkResults[j].tag)
+              ] =
+                checksPassedPerTag[
+                  this.chipOptions.indexOf(checkResults[j].tag)
+                ] + 1;
+            }
+          }
+          //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
+          var info: GridInfo = {
+            project: val.name,
+            testsPassed: checksPassed,
+            testsPassedPerTag: checksPassedPerTag,
+          };
+          this.gridInfo.push(info);
+        });
     }
     //wähle die sortier funktion nach eingabe
     this.gridInfo.sort(this.compareOnlyTestsPassed);
     console.log('Grid Info', this.gridInfo);
-    var item : GridInfo;
+    var item: GridInfo;
     console.log('hier!!!');
-    for (var index in this.gridInfo){
+    for (var index in this.gridInfo) {
       item = this.gridInfo[index];
       this.dataArray.push(item);
     }
-    
+
     this.data.data = this.dataArray;
   }
 
   compareOnlyTestsPassed(a, b) {
-    if(a.testsPassed < b.testsPassed){
+    if (a.testsPassed < b.testsPassed) {
       return 1;
     }
-    if(a.testsPassed > b.testsPassed){
+    if (a.testsPassed > b.testsPassed) {
       return -1;
     }
     return 0;
@@ -214,7 +222,7 @@ export class AppComponent implements OnInit  {
 
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
- }
+  }
 } // Ende von AppComponent
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt
@@ -232,7 +240,7 @@ interface GridInfo {
   project: string;
 
   testsPassed: number;
-  testsPassedPerTag : number[];
+  testsPassedPerTag: number[];
 }
 
 // Zum speichern der Daten des Projekts
