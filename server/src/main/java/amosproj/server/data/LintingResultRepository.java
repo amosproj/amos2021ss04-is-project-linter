@@ -3,7 +3,7 @@ package amosproj.server.data;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.LinkedList;
 
 /**
  * Das LintingResultRepository ist das Interface zur Datenbank für die LintingResults.
@@ -24,5 +24,5 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
      * @param projectId Foreign-Key für das zugehörige Project
      * @return eine Liste an LintingResults die zwischen start und end liegen
      */
-    List<LintingResult> findByLintTimeBetweenAndProjectIdIs(LocalDateTime start, LocalDateTime end, Long projectId);
+    LinkedList<LintingResult> findByLintTimeBetweenAndProjectIdIs(LocalDateTime start, LocalDateTime end, Long projectId);
 }

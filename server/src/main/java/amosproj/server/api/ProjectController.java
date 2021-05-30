@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,6 +51,16 @@ public class ProjectController {
             res.add(proj);
         }
         return res;
+    }
+
+    @GetMapping("/project/{id}/interval")
+    public  ProjectSchema getProjectBetweenDates(@PathVariable("id") Long id) {
+        LocalDateTime before = LocalDateTime.now();
+        LocalDateTime after = before.minusDays(30);
+        LinkedList<LintingResult> list = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs(after, before, id);
+        return new ProjectSchema(repository.findById(id).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
+        ), list);
     }
 
     @GetMapping("/project/{id}")  // id is the project id in _our_ database
