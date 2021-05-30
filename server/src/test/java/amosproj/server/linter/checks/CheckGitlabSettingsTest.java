@@ -202,7 +202,7 @@ public class CheckGitlabSettingsTest {
     @Test
     public void hasSquashingEnabled_positive(){
         try {
-            prepareNegative();
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
             assertFalse(checkGitlabSettings.hasSquashingEnabled());
         } catch (GitLabApiException e) {
             fail();
@@ -212,7 +212,7 @@ public class CheckGitlabSettingsTest {
     @Test
     public void hasSquashingEnabled_negative(){
         try {
-            preparePositive();
+            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
             assertTrue(checkGitlabSettings.hasSquashingEnabled());
         } catch (GitLabApiException e) {
             fail();
