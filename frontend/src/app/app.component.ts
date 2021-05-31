@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   errorMsgForwardLink = '';
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
-  kategorie = null;
+ 
   chipOptions: string[];
 
   gridInfo: GridInfo[] = new Array<GridInfo>();
