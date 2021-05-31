@@ -1,25 +1,20 @@
 <!-- Header-->
 <mat-toolbar color="primary">
   <mat-toolbar-row style="height: 38px">
-    <span
-      style="
+    <span style="
         text-align: center;
         display: inline-block;
         width: 100%;
         font-size: 32px;
-      "
-      >Inner Source Project Linter</span
-    >
+      ">Inner Source Project Linter</span>
   </mat-toolbar-row>
   <mat-toolbar-row style="height: 38px">
-    <p
-      style="
+    <p style="
         text-align: center;
         display: inline-block;
         width: 100%;
         font-size: 18px;
-      "
-    >
+      ">
       Werkzeug für Inner Source Entwicklung
     </p>
   </mat-toolbar-row>
@@ -27,26 +22,12 @@
 
 <!-- Suchleiste-->
 <mat-card-content class="searchBar-mat">
-  <mat-form-field
-    appearance="fill"
-    [hideRequiredMarker]="hideRequiredControl.value"
-    [floatLabel]="floatLabelControl.value"
-    style="width: 420px !important"
-  >
+  <mat-form-field appearance="fill" [hideRequiredMarker]="hideRequiredControl.value"
+    [floatLabel]="floatLabelControl.value" style="width: 420px !important">
     <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
-    <input
-      #suchleiste
-      matInput
-      placeholder="z.B. Amos Testz"
-      required
-      (keyup)="searchProject(suchleiste.value)"
-    />
+    <input #suchleiste matInput placeholder="z.B. Amos Testz" required (keyup)="searchProject(suchleiste.value)" />
     <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
-    <mat-hint
-      *ngIf="getIfForwardLinkWorked() == false"
-      class="errorSearchBar"
-      >{{ errorMsgForwardLink }}</mat-hint
-    >
+    <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint>
   </mat-form-field>
   &nbsp;
 </mat-card-content>
@@ -56,15 +37,9 @@
   <mat-tab label="Repositories">
     <mat-card class="body">
       <mat-card-actions>
-        <button
-          type="button"
-          (click)="GetProjects(); removeAllProjectsFromOverview()"
-          class="btn btn-default"
-          style="border: none; background: none"
-        >
-          <mat-icon matTooltip="Refresh Projekte" color="primary"
-            >refresh</mat-icon
-          >
+        <button type="button" (click)="GetProjects(); removeAllProjectsFromOverview()" class="btn btn-default"
+          style="border: none; background: none">
+          <mat-icon matTooltip="Refresh Projekte" color="primary">refresh</mat-icon>
         </button>
       </mat-card-actions>
 
@@ -77,111 +52,97 @@
     <!----Footer of Repositories-->
     <mat-toolbar color="primary" style="position: fixed; bottom: 0%">
       <mat-toolbar-row style="height: 24px; padding-top: 1%">
-        <span
-          style="
+        <span style="
             text-align: left;
             display: inline-block;
             width: 100%;
             font-size: 24px;
-          "
-          >Bei Rückfragen oder Feedback Mail an:</span
-        >
-        <span
-          style="
+          ">Bei Rückfragen oder Feedback Mail an:</span>
+        <span style="
             text-align: right;
             display: inline-block;
             width: 100%;
             font-size: 24px;
             padding-top: 1%;
-          "
-          >Powered by ACIDIC</span
-        >
+          ">Powered by ACIDIC</span>
       </mat-toolbar-row>
       <mat-toolbar-row style="height: 18px; padding-top: 1%">
-        <span
-          style="
+        <span style="
             text-align: left;
             display: inline-block;
             width: 100%;
             font-size: 24px;
-          "
-          >ria.inner.source@datev.com</span
-        >
+          ">ria.inner.source@datev.com</span>
       </mat-toolbar-row>
     </mat-toolbar>
   </mat-tab>
   <mat-tab label="Statistiken">
-    <mat-card-content style="background-color: green; height: 150px; padding-top: 30px;padding-left: 20px; font-size: large;">
-      Datenbank als CSV exportieren:  <button mat-raised-button> exportieren </button>
+    <mat-card-content
+      style="background-color: green; height: 150px; padding-top: 30px;padding-left: 20px; font-size: large;">
+      Datenbank als CSV exportieren: <button mat-raised-button> exportieren </button>
     </mat-card-content>
-    <mat-card-content style="background-color: red; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
+    <mat-card-content
+      style="background-color: red; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
       <mat-card-title>Filter Repositories nach:</mat-card-title>
       <mat-card-content style="background-color:green; height: 100px;">
         <mat-chip-list selectable multiple [formControl]="chipsControl">
-          <mat-chip #chip="matChip" (click)="chip.toggleSelected(true)"
-            *ngFor="let option of getChipOptions()">
+          <mat-chip #chip="matChip" (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
             {{option}}
           </mat-chip>
         </mat-chip-list>
         <br />
         <div>Value: {{chipsValue$ | async}}</div>
-    </mat-card-content>
-    <mat-card-content style="background-color:green; height: 100px;">
-      <mat-button-toggle-group [formControl]="kategorie">
-        <mat-button-toggle value="bestandene_tests">Anzahl an bestandenen Checks</mat-button-toggle>
-        <mat-button-toggle value="bestandene_tests_letzter_monat">Anzahl an neu bestandenen Checks seit letztem Monat</mat-button-toggle>
-        <mat-button-toggle value="bestande_checks_pro_kategorie">Anzahl der bestanden Checks pro Kategorie</mat-button-toggle>
-      </mat-button-toggle-group>
-    </mat-card-content>
-    <button mat-raised-button  [disabled]="chipsControl.value.length == 0 || kategorie.value.length ==0" (click)="createStatistik($event)">Filter</button>
+      </mat-card-content>
+      <mat-card-content style="background-color:green; height: 100px;">
+        <mat-button-toggle-group [formControl]="kategorie">
+          <mat-button-toggle value="bestandene_tests">Anzahl an bestandenen Checks</mat-button-toggle>
+          <mat-button-toggle value="bestandene_tests_letzter_monat">Anzahl an neu bestandenen Checks seit letztem Monat
+          </mat-button-toggle>
+          <mat-button-toggle value="bestande_checks_pro_kategorie">Anzahl der bestanden Checks pro Kategorie
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+      </mat-card-content>
+      <button mat-raised-button [disabled]="chipsControl.value.length == 0 || kategorie.value.length ==0"
+        (click)="createStatistik($event)">Filter</button>
 
-    <mat-card-content style="background-color:green; height: 100px;">
-      <table mat-table [dataSource]="data" style="width: 100%;">
-        <ng-container [matColumnDef]="column" *ngFor="let column of displayColumns">
-          <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-          <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-        </ng-container>
-      
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-      </table>
-    </mat-card-content>
-       
+      <mat-card-content style="background-color:green; height: 100px;">
+        <table mat-table [dataSource]="data" style="width: 100%;">
+          <ng-container [matColumnDef]="column" *ngFor="let column of displayColumns">
+            <th mat-header-cell *matHeaderCellDef> {{column}} </th>
+            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+          <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+        </table>
+      </mat-card-content>
+
     </mat-card-content>
 
     <!----Footer of statistics-->
     <mat-toolbar color="primary" style="position: fixed; bottom: 0%">
       <mat-toolbar-row style="height: 24px; padding-top: 1%">
-        <span
-          style="
+        <span style="
             text-align: left;
             display: inline-block;
             width: 100%;
             font-size: 24px;
-          "
-          >Bei Rückfragen oder Feedback Mail an:</span
-        >
-        <span
-          style="
+          ">Bei Rückfragen oder Feedback Mail an:</span>
+        <span style="
             text-align: right;
             display: inline-block;
             width: 100%;
             font-size: 24px;
             padding-top: 1%;
-          "
-          >Powered by ACIDIC</span
-        >
+          ">Powered by ACIDIC</span>
       </mat-toolbar-row>
       <mat-toolbar-row style="height: 18px; padding-top: 1%">
-        <span
-          style="
+        <span style="
             text-align: left;
             display: inline-block;
             width: 100%;
             font-size: 24px;
-          "
-          >ria.inner.source@datev.com</span
-        >
+          ">ria.inner.source@datev.com</span>
       </mat-toolbar-row>
     </mat-toolbar>
   </mat-tab>
