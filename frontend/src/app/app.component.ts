@@ -239,7 +239,8 @@ export class AppComponent implements OnInit {
     this.data.data = this.dataArray;
   }
 
-  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any) => number) : GridInfo[]{
+  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
+    // hier ok console.log('chip in sort',this.chipsControl.value);
     let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
     var currentValue, nextValue;
     for (i=0; i < len; i++){
@@ -247,7 +248,7 @@ export class AppComponent implements OnInit {
       for (j=0; j < len-1; j++) {
         currentValue = gridInfoArray[j];
         nextValue = gridInfoArray[j + 1];
-        if (cmp(currentValue, nextValue) > 0) {  /* compare the adjacent elements */
+        if (cmp(currentValue, nextValue, this.chipsControl.value) > 0) {  /* compare the adjacent elements */
             gridInfoArray[j] = nextValue;   /* swap them */
             gridInfoArray[j + 1] = currentValue;
             swapped = true;
@@ -280,10 +281,11 @@ export class AppComponent implements OnInit {
     return 0;
   }
 
-  compareTestsPassedPerTag(a, b) {
+  compareTestsPassedPerTag(a, b, setTags) {
     var result;
-      for (var i = 0; i < this.chipsControl.value.length; i++){
-        if(this.chipsControl.value[i] == 1){
+    console.log('chip in sortFkt',setTags);
+      for (var i = 0; i < setTags.length; i++){
+        if(setTags[i] == 1){
           if(a.testsPassedPerTag[i] >= b.testsPassedPerTag[i]){
             result = 1;
           } else {
