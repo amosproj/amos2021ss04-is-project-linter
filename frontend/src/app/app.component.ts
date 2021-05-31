@@ -38,7 +38,7 @@ export class AppComponent implements OnInit {
   displayColumns: string[] = 
     ['project', 
     'testsPassed', 
-    'testsPassedPerTag', 
+    'testsPassedPerActivChip', 
     'newTestsPassedSinceLastMonth'];
 
   columnsToDisplay: string[] = this.displayColumns.slice();
@@ -179,22 +179,21 @@ export class AppComponent implements OnInit {
           //Zähler für erfolgreiche Checks
           var checksPassed = 0;
           //Zähler für erfolgreiche Checks pro Tag
-          var checksPassedPerTag: number[] = new Array(this.chipOptions.length);
+          var checksPassedPerActivChip = 0;
           //Zähler für erfolgreiche Checks letzten Monat
           var checksPassedLastMonth = 0;
-          for (var j = 0; j < this.chipOptions.length; j++) {
-            checksPassedPerTag[j] = 0;
-          }
           for (var j = 0; j < checkResults.length; j++) {
             // wenn der Check erfolgreich war erhöhe die Zähler
             if (checkResults[j].result) {
               checksPassed = checksPassed + 1;
-              checksPassedPerTag[
-                this.chipOptions.indexOf(checkResults[j].tag)
-              ] =
-                checksPassedPerTag[
-                  this.chipOptions.indexOf(checkResults[j].tag)
-                ] + 1;
+              for(var k = 0; k < this.chipsControl.value.length ; k++){
+                //console.log('chipControl', this.chipsControl.value[k]);
+                //console.log('tag in backend', checkResults[j].tag);
+                if(this.chipsControl.value[k].toLowerCase().trim() == checkResults[j].tag.toLowerCase().trim()){
+                  console.log('hier !!!');
+                  checksPassedPerActivChip = checksPassedPerActivChip + 1;
+                }
+              }
             }
             if(checkResultsLastMonth[j].result){
               checksPassedLastMonth = checksPassedLastMonth + 1;
@@ -204,28 +203,28 @@ export class AppComponent implements OnInit {
           var info: GridInfo = {
             project: val.name,
             testsPassed: checksPassed,
-            testsPassedPerTag: checksPassedPerTag,
+            testsPassedPerActivChip: checksPassedPerActivChip,
             newTestsPassedSinceLastMonth: checksPassed - checksPassedLastMonth 
           };
           this.gridInfo.push(info);
         });
     }
 
-    console.log('chip',this.chipsControl.value);
-    console.log('kategorie',this.kategorie.value);
-
     //wähle die sortier funktion nach eingabe
     switch(this.kategorie.value){
       case "bestandene_tests" : {
-        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassed);
+        //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassed);
+        this.gridInfo.sort(this.compareTestsPassed);
         break;
       }
       case "bestandene_tests_letzter_monat": {
-        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareNewTestsPassedSinceLastMonth);
+        //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareNewTestsPassedSinceLastMonth);
+        this.gridInfo.sort(this.compareNewTestsPassedSinceLastMonth);
         break;
       }
       case "bestandene_tests_pro_kategorie" : {
-        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
+        //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
+        this.gridInfo.sort(this.compareTestsPassedPerActivChip);
         break;
       }
     }
@@ -239,8 +238,8 @@ export class AppComponent implements OnInit {
     this.data.data = this.dataArray;
   }
 
+  /*
   bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
-    // hier ok console.log('chip in sort',this.chipsControl.value);
     let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
     var currentValue, nextValue;
     for (i=0; i < len; i++){
@@ -248,18 +247,19 @@ export class AppComponent implements OnInit {
       for (j=0; j < len-1; j++) {
         currentValue = gridInfoArray[j];
         nextValue = gridInfoArray[j + 1];
-        if (cmp(currentValue, nextValue, this.chipsControl.value) > 0) {  /* compare the adjacent elements */
-            gridInfoArray[j] = nextValue;   /* swap them */
+        if (cmp(currentValue, nextValue, this.chipsControl.value) > 0) {  // compare the adjacent elements 
+            gridInfoArray[j] = nextValue;  // swap them
             gridInfoArray[j + 1] = currentValue;
             swapped = true;
         }
       }
-      if (!swapped) {/*if no number was swapped that means array is sorted now, break the loop.*/
+      if (!swapped) {// if no number was swapped that means array is sorted now, break the loop.
           break;
       }
     }
   return gridInfoArray;
   }
+  */
 
   compareTestsPassed(a, b) {
     if(a.testsPassed < b.testsPassed){
@@ -281,9 +281,21 @@ export class AppComponent implements OnInit {
     return 0;
   }
 
+  compareTestsPassedPerActivChip(a, b) {
+    if(a.testsPassedPerActivChip < b.testsPassedPerActivChip){
+      return 1;
+    }
+    if(a.testsPassedPerActivChip > b.testsPassedPerActivChip){
+      return -1;
+    }
+    return 0;
+  }
+
+
+
+  /*
   compareTestsPassedPerTag(a, b, setTags) {
     var result;
-    console.log('chip in sortFkt',setTags);
       for (var i = 0; i < setTags.length; i++){
         if(setTags[i] == 1){
           if(a.testsPassedPerTag[i] >= b.testsPassedPerTag[i]){
@@ -295,6 +307,7 @@ export class AppComponent implements OnInit {
       }
       return result;
   }
+  */
 
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
@@ -316,7 +329,7 @@ interface GridInfo {
   project: string;
 
   testsPassed: number;
-  testsPassedPerTag: number[];
+  testsPassedPerActivChip: number;
   newTestsPassedSinceLastMonth: number;
 }
 
