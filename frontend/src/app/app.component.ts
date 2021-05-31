@@ -165,14 +165,18 @@ export class AppComponent implements OnInit {
     for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
       this.http
-        .get(`${environment.baseURL}/project/${this.all_projects[i].id}`)
+        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`)
         .subscribe((val: any) => {
           var checkResults: CheckResults[] =
             val.lintingResults[val.lintingResults.length - 1].checkResults;
+          var checkResultsLastMonth : CheckResults[] =
+            val.lintingResults[0].checkResults;  
           //Zähler für erfolgreiche Checks
           var checksPassed = 0;
           //Zähler für erfolgreiche Checks pro Tag
           var checksPassedPerTag: number[] = new Array(this.chipOptions.length);
+          //Zähler für erfolgreiche Checks letzten Monat
+          var checksPassedLastMonth = 0;
           for (var j = 0; j < this.chipOptions.length; j++) {
             checksPassedPerTag[j] = 0;
           }
@@ -187,18 +191,22 @@ export class AppComponent implements OnInit {
                   this.chipOptions.indexOf(checkResults[j].tag)
                 ] + 1;
             }
+            if(checkResultsLastMonth[j].result){
+              checksPassedLastMonth = checksPassedLastMonth + 1;
+            }
           }
           //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
           var info: GridInfo = {
             project: val.name,
             testsPassed: checksPassed,
             testsPassedPerTag: checksPassedPerTag,
+            testsPassedLastMonth: checksPassedLastMonth
           };
           this.gridInfo.push(info);
         });
     }
     //wähle die sortier funktion nach eingabe
-    this.gridInfo.sort(this.compareOnlyTestsPassed);
+    this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
     console.log('Grid Info', this.gridInfo);
     var item: GridInfo;
     console.log('hier!!!');
@@ -210,14 +218,61 @@ export class AppComponent implements OnInit {
     this.data.data = this.dataArray;
   }
 
-  compareOnlyTestsPassed(a, b) {
-    if (a.testsPassed < b.testsPassed) {
+  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c: any) => number) : GridInfo[]{
+    let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
+    var currentValue, nextValue;
+    //TODO setTags korrekter weise setzen !!
+    var setTags = [1,1];
+    for (i=0; i < len; i++){
+      swapped = false;
+      for (j=0; j < len-1; j++) {
+        currentValue = gridInfoArray[j];
+        nextValue = gridInfoArray[j + 1];
+        if (cmp(currentValue, nextValue, setTags) > 0) {  /* compare the adjacent elements */
+            gridInfoArray[j] = nextValue;   /* swap them */
+            gridInfoArray[j + 1] = currentValue;
+            swapped = true;
+        }
+      }
+      if (!swapped) {/*if no number was swapped that means array is sorted now, break the loop.*/
+          break;
+      }
+    }
+  return gridInfoArray;
+  }
+
+  compareTestsPassed(a, b) {
+    if(a.testsPassed < b.testsPassed){
       return 1;
     }
-    if (a.testsPassed > b.testsPassed) {
+    if(a.testsPassed > b.testsPassed){
       return -1;
     }
     return 0;
+  }
+
+  compareTestsPassedLastMonth(a, b) {
+    if(a.testsPassedLastMonth < b.testsPassedLastMonth){
+      return 1;
+    }
+    if(a.testsPassedLastMonth > b.testsPassedLastMonth){
+      return -1;
+    }
+    return 0;
+  }
+
+  compareTestsPassedPerTag(a, b, setTags) {
+    var result;
+      for (var i = 0; i < setTags.length; i++){
+        if(setTags[i] == 1){
+          if(a.testsPassedPerTag[i] >= b.testsPassedPerTag[i]){
+            result = 1;
+          } else {
+            return -1;
+          }
+        }
+      }
+      return result;
   }
 
   toggleSelection(chip: MatChip) {
@@ -241,6 +296,7 @@ interface GridInfo {
 
   testsPassed: number;
   testsPassedPerTag: number[];
+  testsPassedLastMonth: number;
 }
 
 // Zum speichern der Daten des Projekts
