@@ -98,11 +98,12 @@
           <mat-button-toggle value="bestandene_tests">Anzahl an bestandenen Checks</mat-button-toggle>
           <mat-button-toggle value="bestandene_tests_letzter_monat">Anzahl an neu bestandenen Checks seit letztem Monat
           </mat-button-toggle>
-          <mat-button-toggle value="bestande_checks_pro_kategorie">Anzahl der bestanden Checks pro Kategorie
+          <mat-button-toggle value="bestandene_tests_pro_kategorie">Anzahl der bestanden Checks pro Kategorie
           </mat-button-toggle>
         </mat-button-toggle-group>
       </mat-card-content>
-      <button mat-raised-button [disabled]="chipsControl.value.length == 0 || kategorie.value.length ==0"
+      <!-- kategorie.value == bestandene_tests_pro_kategorie-->
+      <button mat-raised-button [disabled]="kategorie.value.length == 0 || chipsControl.value.length == 0 && kategorie.value.length == 0"
         (click)="createStatistik($event)">Filter</button>
 
       <mat-card-content style="background-color:green; height: 100px;">

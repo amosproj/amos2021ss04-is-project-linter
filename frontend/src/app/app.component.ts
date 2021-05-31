@@ -35,7 +35,11 @@ export class AppComponent implements OnInit {
   gridInfo: GridInfo[] = new Array<GridInfo>();
 
   dataArray: GridInfo[] = new Array<GridInfo>();
-  displayColumns: string[] = ['project', 'testsPassed', 'testsPassedPerTag'];
+  displayColumns: string[] = 
+    ['project', 
+    'testsPassed', 
+    'testsPassedPerTag', 
+    'newTestsPassedSinceLastMonth'];
 
   columnsToDisplay: string[] = this.displayColumns.slice();
   data = new MatTableDataSource<GridInfo>(this.dataArray);
@@ -201,16 +205,32 @@ export class AppComponent implements OnInit {
             project: val.name,
             testsPassed: checksPassed,
             testsPassedPerTag: checksPassedPerTag,
-            testsPassedLastMonth: checksPassedLastMonth
+            newTestsPassedSinceLastMonth: checksPassed - checksPassedLastMonth 
           };
           this.gridInfo.push(info);
         });
     }
+
+    console.log('chip',this.chipsControl.value);
+    console.log('kategorie',this.kategorie.value);
+
     //wähle die sortier funktion nach eingabe
-    this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
+    switch(this.kategorie.value){
+      case "bestandene_tests" : {
+        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassed);
+        break;
+      }
+      case "bestandene_tests_letzter_monat": {
+        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareNewTestsPassedSinceLastMonth);
+        break;
+      }
+      case "bestandene_tests_pro_kategorie" : {
+        this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
+        break;
+      }
+    }
     console.log('Grid Info', this.gridInfo);
     var item: GridInfo;
-    console.log('hier!!!');
     for (var index in this.gridInfo) {
       item = this.gridInfo[index];
       this.dataArray.push(item);
@@ -219,17 +239,15 @@ export class AppComponent implements OnInit {
     this.data.data = this.dataArray;
   }
 
-  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c: any) => number) : GridInfo[]{
+  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any) => number) : GridInfo[]{
     let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
     var currentValue, nextValue;
-    //TODO setTags korrekter weise setzen !!
-    var setTags = [1,1];
     for (i=0; i < len; i++){
       swapped = false;
       for (j=0; j < len-1; j++) {
         currentValue = gridInfoArray[j];
         nextValue = gridInfoArray[j + 1];
-        if (cmp(currentValue, nextValue, setTags) > 0) {  /* compare the adjacent elements */
+        if (cmp(currentValue, nextValue) > 0) {  /* compare the adjacent elements */
             gridInfoArray[j] = nextValue;   /* swap them */
             gridInfoArray[j + 1] = currentValue;
             swapped = true;
@@ -252,20 +270,20 @@ export class AppComponent implements OnInit {
     return 0;
   }
 
-  compareTestsPassedLastMonth(a, b) {
-    if(a.testsPassedLastMonth < b.testsPassedLastMonth){
+  compareNewTestsPassedSinceLastMonth(a, b) {
+    if(a.newTestsPassedSinceLastMonth < b.newTestsPassedSinceLastMonth){
       return 1;
     }
-    if(a.testsPassedLastMonth > b.testsPassedLastMonth){
+    if(a.newTestsPassedSinceLastMonth > b.newTestsPassedSinceLastMonth){
       return -1;
     }
     return 0;
   }
 
-  compareTestsPassedPerTag(a, b, setTags) {
+  compareTestsPassedPerTag(a, b) {
     var result;
-      for (var i = 0; i < setTags.length; i++){
-        if(setTags[i] == 1){
+      for (var i = 0; i < this.chipsControl.value.length; i++){
+        if(this.chipsControl.value[i] == 1){
           if(a.testsPassedPerTag[i] >= b.testsPassedPerTag[i]){
             result = 1;
           } else {
@@ -297,7 +315,7 @@ interface GridInfo {
 
   testsPassed: number;
   testsPassedPerTag: number[];
-  testsPassedLastMonth: number;
+  newTestsPassedSinceLastMonth: number;
 }
 
 // Zum speichern der Daten des Projekts
