@@ -22,6 +22,7 @@ export class AppComponent implements OnInit  {
   chipsControl = new FormControl('');
   chipsValue$ = this.chipsControl.valueChanges;
   //SearchBarValue = '';
+  kategorie = new FormControl("");
   all_projects: Project[];
   options: FormGroup;
   forwardLinkWorked = true;
