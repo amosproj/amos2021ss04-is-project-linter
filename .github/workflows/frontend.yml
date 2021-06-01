@@ -20,7 +20,7 @@ jobs:
       
       - name: Install packages
         working-directory: ./frontend
-        run: npm install # TODO cache them
+        run: npm install
 
       - name: Build the FrontEnd
         working-directory: ./frontend
