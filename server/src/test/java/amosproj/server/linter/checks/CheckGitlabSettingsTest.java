@@ -199,7 +199,7 @@ public class CheckGitlabSettingsTest {
         }
     }
 
-    @Test
+    /*@Test
     public void hasSquashingEnabled_positive(){
         try {
             prepareNegative();
@@ -217,5 +217,6 @@ public class CheckGitlabSettingsTest {
         } catch (GitLabApiException e) {
             fail();
         }
-    }
+    }*/
+
 }
