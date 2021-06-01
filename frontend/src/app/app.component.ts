@@ -190,7 +190,6 @@ export class AppComponent implements OnInit {
                 //console.log('chipControl', this.chipsControl.value[k]);
                 //console.log('tag in backend', checkResults[j].tag);
                 if(this.chipsControl.value[k].toLowerCase().trim() == checkResults[j].tag.toLowerCase().trim()){
-                  console.log('hier !!!');
                   checksPassedPerActivChip = checksPassedPerActivChip + 1;
                 }
               }

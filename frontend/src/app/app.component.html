@@ -78,13 +78,13 @@
   </mat-tab>
   <mat-tab label="Statistiken">
     <mat-card-content
-      style="background-color: green; height: 150px; padding-top: 30px;padding-left: 20px; font-size: large;">
+      style="background-color: white; height: 10%; padding-top: 3%; padding-left: 2%; font-size: large; padding-bottom: 2%; border-bottom: 2px solid lightgray">
       Datenbank als CSV exportieren: <button mat-raised-button> exportieren </button>
     </mat-card-content>
     <mat-card-content
-      style="background-color: red; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
+      style="background-color: white; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
       <mat-card-title>Filter Repositories nach:</mat-card-title>
-      <mat-card-content style="background-color:green; height: 100px;">
+      <mat-card-content style="background-color:white; height: 100px;">
         <mat-chip-list selectable multiple [formControl]="chipsControl">
           <mat-chip #chip="matChip" (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
             {{option}}
@@ -93,12 +93,12 @@
         <br />
         <div>Value: {{chipsValue$ | async}}</div>
       </mat-card-content>
-      <mat-card-content style="background-color:green; height: 100px;">
+      <mat-card-content style="background-color:white; height: 100px;">
         <mat-button-toggle-group [formControl]="kategorie">
-          <mat-button-toggle value="bestandene_tests">Anzahl an bestandenen Checks</mat-button-toggle>
-          <mat-button-toggle value="bestandene_tests_letzter_monat">Anzahl an neu bestandenen Checks seit letztem Monat
+          <mat-button-toggle value="bestandene_tests" style="background-color: lightgray;">Anzahl an bestandenen Checks</mat-button-toggle>
+          <mat-button-toggle value="bestandene_tests_letzter_monat" style="background-color: lightgray;">Anzahl an neu bestandenen Checks seit letztem Monat
           </mat-button-toggle>
-          <mat-button-toggle value="bestandene_tests_pro_kategorie">Anzahl der bestanden Checks pro Kategorie
+          <mat-button-toggle value="bestandene_tests_pro_kategorie" style="background-color: lightgray;">Anzahl der bestanden Checks pro Kategorie
           </mat-button-toggle>
         </mat-button-toggle-group>
       </mat-card-content>
@@ -106,7 +106,7 @@
       <button mat-raised-button [disabled]="kategorie.value.length == 0 || chipsControl.value.length == 0 && kategorie.value.length == 0"
         (click)="createStatistik($event)">Filter</button>
 
-      <mat-card-content style="background-color:green; height: 100px;">
+      <mat-card-content style="background-color:white; height: 100px;">
         <table mat-table [dataSource]="data" style="width: 100%;">
           <ng-container [matColumnDef]="column" *ngFor="let column of displayColumns">
             <th mat-header-cell *matHeaderCellDef> {{column}} </th>
