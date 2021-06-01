@@ -24,8 +24,7 @@ public class LinterTest {
 
     @Test
     public void testRunCrawler() throws Exception {
-        // TODO????
-        // better not do this yet, takes 20 minutes
+        // FIXME better not do this yet, takes 20 minutes
     }
 
 }

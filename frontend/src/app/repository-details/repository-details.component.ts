@@ -1,9 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-} from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chart } from '../../../node_modules/chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
@@ -22,7 +19,6 @@ export class RepositoryDetailsComponent implements OnInit {
   //      (1 mal onNGinit für die Erstellung der Tiles (geht nicht später), und 1 mal onngAfterView für die Graphen (Canvas ist davor undefined))
 
   // TODO: chartNames nicht dynamisch erstellen
-
   emojiMap = {
     /*unwichtig:"〰️",
     warning: "⚠️",
@@ -81,11 +77,19 @@ export class RepositoryDetailsComponent implements OnInit {
         var tags = this.getTagsArray(
           val.lintingResults[val.lintingResults.length - 1].checkResults
         );
-        this.numberOfTestsPerSeverityInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(tags, val.lintingResults[val.lintingResults.length - 1].checkResults)[0];
+        this.numberOfTestsPerSeverityInTags =
+          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+            tags,
+            val.lintingResults[val.lintingResults.length - 1].checkResults
+          )[0];
         var chartNames = this.getChartNames(tags);
         //console.log('in after', this.numberOfTestsPerSeverityInTags);
         for (var i = 0; i < this.tags.length + 1; i++) {
-          this.renderChart(chartNames[i], i, this.numberOfTestsPerSeverityInTags);
+          this.renderChart(
+            chartNames[i],
+            i,
+            this.numberOfTestsPerSeverityInTags
+          );
           this.myChart.update();
         }
       });
@@ -152,7 +156,11 @@ export class RepositoryDetailsComponent implements OnInit {
         //this.fillSeverityArrays(); // muss momentan nicht benützt werden
         this.tags = this.getTagsArray(this.latestLintingResults);
 
-        this.LintingResultsInTags = this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(this.tags, this.latestLintingResults)[1];
+        this.LintingResultsInTags =
+          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+            this.tags,
+            this.latestLintingResults
+          )[1];
         //console.log('LintingResultInTags', this.LintingResultsInTags);
 
         // Speichere Informationen
@@ -165,7 +173,9 @@ export class RepositoryDetailsComponent implements OnInit {
         this.chartNames = this.getChartNames(this.tags);
         this.addTilesForCategoryGraphAndTipps();
         // sortiere die Checks um die 3 besten Tipps darzustellen
-        this.latestLintingResults.forEach(val => this.latestLintingResultsSortedPriority.push(Object.assign({}, val)));
+        this.latestLintingResults.forEach((val) =>
+          this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
+        );
         this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
       });
   }
@@ -193,14 +203,16 @@ export class RepositoryDetailsComponent implements OnInit {
     return tags;
   }
 
-  getChartNames(tags){
-    if (!tags){
-      console.log("Error in getChartNames() in repository-details.components.ts\n  this.tags is empty")
+  getChartNames(tags) {
+    if (!tags) {
+      console.log(
+        'Error in getChartNames() in repository-details.components.ts\n  this.tags is empty'
+      );
       return [];
     }
-    var chartNames :String[] = [];
-    chartNames.push("Alle Tests:")
-    for(var i = 0; i < tags.length; i++){
+    var chartNames: String[] = [];
+    chartNames.push('Alle Tests:');
+    for (var i = 0; i < tags.length; i++) {
       chartNames.push(tags[i]);
     }
     return chartNames;
@@ -282,7 +294,12 @@ export class RepositoryDetailsComponent implements OnInit {
       var t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
       this.tiles.push(t);
     }
-    this.tiles.push(<Tile>{ color: 'white', cols: this.maxColsForTiles, rows: 1, text: "Top 3 Tipps" });
+    this.tiles.push(<Tile>{
+      color: 'white',
+      cols: this.maxColsForTiles,
+      rows: 1,
+      text: 'Top 3 Tipps',
+    });
   }
 
   returnEmojiBasedOnSeverity(input) {
@@ -294,17 +311,16 @@ export class RepositoryDetailsComponent implements OnInit {
     else return this.emojiMap.bug;
   }
 
-  compareCheckResults( a, b ) {
-    if ( a.priority < b.priority ){
+  compareCheckResults(a, b) {
+    if (a.priority < b.priority) {
       return -1;
     }
-    if ( a.priority > b.priority ){
+    if (a.priority > b.priority) {
       return 1;
     }
     return 0;
   }
 }
-
 
 // Um das Projekt zu bekommen
 export interface DialogData {
@@ -333,7 +349,8 @@ export interface Tile {
 }
 
 // Zum Speichern der Daten eines LintingResult
-interface LintingResult { // wird gerade nicht benutzt
+interface LintingResult {
+  // wird gerade nicht benutzt
   projectId: number;
   id: number;
   lintTime: string;
