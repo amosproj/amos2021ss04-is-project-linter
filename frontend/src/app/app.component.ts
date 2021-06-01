@@ -101,7 +101,7 @@ export class AppComponent implements OnInit {
 
   GetProjects() {
     // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
-    this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
+    this.http.get(`${environment.baseURL}/projects`).subscribe(async results => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
 
@@ -163,15 +163,15 @@ export class AppComponent implements OnInit {
     this.getProjectInfoForStatistik();
   }
 
-  getProjectInfoForStatistik() {
+  async getProjectInfoForStatistik() {
     //lade projekte, vlt überflüssig
-    this.GetProjects();
+   // this.GetProjects(); Nicht nötig, da sie beim Start geholt werden
     //für jedes projekt
     for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
-      this.http
-        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`)
-        .subscribe((val: any) => {
+    await  this.http
+        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`).toPromise()
+        .then((val: any) => {
           var checkResults: CheckResults[] =
             val.lintingResults[val.lintingResults.length - 1].checkResults;
           var checkResultsLastMonth : CheckResults[] =
@@ -182,8 +182,9 @@ export class AppComponent implements OnInit {
           var checksPassedPerActivChip = 0;
           //Zähler für erfolgreiche Checks letzten Monat
           var checksPassedLastMonth = 0;
-          for (var j = 0; j < checkResults.length; j++) {
+          for (var j = 0; j < checkResults.length-1; j++) {
             // wenn der Check erfolgreich war erhöhe die Zähler
+          
             if (checkResults[j].result) {
               checksPassed = checksPassed + 1;
               for(var k = 0; k < this.chipsControl.value.length ; k++){
@@ -199,16 +200,19 @@ export class AppComponent implements OnInit {
             }
           }
           //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
+
           var info: GridInfo = {
             project: val.name,
             testsPassed: checksPassed,
             testsPassedPerActivChip: checksPassedPerActivChip,
             newTestsPassedSinceLastMonth: checksPassed - checksPassedLastMonth 
           };
+         
+ 
           this.gridInfo.push(info);
         });
     }
-
+ 
     //wähle die sortier funktion nach eingabe
     switch(this.kategorie.value){
       case "bestandene_tests" : {
@@ -231,10 +235,12 @@ export class AppComponent implements OnInit {
     var item: GridInfo;
     for (var index in this.gridInfo) {
       item = this.gridInfo[index];
+ 
       this.dataArray.push(item);
     }
-
+    
     this.data.data = this.dataArray;
+
   }
 
   /*
