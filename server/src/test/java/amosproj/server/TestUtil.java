@@ -4,9 +4,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.stream.Stream;
 
 public class TestUtil {
 
@@ -21,6 +24,19 @@ public class TestUtil {
             e.printStackTrace();
         }
         return new String[]{};
+    }
+
+    public static String[] getRepos() {
+        Resource resource = new ClassPathResource("repoList.txt");
+        try {
+            InputStream inputStream = resource.getInputStream();
+            Stream<String> lines = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                    .lines();
+            return (String[]) lines.toArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
