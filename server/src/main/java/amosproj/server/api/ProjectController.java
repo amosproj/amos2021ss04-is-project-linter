@@ -83,12 +83,12 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/lintAll")
-    public void lint() {
+    @PostMapping("/crawler")
+    public void crawl() {
         crawler.runCrawler();
     }
 
-    @GetMapping("/crawler/status")
+    @GetMapping("/crawler")
     public CrawlerStatusSchema statusCrawler() {
         return crawler.crawlerStatus();
     }
