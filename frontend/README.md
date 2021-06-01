@@ -20,6 +20,6 @@ Flag `--prod` setzen für production build.
 
 Erst bauen (siehe oben) dann folgendes Ausführen: `docker build -t amoslinter/frontend:<TAG> .` (tag z.B staging oder release)
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+## Local Dev-Server
+`ng serve` für einen Lokalen Server zum Testen.
+Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

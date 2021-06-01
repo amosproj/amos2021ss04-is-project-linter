@@ -17,6 +17,7 @@ services:
     backend:
         container_name: "amos-linter-java-server"
         image: "amoslinter/server:${ENVIRONMENT}"
+        # build: "./server"
         environment:
             - spring.datasource.platform=postgres
             - spring.datasource.url=jdbc:postgresql://database:5432/${DB_NAME}
@@ -33,10 +34,11 @@ services:
     nginx:
         container_name: "amos-linter-nginx"
         image: "amoslinter/frontend:${ENVIRONMENT}"
+        # build: "./frontend"
         volumes: # more like: load configurations
             - ./nginx.conf:/etc/nginx/conf.d/default.conf
-        # environment: FIXME
-        #     - port=${PORT}
+        environment:
+            - port=${PORT}
         depends_on:
             - backend
         ports: # only connection to outside world
