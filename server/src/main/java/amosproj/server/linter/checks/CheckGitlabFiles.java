@@ -135,6 +135,13 @@ public class CheckGitlabFiles extends Check {
         return false;
     }
 
+    public boolean eitherOwnersOrMaintainersExist() {
+        if (!checkMaintainersExistence()) {
+            return fileExists("OWNERS.md");
+        }
+        return true;
+    }
+
     public URI getRawReadme() {
         var readme = project.getReadmeUrl();
         if (readme != null) {

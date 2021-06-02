@@ -126,4 +126,16 @@ public class CheckGitlabFilesTest {
         assertFalse(checkGitlabFiles.checkReadmeHasLinks());
     }
 
+    @Test
+    void test_eitherOwnersOrMaintainersExist_positive() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/chiefs/amos-testz");
+        assertTrue(checkGitlabFiles.eitherOwnersOrMaintainersExist());
+    }
+
+    @Test
+    void test_eitherOwnersOrMaintainersExist_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabFiles.eitherOwnersOrMaintainersExist());
+    }
+
 }

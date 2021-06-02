@@ -48,7 +48,7 @@ public class ProjectControllerTest {
         LintingResult lintingResult = lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
         // do test requests
         this.mockMvc.perform(get("/project/" + proj.getId().toString())).andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/project/123")).andDo(print()).andExpect(status().isNotFound());
+        this.mockMvc.perform(get("/project/9999999999")).andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test

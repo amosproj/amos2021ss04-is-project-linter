@@ -185,6 +185,16 @@
       "fix": "Deaktivieren Sie Service Desk in ihrem Projekt.",
       "tag": "Maintainerfreundlichkeit",
       "priority": 1
+    },
+    "eitherOwnersOrMaintainersExist": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft, ob eine MAINTAINERS.md oder OWNERS.md Datei existiert.",
+      "message": "Keine MAINTAINERS.md oder OWNERS.md Datei gefunden!",
+      "fix": "Legen Sie eine MAINTAINERS.md oder OWNERS.md Datei in der Projektwurzel an.",
+      "tag": "Entwicklerfreundlichkeit",
+      "priority": 100
     }
   }
 }
