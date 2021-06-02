@@ -5,7 +5,6 @@
       "https://this.website.com/doesntexist",
       "https://that.doesnt.either"
     ],
-
     "crawler": {
       "scheduler": "0 0 0 * * ?",
       "status": {

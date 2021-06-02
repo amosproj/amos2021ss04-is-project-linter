@@ -77,7 +77,7 @@ public class Crawler {
      */
     public boolean startCrawler() {
         if (!crawlerActive.get()) {// Only one crawler should run at any given time
-            Thread thread = new Thread(() -> runCrawler());
+            Thread thread = new Thread(this::runCrawler);
             thread.start();
             return true;
         } else {
