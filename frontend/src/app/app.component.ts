@@ -44,6 +44,8 @@ export class AppComponent implements OnInit {
   columnsToDisplay: string[] = this.displayColumns.slice();
   data = new MatTableDataSource<GridInfo>(this.dataArray);
 
+  toggleToTrue=true;
+
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
   constructor(
@@ -118,6 +120,9 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.GetProjects();
     this.dataArray = new Array<GridInfo>();
+  }
+  ngAfterViewInit(){
+    
   }
 
   addComponent(name, id, gitlabInstance) {
@@ -311,6 +316,8 @@ export class AppComponent implements OnInit {
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
+
+  
 } // Ende von AppComponent
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt

@@ -35,6 +35,19 @@
 <!-- Tabs-->
 <mat-tab-group mat-align-tabs="center" color="accent">
   <mat-tab label="Repositories">
+    <mat-card>
+      <mat-card-title>Filter Repositories nach:</mat-card-title>
+      <mat-card-content style="background-color:white; height: 100px;">
+        <mat-chip-list selectable multiple [formControl]="chipsControl">
+          <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
+            <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
+            {{option}}
+          </mat-chip>
+        </mat-chip-list>
+        <br />
+        <div>Value: {{chipsValue$ | async}}</div>
+      </mat-card-content>
+    </mat-card> 
     <mat-card class="body">
       <mat-card-actions>
         <button type="button" (click)="GetProjects(); removeAllProjectsFromOverview()" class="btn btn-default"
@@ -87,7 +100,7 @@
       <mat-card-content style="background-color:white; height: 100px;">
         <mat-chip-list selectable multiple [formControl]="chipsControl">
           <mat-chip #chip="matChip" (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
-            {{option}}
+            {{option}} 
           </mat-chip>
         </mat-chip-list>
         <br />
