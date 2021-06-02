@@ -142,6 +142,32 @@ public class CheckGitlabFiles extends Check {
         return true;
     }
 
+    public boolean notDefaultReadme() {
+        String defaultReadme = "# " + project.getName(); // Sollte sich die Default Readme ändern, diese Zeile
+                                                         // anpassen. Dabei "\n" und "\r" ignorieren.
+        if (!checkReadmeExistence())
+            return false;
+        URI uri = getRawReadme();
+        if (uri != null) {
+            try {
+                Scanner scanner = new Scanner(uri.toURL().openStream());
+                String line = "";
+                while (scanner.hasNextLine()) {
+                     line += scanner.nextLine();
+                }
+
+                if (line.equals(defaultReadme)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
     public URI getRawReadme() {
         var readme = project.getReadmeUrl();
         if (readme != null) {

@@ -195,6 +195,16 @@
       "fix": "Legen Sie eine MAINTAINERS.md oder OWNERS.md Datei in der Projektwurzel an.",
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
+    },
+    "notDefaultReadme": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "medium",
+      "description": "Überprüft, ob die README Datei die Default-Readme ist.",
+      "message": "Die Readme ist die Default-Readme!",
+      "fix": "Legen Sie eine README Datei in der Projektwurzel an, die nicht automatisch generiert wurde.",
+      "tag": "Benutzerfreundlichkeit",
+      "priority": 100
     }
   }
 }
