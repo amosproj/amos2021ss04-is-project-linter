@@ -117,7 +117,7 @@
       "priority": 100
     },
     "hasSquashingEnabled": {
-      "category": "settings_check",
+      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob squashing commits erlaubt ist",
@@ -175,6 +175,16 @@
       "fix": "Entfernen Sie die Verlinkung zu der anderen CONTRIBUTING.MD.",
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
+    },
+    "hasServiceDeskDisabled": {
+      "category": "settings_checks",
+      "enabled": true,
+      "severity": "LOW",
+      "description": "Überprüft, ob der Service Desk deaktiviert ist oder nicht.",
+      "message": "Service Desk ist aktiviert!",
+      "fix": "Deaktivieren Sie Service Desk in ihrem Projekt.",
+      "tag": "Maintainerfreundlichkeit",
+      "priority": 1
     }
   }
 }

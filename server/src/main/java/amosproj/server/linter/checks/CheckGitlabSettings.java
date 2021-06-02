@@ -145,4 +145,14 @@ public class CheckGitlabSettings extends Check {
         return result;
     }
 
+    public boolean hasServiceDeskDisabled() {
+        try {
+            JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
+            return !node.get("service_desk_enabled").asBoolean();
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
