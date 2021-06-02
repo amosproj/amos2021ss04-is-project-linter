@@ -1,11 +1,20 @@
 {
   "settings": {
-    "scheduler": "0 0 0 * * ?",
     "gitLabHost": "https://gitlab.cs.fau.de",
     "readMeLinks": [
       "https://this.website.com/doesntexist",
       "https://that.doesnt.either"
-    ]
+    ],
+
+    "crawler": {
+      "scheduler": "0 0 0 * * ?",
+      "status": {
+        "init": "GitLab API wird angefragt",
+        "active": "Crawler läuft",
+        "inactive": "Crawler ist inaktiv"
+      },
+      "maxProjects": 10
+    }
   },
   "checks": {
     "checkReadmeExistence": {

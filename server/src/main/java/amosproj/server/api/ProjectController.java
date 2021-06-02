@@ -11,9 +11,12 @@ import amosproj.server.linter.Linter;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -84,8 +87,13 @@ public class ProjectController {
     }
 
     @PostMapping("/crawler")
-    public void crawl() {
-        crawler.runCrawler();
+    public @ResponseBody
+    ResponseEntity crawl() {
+        if (crawler.startCrawler()) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
+        }
     }
 
     @GetMapping("/crawler")
