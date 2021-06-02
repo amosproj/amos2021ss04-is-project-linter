@@ -126,4 +126,30 @@ public class CheckGitlabFilesTest {
         assertFalse(checkGitlabFiles.checkReadmeHasLinks());
     }
 
+    @Test
+    void test_eitherOwnersOrMaintainersExist_positive() throws GitLabApiException {
+        prepareSettingsCheck("https://gitlab.cs.fau.de/chiefs/amos-testz");
+        assertTrue(checkGitlabFiles.eitherOwnersOrMaintainersExist());
+    }
+
+    @Test
+    void test_eitherOwnersOrMaintainersExist_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabFiles.eitherOwnersOrMaintainersExist());
+    }
+
+    @Test
+    void test_notDefaultReadme_positive() throws GitLabApiException {
+        preparePositive();
+        assertTrue(checkGitlabFiles.notDefaultReadme());
+    }
+
+    @Test
+    void test_notDefaultReadme_negative() throws GitLabApiException {
+        prepareNegative();
+        assertFalse(checkGitlabFiles.notDefaultReadme());
+        prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-2");
+        assertFalse(checkGitlabFiles.notDefaultReadme());
+    }
+
 }

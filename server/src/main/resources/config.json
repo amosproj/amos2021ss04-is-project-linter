@@ -1,11 +1,19 @@
 {
   "settings": {
-    "scheduler": "0 0 0 * * ?",
     "gitLabHost": "https://gitlab.cs.fau.de",
     "readMeLinks": [
       "https://this.website.com/doesntexist",
       "https://that.doesnt.either"
-    ]
+    ],
+    "crawler": {
+      "scheduler": "0 0 0 * * ?",
+      "status": {
+        "init": "GitLab API wird angefragt",
+        "active": "Crawler läuft",
+        "inactive": "Crawler ist inaktiv"
+      },
+      "maxProjects": 10
+    }
   },
   "checks": {
     "checkReadmeExistence": {
@@ -109,7 +117,7 @@
       "priority": 100
     },
     "hasSquashingEnabled": {
-      "category": "settings_check",
+      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob squashing commits erlaubt ist",
@@ -166,6 +174,36 @@
       "message": "Es wurde ein Link zu einer andere CONTRIBUTING.MD gefunden!",
       "fix": "Entfernen Sie die Verlinkung zu der anderen CONTRIBUTING.MD.",
       "tag": "Entwicklerfreundlichkeit",
+      "priority": 100
+    },
+    "hasServiceDeskDisabled": {
+      "category": "settings_checks",
+      "enabled": true,
+      "severity": "LOW",
+      "description": "Überprüft, ob der Service Desk deaktiviert ist oder nicht.",
+      "message": "Service Desk ist aktiviert!",
+      "fix": "Deaktivieren Sie Service Desk in ihrem Projekt.",
+      "tag": "Maintainerfreundlichkeit",
+      "priority": 1
+    },
+    "eitherOwnersOrMaintainersExist": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "MEDIUM",
+      "description": "Überprüft, ob eine MAINTAINERS.md oder OWNERS.md Datei existiert.",
+      "message": "Keine MAINTAINERS.md oder OWNERS.md Datei gefunden!",
+      "fix": "Legen Sie eine MAINTAINERS.md oder OWNERS.md Datei in der Projektwurzel an.",
+      "tag": "Entwicklerfreundlichkeit",
+      "priority": 100
+    },
+    "notDefaultReadme": {
+      "category": "file_checks",
+      "enabled": true,
+      "severity": "medium",
+      "description": "Überprüft, ob die README Datei die Default-Readme ist.",
+      "message": "Die Readme ist die Default-Readme!",
+      "fix": "Legen Sie eine README Datei in der Projektwurzel an, die nicht automatisch generiert wurde.",
+      "tag": "Benutzerfreundlichkeit",
       "priority": 100
     }
   }

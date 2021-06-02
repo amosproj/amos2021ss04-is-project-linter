@@ -8,12 +8,18 @@ import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +35,7 @@ import java.util.List;
 public class ProjectController {
 
     @Autowired
-    private ProjectRepository repository;
+    private ProjectRepository projectRepository;
 
     @Autowired
     private LintingResultRepository lintingResultRepository;
@@ -42,7 +48,7 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects() {
-        var projectList = repository.findAll();
+        var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
@@ -54,11 +60,11 @@ public class ProjectController {
     }
 
     @GetMapping("/project/{id}/lastMonth")
-    public  ProjectSchema getProjectLintsLastMonth(@PathVariable("id") Long id) {
+    public ProjectSchema getProjectLintsLastMonth(@PathVariable("id") Long id) {
         LocalDateTime before = LocalDateTime.now();
         LocalDateTime after = before.minusDays(30);
         LinkedList<LintingResult> list = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs(after, before, id);
-        return new ProjectSchema(repository.findById(id).orElseThrow(
+        return new ProjectSchema(projectRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
         ), list);
     }
@@ -67,9 +73,27 @@ public class ProjectController {
     public ProjectSchema getProject(@PathVariable("id") Long id) {
         LinkedList<LintingResult> list = new LinkedList<>();
         list.add(lintingResultRepository.findFirstByProjectIdOrderByLintTimeDesc(id));
-        return new ProjectSchema(repository.findById(id).orElseThrow(
+        return new ProjectSchema(projectRepository.findById(id).orElseThrow(
                 () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
         ), list);
+    }
+
+    @GetMapping("/projects/csv")
+    public void exportCSV(HttpServletResponse response) throws Exception {
+        //set file name and content type
+        String filename = "results.csv";
+        response.setContentType("text/csv");
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
+        // create csv schema
+        CsvSchema.Builder schema = CsvSchema.builder();
+        schema.addColumn("kek");
+        schema.build();
+        CsvMapper mapper = new CsvMapper();
+        ObjectWriter writer = mapper.writer();
+        // get projects
+        Iterable<Project> projects = projectRepository.findAll();
+        // write csv from csv project schema
+        writer.writeValues(response.getWriter()).writeAll(projects);
     }
 
     @PostMapping("/projects")
@@ -83,12 +107,17 @@ public class ProjectController {
         }
     }
 
-    @GetMapping("/lintAll")
-    public void lint() {
-        crawler.runCrawler();
+    @PostMapping("/crawler")
+    public @ResponseBody
+    ResponseEntity crawl() {
+        if (crawler.startCrawler()) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
+        }
     }
 
-    @GetMapping("/crawler/status")
+    @GetMapping("/crawler")
     public CrawlerStatusSchema statusCrawler() {
         return crawler.crawlerStatus();
     }

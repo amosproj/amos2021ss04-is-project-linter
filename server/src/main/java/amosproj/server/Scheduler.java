@@ -12,6 +12,6 @@ public class Scheduler {
     private TaskScheduler executor;
 
     public void scheduling(final Runnable task) {
-        executor.schedule(task, new CronTrigger(Linter.getConfigNode().get("settings").get("scheduler").asText()));
+        executor.schedule(task, new CronTrigger(Linter.getConfigNode().get("settings").get("crawler").get("scheduler").asText()));
     }
 }

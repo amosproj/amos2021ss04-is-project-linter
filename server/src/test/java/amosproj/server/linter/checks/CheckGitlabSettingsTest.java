@@ -200,6 +200,28 @@ public class CheckGitlabSettingsTest {
     }
 
     @Test
+    public void hasServiceDeskDisabled_positive() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/bo63gazu/amos-test-project");
+            assertTrue(checkGitlabSettings.hasServiceDeskDisabled());
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    public void hasServiceDeskDisabled_negative() {
+        try {
+            prepareSettingsCheck("https://gitlab.cs.fau.de/ib49uquh/amos-testz");
+            assertFalse(checkGitlabSettings.hasServiceDeskDisabled());
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    /*@Test
     public void hasSquashingEnabled_positive(){
         try {
             prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
@@ -217,5 +239,6 @@ public class CheckGitlabSettingsTest {
         } catch (GitLabApiException e) {
             fail();
         }
-    }
+    }*/
+
 }

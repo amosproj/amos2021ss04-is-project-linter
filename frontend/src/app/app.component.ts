@@ -22,24 +22,25 @@ export class AppComponent implements OnInit {
   chipsControl = new FormControl('');
   chipsValue$ = this.chipsControl.valueChanges;
   //SearchBarValue = '';
-  kategorie = new FormControl("");
+  kategorie = new FormControl('');
   all_projects: Project[];
   options: FormGroup;
   forwardLinkWorked = true;
   errorMsgForwardLink = '';
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
- 
+
   chipOptions: string[];
 
   gridInfo: GridInfo[] = new Array<GridInfo>();
 
   dataArray: GridInfo[] = new Array<GridInfo>();
-  displayColumns: string[] = 
-    ['project', 
-    'testsPassed', 
-    'testsPassedPerActivChip', 
-    'newTestsPassedSinceLastMonth'];
+  displayColumns: string[] = [
+    'project',
+    'testsPassed',
+    'testsPassedPerActivChip',
+    'newTestsPassedSinceLastMonth',
+  ];
 
   columnsToDisplay: string[] = this.displayColumns.slice();
   data = new MatTableDataSource<GridInfo>(this.dataArray);
@@ -103,7 +104,7 @@ export class AppComponent implements OnInit {
 
   GetProjects() {
     // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
-    this.http.get(`${environment.baseURL}/projects`).subscribe((results) => {
+    this.http.get(`${environment.baseURL}/projects`).subscribe(async results => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
 
@@ -168,65 +169,74 @@ export class AppComponent implements OnInit {
     this.getProjectInfoForStatistik();
   }
 
-  getProjectInfoForStatistik() {
+  async getProjectInfoForStatistik() {
     //lade projekte, vlt überflüssig
-    this.GetProjects();
+   // this.GetProjects(); Nicht nötig, da sie beim Start geholt werden
     //für jedes projekt
     for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
-      this.http
-        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`)
-        .subscribe((val: any) => {
+
+    await  this.http
+        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`).toPromise()
+        .then((val: any) => {
+
           var checkResults: CheckResults[] =
             val.lintingResults[val.lintingResults.length - 1].checkResults;
-          var checkResultsLastMonth : CheckResults[] =
-            val.lintingResults[0].checkResults;  
+          var checkResultsLastMonth: CheckResults[] =
+            val.lintingResults[0].checkResults;
           //Zähler für erfolgreiche Checks
           var checksPassed = 0;
           //Zähler für erfolgreiche Checks pro Tag
           var checksPassedPerActivChip = 0;
           //Zähler für erfolgreiche Checks letzten Monat
           var checksPassedLastMonth = 0;
-          for (var j = 0; j < checkResults.length; j++) {
+          for (var j = 0; j < checkResults.length-1; j++) {
             // wenn der Check erfolgreich war erhöhe die Zähler
+          
             if (checkResults[j].result) {
               checksPassed = checksPassed + 1;
-              for(var k = 0; k < this.chipsControl.value.length ; k++){
+              for (var k = 0; k < this.chipsControl.value.length; k++) {
                 //console.log('chipControl', this.chipsControl.value[k]);
                 //console.log('tag in backend', checkResults[j].tag);
-                if(this.chipsControl.value[k].toLowerCase().trim() == checkResults[j].tag.toLowerCase().trim()){
+                if (
+                  this.chipsControl.value[k].toLowerCase().trim() ==
+                  checkResults[j].tag.toLowerCase().trim()
+                ) {
                   checksPassedPerActivChip = checksPassedPerActivChip + 1;
                 }
               }
             }
-            if(checkResultsLastMonth[j].result){
+            if (checkResultsLastMonth[j].result) {
               checksPassedLastMonth = checksPassedLastMonth + 1;
             }
           }
           //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
+
           var info: GridInfo = {
             project: val.name,
             testsPassed: checksPassed,
             testsPassedPerActivChip: checksPassedPerActivChip,
-            newTestsPassedSinceLastMonth: checksPassed - checksPassedLastMonth 
+            newTestsPassedSinceLastMonth: checksPassed - checksPassedLastMonth,
           };
+         
+ 
           this.gridInfo.push(info);
         });
     }
-
+ 
     //wähle die sortier funktion nach eingabe
-    switch(this.kategorie.value){
-      case "bestandene_tests" : {
+    switch (this.kategorie.value) {
+      case 'bestandene_tests': {
         //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassed);
         this.gridInfo.sort(this.compareTestsPassed);
         break;
       }
-      case "bestandene_tests_letzter_monat": {
+      case 'bestandene_tests_letzter_monat': {
         //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareNewTestsPassedSinceLastMonth);
         this.gridInfo.sort(this.compareNewTestsPassedSinceLastMonth);
         break;
       }
-      case "bestandene_tests_pro_kategorie" : {
+      case 'bestandene_tests_pro_kategorie': {
         //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassedPerTag);
         this.gridInfo.sort(this.compareTestsPassedPerActivChip);
         break;
@@ -236,10 +246,12 @@ export class AppComponent implements OnInit {
     var item: GridInfo;
     for (var index in this.gridInfo) {
       item = this.gridInfo[index];
+ 
       this.dataArray.push(item);
     }
-
+    
     this.data.data = this.dataArray;
+
   }
 
   /*
@@ -266,36 +278,34 @@ export class AppComponent implements OnInit {
   */
 
   compareTestsPassed(a, b) {
-    if(a.testsPassed < b.testsPassed){
+    if (a.testsPassed < b.testsPassed) {
       return 1;
     }
-    if(a.testsPassed > b.testsPassed){
+    if (a.testsPassed > b.testsPassed) {
       return -1;
     }
     return 0;
   }
 
   compareNewTestsPassedSinceLastMonth(a, b) {
-    if(a.newTestsPassedSinceLastMonth < b.newTestsPassedSinceLastMonth){
+    if (a.newTestsPassedSinceLastMonth < b.newTestsPassedSinceLastMonth) {
       return 1;
     }
-    if(a.newTestsPassedSinceLastMonth > b.newTestsPassedSinceLastMonth){
+    if (a.newTestsPassedSinceLastMonth > b.newTestsPassedSinceLastMonth) {
       return -1;
     }
     return 0;
   }
 
   compareTestsPassedPerActivChip(a, b) {
-    if(a.testsPassedPerActivChip < b.testsPassedPerActivChip){
+    if (a.testsPassedPerActivChip < b.testsPassedPerActivChip) {
       return 1;
     }
-    if(a.testsPassedPerActivChip > b.testsPassedPerActivChip){
+    if (a.testsPassedPerActivChip > b.testsPassedPerActivChip) {
       return -1;
     }
     return 0;
   }
-
-
 
   /*
   compareTestsPassedPerTag(a, b, setTags) {
