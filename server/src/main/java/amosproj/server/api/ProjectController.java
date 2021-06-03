@@ -79,7 +79,14 @@ public class ProjectController {
         ), list);
     }
 
-    @GetMapping("/projects/csv")
+    /**
+     * API endpoint der eine CSV mit allen results returned
+     *
+     * @param response
+     * @throws Exception
+     */
+    // TODO add query parameters to select daterangg
+    @GetMapping("/export/csv")
     public void exportCSV(HttpServletResponse response) throws Exception {
         // FIXME flush on error!!
         //set file name and content type

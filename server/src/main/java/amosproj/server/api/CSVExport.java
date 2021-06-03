@@ -3,7 +3,6 @@ package amosproj.server.api;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import com.opencsv.CSVWriter;
-import org.aspectj.weaver.Lint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
