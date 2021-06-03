@@ -95,7 +95,7 @@ public class ProjectController {
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
         // csv
         try {
-            csvExport.exportResults(response.getWriter());
+            csvExport.exportProject(response.getWriter(), projectRepository.findFirstByUrl("https://gitlab.cs.fau.de/ib49uquh/amos-testz"));
         } catch (IOException e) {
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()); // FIXME
         }
