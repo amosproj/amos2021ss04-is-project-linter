@@ -15,7 +15,7 @@ dependencies {
     implementation 'org.gitlab4j:gitlab4j-api:4.16.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // database access
     implementation 'org.springframework.boot:spring-boot-starter-web' // rest api
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.12.3' // export csv
+    implementation 'com.opencsv:opencsv:5.4' // csv library
     testImplementation 'org.apache.httpcomponents:httpclient'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.h2database:h2'

@@ -8,9 +8,6 @@ import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +43,9 @@ public class ProjectController {
 
     @Autowired
     private Crawler crawler;
+
+    @Autowired
+    private CSVExport csvExport;
 
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects() {
@@ -80,20 +81,18 @@ public class ProjectController {
 
     @GetMapping("/projects/csv")
     public void exportCSV(HttpServletResponse response) throws Exception {
+        // FIXME flush on error!!
         //set file name and content type
         String filename = "results.csv";
         response.setContentType("text/csv");
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
-        // create csv schema
-        CsvSchema.Builder schema = CsvSchema.builder();
-        schema.addColumn("kek");
-        schema.build();
-        CsvMapper mapper = new CsvMapper();
-        ObjectWriter writer = mapper.writer();
-        // get projects
-        Iterable<Project> projects = projectRepository.findAll();
-        // write csv from csv project schema
-        writer.writeValues(response.getWriter()).writeAll(projects);
+        // csv
+        try {
+            csvExport.exportResults(response.getWriter());
+        } catch (IOException e) {
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()); // FIXME
+        }
+        response.getWriter().close();
     }
 
     @PostMapping("/projects")

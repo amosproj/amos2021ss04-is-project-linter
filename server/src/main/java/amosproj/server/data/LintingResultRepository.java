@@ -22,7 +22,14 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
      * @param start     Startzeitpunkt
      * @param end       Endzeitpunkt
      * @param projectId Foreign-Key für das zugehörige Project
-     * @return eine Liste an LintingResults die zwischen start und end liegen
+     * @return eine Liste an LintingResults die zwischen start und end liegen und zu dem Projekt mit der ID projectId gehören.
      */
     LinkedList<LintingResult> findByLintTimeBetweenAndProjectIdIs(LocalDateTime start, LocalDateTime end, Long projectId);
+
+    /**
+     * @param start Startzeitpunkt
+     * @param end   Endzeitpunkt
+     * @return eine Liste an LintingResults die zwischen start und end liegen
+     */
+    LinkedList<LintingResult> findByLintTimeBetween(LocalDateTime start, LocalDateTime end);
 }
