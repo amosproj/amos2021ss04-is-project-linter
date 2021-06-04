@@ -14,14 +14,13 @@ import java.util.List;
  * ProjectSchema kann benutzt werden, um die Projects aus der Datenbank zu dekorieren mit Daten aus der config-Datei.
  * Damit kann Redundanz in der Datenbank umgangen werden.
  */
-public class ProjectSchema<description> {
+public class ProjectSchema {
     // core attributes
     private Long Id;
     private String name;
     private String url;
     private Integer gitlabProjectId;
     private String gitlabInstance;
-
     private String description;
     private Integer forkCount;
     private Date lastCommit;
