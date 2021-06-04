@@ -185,6 +185,7 @@ export class RepositoryDetailsComponent implements OnInit {
     var tags = [];
     for (var i = 0; i < latestLintingResults.length; i++) {
       var tagAlreadyThere = false;
+      console.log('Tag!',latestLintingResults[i].tag);
       // Prüfe ob tags Werte hat
       if (tags) {
         // Prüfe ob Kategorien die momentane Kategorie enthält

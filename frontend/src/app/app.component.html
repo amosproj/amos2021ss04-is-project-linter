@@ -39,7 +39,7 @@
       <mat-card-title>Filter Repositories nach:</mat-card-title>
       <mat-card-content style="background-color:white; height: 100px;">
         <mat-chip-list selectable multiple [formControl]="chipsControl">
-          <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
+          <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()" [value]="option">
             <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
             {{option}}
           </mat-chip>
@@ -104,33 +104,6 @@
     <mat-card-content
       style="background-color: white; height: 10%; padding-top: 3%; padding-left: 2%; font-size: large; padding-bottom: 2%; border-bottom: 2px solid lightgray">
       Datenbank als CSV exportieren: <button mat-raised-button> exportieren </button>
-    </mat-card-content>
-    <mat-card-content
-      style="background-color: white; height: 300px; padding-top: 30px;padding-left: 20px; font-size: large;">
-      <mat-card-title>Filter Repositories nach:</mat-card-title>
-      <mat-card-content style="background-color:white; height: 100px;">
-        <mat-chip-list selectable multiple [formControl]="chipsControl">
-          <mat-chip #chip="matChip" (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()">
-            {{option}} 
-          </mat-chip>
-        </mat-chip-list>
-        <br />
-        <div>Value: {{chipsValue$ | async}}</div>
-      </mat-card-content>
-    
-
-      <mat-card-content style="background-color:white; height: 100px;">
-        <table mat-table [dataSource]="data" style="width: 100%;">
-          <ng-container [matColumnDef]="column" *ngFor="let column of displayColumns">
-            <th mat-header-cell *matHeaderCellDef> {{column}} </th>
-            <td mat-cell *matCellDef="let element"> {{element[column]}} </td>
-          </ng-container>
-
-          <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-          <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
-        </table>
-      </mat-card-content>
-
     </mat-card-content>
 
     <!----Footer of statistics-->
