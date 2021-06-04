@@ -1,5 +1,6 @@
 package amosproj.server.data;
 
+import org.apache.tomcat.jni.Local;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
@@ -32,4 +33,11 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
      * @return eine Liste an LintingResults die zwischen start und end liegen
      */
     LinkedList<LintingResult> findByLintTimeBetween(LocalDateTime start, LocalDateTime end);
+
+    /**
+     *
+     * @return Liste aus allen Zeitpunkten an denen ein Lint stattfand.
+     */
+    LinkedList<LocalDateTime> findDistinctLintTimes();
+
 }
