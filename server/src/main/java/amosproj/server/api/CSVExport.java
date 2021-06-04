@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,29 +23,23 @@ public class CSVExport {
         // create the writer
         CSVWriter w = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END);
         // build the header
-        List<String> header = new LinkedList<>();
-        header.add("ProjectId");
-        header.add("LintingResultId");
-        List<LocalDateTime> dates = lintingResultRepository.findAllByCustomQuery();
-        for (LocalDateTime date : dates) {
-            header.add(date.format(DateTimeFormatter.ISO_DATE_TIME));
-        }
+        // TODO
         // get results
         Iterable<LintingResult> results = lintingResultRepository.findAll();
+        // write header
+        //w.writeNext(header.toArray(new String[0]));
         // write values
-        w.writeNext(header.toArray(new String[0])); // write header
         for (LintingResult res : results) {
             List<String> value = new LinkedList<>();
-            value.add(res.getProjectId().toString());
-
+            value.add(res.getId().toString());
+            value.add(res.getLintTime().format(DateTimeFormatter.ISO_DATE)); // TODO datetime
             for (CheckResult check : res.getCheckResults()) {
-                value.add(check.getCheckName());
+                value.add(check.getResult() ? "1" : "0");
             }
-
             w.writeNext(value.toArray(new String[0]));
         }
         w.close();
     }
-    
+
 
 }
