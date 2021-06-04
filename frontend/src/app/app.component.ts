@@ -29,7 +29,8 @@ export class AppComponent implements OnInit {
   errorMsgForwardLink = '';
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
-
+  searchCriteria = new FormControl('');
+  availableSearchCriteria: string[] = ['Bestandene Tests', 'Neue bestandene Tests in den letzten 30 Tagen'];
   chipOptions: string[];
 
   gridInfo: GridInfo[] = new Array<GridInfo>();
@@ -165,7 +166,7 @@ export class AppComponent implements OnInit {
     return this.chipOptions;
   }
 
-  createStatistik(event: Event) {
+  filterProjects(event: Event) {
     this.getProjectInfoForStatistik();
   }
 
@@ -176,7 +177,7 @@ export class AppComponent implements OnInit {
     for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
 
-    await  this.http
+    await this.http
         .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`).toPromise()
         .then((val: any) => {
 
@@ -253,7 +254,83 @@ export class AppComponent implements OnInit {
     this.data.data = this.dataArray;
 
   }
+  async sortProjects(){
+    console.log("Sort projects");
+    this.removeAllProjectsFromOverview();
+    for (var i = 0; i < this.all_projects.length; i++) {
+      //lade ergebnisse der checks aus dem backend
 
+    await this.http
+        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`).toPromise()
+        .then((val: any) => {
+
+          var checkResults: CheckResults[] =
+            val.lintingResults[val.lintingResults.length - 1].checkResults;
+          var checkResultsLastMonth: CheckResults[] =
+            val.lintingResults[0].checkResults;
+          //Zähler für erfolgreiche Checks
+          var checksPassed = 0;
+          //Zähler für erfolgreiche Checks pro Tag
+          var checksPassedPerActivChip = 0;
+          //Zähler für erfolgreiche Checks letzten Monat
+          var checksPassedLastMonth = 0;
+          for (var j = 0; j < checkResults.length-1; j++) {
+            // wenn der Check erfolgreich war erhöhe die Zähler
+          
+            if (checkResults[j].result) {
+              checksPassed = checksPassed + 1;
+              for (var k = 0; k < this.chipsControl.value.length; k++) {
+                //console.log('chipControl', this.chipsControl.value[k]);
+                //console.log('tag in backend', checkResults[j].tag);
+                if (
+                  this.chipsControl.value[k].toLowerCase().trim() ==
+                  checkResults[j].tag.toLowerCase().trim()
+                ) {
+                  checksPassedPerActivChip = checksPassedPerActivChip + 1;
+                }
+              }
+            }
+            if (checkResultsLastMonth[j].result) {
+              checksPassedLastMonth = checksPassedLastMonth + 1;
+            }
+          }
+          //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
+          this.all_projects[i].passedTestsLastMonth = checksPassed - checksPassedLastMonth;
+          this.all_projects[i].passedTestsInFilter = checksPassedPerActivChip;
+
+        });
+    }
+ 
+    //wähle die sortier funktion nach eingabe
+    console.log(this.searchCriteria.value);
+    switch (this.searchCriteria.value) {
+      case 'Bestandene Tests': {
+        //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareTestsPassed);
+        console.log("Filter: Bestandene tests")
+        this.all_projects.sort(this.compareTestsPassedPerActivFilter);
+
+        break;
+      }
+      case 'Neue bestandene Tests in den letzten 30 Tagen': {
+        //this.gridInfo = this.bubbleSort(this.gridInfo, this.compareNewTestsPassedSinceLastMonth);
+        console.log("Filter: Neue bestandene Tests in den letzten 30 Tagen")
+        this.all_projects.sort(this.compareNewTestsPassedSinceLastMonthFilter);
+        break;
+      }
+    
+    }
+    
+    for (let project in this.all_projects) {
+      console.log(this.all_projects[project].passedTestsLastMonth);
+      this.addComponent(
+        this.all_projects[project].name,
+        this.all_projects[project].id,
+        this.all_projects[project].url
+      );
+    }
+    
+
+  }
   /*
   bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
     let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
@@ -296,7 +373,24 @@ export class AppComponent implements OnInit {
     }
     return 0;
   }
-
+  compareNewTestsPassedSinceLastMonthFilter(a, b) {
+    if (a.passedTastsLastMonth < b.passedTastsLastMonth) {
+      return 1;
+    }
+    if (a.passedTastsLastMonth > b.passedTastsLastMonth) {
+      return -1;
+    }
+    return 0;
+  }
+  compareTestsPassedPerActivFilter(a,b){
+    if (a.passedTestsInFilter < b.passedTestsInFilter) {
+      return 1;
+    }
+    if (a.passedTestsInFilter > b.passedTestsInFilter) {
+      return -1;
+    }
+    return 0;
+  }
   compareTestsPassedPerActivChip(a, b) {
     if (a.testsPassedPerActivChip < b.testsPassedPerActivChip) {
       return 1;
@@ -334,11 +428,13 @@ export class AppComponent implements OnInit {
 interface Project {
   gitlabInstance: string;
   gitlabProjectId: number;
-
   id: number;
   name: string;
   results: [];
   url: string;
+  passedTestsInFilter:number;
+  passedTestsLastMonth:number;
+  passedTestsPerTag: number[];
 }
 
 interface GridInfo {

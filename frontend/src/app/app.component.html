@@ -47,14 +47,25 @@
         <br />
         <div>Value: {{chipsValue$ | async}}</div>
       </mat-card-content>
+
+      <mat-card-content style="background-color:white; height: 100px;">
+        <mat-radio-group
+        aria-labelledby="example-radio-group-label"
+        class="example-radio-group"
+        [formControl]="searchCriteria">
+        <mat-radio-button class="example-radio-button" *ngFor="let item of availableSearchCriteria" [value]="item">
+          {{item}}
+        </mat-radio-button>
+      </mat-radio-group>
+      </mat-card-content>
+      <!-- kategorie.value == bestandene_tests_pro_kategorie-->
+      <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
+        (click)="sortProjects()">Filter</button>
+
     </mat-card> 
+    
     <mat-card class="body">
-      <mat-card-actions>
-        <button type="button" (click)="GetProjects(); removeAllProjectsFromOverview()" class="btn btn-default"
-          style="border: none; background: none">
-          <mat-icon matTooltip="Refresh Projekte" color="primary">refresh</mat-icon>
-        </button>
-      </mat-card-actions>
+     
 
       <div class="container">
         <br />
@@ -106,18 +117,7 @@
         <br />
         <div>Value: {{chipsValue$ | async}}</div>
       </mat-card-content>
-      <mat-card-content style="background-color:white; height: 100px;">
-        <mat-button-toggle-group [formControl]="kategorie">
-          <mat-button-toggle value="bestandene_tests" style="background-color: lightgray;">Anzahl an bestandenen Checks</mat-button-toggle>
-          <mat-button-toggle value="bestandene_tests_letzter_monat" style="background-color: lightgray;">Anzahl an neu bestandenen Checks seit letztem Monat
-          </mat-button-toggle>
-          <mat-button-toggle value="bestandene_tests_pro_kategorie" style="background-color: lightgray;">Anzahl der bestanden Checks pro Kategorie
-          </mat-button-toggle>
-        </mat-button-toggle-group>
-      </mat-card-content>
-      <!-- kategorie.value == bestandene_tests_pro_kategorie-->
-      <button mat-raised-button [disabled]="kategorie.value.length == 0 || chipsControl.value.length == 0 && kategorie.value.length == 0"
-        (click)="createStatistik($event)">Filter</button>
+    
 
       <mat-card-content style="background-color:white; height: 100px;">
         <table mat-table [dataSource]="data" style="width: 100%;">
