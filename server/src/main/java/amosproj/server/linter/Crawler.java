@@ -8,6 +8,8 @@ import org.gitlab4j.api.GitLabApiException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
@@ -51,15 +53,18 @@ public class Crawler {
             var projects = gitLab.getApi().getProjectApi().getProjects(0, Linter.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE));
             size = (long) projects.size();
             progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
-            long start = System.currentTimeMillis();
+            LocalDateTime start = LocalDateTime.now();
 
             for (org.gitlab4j.api.models.Project proj : projects) {
-                linter.checkEverything(proj);
+                linter.checkEverything(proj, start);
                 idx++;
             }
 
-            long end = System.currentTimeMillis();
-            timeTaken = (end-start);
+            LocalDateTime end = LocalDateTime.now();
+            long minutes = ChronoUnit.MINUTES.between(start, end);
+            long hours = ChronoUnit.HOURS.between(start, end);
+            long seconds = ChronoUnit.SECONDS.between(start, end);
+            timeTaken = 3600 * hours + 60 * minutes + seconds;
         } catch (GitLabApiException e) {
             lastError = e.getMessage();
             errorTime = LocalDateTime.now();

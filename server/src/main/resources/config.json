@@ -199,7 +199,7 @@
     "notDefaultReadme": {
       "category": "file_checks",
       "enabled": true,
-      "severity": "medium",
+      "severity": "MEDIUM",
       "description": "Überprüft, ob die README Datei die Default-Readme ist.",
       "message": "Die Readme ist die Default-Readme!",
       "fix": "Legen Sie eine README Datei in der Projektwurzel an, die nicht automatisch generiert wurde.",

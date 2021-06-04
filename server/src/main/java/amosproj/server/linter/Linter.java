@@ -49,7 +49,7 @@ public class Linter {
 
         org.gitlab4j.api.models.Project proj = api.getApi().getProjectApi().getProject(path);
         assert proj != null;
-        checkEverything(proj);
+        checkEverything(proj, LocalDateTime.now());
     }
 
     /**
@@ -57,7 +57,7 @@ public class Linter {
      *
      * @param apiProject
      */
-    public void checkEverything(org.gitlab4j.api.models.Project apiProject) {
+    public void checkEverything(org.gitlab4j.api.models.Project apiProject, LocalDateTime timestamp) {
         // Hole LintingProject
         Project currLintingProject = projectRepository.findFirstByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
@@ -72,7 +72,7 @@ public class Linter {
         }
 
         // Erstelle neues Linting Result
-        LintingResult lintingResult = new LintingResult(currLintingProject, LocalDateTime.now());
+        LintingResult lintingResult = new LintingResult(currLintingProject, timestamp);
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
