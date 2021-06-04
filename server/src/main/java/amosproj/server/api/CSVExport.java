@@ -1,5 +1,7 @@
 package amosproj.server.api;
 
+import amosproj.server.data.CheckResult;
+import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +27,26 @@ public class CSVExport {
         List<String> header = new LinkedList<>();
         header.add("ProjectId");
         header.add("LintingResultId");
-        List<LocalDateTime> dates = lintingResultRepository.findDistinctLintTimes();
+        List<LocalDateTime> dates = lintingResultRepository.findAllByCustomQuery();
         for (LocalDateTime date : dates) {
             header.add(date.format(DateTimeFormatter.ISO_DATE_TIME));
         }
+        // get results
+        Iterable<LintingResult> results = lintingResultRepository.findAll();
         // write values
-        w.writeNext(header.toArray(new String[0]));
+        w.writeNext(header.toArray(new String[0])); // write header
+        for (LintingResult res : results) {
+            List<String> value = new LinkedList<>();
+            value.add(res.getProjectId().toString());
+
+            for (CheckResult check : res.getCheckResults()) {
+                value.add(check.getCheckName());
+            }
+
+            w.writeNext(value.toArray(new String[0]));
+        }
         w.close();
     }
+    
 
 }

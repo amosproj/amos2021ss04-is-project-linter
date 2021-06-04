@@ -1,6 +1,7 @@
 package amosproj.server.data;
 
 import org.apache.tomcat.jni.Local;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
@@ -35,9 +36,10 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
     LinkedList<LintingResult> findByLintTimeBetween(LocalDateTime start, LocalDateTime end);
 
     /**
-     *
+     * FIXME dont use query, works for now.
      * @return Liste aus allen Zeitpunkten an denen ein Lint stattfand.
      */
-    LinkedList<LocalDateTime> findDistinctLintTimes();
+    @Query("SELECT DISTINCT lintTime FROM LintingResult ORDER BY lintTime ASC")
+    LinkedList<LocalDateTime> findAllByCustomQuery();
 
 }
