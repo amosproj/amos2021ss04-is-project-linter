@@ -61,10 +61,7 @@ public class Crawler {
             }
 
             LocalDateTime end = LocalDateTime.now();
-            long minutes = ChronoUnit.MINUTES.between(start, end);
-            long hours = ChronoUnit.HOURS.between(start, end);
-            long seconds = ChronoUnit.SECONDS.between(start, end);
-            timeTaken = 3600 * hours + 60 * minutes + seconds;
+            timeTaken = ChronoUnit.SECONDS.between(start, end);
         } catch (GitLabApiException e) {
             lastError = e.getMessage();
             errorTime = LocalDateTime.now();
