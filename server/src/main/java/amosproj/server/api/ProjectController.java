@@ -114,12 +114,11 @@ public class ProjectController {
     }
 
     @PostMapping("/crawler")
-    public @ResponseBody
-    ResponseEntity crawl() {
+    public ResponseEntity<String> crawl() {
         if (crawler.startCrawler()) {
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity("ok", HttpStatus.OK);
         } else {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
+            return new ResponseEntity("Crawler is already running, slow down!", HttpStatus.TOO_MANY_REQUESTS);
         }
     }
 
