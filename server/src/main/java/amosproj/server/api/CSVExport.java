@@ -3,6 +3,7 @@ package amosproj.server.api;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
+import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Linter;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,16 @@ public class CSVExport {
     @Autowired
     private LintingResultRepository lintingResultRepository;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    /**
+     * Exports all Linting Results as CSV with the following columns: repoUrl, lintTime, ...checkNames...
+     * Each LintingResults will become one value/line.
+     *
+     * @param writer where the CSV is output to
+     * @throws IOException
+     */
     public void exportResults(Writer writer) throws IOException {
         // create the writer
         CSVWriter w = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END);
@@ -32,8 +43,7 @@ public class CSVExport {
         }
         // write header
         List<String> header = new LinkedList<>();
-        header.add("projectId");
-        header.add("lintResultId");
+        header.add("repoUrl");
         header.add("lintTime");
         header.addAll(checks);
         w.writeNext(header.toArray(new String[0]));
@@ -43,8 +53,7 @@ public class CSVExport {
         for (LintingResult res : results) {
             List<String> value = new LinkedList<>();
             // add metainformation
-            value.add(res.getProjectId().toString());
-            value.add(res.getId().toString());
+            value.add(projectRepository.findById(res.getProjectId()).get().getUrl());
             value.add(res.getLintTime().format(DateTimeFormatter.ISO_DATE_TIME));
             // add check Results
             for (String check : checks) {
