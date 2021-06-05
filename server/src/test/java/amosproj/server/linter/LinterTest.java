@@ -14,17 +14,19 @@ public class LinterTest {
     @Autowired
     private Linter linter;
 
+    @Autowired
+    private Crawler crawler;
+
     @Test
     public void testRunLint() throws GitLabApiException {
         for (String repo : TestUtil.getTestRepos()) {
-            System.out.println(repo);
             linter.runLint(repo);
         }
     }
 
     @Test
-    public void testRunCrawler() throws Exception {
-        // FIXME better not do this yet, takes 20 minutes
+    public void testRunCrawler() {
+        assert crawler.startCrawler();
     }
 
 }

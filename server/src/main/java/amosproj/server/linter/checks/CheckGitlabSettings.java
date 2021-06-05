@@ -13,8 +13,6 @@ import org.gitlab4j.api.models.Branch;
 import org.gitlab4j.api.models.MergeRequest;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.Visibility;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -24,6 +22,7 @@ import java.util.List;
 public class CheckGitlabSettings extends Check {
 
     private GitLabApi api;
+
     public CheckGitlabSettings(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
         super(gitLab, project, lintingResult, checkResultRepository);
         this.api = gitLab.getApi();
@@ -95,7 +94,7 @@ public class CheckGitlabSettings extends Check {
                 }
             }
         } catch (GitLabApiException e) {
-            System.out.println("reason: " + e.getReason()); // TODO remove
+            e.printStackTrace();
         }
         return false;
     }
@@ -106,9 +105,8 @@ public class CheckGitlabSettings extends Check {
             if (!badgelist.isEmpty()) {
                 return true;
             }
-
         } catch (GitLabApiException e) {
-            System.out.println(e.getReason());
+            e.printStackTrace();
         }
         return false;
     }
@@ -128,7 +126,7 @@ public class CheckGitlabSettings extends Check {
             result = demoMergeRequest.getSquash();
         } catch (GitLabApiException e) {
             //ein fehler ist passiert oder squashing ist nicht erlaubt
-            System.out.println(e.getReason());
+            e.printStackTrace();
         } finally {
             try {
                 //lösche die demos falls sie erzeugt werden konnten

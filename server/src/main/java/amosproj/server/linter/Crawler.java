@@ -46,7 +46,7 @@ public class Crawler {
     /**
      * scheduled method that lints every repo in the instance at a specified cron time
      */
-    public synchronized void runCrawler() {
+    private synchronized void runCrawler() {
         crawlerActive = new AtomicBoolean(true);
         progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
         try {

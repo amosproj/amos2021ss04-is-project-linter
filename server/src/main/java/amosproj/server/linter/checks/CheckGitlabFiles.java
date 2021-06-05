@@ -187,7 +187,7 @@ public class CheckGitlabFiles extends Check {
                 //lade die Datei nach java.io.tmp
                 return api.getRepositoryFileApi().getRawFile(project.getId(), project.getDefaultBranch(), filepath, null);
             } catch (GitLabApiException e) {
-                System.out.println("reason: " + e.getReason()); // TODO remove
+                e.printStackTrace();
             }
         }
         return null;
