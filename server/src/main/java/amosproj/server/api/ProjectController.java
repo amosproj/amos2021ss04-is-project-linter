@@ -85,10 +85,8 @@ public class ProjectController {
      * @param response
      * @throws Exception
      */
-    // TODO add query parameters to select daterangg
     @GetMapping("/export/csv")
     public void exportCSV(HttpServletResponse response) throws Exception {
-        // FIXME flush on error!!
         //set file name and content type
         String filename = "results.csv";
         response.setContentType("text/csv");
@@ -97,7 +95,9 @@ public class ProjectController {
         try {
             csvExport.exportResults(response.getWriter());
         } catch (IOException e) {
-            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()); // FIXME
+            response.getWriter().flush();
+            response.getWriter().write(e.getMessage());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         response.getWriter().close();
     }
