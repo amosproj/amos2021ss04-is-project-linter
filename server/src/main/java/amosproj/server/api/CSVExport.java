@@ -38,7 +38,7 @@ public class CSVExport {
         header.addAll(checks);
         w.writeNext(header.toArray(new String[0]));
         // get results
-        Iterable<LintingResult> results = lintingResultRepository.findAll();
+        Iterable<LintingResult> results = lintingResultRepository.findAllByOrderByLintTimeAsc();
         // write values
         for (LintingResult res : results) {
             List<String> value = new LinkedList<>();

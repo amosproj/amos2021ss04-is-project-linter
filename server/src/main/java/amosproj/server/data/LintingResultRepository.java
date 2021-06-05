@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Das LintingResultRepository ist das Interface zur Datenbank für die LintingResults.
@@ -28,18 +29,6 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
      */
     LinkedList<LintingResult> findByLintTimeBetweenAndProjectIdIs(LocalDateTime start, LocalDateTime end, Long projectId);
 
-    /**
-     * @param start Startzeitpunkt
-     * @param end   Endzeitpunkt
-     * @return eine Liste an LintingResults die zwischen start und end liegen
-     */
-    LinkedList<LintingResult> findByLintTimeBetween(LocalDateTime start, LocalDateTime end);
 
-    /**
-     * FIXME dont use query, works for now.
-     * @return Liste aus allen Zeitpunkten an denen ein Lint stattfand.
-     */
-    @Query("SELECT DISTINCT lintTime FROM LintingResult ORDER BY lintTime ASC")
-    LinkedList<LocalDateTime> findAllByCustomQuery();
-
+    List<LintingResult> findAllByOrderByLintTimeAsc();
 }
