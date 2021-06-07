@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -9,6 +9,10 @@ import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
+import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import { InterceptorService } from './loader/interceptor.service';
+import { CommonModule } from '@angular/common';
 
 //import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -17,15 +21,18 @@ import { MatIconModule } from '@angular/material/icon';
   entryComponents: [RepositoryDetailsComponent],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
     MatDialogModule,
     MatIconModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule
     //FlexLayoutModule 
   ],
-  providers: [],
+  providers: [{provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

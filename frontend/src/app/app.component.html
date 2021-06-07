@@ -1,5 +1,9 @@
 <!-- Header-->
+<div *ngIf="loaderService.isLoading | async" class="loader-container">
+  <mat-spinner style="top:50%;left: 50px;"></mat-spinner>  
+</div>
 <mat-toolbar color="primary">
+ 
   <mat-toolbar-row style="height: 38px">
     <span style="
         text-align: center;
@@ -22,6 +26,7 @@
 
 <!-- Suchleiste-->
 <mat-card-content class="searchBar-mat">
+  
   <mat-form-field appearance="fill" [hideRequiredMarker]="hideRequiredControl.value"
     [floatLabel]="floatLabelControl.value" style="width: 420px !important">
     <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
@@ -30,6 +35,8 @@
     <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint>
   </mat-form-field>
   &nbsp;
+
+
 </mat-card-content>
 
 <!-- Tabs-->
@@ -66,8 +73,9 @@
     
     <mat-card class="body">
      
-
+     
       <div class="container">
+     
         <br />
         <div #parent></div>
       </div>
@@ -99,6 +107,7 @@
           ">ria.inner.source@datev.com</span>
       </mat-toolbar-row>
     </mat-toolbar>
+    
   </mat-tab>
   <mat-tab label="Statistiken">
     <mat-card-content
@@ -134,3 +143,4 @@
     </mat-toolbar>
   </mat-tab>
 </mat-tab-group>
+
