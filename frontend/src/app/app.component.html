@@ -60,7 +60,10 @@
       </mat-card-content>
       <!-- kategorie.value == bestandene_tests_pro_kategorie-->
       <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
-        (click)="sortProjects()">Filter</button>
+        (click)="sortProjects()" >Filter</button>
+      <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
+        info
+      </mat-icon>
 
     </mat-card> 
     
