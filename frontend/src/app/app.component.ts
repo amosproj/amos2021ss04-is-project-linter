@@ -10,7 +10,6 @@ import { MatChip, MatChipList } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
 import * as configFile from '../../../server/src/main/resources/config.json';
 import { MatTableDataSource } from '@angular/material/table';
-
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
@@ -35,13 +34,15 @@ export class AppComponent implements OnInit {
   hideRequiredControl = new FormControl(false);
   floatLabelControl = new FormControl('auto');
   searchCriteria = new FormControl('');
-  availableSearchCriteria: string[] = ['Bestandene Tests', 'Neue bestandene Tests in den letzten 30 Tagen'];
+  availableSearchCriteria: string[] = [
+    'Bestandene Tests',
+    'Neue bestandene Tests in den letzten 30 Tagen',
+  ];
   chipOptions: string[];
-  filterInfo = "Momentan sortierts nach Tag: - und Kategorie: -";
-  toggleToTrue=true;
-  
+  filterInfo = 'Momentan sortierts nach Tag: - und Kategorie: -';
+  toggleToTrue = true;
+
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
- 
 
   constructor(
     public dialog: MatDialog,
@@ -103,33 +104,34 @@ export class AppComponent implements OnInit {
       width: '100%',
       height: '100%',
       panelClass: 'custom-dialog-container',
-   
     });
-   
-    await this.http.get(`${environment.baseURL}/projects`).toPromise().then((results:any) => {
-      this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
-      console.log(this.all_projects);
 
-      for (let project in this.all_projects) {
-        this.addComponent(
-          this.all_projects[project].name,
-          this.all_projects[project].id,
-          this.all_projects[project].url
-        );
-      }
+    await this.http
+      .get(`${environment.baseURL}/projects`)
+      .toPromise()
+      .then((results: any) => {
+        this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
+        console.log(this.all_projects);
 
-      this.prepareProjectDataForSorting();
-      this.init_all_projects = this.all_projects.slice();
-      dialogRef.close();
-    }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
+        for (let project in this.all_projects) {
+          this.addComponent(
+            this.all_projects[project].name,
+            this.all_projects[project].id,
+            this.all_projects[project].url
+          );
+        }
+
+        this.prepareProjectDataForSorting();
+        this.init_all_projects = this.all_projects.slice();
+        dialogRef.close();
+      }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
 
   ngOnInit() {
     this.GetProjects();
   }
 
-  ngAfterViewInit(){
-  }
+  ngAfterViewInit() {}
 
   addComponent(name, id, gitlabInstance) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
@@ -173,80 +175,93 @@ export class AppComponent implements OnInit {
   async prepareProjectDataForSorting() {
     for (var i = 0; i < this.all_projects.length; i++) {
       //lade ergebnisse der checks aus dem backend
-      
-      await this.http
-        .get(`${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`).toPromise().then((val: any) => {
 
+      await this.http
+        .get(
+          `${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`
+        )
+        .toPromise()
+        .then((val: any) => {
           var checkResults: CheckResults[] =
             val.lintingResults[val.lintingResults.length - 1].checkResults;
           var checkResultsLastMonth: CheckResults[] =
             val.lintingResults[0].checkResults;
           //Zähler für erfolgreiche Checks pro Tag
-          var checksPassed : number[] = new Array(this.chipOptions.length).fill(0);
+          var checksPassed: number[] = new Array(this.chipOptions.length).fill(
+            0
+          );
           //Zähler für erfolgreiche Checks letzten Monat pro Tag
-          var checksPassedLastMonth : number[] = new Array(this.chipOptions.length).fill(0);
+          var checksPassedLastMonth: number[] = new Array(
+            this.chipOptions.length
+          ).fill(0);
           for (var j = 0; j < checkResults.length - 1; j++) {
             // wenn der Check erfolgreich war erhöhe die Zähler
             if (checkResults[j].result) {
-              checksPassed[this.chipOptions.indexOf(checkResults[j].tag)] += 1; 
+              checksPassed[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
             }
             if (checkResultsLastMonth[j].result) {
-              checksPassedLastMonth[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
+              checksPassedLastMonth[
+                this.chipOptions.indexOf(checkResults[j].tag)
+              ] += 1;
             }
           }
-          var newChecksPassedLastMonth : number[] = new Array(this.chipOptions.length);
-          for (var j = 0; j < this.chipOptions.length; j++){
-            newChecksPassedLastMonth[j] = checksPassed[j] - checksPassedLastMonth[j];
+          var newChecksPassedLastMonth: number[] = new Array(
+            this.chipOptions.length
+          );
+          for (var j = 0; j < this.chipOptions.length; j++) {
+            newChecksPassedLastMonth[j] =
+              checksPassed[j] - checksPassedLastMonth[j];
           }
           //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
           this.all_projects[i].passedTestsPerTag = checksPassed;
-          this.all_projects[i].newPassedTestsPerTagLastMonth = newChecksPassedLastMonth;
+          this.all_projects[i].newPassedTestsPerTagLastMonth =
+            newChecksPassedLastMonth;
           this.all_projects[i].passedTestsInFilter = 0;
           this.all_projects[i].newPassedTestsLastMonth = 0;
-
         });
     }
- 
   }
 
-  sortProjects(){
+  sortProjects() {
     //stelle die initale unsortierte Reihenfolge der Projekte wieder her
     this.all_projects = this.init_all_projects.slice();
 
     //aktualisiere die Filter Info
-    this.filterInfo = "Momentan sortiert nach Tag: ";
-    for(var i = 0; i < this.chipsControl.value.length; i++){
+    this.filterInfo = 'Momentan sortiert nach Tag: ';
+    for (var i = 0; i < this.chipsControl.value.length; i++) {
       this.filterInfo += this.chipsControl.value[i];
-      if(i != this.chipsControl.value.length - 1){
-        this.filterInfo += ", ";
+      if (i != this.chipsControl.value.length - 1) {
+        this.filterInfo += ', ';
       }
-    } 
-    this.filterInfo += " und Kategorie: " + this.searchCriteria.value; 
-    
+    }
+    this.filterInfo += ' und Kategorie: ' + this.searchCriteria.value;
+
     this.removeAllProjectsFromOverview();
 
-    //setze die notwendigen variablen fürs sortieren der projekte nach den gewählten tags 
-    for(let project in this.all_projects){
+    //setze die notwendigen variablen fürs sortieren der projekte nach den gewählten tags
+    for (let project in this.all_projects) {
       this.all_projects[project].passedTestsInFilter = 0;
       this.all_projects[project].newPassedTestsLastMonth = 0;
-      for (var i = 0; i < this.chipOptions.length; i++){
-        for(var j = 0; j < this.chipsControl.value.length; j++){
+      for (var i = 0; i < this.chipOptions.length; i++) {
+        for (var j = 0; j < this.chipsControl.value.length; j++) {
           /*
           if(this.chipsControl.value[j].includes("check")){
             this.chipsControl.value[j] = this.chipsControl.value[j].replace("check","");
           }
           this.chipsControl.value[j] = this.chipsControl.value[j].trim();
           */
-          if(this.chipsControl.value[j] == this.chipOptions[i]){
-            this.all_projects[project].passedTestsInFilter += this.all_projects[project].passedTestsPerTag[i];
-            this.all_projects[project].newPassedTestsLastMonth += this.all_projects[project].newPassedTestsPerTagLastMonth[i];
+          if (this.chipsControl.value[j] == this.chipOptions[i]) {
+            this.all_projects[project].passedTestsInFilter +=
+              this.all_projects[project].passedTestsPerTag[i];
+            this.all_projects[project].newPassedTestsLastMonth +=
+              this.all_projects[project].newPassedTestsPerTagLastMonth[i];
           }
         }
       }
     }
-    
+
     //wähle die sortier funktion nach eingabe
-    console.log('Projekte for sortieren!', this.all_projects);
+    console.log('Projekte vor sortieren!', this.all_projects);
     switch (this.searchCriteria.value) {
       case 'Bestandene Tests': {
         this.all_projects.sort(this.compareTestsPassedPerActivFilter);
@@ -256,10 +271,9 @@ export class AppComponent implements OnInit {
         this.all_projects.sort(this.compareNewTestsPassedSinceLastMonthFilter);
         break;
       }
-    
     }
     console.log('Projekte nach sortieren', this.all_projects);
-    
+
     for (let project in this.all_projects) {
       this.addComponent(
         this.all_projects[project].name,
@@ -267,8 +281,6 @@ export class AppComponent implements OnInit {
         this.all_projects[project].url
       );
     }
-    
-
   }
   /*
   bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
@@ -302,7 +314,7 @@ export class AppComponent implements OnInit {
     }
     return 0;
   }
-  compareTestsPassedPerActivFilter(a,b){
+  compareTestsPassedPerActivFilter(a, b) {
     if (a.passedTestsInFilter < b.passedTestsInFilter) {
       return 1;
     }
@@ -331,8 +343,6 @@ export class AppComponent implements OnInit {
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
-
-  
 } // Ende von AppComponent
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt
