@@ -35,7 +35,7 @@ export class AppComponent implements OnInit {
   searchCriteria = new FormControl('');
   availableSearchCriteria: string[] = ['Bestandene Tests', 'Neue bestandene Tests in den letzten 30 Tagen'];
   chipOptions: string[];
-
+  filterInfo = "Momentan sortierts nach Tag: - und Kategorie: -";
   toggleToTrue=true;
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
@@ -202,8 +202,19 @@ export class AppComponent implements OnInit {
   }
 
   sortProjects(){
+    //stelle die initale unsortierte Reihenfolge der Projekte wieder her
     this.all_projects = this.init_all_projects.slice();
 
+    //aktualisiere die Filter Info
+    this.filterInfo = "Momentan sortiert nach Tag: ";
+    for(var i = 0; i < this.chipsControl.value.length; i++){
+      this.filterInfo += this.chipsControl.value[i];
+      if(i != this.chipsControl.value.length - 1){
+        this.filterInfo += ", ";
+      }
+    } 
+    this.filterInfo += " und Kategorie: " + this.searchCriteria.value; 
+    
     this.removeAllProjectsFromOverview();
 
     //setze die notwendigen variablen fürs sortieren der projekte nach den gewählten tags 
