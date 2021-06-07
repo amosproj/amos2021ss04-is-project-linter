@@ -10,8 +10,10 @@ import { MatChip, MatChipList } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
 import * as configFile from '../../../server/src/main/resources/config.json';
 import { MatTableDataSource } from '@angular/material/table';
-import { LoaderService } from './loader/loader.service';
+
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
 
 @Component({
   selector: 'app-root',
@@ -37,12 +39,12 @@ export class AppComponent implements OnInit {
   chipOptions: string[];
   filterInfo = "Momentan sortierts nach Tag: - und Kategorie: -";
   toggleToTrue=true;
-
+  
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
  
 
   constructor(
-    public loaderService:LoaderService,
+    public dialog: MatDialog,
     fb: FormBuilder,
     private _cfr: ComponentFactoryResolver,
     private http: HttpClient
@@ -95,10 +97,16 @@ export class AppComponent implements OnInit {
     this.container.clear();
   }
 
-  GetProjects() {
+  async GetProjects() {
     // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
+    let dialogRef = this.dialog.open(SpinnerComponentComponent, {
+      width: '100%',
+      height: '100%',
+      panelClass: 'custom-dialog-container',
    
-    this.http.get(`${environment.baseURL}/projects`).subscribe((results:any) => {
+    });
+   
+    await this.http.get(`${environment.baseURL}/projects`).toPromise().then((results:any) => {
       this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
       console.log(this.all_projects);
 
@@ -112,7 +120,7 @@ export class AppComponent implements OnInit {
 
       this.prepareProjectDataForSorting();
       this.init_all_projects = this.all_projects.slice();
-    
+      dialogRef.close();
     }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
 

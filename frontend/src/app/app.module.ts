@@ -11,13 +11,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
 import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import { InterceptorService } from './loader/interceptor.service';
+
 import { CommonModule } from '@angular/common';
+import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
 
 //import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  declarations: [AppComponent, RepositoryComponent, RepositoryDetailsComponent],
+  declarations: [AppComponent, RepositoryComponent, RepositoryDetailsComponent, SpinnerComponentComponent],
   entryComponents: [RepositoryDetailsComponent],
   imports: [
     BrowserModule,
@@ -32,7 +33,7 @@ import { CommonModule } from '@angular/common';
     MatProgressSpinnerModule
     //FlexLayoutModule 
   ],
-  providers: [{provide:HTTP_INTERCEPTORS,useClass:InterceptorService,multi:true}],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
