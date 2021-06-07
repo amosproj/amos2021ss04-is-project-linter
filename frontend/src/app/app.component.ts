@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
   chipOptions: string[];
   filterInfo = 'Momentan sortierts nach Tag: - und Kategorie: -';
   toggleToTrue = true;
+  csvExportLink = environment.baseUrl + "/export/csv";
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
