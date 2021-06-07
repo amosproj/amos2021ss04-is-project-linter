@@ -37,6 +37,7 @@ services:
         # build: "./frontend"
         volumes: # more like: load nginx configuration
             - ./nginx.conf:/etc/nginx/templates/default.conf.template
+            - ./server/src/main/resources/config.json:/config.json # FIXME just config.json nach dem rausziehen
         environment:
             - PORT=${PORT}
             - HOST=${HOST}
