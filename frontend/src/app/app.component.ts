@@ -8,7 +8,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { MatChip, MatChipList } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
-import * as configFile from '../../../server/src/main/resources/config.json';
+import * as configFile from '../../../config.json';
 import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
   chipOptions: string[];
   filterInfo = 'Momentan sortierts nach Tag: - und Kategorie: -';
   toggleToTrue = true;
-  csvExportLink = environment.baseURL + "/export/csv";
+  csvExportLink = environment.baseURL + '/export/csv';
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 

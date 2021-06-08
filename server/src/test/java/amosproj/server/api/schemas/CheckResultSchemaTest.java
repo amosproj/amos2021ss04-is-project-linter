@@ -1,8 +1,8 @@
 package amosproj.server.api.schemas;
 
+import amosproj.server.Config;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
-import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
@@ -18,7 +18,7 @@ public class CheckResultSchemaTest {
 
     @Test
     public void testCheckResultSchema() {
-        JsonNode node = Linter.getConfigNode().get("checks").get("checkReadmeExistence");
+        JsonNode node = Config.getConfigNode().get("checks").get("checkReadmeExistence");
         CheckResult checkResult = new CheckResult(null, "checkReadmeExistence", true);
         CheckResultSchema checkResultSchema = new CheckResultSchema(checkResult, node);
         // some assertions

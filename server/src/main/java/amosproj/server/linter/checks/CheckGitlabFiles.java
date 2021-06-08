@@ -1,9 +1,9 @@
 package amosproj.server.linter.checks;
 
+import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
-import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApi;
 import org.gitlab4j.api.GitLabApiException;
@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 public class CheckGitlabFiles extends Check {
 
     private GitLabApi api;
+
     public CheckGitlabFiles(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
         super(gitLab, project, lintingResult, checkResultRepository);
         this.api = gitLab.getApi();
@@ -108,7 +109,7 @@ public class CheckGitlabFiles extends Check {
      */
     public boolean checkReadmeHasLinks() {
         // generiere regex
-        JsonNode links = Linter.getConfigNode().get("settings").get("readMeLinks");
+        JsonNode links = Config.getConfigNode().get("settings").get("readMeLinks");
         for (JsonNode it : links) {
             String link = it.asText();
             final Pattern pattern = Pattern.compile(link, Pattern.MULTILINE);
@@ -144,7 +145,7 @@ public class CheckGitlabFiles extends Check {
 
     public boolean notDefaultReadme() {
         String defaultReadme = "# " + project.getName(); // Sollte sich die Default Readme ändern, diese Zeile
-                                                         // anpassen. Dabei "\n" und "\r" ignorieren.
+        // anpassen. Dabei "\n" und "\r" ignorieren.
         if (!checkReadmeExistence())
             return false;
         URI uri = getRawReadme();
@@ -153,7 +154,7 @@ public class CheckGitlabFiles extends Check {
                 Scanner scanner = new Scanner(uri.toURL().openStream());
                 String line = "";
                 while (scanner.hasNextLine()) {
-                     line += scanner.nextLine();
+                    line += scanner.nextLine();
                 }
 
                 if (line.equals(defaultReadme)) {

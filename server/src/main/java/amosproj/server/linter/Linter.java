@@ -1,18 +1,16 @@
 package amosproj.server.linter;
 
+import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.data.*;
 import amosproj.server.linter.checks.CheckGitlabFiles;
 import amosproj.server.linter.checks.CheckGitlabRoles;
 import amosproj.server.linter.checks.CheckGitlabSettings;
-import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gitlab4j.api.GitLabApiException;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 
@@ -23,19 +21,14 @@ import java.util.Iterator;
 @Service
 public class Linter {
 
-    // autowired
-    private final GitLab api;
-    private final LintingResultRepository lintingResultRepository;
-    private final CheckResultRepository checkResultRepository;
-    private final ProjectRepository projectRepository;
-    // end autowired
-
-    public Linter(GitLab api, LintingResultRepository lintingResultRepository, CheckResultRepository checkResultRepository, ProjectRepository projectRepository) {
-        this.api = api;
-        this.lintingResultRepository = lintingResultRepository;
-        this.checkResultRepository = checkResultRepository;
-        this.projectRepository = projectRepository;
-    }
+    @Autowired
+    private GitLab api;
+    @Autowired
+    private LintingResultRepository lintingResultRepository;
+    @Autowired
+    private CheckResultRepository checkResultRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
 
     /**
      * entry point to start asynchronous linting process
@@ -76,7 +69,7 @@ public class Linter {
         lintingResultRepository.save(lintingResult);
 
         // Fuehre Checks aus
-        JsonNode checks = getConfigNode().get("checks");
+        JsonNode checks = Config.getConfigNode().get("checks");
 
         var fileChecks = new CheckGitlabFiles(api, apiProject, lintingResult, checkResultRepository);
         var settingsChecks = new CheckGitlabSettings(api, apiProject, lintingResult, checkResultRepository);
@@ -98,24 +91,6 @@ public class Linter {
             }
         }
 
-    }
-
-
-    /**
-     * Gets the config.json and parses it into a JsonNode
-     *
-     * @return JsonNode of the parsed config.json
-     */
-    public static JsonNode getConfigNode() {
-        ClassPathResource file = new ClassPathResource("config.json");
-        ObjectMapper objectMapper = new ObjectMapper(new JsonFactory());
-        JsonNode node = null;
-        try {
-            node = objectMapper.readTree(file.getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return node;
     }
 
 }
