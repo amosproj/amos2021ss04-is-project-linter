@@ -48,13 +48,15 @@ public class ProjectController {
     private CSVExport csvExport;
 
     @GetMapping("/projects")
-    public List<ProjectSchema> allProjects() {
+    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended) {
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
             Project projAlt = it.next();
-            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
+            ProjectSchema proj;
+            if (extended != null && extended) proj = new ProjectSchema(projAlt, projAlt.getResults());
+            else proj = new ProjectSchema(projAlt, new LinkedList<>());
             res.add(proj);
         }
         return res;
