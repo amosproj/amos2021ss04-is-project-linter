@@ -26,6 +26,9 @@ services:
             - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
             - GITLAB_ACCESS_TOKEN=${GITLAB_ACCESS_TOKEN}
             - server.port=8080
+            - CONFIG_FILE=/home/amos/config.json
+        volumes: # more like: load nginx configuration
+            - ./config.json:/home/amos/config.json
         depends_on:
             - database
         expose:
@@ -37,15 +40,14 @@ services:
         # build: "./frontend"
         volumes: # more like: load nginx configuration
             - ./nginx.conf:/etc/nginx/templates/default.conf.template
-            - ./server/src/main/resources/config.json:/config.json # FIXME just config.json nach dem rausziehen
+            - ./config.json:/config.json
         environment:
             - PORT=${PORT}
             - HOST=${HOST}
         depends_on:
             - backend
         ports: # only connection to outside world
-            - ${PORT}:80
-            - 443:443
+            - ${PORT}:80 # TODO https
         links:
             - backend
 

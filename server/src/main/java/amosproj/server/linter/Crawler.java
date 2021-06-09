@@ -1,14 +1,13 @@
 package amosproj.server.linter;
 
+import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.Scheduler;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -29,11 +28,12 @@ public class Crawler {
     private Long size;
 
     public Crawler(GitLab gitLab, Scheduler scheduler, Linter linter) {
+        // set autowired
         this.gitLab = gitLab;
         this.linter = linter;
-
+        // init crawler status
         crawlerActive = new AtomicBoolean(false);
-        progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
+        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         timeTaken = 0L;
         idx = 0L;
         lastError = "";
@@ -48,11 +48,11 @@ public class Crawler {
      */
     private synchronized void runCrawler() {
         crawlerActive = new AtomicBoolean(true);
-        progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
+        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
         try {
-            var projects = gitLab.getApi().getProjectApi().getProjects(0, Linter.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE));
+            var projects = gitLab.getApi().getProjectApi().getProjects(0, Config.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE));
             size = (long) projects.size();
-            progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
+            progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
             LocalDateTime start = LocalDateTime.now();
 
             for (org.gitlab4j.api.models.Project proj : projects) {
@@ -67,7 +67,7 @@ public class Crawler {
             errorTime = LocalDateTime.now();
             e.printStackTrace();
         }
-        progress = Linter.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
+        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         crawlerActive.set(false);
         idx = 0L;
     }

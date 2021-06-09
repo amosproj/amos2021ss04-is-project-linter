@@ -1,6 +1,5 @@
 package amosproj.server;
 
-import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +25,7 @@ public class GitLab {
 
     private String apitoken;
 
-    private String gitlabHost = Linter.getConfigNode().get("settings").get("gitLabHost").asText();
+    private String gitlabHost = Config.getConfigNode().get("settings").get("gitLabHost").asText();
 
     private final org.gitlab4j.api.GitLabApi api;
 

@@ -1,10 +1,10 @@
 package amosproj.server.api;
 
+import amosproj.server.Config;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.ProjectRepository;
-import amosproj.server.linter.Linter;
 import com.opencsv.CSVWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class CSVExport {
         CSVWriter w = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.NO_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.RFC4180_LINE_END);
         // get all checkNames in arraylist
         ArrayList<String> checks = new ArrayList<>();
-        for (Iterator<String> it = Linter.getConfigNode().get("checks").fieldNames(); it.hasNext(); ) {
+        for (Iterator<String> it = Config.getConfigNode().get("checks").fieldNames(); it.hasNext(); ) {
             checks.add(it.next());
         }
         // write header

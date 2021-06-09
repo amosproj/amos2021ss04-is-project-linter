@@ -29,6 +29,7 @@ jobs:
         working-directory: ./server
         env:
           GITLAB_ACCESS_TOKEN: ${{ secrets.GITLAB_ACCESS_TOKEN }}
+          CONFIG_FILE: /home/runner/work/amos-ss2021-is-project-linter/amos-ss2021-is-project-linter/config.json
         run: ./gradlew test
 
       - name: Log in to Docker Hub
