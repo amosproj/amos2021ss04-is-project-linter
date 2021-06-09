@@ -28,9 +28,10 @@ public class Crawler {
     private Long size;
 
     public Crawler(GitLab gitLab, Scheduler scheduler, Linter linter) {
+        // set autowired
         this.gitLab = gitLab;
         this.linter = linter;
-
+        // init crawler status
         crawlerActive = new AtomicBoolean(false);
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         timeTaken = 0L;
