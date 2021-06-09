@@ -21,7 +21,7 @@ docker-compose --env-file .env up
 
 ## Zugriff
 Folgende Endpoints sind nun erreichbar:
-* FrontEnd Website: `http://localhost:<PORT>/*`
-* BackEnd Rest-API: `http://localhost:<PORT>/api/*`
+* FrontEnd Website: `http://localhost:6969/*`
+* BackEnd Rest-API: `http://localhost:6969/api/*`
 
 Die Api Endpoints finden sie [hier](API.md)

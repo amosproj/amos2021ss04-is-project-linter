@@ -1,4 +1,4 @@
-Die API ist prinzipiell unter `http://<HOST>/<PORT>/api` erreichtbar.
+Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 
 ### GET - `/projects` - Übersicht aller Projekte
 * Body: nichts
@@ -29,7 +29,7 @@ Die API ist prinzipiell unter `http://<HOST>/<PORT>/api` erreichtbar.
 
 ### GET - `/export/csv` - Exportiert Ergebnisse Als CSV-Datei
 * Body: nichts
-* Response: Eine CSV Datei, direkt zum Download, also am besten per `<a download href="http://<HOST>/<PORT>/api/export/csv">download</a>` einbetten
+* Response: Eine CSV Datei, direkt zum Download, also am besten per `<a download href="http://<HOST>/6969/api/export/csv">download</a>` einbetten
 
 
 # Schemas
