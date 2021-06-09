@@ -1,58 +1,31 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.GitLab;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.gitlab4j.api.GitLabApi;
-import org.gitlab4j.api.models.Project;
 
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * Check ist die Abstrakte Klasse, die das Ausführen der einzelnen Checks vornimmt.
  */
 public abstract class Check {
 
-    protected GitLab gitLab;
-    protected org.gitlab4j.api.models.Project project;
-    private final LintingResult lintingResult;
-    private final CheckResultRepository checkResultRepository;
+    protected abstract boolean evaluate();
 
-    protected Check(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        this.gitLab = gitLab;
-        this.project = project;
-        this.lintingResult = lintingResult;
-        this.checkResultRepository = checkResultRepository;
-    }
-
-    /**
-     * Führt einen Test, basierend auf seiner JSON config und seinem TestNamen durch.
-     * Diese Methode arbeitet mit Java Reflection um dies passende Methode zu dem (einzigartigem) TestNamen zu finden.
-     *
-     * @param testName einzigartiger Name des Tests
-     * @param node     Eintrag aus der config JSON-Datei
-     * @param args     parameter die dem Check übergeben werden sollen (beliebige Anzahl / beliebiger Datentyp)
-     * @return Ergebnis, welches automatisch in der Datenbank gespeichert wird.
-     */
-    public CheckResult runTest(String testName, JsonNode node, Object... args) {
-        // nur aktivierte tests sollen ausgeführt werden
-        if (!node.get("enabled").booleanValue()) return null;
-
-        // Start Check per reflection
-        java.lang.reflect.Method method;
-        boolean checkResult;
+    public static void run(String checkName, CheckResultRepository checkResultRepository, LintingResult lintingResult) {
+        boolean result = false;
         try {
-            method = getClass().getMethod(testName);
-            checkResult = (boolean) method.invoke(this, args);
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            return null;
+            Class<? extends Check> obj = (Class<? extends Check>) Class.forName("amosproj.server.linter.checks." + checkName);
+            Method method = obj.getDeclaredMethod("evaluate");
+            result = (boolean) method.invoke(obj.getConstructor().newInstance());
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            // TODO handle some of the exceptions differently (e.g. return false upon ClassNotFound Exception.
+            e.printStackTrace();
         }
-        // return check result
-        CheckResult cr = new CheckResult(lintingResult, testName, checkResult);
+        CheckResult cr = new CheckResult(lintingResult, checkName, result);
         checkResultRepository.save(cr);
-        return cr;
     }
 
 }

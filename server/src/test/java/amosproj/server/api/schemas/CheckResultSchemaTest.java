@@ -30,7 +30,6 @@ public class CheckResultSchemaTest {
         assertEquals(node.get("tag").asText(), checkResultSchema.getTag());
         assertEquals(CheckSeverity.valueOf(node.get("severity").asText()), checkResultSchema.getSeverity());
         assertEquals(node.get("message").asText(), checkResultSchema.getMessage());
-        assertEquals(node.get("category").asText(), checkResultSchema.getCategory());
         assertEquals(node.get("priority").asInt(), checkResultSchema.getPriority());
     }
 }

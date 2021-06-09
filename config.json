@@ -16,7 +16,7 @@
     }
   },
   "checks": {
-    "checkReadmeExistence": {
+    "CheckReadmeExistence": {
       "category": "file_checks",
       "enabled": true,
       "severity": "HIGH",
@@ -26,7 +26,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "checkContributingExistence": {
+    "CheckContributingExistence": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -36,7 +36,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "checkMaintainersExistence": {
+    "CheckMaintainersExistence": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -46,7 +46,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasMergeRequestEnabled": {
+    "HasMergeRequestEnabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "LOW",
@@ -56,7 +56,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasIssuesEnabled": {
+    "HasIssuesEnabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -66,7 +66,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "isPublic": {
+    "IsPublic": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "HIGH",
@@ -76,7 +76,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "gitlabWikiDisabled": {
+    "GitlabWikiDisabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -86,7 +86,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasForkingEnabled": {
+    "HasForkingEnabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -96,7 +96,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasAvatar": {
+    "HasAvatar": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "NOT_SPECIFIED",
@@ -106,7 +106,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasDescription": {
+    "HasDescription": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -116,7 +116,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasSquashingEnabled": {
+    "HasSquashingEnabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -126,7 +126,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "guestRoleDisabled": {
+    "GuestRoleDisabled": {
       "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
@@ -136,7 +136,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "developerRoleDisabled": {
+    "DeveloperRoleDisabled": {
       "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
@@ -146,7 +146,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasBadges": {
+    "HasBadges": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -156,7 +156,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "checkReadmeHasLinks": {
+    "CheckReadmeHasLinks": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -166,7 +166,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "checkNoContributingChain": {
+    "CheckNoContributingChain": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -176,7 +176,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasServiceDeskDisabled": {
+    "HasServiceDeskDisabled": {
       "category": "settings_checks",
       "enabled": true,
       "severity": "LOW",
@@ -186,7 +186,7 @@
       "tag": "Maintainerfreundlichkeit",
       "priority": 1
     },
-    "eitherOwnersOrMaintainersExist": {
+    "EitherOwnersOrMaintainersExist": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
@@ -196,7 +196,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "notDefaultReadme": {
+    "NotDefaultReadme": {
       "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
