@@ -11,7 +11,7 @@ Wollen Sie jedoch selbst bauen, schauen Sie sich folgende Anleitungen an:
 * [Für das BackEnd Image](https://github.com/amosproj/amos-ss2021-is-project-linter/blob/main/server/README.md)
 
 ## Ausführen (mit docker-compose)
-[Konfiguration](https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Konfiguration) durchführen und die wie im vorherigen Kapitel einsetzen.
+[Konfiguration](Konfiguration.md) durchführen und die wie im vorherigen Kapitel einsetzen.
 
 Gesamte Software-Architektur starten:
 ```shell
@@ -24,4 +24,4 @@ Folgende Endpoints sind nun erreichbar:
 * FrontEnd Website: `http://localhost:<PORT>/*`
 * BackEnd Rest-API: `http://localhost:<PORT>/api/*`
 
-Die Api Endpoints finden sie [hier](API)
+Die Api Endpoints finden sie [hier](API.md)
