@@ -13,6 +13,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -61,6 +63,17 @@ public class ProjectControllerTest {
                 .content("https://gitlab.cs.fau.de/ib49uquh/repo-welches-garantiert-nicht-existiert"))
                 .andExpect(status().isNotFound());
 
+    }
+
+    @Test
+    public void testGetProjectLintsLastMonth() throws Exception {
+        Project proj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 420, "gitlab.cs.fau.de");
+        lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
+        lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now().minusDays(50)));
+        proj = projectRepository.save(proj);
+
+        mockMvc.perform(get("/project/" + proj.getId() + "/lastMonth")).andExpect(status().isOk());
+        // TODO check that only ONE linting result is returned
     }
 
 }
