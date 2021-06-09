@@ -25,11 +25,12 @@ public class GitLab {
 
     private String apitoken;
 
-    private String gitlabHost = Config.getConfigNode().get("settings").get("gitLabHost").asText();
+    private String gitlabHost;
 
     private final org.gitlab4j.api.GitLabApi api;
 
     public GitLab(@Value("${GITLAB_ACCESS_TOKEN}") String token) {
+        this.gitlabHost = Config.getConfigNode().get("settings").get("gitLabHost").asText();
         this.apitoken = token;
         this.api = new GitLabApi(gitlabHost, apitoken);
     }

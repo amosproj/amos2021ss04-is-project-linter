@@ -14,9 +14,14 @@ import java.io.InputStream;
 @Service
 public class Config {
 
-    private static String configFile;
+    private static String configFile = "/home/amos/config.json"; // FIXME default value da sonst nicht in docker läuft.
 
-    public Config(@Value("${CONFIG_FILE}") String CONFIG_FILE) {
+    /*public Config(@Value("${CONFIG_FILE}") String CONFIG_FILE) {
+        configFile = CONFIG_FILE;
+    }*/
+
+    @Value("${CONFIG_FILE}")
+    public void setConfigFile(String CONFIG_FILE) {
         configFile = CONFIG_FILE;
     }
 
