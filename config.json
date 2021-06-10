@@ -118,7 +118,7 @@
     },
     "HasSquashingEnabled": {
       "category": "settings_checks",
-      "enabled": true,
+      "enabled": false,
       "severity": "MEDIUM",
       "description": "Überprüft, ob squashing commits erlaubt ist",
       "message": "Squashing commits sind erlaubt",

@@ -49,15 +49,17 @@ public class Crawler {
     private synchronized void runCrawler() {
         crawlerActive = new AtomicBoolean(true);
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
+        System.out.println(progress);
         try {
             var projects = gitLab.getApi().getProjectApi().getProjects(0, Config.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE));
             size = (long) projects.size();
             progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
+            System.out.println(progress);
             LocalDateTime start = LocalDateTime.now();
 
             for (org.gitlab4j.api.models.Project proj : projects) {
+                System.out.println("Linte Projekt " + proj.getWebUrl() + ", Fortschritt: " + ++idx + "/" + size);
                 linter.checkEverything(proj, start);
-                idx++;
             }
 
             LocalDateTime end = LocalDateTime.now();
@@ -68,6 +70,7 @@ public class Crawler {
             e.printStackTrace();
         }
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
+        System.out.println(progress);
         crawlerActive.set(false);
         idx = 0L;
     }
