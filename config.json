@@ -116,11 +116,11 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasSquashingEnabled": {
+    "hasSquashingDisabled": {
       "category": "settings_checks",
       "enabled": false,
       "severity": "MEDIUM",
-      "description": "Überprüft, ob squashing commits erlaubt ist",
+      "description": "Überprüft, ob squashing commits deaktiviert sind",
       "message": "Squashing commits sind erlaubt",
       "fix": "Ändern Sie die Einstellungen des Repositories um squash commits zu verbieten.",
       "tag": "Entwicklerfreundlichkeit",

@@ -81,24 +81,6 @@ public class CheckGitlabSettings extends Check {
         return (description != null && !description.equals(""));
     }
 
-    //das gewünschte Ergebnis ist false
-    public boolean hasSquashedCommitInMergeRequests() {
-        var mergeRequestsApi = api.getMergeRequestApi();
-        try {
-            //hole alle mergeRequests des Projekts
-            List<MergeRequest> mergeRequestList = mergeRequestsApi.getMergeRequests(project.getId());
-            //checke ob squashing in irgendeinen merge request verwendet wurde
-            for (MergeRequest m : mergeRequestList) {
-                if (m.getSquash()) {
-                    return true;
-                }
-            }
-        } catch (GitLabApiException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public boolean hasBadges() {
         try {
             var badgelist = api.getProjectApi().getBadges(project);
@@ -111,36 +93,17 @@ public class CheckGitlabSettings extends Check {
         return false;
     }
 
-    //checke if squashing im projekt erlaubt ist, dies sollte falsch ergeben
-    public boolean hasSquashingEnabled() {
-        boolean result = false;
-        RepositoryApi repositoryApi = api.getRepositoryApi();
-        MergeRequestApi mergeRequestApi = api.getMergeRequestApi();
-        Branch demoBranch = null;
-        MergeRequest demoMergeRequest = null;
+    public boolean hasSquashingDisabled() {
         try {
-            //erstelle demo branch und merge request mit squashing erlaubt
-            demoBranch = repositoryApi.createBranch(project, "demo", project.getDefaultBranch());
-            demoMergeRequest = mergeRequestApi.createMergeRequest(project, demoBranch.getName(), project.getDefaultBranch(), "demoTitle", "demoDescription", null, null, null, null, null, true);
-            //squashing ist erlaubt
-            result = demoMergeRequest.getSquash();
-        } catch (GitLabApiException e) {
-            //ein fehler ist passiert oder squashing ist nicht erlaubt
+            JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
+            String forkingAccessLevel = node.get("squash_option").asText();
+            if (forkingAccessLevel.equals("default_off"))
+                return false;
+            return true;
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                //lösche die demos falls sie erzeugt werden konnten
-                if (demoBranch != null) {
-                    repositoryApi.deleteBranch(project, demoBranch.getName());
-                }
-                if (demoMergeRequest != null) {
-                    mergeRequestApi.deleteMergeRequest(project, demoMergeRequest.getIid());
-                }
-            } catch (GitLabApiException e) {
-                e.printStackTrace();
-            }
+            return false;
         }
-        return result;
     }
 
     public boolean hasServiceDeskDisabled() {
