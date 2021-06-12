@@ -31,10 +31,6 @@ jobs:
       - name: Install packages
         working-directory: ./frontend
         run: npm install
-        
-      - name: Install Angular Flex
-        working-directory: ./frontend
-        run: npm install @angular/flex-layout @angular/cdk
 
       - name: Build the FrontEnd
         working-directory: ./frontend
