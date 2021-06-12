@@ -43,6 +43,9 @@ export class AppComponent implements OnInit {
   toggleToTrue = true;
   csvExportLink = environment.baseURL + '/export/csv';
 
+  currentPage: number = 0;
+  pages: number;
+
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
   constructor(
@@ -114,13 +117,10 @@ export class AppComponent implements OnInit {
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
         console.log(this.all_projects);
 
-        for (let project in this.all_projects) {
-          this.addComponent(
-            this.all_projects[project].name,
-            this.all_projects[project].id,
-            this.all_projects[project].url
-          );
-        }
+        this.pages = Math.floor(this.all_projects.length / 50);
+        console.log('anzahl seiten', this.pages);
+
+        this.displayProjects();
 
         this.prepareProjectDataForSorting();
         this.init_all_projects = this.all_projects.slice();
@@ -146,6 +146,28 @@ export class AppComponent implements OnInit {
     this.projectComponents.push(expComponent);
   }
 
+  displayProjects() {
+    for (var i = 50 * this.currentPage; i < 50 * (this.currentPage + 1) && i < this.all_projects.length; i++) {
+      this.addComponent(
+        this.all_projects[i].name,
+        this.all_projects[i].id,
+        this.all_projects[i].url
+      );
+    }
+  }
+
+  pageRight() {
+    this.currentPage += 1;
+    this.removeAllProjectsFromOverview();
+    this.displayProjects();
+  }
+
+  pageLeft() {
+    this.currentPage -= 1;
+    this.removeAllProjectsFromOverview();
+    this.displayProjects();
+  }
+
   searchProject(value: string) {
     // Erstellt alle Komponenten im Repostiories Tab
     // TODO: Methoden Benennung ändern
@@ -162,6 +184,7 @@ export class AppComponent implements OnInit {
       }
     }
   }
+
   getChipOptions() {
     //hole alle verschiedenen tags aus der config.json datei
     this.chipOptions = [];
@@ -237,8 +260,6 @@ export class AppComponent implements OnInit {
     }
     this.filterInfo += ' und Sortierkriterium: ' + this.searchCriteria.value;
 
-    this.removeAllProjectsFromOverview();
-
     //setze die notwendigen variablen fürs sortieren der projekte nach den gewählten tags
     for (let project in this.all_projects) {
       this.all_projects[project].passedTestsInFilter = 0;
@@ -275,13 +296,9 @@ export class AppComponent implements OnInit {
     }
     console.log('Projekte nach sortieren', this.all_projects);
 
-    for (let project in this.all_projects) {
-      this.addComponent(
-        this.all_projects[project].name,
-        this.all_projects[project].id,
-        this.all_projects[project].url
-      );
-    }
+    this.removeAllProjectsFromOverview();
+
+    this.displayProjects();
   }
   /*
   bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
