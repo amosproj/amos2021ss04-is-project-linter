@@ -40,50 +40,49 @@
 <!-- Tabs-->
 <mat-tab-group mat-align-tabs="center" color="accent">
   <mat-tab label="Repositories">
+      <mat-card>
+        <mat-card-title>Sortiere Projekte nach:<mat-icon matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium" style=" padding-left: 10px;" color="primary">
+          info
+        </mat-icon></mat-card-title>
+        <div style="font-size: large;">Kategorie:</div>
+        <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
+          <mat-chip-list selectable multiple [formControl]="chipsControl">
+            <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()" [value]="option">
+              <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
+              {{option}}
+            </mat-chip>
+          </mat-chip-list>
+          <br />
+          <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
+        </mat-card-content>
+
+        <div style="font-size: large;">Sortierkriterium:</div>
+        <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
+          <mat-radio-group
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          [formControl]="searchCriteria">
+          <mat-radio-button class="example-radio-button" *ngFor="let item of availableSearchCriteria" [value]="item">
+            {{item}}
+          </mat-radio-button>
+        </mat-radio-group>
+        </mat-card-content>
+        <!-- kategorie.value == bestandene_tests_pro_kategorie-->
+        <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
+          (click)="sortProjects()">Sortieren</button>
+        <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
+          info
+        </mat-icon>
+      </mat-card> 
+
     <mat-card>
-      <mat-card-title>Sortiere Projekte nach:<mat-icon matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium" style=" padding-left: 10px;" color="primary">
-        info
-      </mat-icon></mat-card-title>
-      <div style="font-size: large;">Kategorie:</div>
-      <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
-        <mat-chip-list selectable multiple [formControl]="chipsControl">
-          <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()" [value]="option">
-            <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
-            {{option}}
-          </mat-chip>
-        </mat-chip-list>
-        <br />
-        <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
+     
+      <mat-card-content>
+        <div fxLayout="row wrap" fxLayoutAlign="center end" >
+      
+          <div  fxLayoutAlign="center end" #parent></div>
+        </div>
       </mat-card-content>
-
-      <div style="font-size: large;">Sortierkriterium:</div>
-      <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
-        <mat-radio-group
-        aria-labelledby="example-radio-group-label"
-        class="example-radio-group"
-        [formControl]="searchCriteria">
-        <mat-radio-button class="example-radio-button" *ngFor="let item of availableSearchCriteria" [value]="item">
-          {{item}}
-        </mat-radio-button>
-      </mat-radio-group>
-      </mat-card-content>
-      <!-- kategorie.value == bestandene_tests_pro_kategorie-->
-      <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
-        (click)="sortProjects()">Sortieren</button>
-      <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
-        info
-      </mat-icon>
-
-    </mat-card> 
-    
-    <mat-card class="body">
-     
-     
-      <div class="container">
-     
-        <br />
-        <div #parent></div>
-      </div>
     </mat-card>
 
     <!----Footer of Repositories-->
