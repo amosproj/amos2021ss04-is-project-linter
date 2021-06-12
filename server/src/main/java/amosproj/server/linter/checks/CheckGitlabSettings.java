@@ -98,8 +98,8 @@ public class CheckGitlabSettings extends Check {
             JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
             String forkingAccessLevel = node.get("squash_option").asText();
             if (forkingAccessLevel.equals("default_off"))
-                return false;
-            return true;
+                return true;
+            return false;
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;
