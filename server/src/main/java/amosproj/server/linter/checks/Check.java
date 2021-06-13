@@ -14,6 +14,13 @@ public abstract class Check {
 
     protected abstract boolean evaluate();
 
+    /**
+     * runs a Check Based on its name. Uses reflection.
+     *
+     * @param checkName
+     * @param checkResultRepository
+     * @param lintingResult
+     */
     public static void run(String checkName, CheckResultRepository checkResultRepository, LintingResult lintingResult) {
         boolean result = false;
         try {
