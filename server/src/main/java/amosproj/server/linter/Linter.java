@@ -79,7 +79,7 @@ public class Linter {
             String checkName = it.next();
             JsonNode check = checks.get(checkName);
             // run check
-            Check.run(checkName, checkResultRepository, lintingResult);
+            Check.run(checkName, api, apiProject, checkResultRepository, lintingResult);
         }
     }
 
