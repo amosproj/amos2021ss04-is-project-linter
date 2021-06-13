@@ -16,8 +16,7 @@
     }
   },
   "checks": {
-    "checkReadmeExistence": {
-      "category": "file_checks",
+    "CheckReadmeExistence": {
       "enabled": true,
       "severity": "HIGH",
       "description": "Überprüft, ob eine README Datei existiert.",
@@ -26,8 +25,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "checkContributingExistence": {
-      "category": "file_checks",
+    "CheckContributingExistence": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine CONTRIBUTING Datei existiert.",
@@ -36,18 +34,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "checkMaintainersExistence": {
-      "category": "file_checks",
-      "enabled": true,
-      "severity": "MEDIUM",
-      "description": "Überprüft, ob eine MAINTAINERS Datei existiert.",
-      "message": "Keine MAINTAINERS Datei gefunden!",
-      "fix": "Legen Sie eine MAINTAINERS Datei in der Projektwurzel an.",
-      "tag": "Entwicklerfreundlichkeit",
-      "priority": 100
-    },
-    "hasMergeRequestEnabled": {
-      "category": "settings_checks",
+    "HasMergeRequestEnabled": {
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob Merge Requests erlaubt sind.",
@@ -56,8 +43,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasIssuesEnabled": {
-      "category": "settings_checks",
+    "HasIssuesEnabled": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob Issues aktiviert sind.",
@@ -66,8 +52,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "isPublic": {
-      "category": "settings_checks",
+    "IsPublic": {
       "enabled": true,
       "severity": "HIGH",
       "description": "Überprüft, ob das Repository öffentlich ist.",
@@ -76,8 +61,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "gitlabWikiDisabled": {
-      "category": "settings_checks",
+    "GitlabWikiDisabled": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository Wiki Pages nutzt.",
@@ -86,8 +70,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasForkingEnabled": {
-      "category": "settings_checks",
+    "HasForkingEnabled": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob Forks erlaubt sind.",
@@ -96,8 +79,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasAvatar": {
-      "category": "settings_checks",
+    "HasAvatar": {
       "enabled": true,
       "severity": "NOT_SPECIFIED",
       "description": "Überprüft, ob das Repository ein Avatar (Bild) hat.",
@@ -106,8 +88,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasDescription": {
-      "category": "settings_checks",
+    "HasDescription": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository eine Beschreibung hat.",
@@ -116,18 +97,16 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "hasSquashingEnabled": {
-      "category": "settings_checks",
+    "HasSquashingDisabled": {
       "enabled": false,
       "severity": "MEDIUM",
-      "description": "Überprüft, ob squashing commits erlaubt ist",
+      "description": "Überprüft, ob squashing commits deaktiviert sind",
       "message": "Squashing commits sind erlaubt",
       "fix": "Ändern Sie die Einstellungen des Repositories um squash commits zu verbieten.",
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "guestRoleDisabled": {
-      "category": "role_checks",
+    "GuestRoleDisabled": {
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Guest Rolle deaktiviert ist.",
@@ -136,8 +115,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "developerRoleDisabled": {
-      "category": "role_checks",
+    "DeveloperRoleDisabled": {
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Developer Rolle deaktiviert ist.",
@@ -146,8 +124,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasBadges": {
-      "category": "settings_checks",
+    "HasBadges": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Projekt 'Badges' verwendet.",
@@ -156,8 +133,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "checkReadmeHasLinks": {
-      "category": "file_checks",
+    "CheckReadmeHasLinks": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob in der Readme eine Verlinkung zu Confluence oder anderen Dokus eingetragen ist.",
@@ -166,8 +142,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "checkNoContributingChain": {
-      "category": "file_checks",
+    "CheckNoContributingChain": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, dass sich in der CONTRIBUTING-Datei keine links auf andere CONTRIBUTING-Dateien befinden.",
@@ -176,8 +151,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "hasServiceDeskDisabled": {
-      "category": "settings_checks",
+    "HasServiceDeskDisabled": {
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob der Service Desk deaktiviert ist oder nicht.",
@@ -186,8 +160,7 @@
       "tag": "Maintainerfreundlichkeit",
       "priority": 1
     },
-    "eitherOwnersOrMaintainersExist": {
-      "category": "file_checks",
+    "EitherOwnersOrMaintainersExist": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine MAINTAINERS.md oder OWNERS.md Datei existiert.",
@@ -196,8 +169,7 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
-    "notDefaultReadme": {
-      "category": "file_checks",
+    "NotDefaultReadme": {
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob die README Datei die Default-Readme ist.",

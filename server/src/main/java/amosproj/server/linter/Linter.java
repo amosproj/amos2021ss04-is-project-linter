@@ -3,14 +3,13 @@ package amosproj.server.linter;
 import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.data.*;
-import amosproj.server.linter.checks.CheckGitlabFiles;
-import amosproj.server.linter.checks.CheckGitlabRoles;
-import amosproj.server.linter.checks.CheckGitlabSettings;
+import amosproj.server.linter.checks.Check;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 
@@ -37,10 +36,11 @@ public class Linter {
      * @throws GitLabApiException
      */
     public void runLint(String repoUrl) throws GitLabApiException {
+        // get project
         repoUrl = repoUrl.replace("\r", "");
         String path = repoUrl.replace(api.getGitlabHost() + "/", "");
-
         org.gitlab4j.api.models.Project proj = api.getApi().getProjectApi().getProject(path);
+        // start linting process
         assert proj != null;
         checkEverything(proj, LocalDateTime.now());
     }
@@ -48,7 +48,8 @@ public class Linter {
     /**
      * internal method that starts all checks, and saves the results
      *
-     * @param apiProject
+     * @param apiProject the project to lint
+     * @param timestamp  under which timestamp the linting process should be saved
      */
     public void checkEverything(org.gitlab4j.api.models.Project apiProject, LocalDateTime timestamp) {
         // Hole LintingProject
@@ -68,29 +69,19 @@ public class Linter {
         LintingResult lintingResult = new LintingResult(currLintingProject, timestamp);
         lintingResultRepository.save(lintingResult);
 
-        // Fuehre Checks aus
-        JsonNode checks = Config.getConfigNode().get("checks");
-
-        var fileChecks = new CheckGitlabFiles(api, apiProject, lintingResult, checkResultRepository);
-        var settingsChecks = new CheckGitlabSettings(api, apiProject, lintingResult, checkResultRepository);
-        var roleChecks = new CheckGitlabRoles(api, apiProject, lintingResult, checkResultRepository);
-
-        for (Iterator<String> it = checks.fieldNames(); it.hasNext(); ) {
-            String testName = it.next();
-            JsonNode check = checks.get(testName);
-            switch (check.get("category").asText()) {
-                case "file_checks":
-                    fileChecks.runTest(testName, check);
-                    break;
-                case "settings_checks":
-                    settingsChecks.runTest(testName, check);
-                    break;
-                case "role_checks":
-                    roleChecks.runTest(testName, check);
-                    break;
-            }
-        }
-
+        // TODO multithreaded in ThreadPool oder ExecutorService
+        runChecks(apiProject, lintingResult);
     }
+
+    private void runChecks(org.gitlab4j.api.models.Project apiProject, LintingResult lintingResult) {
+        JsonNode checks = Config.getConfigNode().get("checks");
+        for (Iterator<String> it = checks.fieldNames(); it.hasNext(); ) {
+            String checkName = it.next();
+            JsonNode check = checks.get(checkName);
+            // run check
+            Check.run(checkName, api, apiProject, checkResultRepository, lintingResult);
+        }
+    }
+
 
 }

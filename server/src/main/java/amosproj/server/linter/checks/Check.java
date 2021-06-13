@@ -4,55 +4,70 @@ import amosproj.server.GitLab;
 import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckResultRepository;
 import amosproj.server.data.LintingResult;
-import com.fasterxml.jackson.databind.JsonNode;
-import org.gitlab4j.api.GitLabApi;
+import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
+import org.gitlab4j.api.models.RepositoryFile;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * Check ist die Abstrakte Klasse, die das Ausführen der einzelnen Checks vornimmt.
  */
 public abstract class Check {
 
-    protected GitLab gitLab;
-    protected org.gitlab4j.api.models.Project project;
-    private final LintingResult lintingResult;
-    private final CheckResultRepository checkResultRepository;
+    protected abstract boolean evaluate(GitLab gitLab, Project project);
 
-    protected Check(GitLab gitLab, Project project, LintingResult lintingResult, CheckResultRepository checkResultRepository) {
-        this.gitLab = gitLab;
-        this.project = project;
-        this.lintingResult = lintingResult;
-        this.checkResultRepository = checkResultRepository;
+    public static void run(String checkName, GitLab gitLab, Project project, CheckResultRepository checkResultRepository, LintingResult lintingResult) {
+        boolean result = false;
+        try {
+            Class<? extends Check> obj = (Class<? extends Check>) Class.forName("amosproj.server.linter.checks." + checkName);
+            Method method = obj.getDeclaredMethod("evaluate", GitLab.class, Project.class);
+            result = (boolean) method.invoke(obj.getConstructor().newInstance(), gitLab, project);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
+            // TODO handle some of the exceptions differently (e.g. return false upon ClassNotFound Exception.
+            e.printStackTrace();
+        }
+        CheckResult cr = new CheckResult(lintingResult, checkName, result);
+        checkResultRepository.save(cr);
     }
 
-    /**
-     * Führt einen Test, basierend auf seiner JSON config und seinem TestNamen durch.
-     * Diese Methode arbeitet mit Java Reflection um dies passende Methode zu dem (einzigartigem) TestNamen zu finden.
-     *
-     * @param testName einzigartiger Name des Tests
-     * @param node     Eintrag aus der config JSON-Datei
-     * @param args     parameter die dem Check übergeben werden sollen (beliebige Anzahl / beliebiger Datentyp)
-     * @return Ergebnis, welches automatisch in der Datenbank gespeichert wird.
-     */
-    public CheckResult runTest(String testName, JsonNode node, Object... args) {
-        // nur aktivierte tests sollen ausgeführt werden
-        if (!node.get("enabled").booleanValue()) return null;
-
-        // Start Check per reflection
-        java.lang.reflect.Method method;
-        boolean checkResult;
+    protected boolean fileExists(GitLab gitLab, Project project, String filepath) {
         try {
-            method = getClass().getMethod(testName);
-            checkResult = (boolean) method.invoke(this, args);
-        } catch (InvocationTargetException | NoSuchMethodException | IllegalAccessException e) {
-            return null;
+            RepositoryFile file = gitLab.getApi().getRepositoryFileApi().getFileInfo(project.getId(), filepath, project.getDefaultBranch());
+            if (file == null) return false;
+        } catch (GitLabApiException | IllegalArgumentException e) {
+            return false;
         }
-        // return check result
-        CheckResult cr = new CheckResult(lintingResult, testName, checkResult);
-        checkResultRepository.save(cr);
-        return cr;
+        return true;
+    }
+
+    protected File getRawFile(GitLab gitLab, Project project, String filepath) {
+        if (fileExists(gitLab, project, filepath)) {
+            try {
+                //lade die Datei nach java.io.tmp
+                return gitLab.getApi().getRepositoryFileApi().getRawFile(project.getId(), project.getDefaultBranch(), filepath, null);
+            } catch (GitLabApiException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    protected URI getRawReadme(Project project) {
+        var readme = project.getReadmeUrl();
+        if (readme != null) {
+            var raw_readme = readme.replace("blob", "raw");
+            try {
+                return new URI(raw_readme);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
 }

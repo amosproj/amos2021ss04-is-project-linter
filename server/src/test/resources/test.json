@@ -1,0 +1,42 @@
+{
+  "https://gitlab.cs.fau.de/ib49uquh/allcheckstrue": {
+    "CheckReadmeExistence": true,
+    "CheckContributingExistence": true,
+    "HasMergeRequestEnabled": true,
+    "HasIssuesEnabled": true,
+    "IsPublic": true,
+    "GitlabWikiDisabled": true,
+    "HasForkingEnabled": true,
+    "HasAvatar": true,
+    "HasDescription": true,
+    "HasSquashingDisabled": true,
+    "GuestRoleDisabled": true,
+    "DeveloperRoleDisabled": true,
+    "HasBadges": true,
+    "CheckReadmeHasLinks": true,
+    "CheckNoContributingChain": true,
+    "HasServiceDeskDisabled": true,
+    "EitherOwnersOrMaintainersExist": true,
+    "NotDefaultReadme": true
+  },
+  "https://gitlab.cs.fau.de/ib49uquh/allchecksfalse": {
+    "CheckReadmeExistence": false,
+    "CheckContributingExistence": false,
+    "HasMergeRequestEnabled": false,
+    "HasIssuesEnabled": false,
+    "IsPublic": false,
+    "GitlabWikiDisabled": false,
+    "HasForkingEnabled": false,
+    "HasAvatar": false,
+    "HasDescription": false,
+    "HasSquashingDisabled": false,
+    "GuestRoleDisabled": false,
+    "DeveloperRoleDisabled": false,
+    "HasBadges": false,
+    "CheckReadmeHasLinks": false,
+    "CheckNoContributingChain": false,
+    "HasServiceDeskDisabled": false,
+    "EitherOwnersOrMaintainersExist": false,
+    "NotDefaultReadme": false
+  }
+}

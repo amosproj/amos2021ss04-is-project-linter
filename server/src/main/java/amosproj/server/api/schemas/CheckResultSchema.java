@@ -14,7 +14,6 @@ public class CheckResultSchema {
     // core attributes
     private String checkName;
     private Boolean result;
-    private String category;
     // relations
     // -
     // additional info
@@ -29,7 +28,6 @@ public class CheckResultSchema {
         this.checkName = result.getCheckName();
         this.result = result.getResult();
         this.severity = CheckSeverity.valueOf(node.get("severity").asText());
-        this.category = node.get("category").asText();
         this.description = node.get("description").asText();
         this.message = node.get("message").asText();
         this.fix = node.get("fix").asText();
@@ -59,10 +57,6 @@ public class CheckResultSchema {
 
     public String getFix() {
         return fix;
-    }
-
-    public String getCategory() {
-        return category;
     }
 
     public String getTag() {
