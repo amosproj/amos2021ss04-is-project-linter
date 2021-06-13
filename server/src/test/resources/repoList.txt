@@ -1,6 +1,0 @@
-https://gitlab.cs.fau.de/it62ajow/chiefexam
-https://gitlab.cs.fau.de/ib49uquh/amos-testz
-https://gitlab.cs.fau.de/uv59uxut/linter_negative
-https://gitlab.cs.fau.de/uv59uxut/linter_positive
-https://gitlab.cs.fau.de/or16iqyd/hasReadme
-https://gitlab.cs.fau.de/or16iqyd/noReadme
