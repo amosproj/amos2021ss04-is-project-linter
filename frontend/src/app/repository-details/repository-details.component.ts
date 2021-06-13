@@ -66,33 +66,32 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.latestLintingResultsSortedPriority = new Array<CheckResults>();
-    this.initializeClassValuesAndTiles(this.data.projectID); // sendet erste HTTP Anfrage ans backend
+    console.log('lintingResult was injected?',this.data.lintingResult);
+    this.initializeClassValuesAndTiles(); // sendet erste HTTP Anfrage ans backend
   }
 
   ngAfterViewInit(): void {
-    // sendet zweite Http Anfrage um Daten für die Charts zu bekommen
-    this.http
-      .get(`${environment.baseURL}/project/${this.data.projectID}`)
-      .subscribe((val: any) => {
-        var tags = this.getTagsArray(
-          val.lintingResults[val.lintingResults.length - 1].checkResults
-        );
-        this.numberOfTestsPerSeverityInTags =
-          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-            tags,
-            val.lintingResults[val.lintingResults.length - 1].checkResults
-          )[0];
-        var chartNames = this.getChartNames(tags);
-        //console.log('in after', this.numberOfTestsPerSeverityInTags);
-        for (var i = 0; i < this.tags.length + 1; i++) {
-          this.renderChart(
-            chartNames[i],
-            i,
-            this.numberOfTestsPerSeverityInTags
-          );
-          this.myChart.update();
-        }
-      });
+    /*
+    var tags = this.getTagsArray(
+      this.data.lintingResult.checkResults
+    );
+    this.numberOfTestsPerSeverityInTags =
+    this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+      tags,
+      this.data.lintingResult.checkResults
+    )[0];
+    var chartNames = this.getChartNames(tags);
+    //console.log('in after', this.numberOfTestsPerSeverityInTags);
+    */
+    for (var i = 0; i < this.tags.length + 1; i++) {
+      this.renderChart(
+        this.chartNames[i],
+        i,
+        this.numberOfTestsPerSeverityInTags
+      );
+      this.myChart.update();
+    }
+    
   }
 
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
@@ -143,41 +142,40 @@ export class RepositoryDetailsComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  initializeClassValuesAndTiles(gitID) {
+  initializeClassValuesAndTiles() {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
-    this.http
-      .get(`${environment.baseURL}/project/${gitID}`)
-      .subscribe((val: any) => {
-        console.log('GET call successful value returned in body', val);
-        // fülle linting Kategorien array
-        var last_entry = val.lintingResults.length;
-        this.latestLintingResults =
-          val.lintingResults[last_entry - 1].checkResults;
-        //this.fillSeverityArrays(); // muss momentan nicht benützt werden
-        this.tags = this.getTagsArray(this.latestLintingResults);
+    // fülle linting Kategorien array
+    this.latestLintingResults =
+      this.data.lintingResult.checkResults;
+    //this.fillSeverityArrays(); // muss momentan nicht benützt werden
+    this.tags = this.getTagsArray(this.latestLintingResults);
 
-        this.LintingResultsInTags =
-          this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-            this.tags,
-            this.latestLintingResults
-          )[1];
-        //console.log('LintingResultInTags', this.LintingResultsInTags);
+    this.LintingResultsInTags =
+      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+        this.tags,
+        this.latestLintingResults
+      )[1];
+    //console.log('LintingResultInTags', this.LintingResultsInTags);
 
-        // Speichere Informationen
-        this.RepoName = val.name;
-        this.RepoURL = val.url;
-        this.lastLintTime = dayjs(
-          val.lintingResults[last_entry - 1].lintTime
-        ).format('DD.MM.YYYY - H:mm');
-        // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
-        this.chartNames = this.getChartNames(this.tags);
-        this.addTilesForCategoryGraphAndTipps();
-        // sortiere die Checks um die 3 besten Tipps darzustellen
-        this.latestLintingResults.forEach((val) =>
-          this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
-        );
-        this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
-      });
+    // Speichere Informationen
+    this.RepoName = this.data.projectName;
+    this.RepoURL = this.data.projectUrl;
+    this.lastLintTime = dayjs(
+      this.data.lintingResult.lintTime
+    ).format('DD.MM.YYYY - H:mm');
+    // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
+    this.numberOfTestsPerSeverityInTags =
+    this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+      this.tags,
+      this.data.lintingResult.checkResults
+    )[0];
+    this.chartNames = this.getChartNames(this.tags);
+    this.addTilesForCategoryGraphAndTipps();
+    // sortiere die Checks um die 3 besten Tipps darzustellen
+    this.latestLintingResults.forEach((val) =>
+      this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
+    );
+    this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
   }
 
   getTagsArray(latestLintingResults) {
@@ -185,7 +183,6 @@ export class RepositoryDetailsComponent implements OnInit {
     var tags = [];
     for (var i = 0; i < latestLintingResults.length; i++) {
       var tagAlreadyThere = false;
-      console.log('Tag!',latestLintingResults[i].tag);
       // Prüfe ob tags Werte hat
       if (tags) {
         // Prüfe ob Kategorien die momentane Kategorie enthält
@@ -326,6 +323,9 @@ export class RepositoryDetailsComponent implements OnInit {
 // Um das Projekt zu bekommen
 export interface DialogData {
   projectID: number;
+  projectName: string;
+  projectUrl: string;
+  lintingResult: LintingResult;
 }
 
 // Zum speichern der Daten des Projekts
