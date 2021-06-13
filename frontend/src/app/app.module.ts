@@ -15,7 +15,7 @@ import {MatProgressSpinner, MatProgressSpinnerModule} from "@angular/material/pr
 import { CommonModule } from '@angular/common';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
 
-//import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [AppComponent, RepositoryComponent, RepositoryDetailsComponent, SpinnerComponentComponent],
@@ -30,8 +30,8 @@ import { SpinnerComponentComponent } from './spinner-component/spinner-component
     MatDialogModule,
     MatIconModule,
     MatProgressBarModule,
-    MatProgressSpinnerModule
-    //FlexLayoutModule 
+    MatProgressSpinnerModule,
+    FlexLayoutModule 
   ],
   providers: [],
   bootstrap: [AppComponent],

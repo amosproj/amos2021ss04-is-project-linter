@@ -14,20 +14,6 @@
   vertical-align: top;
 }
 
-.body {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.container {
-  padding: 20px;
-  overflow: auto;
-}
-
-::ng-deep .matInput {
-  width: 400px !important;
-}
-
 .footer {
   position: fixed;
   left: 0;
@@ -36,30 +22,7 @@
 
   text-align: center;
 }
-.example-container .mat-form-field + .mat-form-field {
-  margin-left: 8px;
-}
 
-.example-container .mat-form-field {
-  width: 220px;
-}
-
-.example-container form {
-  margin-bottom: 20px;
-}
-
-.example-container form > * {
-  margin: 5px 0;
-}
-
-.example-container .mat-radio-button {
-  margin: 0 12px;
-}
-
-.mat-grid-tile .mat-figure {
-  justify-content: flex-start !important ;
-  align-items: flex-start !important;
-}
 mat-icon {
   height: 20px;
   width: 20px;

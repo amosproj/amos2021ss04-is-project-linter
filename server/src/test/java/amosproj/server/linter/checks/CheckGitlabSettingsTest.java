@@ -221,24 +221,25 @@ public class CheckGitlabSettingsTest {
         }
     }
 
-    /*@Test
-    public void hasSquashingEnabled_positive(){
-        try {
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/noReadme");
-            assertFalse(checkGitlabSettings.hasSquashingEnabled());
-        } catch (GitLabApiException e) {
-            fail();
-        }
-    }
-
-    @Test
-    public void hasSquashingEnabled_negative(){
-        try {
-            prepareSettingsCheck("https://gitlab.cs.fau.de/or16iqyd/hasReadme");
-            assertTrue(checkGitlabSettings.hasSquashingEnabled());
-        } catch (GitLabApiException e) {
-            fail();
-        }
-    }*/
-
+//    @Test
+//    public void hasSquashingDisabled_positive() {
+//        try {
+//            preparePositive();
+//            assertTrue(checkGitlabSettings.hasSquashingDisabled());
+//        } catch (GitLabApiException e) {
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
+//
+//    @Test
+//    public void hasSquashingDisabled_negative() {
+//        try {
+//            prepareNegative();
+//            assertFalse(checkGitlabSettings.hasSquashingDisabled());
+//        } catch (GitLabApiException e) {
+//            e.printStackTrace();
+//            fail();
+//        }
+//    }
 }

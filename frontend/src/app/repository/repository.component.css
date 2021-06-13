@@ -1,9 +1,8 @@
 .example-card {
   width: 370px;
-  height: 150px;
-  margin-right: 50px;
-  margin-bottom: 50px;
-  float: left;
+  height: 130px;
+  
+  margin: 20px;
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;
   border-radius: 30px;
