@@ -17,7 +17,6 @@
   },
   "checks": {
     "CheckReadmeExistence": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "HIGH",
       "description": "Überprüft, ob eine README Datei existiert.",
@@ -27,7 +26,6 @@
       "priority": 100
     },
     "CheckContributingExistence": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine CONTRIBUTING Datei existiert.",
@@ -36,18 +34,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "CheckMaintainersExistence": {
-      "category": "file_checks",
-      "enabled": true,
-      "severity": "MEDIUM",
-      "description": "Überprüft, ob eine MAINTAINERS Datei existiert.",
-      "message": "Keine MAINTAINERS Datei gefunden!",
-      "fix": "Legen Sie eine MAINTAINERS Datei in der Projektwurzel an.",
-      "tag": "Entwicklerfreundlichkeit",
-      "priority": 100
-    },
     "HasMergeRequestEnabled": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob Merge Requests erlaubt sind.",
@@ -57,7 +44,6 @@
       "priority": 100
     },
     "HasIssuesEnabled": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob Issues aktiviert sind.",
@@ -67,7 +53,6 @@
       "priority": 100
     },
     "IsPublic": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "HIGH",
       "description": "Überprüft, ob das Repository öffentlich ist.",
@@ -77,7 +62,6 @@
       "priority": 100
     },
     "GitlabWikiDisabled": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository Wiki Pages nutzt.",
@@ -87,7 +71,6 @@
       "priority": 100
     },
     "HasForkingEnabled": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob Forks erlaubt sind.",
@@ -97,7 +80,6 @@
       "priority": 100
     },
     "HasAvatar": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "NOT_SPECIFIED",
       "description": "Überprüft, ob das Repository ein Avatar (Bild) hat.",
@@ -107,7 +89,6 @@
       "priority": 100
     },
     "HasDescription": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Repository eine Beschreibung hat.",
@@ -116,8 +97,7 @@
       "tag": "Benutzerfreundlichkeit",
       "priority": 100
     },
-    "HasSquashingEnabled": {
-      "category": "settings_checks",
+    "HasSquashingDisabled": {
       "enabled": false,
       "severity": "MEDIUM",
       "description": "Überprüft, ob squashing commits deaktiviert sind",
@@ -127,7 +107,6 @@
       "priority": 100
     },
     "GuestRoleDisabled": {
-      "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Guest Rolle deaktiviert ist.",
@@ -137,7 +116,6 @@
       "priority": 100
     },
     "DeveloperRoleDisabled": {
-      "category": "role_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob die Developer Rolle deaktiviert ist.",
@@ -147,7 +125,6 @@
       "priority": 100
     },
     "HasBadges": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob das Projekt 'Badges' verwendet.",
@@ -157,7 +134,6 @@
       "priority": 100
     },
     "CheckReadmeHasLinks": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob in der Readme eine Verlinkung zu Confluence oder anderen Dokus eingetragen ist.",
@@ -167,7 +143,6 @@
       "priority": 100
     },
     "CheckNoContributingChain": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, dass sich in der CONTRIBUTING-Datei keine links auf andere CONTRIBUTING-Dateien befinden.",
@@ -177,7 +152,6 @@
       "priority": 100
     },
     "HasServiceDeskDisabled": {
-      "category": "settings_checks",
       "enabled": true,
       "severity": "LOW",
       "description": "Überprüft, ob der Service Desk deaktiviert ist oder nicht.",
@@ -187,7 +161,6 @@
       "priority": 1
     },
     "EitherOwnersOrMaintainersExist": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob eine MAINTAINERS.md oder OWNERS.md Datei existiert.",
@@ -197,7 +170,6 @@
       "priority": 100
     },
     "NotDefaultReadme": {
-      "category": "file_checks",
       "enabled": true,
       "severity": "MEDIUM",
       "description": "Überprüft, ob die README Datei die Default-Readme ist.",

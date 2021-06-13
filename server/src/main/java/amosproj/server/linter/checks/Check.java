@@ -7,7 +7,6 @@ import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.RepositoryFile;
-import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -27,8 +26,8 @@ public abstract class Check {
         try {
             Class<? extends Check> obj = (Class<? extends Check>) Class.forName("amosproj.server.linter.checks." + checkName);
             Method method = obj.getDeclaredMethod("evaluate", GitLab.class, Project.class);
-            result = (boolean) method.invoke(gitLab, project);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            result = (boolean) method.invoke(obj.getConstructor().newInstance(), gitLab, project);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
             // TODO handle some of the exceptions differently (e.g. return false upon ClassNotFound Exception.
             e.printStackTrace();
         }
