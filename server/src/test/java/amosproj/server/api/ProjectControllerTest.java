@@ -1,9 +1,11 @@
 package amosproj.server.api;
 
+import amosproj.server.TestUtil;
 import amosproj.server.data.LintingResult;
 import amosproj.server.data.LintingResultRepository;
 import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,8 +15,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Iterator;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,7 +39,7 @@ public class ProjectControllerTest {
     @Test
     public void testAllProjects() throws Exception {
         // insert test data
-        projectRepository.save(new Project("amos-testz", "https://gitlab.cs.fau.de/ib49uquh/amos-testz", 69, "gitlab.cs.fau.de"));
+        projectRepository.save(new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com"));
         // do test request
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk());
     }
@@ -46,7 +47,7 @@ public class ProjectControllerTest {
     @Test
     public void testGetProject() throws Exception {
         // insert test data
-        Project proj = projectRepository.save(new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 420, "gitlab.cs.fau.de"));
+        Project proj = projectRepository.save(new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com"));
         LintingResult lintingResult = lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
         // do test requests
         this.mockMvc.perform(get("/project/" + proj.getId().toString())).andDo(print()).andExpect(status().isOk());
@@ -55,19 +56,22 @@ public class ProjectControllerTest {
 
     @Test
     public void testLintProject() throws Exception {
-        mockMvc.perform(post("/projects").contentType(MediaType.TEXT_PLAIN_VALUE)
-                .content("https://gitlab.cs.fau.de/ib49uquh/amos-testz"))
-                .andExpect(status().isOk());
+        JsonNode node = TestUtil.getTestConfig();
+        for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
+            String repo = it.next();
+
+            mockMvc.perform(post("/projects").contentType(MediaType.TEXT_PLAIN_VALUE)
+                    .content(repo)).andExpect(status().isOk());
+        }
 
         mockMvc.perform(post("/projects").contentType(MediaType.TEXT_PLAIN_VALUE)
-                .content("https://gitlab.cs.fau.de/ib49uquh/repo-welches-garantiert-nicht-existiert"))
+                .content(node.get("https://gitlab.cs.fau.de/ib49uquh/allcheckstrue").get("gitlabInstance").asText() + "/be15piel/repo-welches-garantiert-nicht-existiert"))
                 .andExpect(status().isNotFound());
-
     }
 
     @Test
     public void testGetProjectLintsLastMonth() throws Exception {
-        Project proj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 420, "gitlab.cs.fau.de");
+        Project proj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com");
         lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
         lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now().minusDays(50)));
         proj = projectRepository.save(proj);
