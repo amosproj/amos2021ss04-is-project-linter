@@ -38,6 +38,7 @@ export class RepositoryDetailsComponent implements OnInit {
   lastLintTime;
   RepoName = '';
   RepoURL = '';
+  RepoDescription = '';
   checksHighSeverity: CheckResults[]; // wird momentan nicht benützt
   checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
   checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
@@ -66,23 +67,10 @@ export class RepositoryDetailsComponent implements OnInit {
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
     this.latestLintingResultsSortedPriority = new Array<CheckResults>();
-    console.log('lintingResult was injected?',this.data.lintingResult);
     this.initializeClassValuesAndTiles(); // sendet erste HTTP Anfrage ans backend
   }
 
   ngAfterViewInit(): void {
-    /*
-    var tags = this.getTagsArray(
-      this.data.lintingResult.checkResults
-    );
-    this.numberOfTestsPerSeverityInTags =
-    this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-      tags,
-      this.data.lintingResult.checkResults
-    )[0];
-    var chartNames = this.getChartNames(tags);
-    //console.log('in after', this.numberOfTestsPerSeverityInTags);
-    */
     for (var i = 0; i < this.tags.length + 1; i++) {
       this.renderChart(
         this.chartNames[i],
@@ -146,7 +134,7 @@ export class RepositoryDetailsComponent implements OnInit {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
     // fülle linting Kategorien array
     this.latestLintingResults =
-      this.data.lintingResult.checkResults;
+      this.data.project.lintingResults[0].checkResults;
     //this.fillSeverityArrays(); // muss momentan nicht benützt werden
     this.tags = this.getTagsArray(this.latestLintingResults);
 
@@ -158,16 +146,17 @@ export class RepositoryDetailsComponent implements OnInit {
     //console.log('LintingResultInTags', this.LintingResultsInTags);
 
     // Speichere Informationen
-    this.RepoName = this.data.projectName;
-    this.RepoURL = this.data.projectUrl;
+    this.RepoName = this.data.project.name;
+    this.RepoURL = this.data.project.url;
+    this.RepoDescription = this.data.project.description;
     this.lastLintTime = dayjs(
-      this.data.lintingResult.lintTime
+      this.data.project.lintingResults[0].lintTime
     ).format('DD.MM.YYYY - H:mm');
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
     this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
       this.tags,
-      this.data.lintingResult.checkResults
+      this.data.project.lintingResults[0].checkResults
     )[0];
     this.chartNames = this.getChartNames(this.tags);
     this.addTilesForCategoryGraphAndTipps();
@@ -322,10 +311,24 @@ export class RepositoryDetailsComponent implements OnInit {
 
 // Um das Projekt zu bekommen
 export interface DialogData {
-  projectID: number;
-  projectName: string;
-  projectUrl: string;
-  lintingResult: LintingResult;
+  project: Project;
+}
+
+// Interface für die repository Komponente welche grob die Informationen des repository zeigt
+interface Project {
+  gitlabInstance: string;
+  gitlabProjectId: number;
+  id: number;
+  name: string;
+  description: string;
+  results: [];
+  url: string;
+  passedTestsInFilter: number;
+  newPassedTestsLastMonth: number;
+  passedTestsPerTag: number[];
+  newPassedTestsPerTagLastMonth: number[];
+
+  lintingResults: LintingResult[];
 }
 
 // Zum speichern der Daten des Projekts

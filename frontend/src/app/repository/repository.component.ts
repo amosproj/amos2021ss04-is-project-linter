@@ -11,11 +11,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RepositoryComponent implements OnInit {
   _ref: any;
-  gitlabInstance = '';
-  name = '';
-  url = '';
-  id = 0;
-  lintingResult: LintingResult;
+  project: Project;
   @ViewChild(RepositoryDetailsComponent) child;
   removeObject() {
     this._ref.destroy();
@@ -34,10 +30,27 @@ export class RepositoryComponent implements OnInit {
       width: '77%',
       height: '96%',
       panelClass: 'custom-dialog-container',
-      data: { protectName: this.name, projectUrl: this.gitlabInstance, projectID: this.id , lintingResult: this.lintingResult},
+      data: { project: this.project},
     });
   }
 
+}
+
+// Interface für die repository Komponente welche grob die Informationen des repository zeigt
+interface Project {
+  gitlabInstance: string;
+  gitlabProjectId: number;
+  id: number;
+  name: string;
+  description: string;
+  results: [];
+  url: string;
+  passedTestsInFilter: number;
+  newPassedTestsLastMonth: number;
+  passedTestsPerTag: number[];
+  newPassedTestsPerTagLastMonth: number[];
+
+  lintingResults: LintingResult[];
 }
 
 // Zum speichern der Daten des Projekts

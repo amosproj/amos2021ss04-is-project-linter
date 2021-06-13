@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-root',
@@ -135,15 +136,12 @@ export class AppComponent implements OnInit {
 
   ngAfterViewInit() {}
 
-  addComponent(name, id, gitlabInstance, lintingResult) {
+  addComponent(project) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
     var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
-    expComponent.instance.name = name;
-    expComponent.instance.id = id;
-    expComponent.instance.gitlabInstance = gitlabInstance;
-    expComponent.instance.lintingResult = lintingResult;
+    expComponent.instance.project = project;
     //Zum Suchen
     this.projectComponents.push(expComponent);
   }
@@ -151,10 +149,7 @@ export class AppComponent implements OnInit {
   displayProjects() {
     for (var i = 50 * this.currentPage; i < 50 * (this.currentPage + 1) && i < this.all_projects.length; i++) {
       this.addComponent(
-        this.all_projects[i].name,
-        this.all_projects[i].id,
-        this.all_projects[i].url,
-        this.all_projects[i].lintingResults[0]
+        this.all_projects[i]
       );
     }
   }
@@ -181,10 +176,7 @@ export class AppComponent implements OnInit {
         var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
         var expComponent = this.container.createComponent(comp);
         expComponent.instance._ref = expComponent;
-        expComponent.instance.name = item.instance.name;
-        expComponent.instance.id = item.instance.id;
-        expComponent.instance.gitlabInstance = item.instance.gitlabInstance;
-        expComponent.instance.lintingResult = item.instance.lintingResult;
+        expComponent.instance.project = item.instance.project;
       }
     }
   }
@@ -312,6 +304,7 @@ interface Project {
   gitlabProjectId: number;
   id: number;
   name: string;
+  description: string;
   results: [];
   url: string;
   passedTestsInFilter: number;

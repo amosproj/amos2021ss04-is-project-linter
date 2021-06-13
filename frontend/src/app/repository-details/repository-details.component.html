@@ -3,7 +3,7 @@
   <mat-toolbar-row style="height: 50px">
     <span
       style="text-align: left; display: inline-block; width: 100%; font-size: 32px; border: none; ">
-      {{ RepoName }}
+      {{ RepoName}}
       </span>
     <mat-dialog-actions>
       <button mat-stroked-button mat-dialog-close style=" text-align: right; display: inline-block; ">
@@ -21,6 +21,30 @@
       "
     >
       URL: {{ RepoURL }}
+    </p>
+  </mat-toolbar-row>
+  <mat-toolbar-row style="height: 20px">
+    <p
+      style="
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+      "
+    >
+      Beschreibung: {{ RepoDescription }}
+    </p>
+  </mat-toolbar-row>
+  <mat-toolbar-row style="height: 20px">
+    <p
+      style="
+        text-align: left;
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+      "
+    >
+      Zuletzt gelintet am: {{ lastLintTime }}
     </p>
   </mat-toolbar-row>
 </mat-toolbar>
