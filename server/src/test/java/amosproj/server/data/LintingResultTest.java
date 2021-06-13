@@ -28,7 +28,7 @@ public class LintingResultTest {
 
     @BeforeEach
     void setup() {
-        testProj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 1, "https://gitlab.cs.fau.de");
+        testProj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com");
         projectRepository.save(testProj);
     }
 

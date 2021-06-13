@@ -7,4 +7,6 @@ import org.springframework.data.repository.CrudRepository;
  * Hier werden die Datenbank-Queries ausgeführt.
  */
 public interface CheckResultRepository extends CrudRepository<CheckResult, Long> {
+
+    CheckResult findFirstByCheckName(String checkName);
 }

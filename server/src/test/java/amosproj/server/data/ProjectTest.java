@@ -25,7 +25,7 @@ public class ProjectTest {
 
     @BeforeEach
     void setUp() {
-        testProj = new Project("ChiefExam", "https://gitlab.cs.fau.de/it62ajow/chiefexam", 1, "https://gitlab.cs.fau.de", "Beschreibung", 1, new Date(15L));
+        testProj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com", "Beschreibung", 1, new Date(15L));
         projectRepository.save(testProj);
     }
 
@@ -37,7 +37,7 @@ public class ProjectTest {
     @Test
     public void checkDataBaseIntegrity() {
         assert testProj != null;
-        assert projectRepository.findFirstByGitlabProjectId(1) != null;
+        assert projectRepository.findFirstByGitlabProjectId(69) != null;
 
         Iterable<Project> projectIterable = projectRepository.findAll();
         Iterator<Project> projectIterator = projectIterable.iterator();

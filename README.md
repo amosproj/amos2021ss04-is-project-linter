@@ -9,11 +9,11 @@
 </p>
 
 <h3 align="center">
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Docker-Deployment">Installation</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/tree/main/docs#installation">Installation</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Architektur">Architektur</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/blob/main/docs/Architektur.md">Architektur</a>
   <span> · </span>
-  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Config-File">Konfiguration der Web-App</a>
+  <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/tree/main/docs#nutzung">Nutzung</a>
 </h3>
 
 ---
@@ -21,7 +21,7 @@
 ## Beschreibung
 Linter für Inner-Source-Software
 
-Die ACIDIC Software analysiert und gibt Tips zum Verbessern von Softwareprojekten auf einer GitLab Instanz. Sie überprüft diese Projekte auf (siehe <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/wiki/Checks">Wiki</a>): 
+Die ACIDIC Software analysiert und gibt Tips zum Verbessern von Softwareprojekten auf einer GitLab Instanz. Sie überprüft diese Projekte auf (siehe <a href="https://github.com/amosproj/amos-ss2021-is-project-linter/blob/main/docs/Checks.md">Wiki</a>): 
 * Korrekte Einstellungen
 * Existenz von benötigten Dateien
 * Existenz von Links innerhalb der benötigten Dateien
