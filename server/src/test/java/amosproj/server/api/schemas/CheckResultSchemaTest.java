@@ -5,21 +5,19 @@ import amosproj.server.data.CheckResult;
 import amosproj.server.data.CheckSeverity;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@DataJpaTest
-@AutoConfigureDataJpa
+@SpringBootTest // DataJPATest baut kein richtigen Spring Context auf, und liest somit nicht die ENV Variablen ein, die wir brauchen.
 @TestPropertySource(locations = "classpath:test.properties")
 public class CheckResultSchemaTest {
 
     @Test
     public void testCheckResultSchema() {
-        JsonNode node = Config.getConfigNode().get("checks").get("checkReadmeExistence");
-        CheckResult checkResult = new CheckResult(null, "checkReadmeExistence", true);
+        JsonNode node = Config.getConfigNode().get("checks").get("CheckReadmeExistence");
+        CheckResult checkResult = new CheckResult(null, "CheckReadmeExistence", true);
         CheckResultSchema checkResultSchema = new CheckResultSchema(checkResult, node);
         // some assertions
         assertEquals(checkResult.getResult(), checkResultSchema.getResult());

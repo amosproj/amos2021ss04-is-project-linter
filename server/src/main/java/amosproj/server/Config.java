@@ -16,13 +16,13 @@ public class Config {
 
     private static String configFile = "/home/amos/config.json"; // FIXME default value da sonst nicht in docker läuft.
 
-    /*public Config(@Value("${CONFIG_FILE}") String CONFIG_FILE) {
-        configFile = CONFIG_FILE;
-    }*/
+    public Config(@Value("${CONFIG_FILE}") String CONFIG_FILE) {
+        Config.configFile = CONFIG_FILE;
+    }
 
     @Value("${CONFIG_FILE}")
     public void setConfigFile(String CONFIG_FILE) {
-        configFile = CONFIG_FILE;
+        Config.configFile = CONFIG_FILE;
     }
 
     /**
@@ -31,7 +31,7 @@ public class Config {
      * @return JsonNode of the parsed config.json
      */
     public static JsonNode getConfigNode() {
-        File file = new File(configFile);
+        File file = new File(Config.configFile);
         assert file.exists();
         try {
             InputStream fileStream = new FileInputStream(file);
