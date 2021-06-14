@@ -38,13 +38,12 @@ services:
         image: "amoslinter/frontend:${ENVIRONMENT}"
         volumes: # more like: load nginx configuration
             - ./nginx.conf:/etc/nginx/templates/default.conf.template
-            - ./config.json:/config.json
         environment:
             - HOST=${HOST}
         depends_on:
             - backend
         ports: # only connection to outside world
-            - 6969:80 # TODO https
+            - 6969:80
         links:
             - backend
 

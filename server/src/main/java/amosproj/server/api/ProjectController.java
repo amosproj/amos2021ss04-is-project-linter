@@ -1,5 +1,6 @@
 package amosproj.server.api;
 
+import amosproj.server.Config;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.LintingResult;
@@ -8,6 +9,7 @@ import amosproj.server.data.Project;
 import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -127,6 +129,11 @@ public class ProjectController {
     @GetMapping("/crawler")
     public CrawlerStatusSchema statusCrawler() {
         return crawler.crawlerStatus();
+    }
+
+    @GetMapping("/config")
+    public JsonNode sendConfig() {
+        return Config.getConfigNode();
     }
 
 }
