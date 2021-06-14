@@ -7,8 +7,8 @@ Docker, Docker-Compose
 ## Docker Images
 Überlicherweise werden die Docker Images automatisch von unserem [DockerHub](https://hub.docker.com/u/amoslinter/) gepullt.
 Wollen Sie jedoch selbst bauen, schauen Sie sich folgende Anleitungen an:
-* [Für das FrontEnd Image](https://github.com/amosproj/amos-ss2021-is-project-linter/blob/main/frontend/README.md)
-* [Für das BackEnd Image](https://github.com/amosproj/amos-ss2021-is-project-linter/blob/main/server/README.md)
+* [Für das FrontEnd Image](../frontend/README.md)
+* [Für das BackEnd Image](../server/README.md)
 
 ## Ausführen (mit docker-compose)
 [Konfiguration](Konfiguration.md) durchführen und die wie im vorherigen Kapitel einsetzen.

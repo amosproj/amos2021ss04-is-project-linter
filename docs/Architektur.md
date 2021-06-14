@@ -7,7 +7,7 @@ Die Full-Stack Architektur der Software ist implementiert durch:
 * PostgreSQL als Datenbank
 * Als Docker-Images gepackt
 
-![Softwarearchitektur](https://github.com/amosproj/amos-ss2021-is-project-linter/raw/main/assets/architektur.png)
+![Softwarearchitektur](../assets/architektur.png)
 
 # Datenbankschema
-![Datenbankschema](https://github.com/amosproj/amos-ss2021-is-project-linter/raw/main/assets/database.png)
+![Datenbankschema](../assets/database.png)
