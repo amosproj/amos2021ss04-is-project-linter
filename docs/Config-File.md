@@ -1,4 +1,4 @@
-**Einstellungsdatei**. Befindet sich momentan in `server/src/main/resources/config.json`
+**Einstellungsdatei**. Befindet sich momentan in `/config.json`
 
 ## Settings
 * `gitLabHost`: Base Url der GitLab Instanz (z.B "https://gitlab.com")
