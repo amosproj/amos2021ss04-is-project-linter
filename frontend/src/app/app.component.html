@@ -73,6 +73,8 @@
         <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
           info
         </mat-icon>
+        <button mat-raised-button [disabled]="currentPage  == 0 || suchleiste.value != ''" (click)="pageLeft()">Vorherige 50 Projekte</button>
+        <button mat-raised-button [disabled]="currentPage  == pages || suchleiste.value != ''" (click)="pageRight()">Nächste 50 Projekte</button>
       </mat-card> 
 
     <mat-card>

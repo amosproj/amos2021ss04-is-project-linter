@@ -4,13 +4,17 @@
   <mat-card-content (click)="showDetailsViaDialog()">
     <table style="text-align: left; margin-bottom: 20px">
       <caption>
-        <mat-card-title style="text-align: left"> {{ name }}</mat-card-title>
+        <mat-card-title style="text-align: left"> {{ project.name }}</mat-card-title>
       </caption>
       <tr>
         URL:
         {{
-          gitlabInstance
+          project.url
         }}
+      </tr>
+      <tr>
+        Beschreibung: {{project.description}}
+      </tr>
     </table>
     <div >
       <button mat-raised-button>Anzeigen</button>

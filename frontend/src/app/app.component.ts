@@ -13,6 +13,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +43,9 @@ export class AppComponent implements OnInit {
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   toggleToTrue = true;
   csvExportLink = environment.baseURL + '/export/csv';
+
+  currentPage: number = 0;
+  pages: number;
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
@@ -100,7 +104,8 @@ export class AppComponent implements OnInit {
   }
 
   async GetProjects() {
-    // Holt alle Projekte vom Backend-Server (Ohne LintingResults)
+
+    // Holt alle Projekte vom Backend-Server 
     let dialogRef = this.dialog.open(SpinnerComponentComponent, {
       width: '100%',
       height: '100%',
@@ -108,23 +113,20 @@ export class AppComponent implements OnInit {
     });
 
     await this.http
-      .get(`${environment.baseURL}/projects`)
+      .get(`${environment.baseURL}/projects?extended=true`)
       .toPromise()
       .then((results: any) => {
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
-        console.log(this.all_projects);
+        console.log('projekte',this.all_projects);
 
-        for (let project in this.all_projects) {
-          this.addComponent(
-            this.all_projects[project].name,
-            this.all_projects[project].id,
-            this.all_projects[project].url
-          );
-        }
+        this.pages = Math.floor(this.all_projects.length / 50);
+
+        this.displayProjects();
 
         this.prepareProjectDataForSorting();
         this.init_all_projects = this.all_projects.slice();
         dialogRef.close();
+        
       }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
 
@@ -134,16 +136,34 @@ export class AppComponent implements OnInit {
 
   ngAfterViewInit() {}
 
-  addComponent(name, id, gitlabInstance) {
+  addComponent(project) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
     var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
     var expComponent = this.container.createComponent(comp);
     expComponent.instance._ref = expComponent;
-    expComponent.instance.name = name;
-    expComponent.instance.id = id;
-    expComponent.instance.gitlabInstance = gitlabInstance;
+    expComponent.instance.project = project;
     //Zum Suchen
     this.projectComponents.push(expComponent);
+  }
+
+  displayProjects() {
+    for (var i = 50 * this.currentPage; i < 50 * (this.currentPage + 1) && i < this.all_projects.length; i++) {
+      this.addComponent(
+        this.all_projects[i]
+      );
+    }
+  }
+
+  pageRight() {
+    this.currentPage += 1;
+    this.removeAllProjectsFromOverview();
+    this.displayProjects();
+  }
+
+  pageLeft() {
+    this.currentPage -= 1;
+    this.removeAllProjectsFromOverview();
+    this.displayProjects();
   }
 
   searchProject(value: string) {
@@ -156,12 +176,11 @@ export class AppComponent implements OnInit {
         var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
         var expComponent = this.container.createComponent(comp);
         expComponent.instance._ref = expComponent;
-        expComponent.instance.name = item.instance.name;
-        expComponent.instance.id = item.instance.id;
-        expComponent.instance.gitlabInstance = item.instance.gitlabInstance;
+        expComponent.instance.project = item.instance.project;
       }
     }
   }
+
   getChipOptions() {
     //hole alle verschiedenen tags aus der config.json datei
     this.chipOptions = [];
@@ -173,53 +192,36 @@ export class AppComponent implements OnInit {
     return this.chipOptions;
   }
 
-  async prepareProjectDataForSorting() {
+  prepareProjectDataForSorting() {
     for (var i = 0; i < this.all_projects.length; i++) {
-      //lade ergebnisse der checks aus dem backend
-
-      await this.http
-        .get(
-          `${environment.baseURL}/project/${this.all_projects[i].id}/lastMonth`
-        )
-        .toPromise()
-        .then((val: any) => {
-          var checkResults: CheckResults[] =
-            val.lintingResults[val.lintingResults.length - 1].checkResults;
-          var checkResultsLastMonth: CheckResults[] =
-            val.lintingResults[0].checkResults;
-          //Zähler für erfolgreiche Checks pro Tag
-          var checksPassed: number[] = new Array(this.chipOptions.length).fill(
-            0
-          );
-          //Zähler für erfolgreiche Checks letzten Monat pro Tag
-          var checksPassedLastMonth: number[] = new Array(
-            this.chipOptions.length
-          ).fill(0);
-          for (var j = 0; j < checkResults.length - 1; j++) {
-            // wenn der Check erfolgreich war erhöhe die Zähler
-            if (checkResults[j].result) {
-              checksPassed[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
-            }
-            if (checkResultsLastMonth[j].result) {
-              checksPassedLastMonth[
-                this.chipOptions.indexOf(checkResults[j].tag)
-              ] += 1;
-            }
-          }
-          var newChecksPassedLastMonth: number[] = new Array(
-            this.chipOptions.length
-          );
-          for (var j = 0; j < this.chipOptions.length; j++) {
-            newChecksPassedLastMonth[j] =
-              checksPassed[j] - checksPassedLastMonth[j];
-          }
-          //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
-          this.all_projects[i].passedTestsPerTag = checksPassed;
-          this.all_projects[i].newPassedTestsPerTagLastMonth =
-            newChecksPassedLastMonth;
-          this.all_projects[i].passedTestsInFilter = 0;
-          this.all_projects[i].newPassedTestsLastMonth = 0;
-        });
+      var checkResults: CheckResults[] =
+        this.all_projects[i].lintingResults[ this.all_projects[i].lintingResults.length - 1].checkResults;
+      var checkResultsLastMonth: CheckResults[] =
+        this.all_projects[i].lintingResults[0].checkResults;
+      //Zähler für erfolgreiche Checks pro Tag
+      var checksPassed: number[] = new Array(this.chipOptions.length).fill(0);
+      //Zähler für erfolgreiche Checks letzten Monat pro Tag
+      var checksPassedLastMonth: number[] = new Array(this.chipOptions.length).fill(0);
+      for (var j = 0; j < checkResults.length - 1; j++) {
+        // wenn der Check erfolgreich war erhöhe die Zähler
+        if (checkResults[j].result) {
+          checksPassed[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
+        }
+        if (checkResultsLastMonth[j].result) {
+          checksPassedLastMonth[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
+        }
+      }
+      var newChecksPassedLastMonth: number[] = new Array(
+        this.chipOptions.length
+      );
+      for (var j = 0; j < this.chipOptions.length; j++) {
+        newChecksPassedLastMonth[j] = checksPassed[j] - checksPassedLastMonth[j];
+      }
+      //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
+      this.all_projects[i].passedTestsPerTag = checksPassed;
+      this.all_projects[i].newPassedTestsPerTagLastMonth = newChecksPassedLastMonth;
+      this.all_projects[i].passedTestsInFilter = 0;
+      this.all_projects[i].newPassedTestsLastMonth = 0;
     }
   }
 
@@ -237,20 +239,12 @@ export class AppComponent implements OnInit {
     }
     this.filterInfo += ' und Sortierkriterium: ' + this.searchCriteria.value;
 
-    this.removeAllProjectsFromOverview();
-
     //setze die notwendigen variablen fürs sortieren der projekte nach den gewählten tags
     for (let project in this.all_projects) {
       this.all_projects[project].passedTestsInFilter = 0;
       this.all_projects[project].newPassedTestsLastMonth = 0;
       for (var i = 0; i < this.chipOptions.length; i++) {
         for (var j = 0; j < this.chipsControl.value.length; j++) {
-          /*
-          if(this.chipsControl.value[j].includes("check")){
-            this.chipsControl.value[j] = this.chipsControl.value[j].replace("check","");
-          }
-          this.chipsControl.value[j] = this.chipsControl.value[j].trim();
-          */
           if (this.chipsControl.value[j] == this.chipOptions[i]) {
             this.all_projects[project].passedTestsInFilter +=
               this.all_projects[project].passedTestsPerTag[i];
@@ -275,36 +269,10 @@ export class AppComponent implements OnInit {
     }
     console.log('Projekte nach sortieren', this.all_projects);
 
-    for (let project in this.all_projects) {
-      this.addComponent(
-        this.all_projects[project].name,
-        this.all_projects[project].id,
-        this.all_projects[project].url
-      );
-    }
+    this.removeAllProjectsFromOverview();
+
+    this.displayProjects();
   }
-  /*
-  bubbleSort(gridInfoArray: GridInfo[], cmp: (a: any, b: any, c:any) => number) : GridInfo[]{
-    let i = 0, j = 0, len = gridInfoArray.length, swapped = false;
-    var currentValue, nextValue;
-    for (i=0; i < len; i++){
-      swapped = false;
-      for (j=0; j < len-1; j++) {
-        currentValue = gridInfoArray[j];
-        nextValue = gridInfoArray[j + 1];
-        if (cmp(currentValue, nextValue, this.chipsControl.value) > 0) {  // compare the adjacent elements 
-            gridInfoArray[j] = nextValue;  // swap them
-            gridInfoArray[j + 1] = currentValue;
-            swapped = true;
-        }
-      }
-      if (!swapped) {// if no number was swapped that means array is sorted now, break the loop.
-          break;
-      }
-    }
-  return gridInfoArray;
-  }
-  */
 
   compareNewTestsPassedSinceLastMonthFilter(a, b) {
     if (a.newPassedTestsLastMonth < b.newPassedTestsLastMonth) {
@@ -325,22 +293,6 @@ export class AppComponent implements OnInit {
     return 0;
   }
 
-  /*
-  compareTestsPassedPerTag(a, b, setTags) {
-    var result;
-      for (var i = 0; i < setTags.length; i++){
-        if(setTags[i] == 1){
-          if(a.testsPassedPerTag[i] >= b.testsPassedPerTag[i]){
-            result = 1;
-          } else {
-            return -1;
-          }
-        }
-      }
-      return result;
-  }
-  */
-
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
@@ -352,12 +304,15 @@ interface Project {
   gitlabProjectId: number;
   id: number;
   name: string;
+  description: string;
   results: [];
   url: string;
   passedTestsInFilter: number;
   newPassedTestsLastMonth: number;
   passedTestsPerTag: number[];
   newPassedTestsPerTagLastMonth: number[];
+
+  lintingResults: LintingResult[];
 }
 
 // Zum speichern der Daten des Projekts
