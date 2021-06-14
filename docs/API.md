@@ -31,6 +31,9 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Body: nichts
 * Response: Eine CSV Datei, direkt zum Download, also am besten per `<a download href="http://<HOST>/6969/api/export/csv">download</a>` einbetten
 
+### GET - `/config` - Holt die Config Datei
+* Body: nichts
+* Response: Eine JSON antwort mit der config.
 
 # Schemas
 #### CrawlerStatusSchema
