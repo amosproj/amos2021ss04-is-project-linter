@@ -7,6 +7,8 @@ import amosproj.server.data.LintingResult;
 import org.gitlab4j.api.GitLabApiException;
 import org.gitlab4j.api.models.Project;
 import org.gitlab4j.api.models.RepositoryFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -19,9 +21,13 @@ import java.net.URISyntaxException;
  */
 public abstract class Check {
 
+    protected static final Logger logger = LoggerFactory.getLogger(Check.class);
+
     protected abstract boolean evaluate(GitLab gitLab, Project project);
 
     public static void run(String checkName, GitLab gitLab, Project project, CheckResultRepository checkResultRepository, LintingResult lintingResult) {
+        logger.debug("running Check: " + checkName + " for Project " + project.getName());
+
         boolean result = false;
         try {
             Class<? extends Check> obj = (Class<? extends Check>) Class.forName("amosproj.server.linter.checks." + checkName);

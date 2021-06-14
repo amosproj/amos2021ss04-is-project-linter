@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 public class ServerApplication {
-
+    
     /**
      * Dies ist der Einstiegspunkt des Programms.
      *

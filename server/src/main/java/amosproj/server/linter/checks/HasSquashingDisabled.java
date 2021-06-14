@@ -6,13 +6,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.models.Project;
 
 public class HasSquashingDisabled extends Check {
+
     @Override
     protected boolean evaluate(GitLab gitLab, Project project) {
         try {
             JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
             JsonNode squashNode = node.get("squash_option");
             if (squashNode == null) {
-                System.err.println("Die GitLab Instanz läuft nicht auf der neuesten version. Squashing ist nicht direkt auslesbar.");
+                logger.warn("Die GitLab Instanz läuft nicht auf der neuesten version. Squashing ist nicht direkt auslesbar.");
                 return false;
             }
             String forkingAccessLevel = squashNode.asText();
