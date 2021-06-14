@@ -47,7 +47,7 @@
         <div style="font-size: large;">Kategorie:</div>
         <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
           <mat-chip-list selectable multiple [formControl]="chipsControl">
-            <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of getChipOptions()" [value]="option">
+            <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of chipOptions" [value]="option">
               <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
               {{option}}
             </mat-chip>

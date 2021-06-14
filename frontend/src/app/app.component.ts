@@ -8,12 +8,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { MatChip, MatChipList } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
-import * as configFile from '../../../config.json';
-import { MatTableDataSource } from '@angular/material/table';
-import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
-import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-root',
@@ -21,11 +17,14 @@ import { coerceStringArray } from '@angular/cdk/coercion';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
+  /***********************************************************
+   * Properties
+   ***********************************************************/
+
   title = 'frontend';
   projectComponents = [];
   chipsControl = new FormControl('');
   chipsValue$ = this.chipsControl.valueChanges;
-  //SearchBarValue = '';
   kategorie = new FormControl('');
   all_projects: Project[];
   init_all_projects: Project[];
@@ -43,11 +42,15 @@ export class AppComponent implements OnInit {
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   toggleToTrue = true;
   csvExportLink = environment.baseURL + '/export/csv';
-
   currentPage: number = 0;
   pages: number;
+  config: Config;
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
+
+  /***********************************************************
+   * Init Methods
+   ***********************************************************/
 
   constructor(
     public dialog: MatDialog,
@@ -61,9 +64,21 @@ export class AppComponent implements OnInit {
     });
   }
 
+  ngOnInit() {
+    this.GetProjects();
+    this.GetConfig();
+  }
+
+  ngAfterViewInit() {}
+
+  /***********************************************************
+   * Functions
+   ***********************************************************/
+
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
+
   forwardLink(URL) {
     // Wird aktuell nicht benötigt
     const headers = { 'Content-Type': 'text/html' };
@@ -98,14 +113,24 @@ export class AppComponent implements OnInit {
         }
       );
   }
+
   removeAllProjectsFromOverview() {
     // Löscht alle angezeigten Projekte
     this.container.clear();
   }
 
-  async GetProjects() {
+  async GetConfig() {
+    await this.http
+      .get(`${environment.baseURL}/config`)
+      .toPromise()
+      .then((results: any) => {
+        this.config = results;
+        this.getChipOptions();
+      });
+  }
 
-    // Holt alle Projekte vom Backend-Server 
+  async GetProjects() {
+    // Holt alle Projekte vom Backend-Server
     let dialogRef = this.dialog.open(SpinnerComponentComponent, {
       width: '100%',
       height: '100%',
@@ -117,7 +142,7 @@ export class AppComponent implements OnInit {
       .toPromise()
       .then((results: any) => {
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
-        console.log('projekte',this.all_projects);
+        console.log('projekte', this.all_projects);
 
         this.pages = Math.floor(this.all_projects.length / 50);
 
@@ -126,15 +151,8 @@ export class AppComponent implements OnInit {
         this.prepareProjectDataForSorting();
         this.init_all_projects = this.all_projects.slice();
         dialogRef.close();
-        
       }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
   }
-
-  ngOnInit() {
-    this.GetProjects();
-  }
-
-  ngAfterViewInit() {}
 
   addComponent(project) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
@@ -147,10 +165,12 @@ export class AppComponent implements OnInit {
   }
 
   displayProjects() {
-    for (var i = 50 * this.currentPage; i < 50 * (this.currentPage + 1) && i < this.all_projects.length; i++) {
-      this.addComponent(
-        this.all_projects[i]
-      );
+    for (
+      var i = 50 * this.currentPage;
+      i < 50 * (this.currentPage + 1) && i < this.all_projects.length;
+      i++
+    ) {
+      this.addComponent(this.all_projects[i]);
     }
   }
 
@@ -184,42 +204,49 @@ export class AppComponent implements OnInit {
   getChipOptions() {
     //hole alle verschiedenen tags aus der config.json datei
     this.chipOptions = [];
-    for (let [key, value] of Object.entries(configFile.checks)) {
+    for (let [key, value] of Object.entries(this.config.checks)) {
       if (!this.chipOptions.includes(value.tag)) {
         this.chipOptions.push(value.tag);
       }
     }
-    return this.chipOptions;
   }
 
   prepareProjectDataForSorting() {
     for (var i = 0; i < this.all_projects.length; i++) {
       var checkResults: CheckResults[] =
-        this.all_projects[i].lintingResults[ this.all_projects[i].lintingResults.length - 1].checkResults;
+        this.all_projects[i].lintingResults[
+          this.all_projects[i].lintingResults.length - 1
+        ].checkResults;
       var checkResultsLastMonth: CheckResults[] =
         this.all_projects[i].lintingResults[0].checkResults;
       //Zähler für erfolgreiche Checks pro Tag
       var checksPassed: number[] = new Array(this.chipOptions.length).fill(0);
       //Zähler für erfolgreiche Checks letzten Monat pro Tag
-      var checksPassedLastMonth: number[] = new Array(this.chipOptions.length).fill(0);
+      var checksPassedLastMonth: number[] = new Array(
+        this.chipOptions.length
+      ).fill(0);
       for (var j = 0; j < checkResults.length - 1; j++) {
         // wenn der Check erfolgreich war erhöhe die Zähler
         if (checkResults[j].result) {
           checksPassed[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
         }
         if (checkResultsLastMonth[j].result) {
-          checksPassedLastMonth[this.chipOptions.indexOf(checkResults[j].tag)] += 1;
+          checksPassedLastMonth[
+            this.chipOptions.indexOf(checkResults[j].tag)
+          ] += 1;
         }
       }
       var newChecksPassedLastMonth: number[] = new Array(
         this.chipOptions.length
       );
       for (var j = 0; j < this.chipOptions.length; j++) {
-        newChecksPassedLastMonth[j] = checksPassed[j] - checksPassedLastMonth[j];
+        newChecksPassedLastMonth[j] =
+          checksPassed[j] - checksPassedLastMonth[j];
       }
       //var info : GridInfo = {project : val.name, testsPassed: checksPassed};
       this.all_projects[i].passedTestsPerTag = checksPassed;
-      this.all_projects[i].newPassedTestsPerTagLastMonth = newChecksPassedLastMonth;
+      this.all_projects[i].newPassedTestsPerTagLastMonth =
+        newChecksPassedLastMonth;
       this.all_projects[i].passedTestsInFilter = 0;
       this.all_projects[i].newPassedTestsLastMonth = 0;
     }
@@ -283,6 +310,7 @@ export class AppComponent implements OnInit {
     }
     return 0;
   }
+
   compareTestsPassedPerActivFilter(a, b) {
     if (a.passedTestsInFilter < b.passedTestsInFilter) {
       return 1;
@@ -297,6 +325,10 @@ export class AppComponent implements OnInit {
     chip.toggleSelected();
   }
 } // Ende von AppComponent
+
+/***********************************************************
+ * Interfaces
+ ***********************************************************/
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt
 interface Project {
@@ -334,4 +366,18 @@ interface LintingResult {
   id: number;
   lintTime: string;
   checkResults: CheckResults[];
+}
+
+interface Config {
+  checks: Check[];
+}
+
+interface Check {
+  enabled: boolean;
+  severity: string;
+  description: string;
+  message: string;
+  fix: string;
+  priority: number;
+  tag: string;
 }
