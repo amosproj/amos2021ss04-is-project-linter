@@ -4,7 +4,6 @@ import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.Scheduler;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
-import amosproj.server.linter.checks.Check;
 import org.gitlab4j.api.GitLabApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
