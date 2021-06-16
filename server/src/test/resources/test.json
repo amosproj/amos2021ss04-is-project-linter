@@ -20,7 +20,8 @@
       "CheckNoContributingChain": true,
       "HasServiceDeskDisabled": true,
       "EitherOwnersOrMaintainersExist": true,
-      "NotDefaultReadme": true
+      "NotDefaultReadme": true,
+      "CheckReadmeHasPicture": true
     }
   },
   "https://gitlab.cs.fau.de/ib49uquh/allchecksfalse": {
@@ -44,7 +45,8 @@
       "CheckNoContributingChain": true,
       "HasServiceDeskDisabled": false,
       "EitherOwnersOrMaintainersExist": false,
-      "NotDefaultReadme": false
+      "NotDefaultReadme": false,
+      "CheckReadmeHasPicture": false
     }
   }
 }
