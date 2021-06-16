@@ -5,6 +5,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Response: Json(List(ProjectSchema))
 
 ### POST - `/projects` - Linted ein einzelnes Repo
+* Query: ?extended=true|false, liefert auf wunsch auch die Ergebnisse von allen Projekten.
 * Body: url des zu lintenden Repos
 * Response: 'ok' falls ok, HTTP Fehlercode sonst
 
