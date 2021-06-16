@@ -65,8 +65,15 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    //this.manuallyStartCrawler();
     this.GetProjects();
     this.GetConfig();
+  }
+
+  manuallyStartCrawler(){
+    this.http.post(`${environment.baseURL}/crawler`, null).subscribe((result:any) => {
+      console.log(result);
+    });
   }
 
   ngAfterViewInit() {}
