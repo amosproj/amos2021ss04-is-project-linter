@@ -27,7 +27,7 @@ public class CheckResultSchema {
     public CheckResultSchema(CheckResult result, JsonNode node) {
         this.checkName = result.getCheckName();
         this.result = result.getResult();
-        this.severity = CheckSeverity.valueOf(node.get("severity").asText());
+        this.severity = CheckSeverity.valueOf(node.get("severity").asText("NOT_SPECIFIED"));
         this.description = node.get("description").asText();
         this.message = node.get("message").asText();
         this.fix = node.get("fix").asText();
