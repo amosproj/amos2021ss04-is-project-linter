@@ -27,12 +27,14 @@ public class CheckResultSchema {
     public CheckResultSchema(CheckResult result, JsonNode node) {
         this.checkName = result.getCheckName();
         this.result = result.getResult();
-        this.severity = CheckSeverity.valueOf(node.get("severity").asText());
-        this.description = node.get("description").asText();
-        this.message = node.get("message").asText();
-        this.fix = node.get("fix").asText();
-        this.tag = node.get("tag").asText();
-        this.priority = node.get("priority").asInt();
+        if (node != null) {
+            this.severity = CheckSeverity.valueOf(node.get("severity").asText());
+            this.description = node.get("description").asText();
+            this.message = node.get("message").asText();
+            this.fix = node.get("fix").asText();
+            this.tag = node.get("tag").asText();
+            this.priority = node.get("priority").asInt();
+        }
     }
 
     public String getCheckName() {
