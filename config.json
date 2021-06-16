@@ -142,6 +142,15 @@
       "tag": "Entwicklerfreundlichkeit",
       "priority": 100
     },
+    "CheckReadmeHasPicture": {
+      "enabled": true,
+      "severity": "LOW",
+      "description": "Überprüft, ob sich in der Readme ein Bild befindet.",
+      "message": "Kein Bild in Readme gefunden!",
+      "fix": "Fügen Sie ein Bild zur verschönerung der Readme ein.",
+      "tag": "Benutzerfreundlichkeit",
+      "priority": 100
+    },
     "CheckNoContributingChain": {
       "enabled": true,
       "severity": "MEDIUM",
