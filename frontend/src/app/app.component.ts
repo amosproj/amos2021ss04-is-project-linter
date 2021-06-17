@@ -196,7 +196,7 @@ export class AppComponent implements OnInit {
     this.removeAllProjectsFromOverview();
 
     for (let item of this.all_projects) {
-      if (item.name.startsWith(value) || value === '') {
+      if (item.name.toUpperCase().startsWith(value.toUpperCase()) || value === '') {
        this.addComponent(item);
       }
     }
