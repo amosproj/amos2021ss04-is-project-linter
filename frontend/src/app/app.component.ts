@@ -68,6 +68,10 @@ export class AppComponent implements OnInit {
     //this.manuallyStartCrawler();
     this.GetProjects();
     this.GetConfig();
+    this.GetProjects();
+  
+    
+ 
   }
 
   manuallyStartCrawler(){
@@ -150,16 +154,17 @@ export class AppComponent implements OnInit {
       .then((results: any) => {
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
         console.log('projekte', this.all_projects);
-
+        console.log(this.all_projects);
         this.pages = Math.floor(this.all_projects.length / 50);
 
         this.displayProjects();
 
-        this.prepareProjectDataForSorting();
-        this.init_all_projects = this.all_projects.slice();
-        dialogRef.close();
-      }); // momentan kann man nur die URL senden und nicht ein JSON Objekt
+      }); // momentan kann man nur die URL senden und nicht ein JSON Objekte
+      this.prepareProjectDataForSorting();
+      this.init_all_projects = this.all_projects.slice();
+      dialogRef.close();
   }
+ 
 
   addComponent(project) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
@@ -198,12 +203,9 @@ export class AppComponent implements OnInit {
     // TODO: Methoden Benennung ändern
     this.removeAllProjectsFromOverview();
 
-    for (let item of this.projectComponents) {
-      if (item.instance.name.startsWith(value) || value === '') {
-        var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
-        var expComponent = this.container.createComponent(comp);
-        expComponent.instance._ref = expComponent;
-        expComponent.instance.project = item.instance.project;
+    for (let item of this.all_projects) {
+      if (item.name.toUpperCase().startsWith(value.toUpperCase()) || value === '') {
+       this.addComponent(item);
       }
     }
   }
@@ -227,6 +229,7 @@ export class AppComponent implements OnInit {
       var checkResultsLastMonth: CheckResults[] =
         this.all_projects[i].lintingResults[0].checkResults;
       //Zähler für erfolgreiche Checks pro Tag
+      
       var checksPassed: number[] = new Array(this.chipOptions.length).fill(0);
       //Zähler für erfolgreiche Checks letzten Monat pro Tag
       var checksPassedLastMonth: number[] = new Array(
