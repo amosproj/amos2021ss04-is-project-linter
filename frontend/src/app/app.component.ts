@@ -45,7 +45,7 @@ export class AppComponent implements OnInit {
   currentPage: number = 0;
   pages: number;
   config: Config;
-
+  suchBegriff:string;
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
   /***********************************************************
@@ -187,15 +187,27 @@ export class AppComponent implements OnInit {
   }
 
   pageRight() {
-    this.currentPage += 1;
-    this.removeAllProjectsFromOverview();
-    this.displayProjects();
+    if(this.currentPage  == this.pages || this.suchBegriff != ''){
+      return;
+    }else{
+      this.currentPage += 1;
+      this.removeAllProjectsFromOverview();
+      this.displayProjects();
+    }
+
+    
+   
   }
 
   pageLeft() {
-    this.currentPage -= 1;
-    this.removeAllProjectsFromOverview();
-    this.displayProjects();
+    if(this.currentPage  == 0 || this.suchBegriff != ''){
+        return;
+    }else{
+      this.currentPage -= 1;
+      this.removeAllProjectsFromOverview();
+      this.displayProjects();
+    }
+    
   }
 
   searchProject(value: string) {
