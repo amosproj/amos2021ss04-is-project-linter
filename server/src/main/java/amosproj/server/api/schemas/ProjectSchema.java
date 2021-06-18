@@ -5,7 +5,7 @@ import amosproj.server.data.Project;
 import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class ProjectSchema {
     private String gitlabInstance;
     private String description;
     private Integer forkCount;
-    private Date lastCommit;
+    private LocalDateTime lastCommit;
     // relations
     private List<LintingResultSchema> lintingResults;
     // extra info
@@ -92,11 +92,11 @@ public class ProjectSchema {
         this.forkCount = forkCount;
     }
 
-    public Date getLastCommit() {
+    public LocalDateTime getLastCommit() {
         return lastCommit;
     }
 
-    public void setLastCommit(Date lastCommit) {
+    public void setLastCommit(LocalDateTime lastCommit) {
         this.lastCommit = lastCommit;
     }
 

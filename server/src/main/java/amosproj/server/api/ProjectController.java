@@ -20,6 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class ProjectController {
 
     @GetMapping("/project/{id}/lastMonth")
     public ProjectSchema getProjectLintsLastMonth(@PathVariable("id") Long id) {
-        LocalDateTime before = LocalDateTime.now();
+        LocalDateTime before = LocalDateTime.now(Clock.systemUTC());
         LocalDateTime after = before.minusDays(30);
         LinkedList<LintingResult> list = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs(after, before, id);
         return new ProjectSchema(projectRepository.findById(id).orElseThrow(

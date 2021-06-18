@@ -28,7 +28,7 @@
   <mat-form-field appearance="fill" [hideRequiredMarker]="hideRequiredControl.value"
     [floatLabel]="floatLabelControl.value" style="width: 420px !important">
     <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
-    <input #suchleiste matInput placeholder="z.B. Amos Testz" required (keyup)="searchProject(suchleiste.value)" />
+    <input [(ngModel)]="suchBegriff" #suchleiste matInput placeholder="z.B. Amos Testz" required (keyup)="searchProject(suchleiste.value)" />
     <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
     <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint>
   </mat-form-field>
@@ -68,18 +68,39 @@
         </mat-radio-group>
         </mat-card-content>
         <!-- kategorie.value == bestandene_tests_pro_kategorie-->
-        <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap >
+          <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
           (click)="sortProjects()">Sortieren</button>
         <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
           info
         </mat-icon>
-        <button mat-raised-button [disabled]="currentPage  == 0 || suchleiste.value != ''" (click)="pageLeft()">Vorherige 50 Projekte</button>
-        <button mat-raised-button [disabled]="currentPage  == pages || suchleiste.value != ''" (click)="pageRight()">Nächste 50 Projekte</button>
+        </div>
+        
+        <div style="float: right;" fxLayout="row" fxLayoutAlign="space-around center">
+
+          <mat-icon matTooltip="Vorherige 50"  (click)="pageLeft()">arrow_back_ios</mat-icon>
+          
+          <div>
+            Seite {{currentPage}}
+          </div>
+         
+          <mat-icon matTooltip="Nächste 50"  (click)="pageRight()">arrow_forward_ios</mat-icon>
+        </div>
+   
+        
       </mat-card> 
 
     <mat-card style="padding-bottom: 4%;">
      
       <mat-card-content>
+        <div *ngIf="all_projects != undefined ">
+          <div *ngIf="all_projects.length > 50">
+            50 von {{all_projects.length}}
+          </div>
+          <div *ngIf="all_projects.length < 50">
+            {{all_projects.length}} von {{all_projects.length}}
+          </div>
+        </div>
         <div fxLayout="row wrap" fxLayoutAlign="center end" >
       
           <div  fxLayoutAlign="center end" #parent></div>

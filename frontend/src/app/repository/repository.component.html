@@ -2,20 +2,26 @@
   <mat-card-header> </mat-card-header>
   <!img mat-card-image src="{{image}}">
   <mat-card-content (click)="showDetailsViaDialog()">
-    <table style="text-align: left; margin-bottom: 20px">
-      <caption>
-        <mat-card-title style="text-align: left"> {{ project.name }}</mat-card-title>
-      </caption>
-      <tr>
+    
+      
+        <mat-card-title style="text-align: left" > {{ project.name }}</mat-card-title>
+        <div *ngIf="project.description.length >0">
+          {{project.description}}
+        </div>
+        <div *ngIf="project.description.length < 1">
+          Keine Beschreibung vorhanden
+        </div>
+  
+      <br>
         URL:
         {{
           project.url
         }}
-      </tr>
-      <tr>
-        Beschreibung: {{project.description}}
-      </tr>
-    </table>
+        <br>
+      
+        
+        
+ 
     <mat-toolbar-row style="bottom: 0%; position: absolute;">
       <button mat-raised-button>Anzeigen</button>
     </mat-toolbar-row>
