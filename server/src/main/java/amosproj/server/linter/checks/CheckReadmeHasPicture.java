@@ -1,8 +1,6 @@
 package amosproj.server.linter.checks;
 
-import amosproj.server.Config;
 import amosproj.server.GitLab;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.models.Project;
 
 import java.io.IOException;
@@ -15,10 +13,9 @@ public class CheckReadmeHasPicture extends Check {
 
     @Override
     protected boolean evaluate(GitLab gitLab, Project project) {
-        // generiere regex
-        final Pattern pattern_md = Pattern.compile("^!\\[.*\\]\\(.*\\)$", Pattern.CASE_INSENSITIVE);
-        final Pattern pattern_html = Pattern.compile("<img.*src=\".*\".*>", Pattern.CASE_INSENSITIVE);
-
+        // regex expressions
+        final Pattern pattern_md = Pattern.compile("\\!\\[.*\\]\\(.*\\)", Pattern.CASE_INSENSITIVE);
+        final Pattern pattern_html = Pattern.compile("<img.*src=\".*\".*/>", Pattern.CASE_INSENSITIVE);
         //lade Datei in java.io.tmp
         URI uri = getRawReadme(project);
         if (uri != null) {
