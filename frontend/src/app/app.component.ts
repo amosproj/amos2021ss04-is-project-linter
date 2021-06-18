@@ -10,6 +10,7 @@ import { MatChip, MatChipList } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { Chart } from '../../node_modules/chart.js';
 
 @Component({
   selector: 'app-root',
@@ -46,6 +47,31 @@ export class AppComponent implements OnInit {
   pages: number;
   config: Config;
 
+  chartImportantChecks;
+  dataImportantChecks;
+  canvasImportantChecks;
+  chartImportantChecksPercentage;
+  dataImportantChecksPercentage;
+  canvasImportantChecksPercentage;
+  chartCheckPerCategorie;
+  dataCheckPerCategorie;
+  canvasCheckPerCategorie;
+  chartCheckPerCategoriePercentage;
+  dataCheckPerCategoriePercentage;
+  canvasCheckPerCategoriePercantage;
+  chartOptionsTotal;
+  chartOptionsPercentage;
+
+  chartcolors = {
+    red: 'rgb(255, 99, 132)',
+    orange: 'rgb(255, 159, 64)',
+    yellow: 'rgb(255, 205, 86)',
+    green: 'rgb(75, 192, 192)',
+    blue: 'rgb(54, 162, 235)',
+    purple: 'rgb(153, 102, 255)',
+    grey: 'rgb(231,233,237)'
+  };
+
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
   /***********************************************************
@@ -70,8 +96,6 @@ export class AppComponent implements OnInit {
     this.GetConfig();
     this.GetProjects();
   
-    
- 
   }
 
   manuallyStartCrawler(){
@@ -80,7 +104,8 @@ export class AppComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
+  }
 
   /***********************************************************
    * Functions
@@ -329,6 +354,135 @@ export class AppComponent implements OnInit {
       return -1;
     }
     return 0;
+  }
+
+  setChartData(){
+    this.dataImportantChecks =  {
+      labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
+      datasets: [{
+        label: "Top 5",
+        data: [10, 11, 11, 11, 12, 14, 14],
+        backgroundcolor: this.chartcolors.red,
+        bordercolor: this.chartcolors.red,
+      },{
+        label: "Top 10",
+        data: [7, 7, 7, 7, 8, 8, 9],
+        backgroundcolor: this.chartcolors.blue,
+        bordercolor: this.chartcolors.blue,
+      }]
+    };
+
+    this.dataImportantChecksPercentage = {
+      labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
+      datasets: [{
+        label: "Top 5",
+        data: [20, 22, 22, 22, 24, 28, 28],
+        fill: false,
+        backgroundcolor: 'rgb(255, 99, 132)',
+        bordercolor: 'rgb(255, 99, 132)',
+        color: 'rgb(255, 99, 132)',
+      }]
+    };
+
+    this.dataCheckPerCategorie = {
+      labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      datasets: [{
+        label: "Car Color",
+        data: [0, 10, 5, 50, 20, 70, 45],
+      }]
+    };
+
+    this.dataCheckPerCategoriePercentage = {
+      labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      datasets: [{
+        label: "Car Cost",
+        data: [0, 100, 200, 50, 150, 70, 220],
+        fill: false,
+      }]
+    }
+
+    this.chartOptionsTotal = {
+      responsive: true,
+      legend: {
+        position: 'right',
+        display: true,
+      },
+    };
+
+    this.chartOptionsPercentage = {
+      responsive: true,
+      legend: {
+        position: 'right',
+        display: true,
+      },
+      /*
+      scales:{
+        y:{
+          ticks:{
+            callback: function(value, index) {
+              return value + '%';
+            }
+          }
+        }
+      }
+      */
+    };
+  };
+
+  setOnStatistikTab(){
+    this.setChartData();
+    this.renderStatistikCharts();
+  }
+
+  renderStatistikCharts(){
+    this.canvasImportantChecks = <HTMLCanvasElement>(
+      document.getElementById('importantChecks')
+    );
+
+    this.chartImportantChecks = new Chart(this.canvasImportantChecks.getContext('2d'), {
+      type: 'line',
+      data: this.dataImportantChecks,
+      options: this.chartOptionsTotal
+    });
+
+    this.chartImportantChecks.update();
+
+    this.canvasImportantChecksPercentage = <HTMLCanvasElement>(
+      document.getElementById('importantChecksPercentage')
+    );
+
+    this.chartImportantChecksPercentage = new Chart(this.canvasImportantChecksPercentage.getContext('2d'), {
+      type: 'line',
+      data: this.dataImportantChecksPercentage,
+      options: this.chartOptionsPercentage
+    });
+
+    this.chartImportantChecksPercentage.update();
+
+    this.canvasCheckPerCategorie = <HTMLCanvasElement>(
+      document.getElementById('checksPerCategorie')
+    );
+
+    this.chartCheckPerCategorie = new Chart(this.canvasCheckPerCategorie.getContext('2d'), {
+      type: 'line',
+      data: this.dataCheckPerCategorie,
+      options: this.chartOptionsTotal
+    });
+
+    this.chartCheckPerCategorie.update();
+
+    this.canvasCheckPerCategoriePercantage = <HTMLCanvasElement>(
+      document.getElementById('checksPerCategoriePercentage')
+    );
+
+    this.chartCheckPerCategoriePercentage = new Chart(this.canvasCheckPerCategoriePercantage.getContext('2d'), {
+      type: 'line',
+      data: this.dataCheckPerCategoriePercentage,
+      options: this.chartOptionsPercentage
+    });
+
+    this.chartCheckPerCategoriePercentage.update();
+
   }
 
   toggleSelection(chip: MatChip) {
