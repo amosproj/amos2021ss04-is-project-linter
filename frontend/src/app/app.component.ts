@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     //this.manuallyStartCrawler();
-    this.GetProjects();
+    
     this.GetConfig();
     this.GetProjects();
   
