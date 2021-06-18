@@ -16,8 +16,8 @@ public class CheckReadmeHasPicture extends Check {
     @Override
     protected boolean evaluate(GitLab gitLab, Project project) {
         // generiere regex
-        final Pattern pattern = Pattern.compile("^!\\[.*\\]\\(.*\\)$", Pattern.CASE_INSENSITIVE);
-        //TODO: HTML embedded image
+        final Pattern pattern_md = Pattern.compile("^!\\[.*\\]\\(.*\\)$", Pattern.CASE_INSENSITIVE);
+        final Pattern pattern_html = Pattern.compile("<img.*src=\".*\".*>", Pattern.CASE_INSENSITIVE);
 
         //lade Datei in java.io.tmp
         URI uri = getRawReadme(project);
@@ -28,8 +28,9 @@ public class CheckReadmeHasPicture extends Check {
                 while (scanner.hasNextLine()) {
                     String line = scanner.nextLine();
                     // führe regex auf zeile aus
-                    final Matcher matcher = pattern.matcher(line);
-                    if (matcher.find()) {
+                    final Matcher matcher_md = pattern_md.matcher(line);
+                    final Matcher matcher_html = pattern_html.matcher(line);
+                    if (matcher_html.find() || matcher_md.find()) {
                         return true;
                     }
                 }
