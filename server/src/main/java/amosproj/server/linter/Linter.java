@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Iterator;
 
 /**
@@ -55,13 +56,13 @@ public class Linter {
         Project currLintingProject = projectRepository.findFirstByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
             // Erstelle neues Projekt mit Description und ForkCount
-            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt());
+            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
             projectRepository.save(currLintingProject);
         } else {
             // Update Description, LastActivity und ForkCount
             currLintingProject.setDescription(apiProject.getDescription());
             currLintingProject.setForkCount(apiProject.getForksCount());
-            currLintingProject.setLastCommit(apiProject.getLastActivityAt());
+            currLintingProject.setLastCommit(apiProject.getLastActivityAt().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
         }
 
         // Erstelle neues Linting Result
