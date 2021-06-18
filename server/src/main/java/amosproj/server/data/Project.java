@@ -3,6 +3,7 @@ package amosproj.server.data;
 import org.gitlab4j.api.utils.JacksonJson;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class Project {
     private String gitlabInstance;
     private String description;
     private Integer forkCount;
-    private Date lastCommit;
+    private LocalDateTime lastCommit;
 
     @OneToMany(targetEntity = LintingResult.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
@@ -37,7 +38,7 @@ public class Project {
         this.gitlabInstance = gitlabInstance;
     }
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance, String description, Integer forkCount, Date lastCommit) {
+    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance, String description, Integer forkCount, LocalDateTime lastCommit) {
         this.name = name;
         this.url = url;
         this.gitlabProjectId = gitlabProjectId;
@@ -107,11 +108,11 @@ public class Project {
         this.forkCount = forkCount;
     }
 
-    public Date getLastCommit() {
+    public LocalDateTime getLastCommit() {
         return lastCommit;
     }
 
-    public void setLastCommit(Date lastCommit) {
+    public void setLastCommit(LocalDateTime lastCommit) {
         this.lastCommit = lastCommit;
     }
 
