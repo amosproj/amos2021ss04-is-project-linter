@@ -3,13 +3,15 @@ import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { RepositoryComponent } from './repository/repository.component';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from 'src/environments/environment';
-import { MatChip, MatChipList } from '@angular/material/chips';
+import { MatChip } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+
+import { environment } from 'src/environments/environment';
+import { RepositoryComponent } from './repository/repository.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { Project, Config, CheckResults, LintingResult } from './schemas';
 
 @Component({
   selector: 'app-root',
@@ -66,18 +68,17 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     //this.manuallyStartCrawler();
-    
+
     this.GetConfig();
     this.GetProjects();
-  
-    
- 
   }
 
-  manuallyStartCrawler(){
-    this.http.post(`${environment.baseURL}/crawler`, null).subscribe((result:any) => {
-      console.log(result);
-    });
+  manuallyStartCrawler() {
+    this.http
+      .post(`${environment.baseURL}/crawler`, null)
+      .subscribe((result: any) => {
+        console.log(result);
+      });
   }
 
   ngAfterViewInit() {}
@@ -158,13 +159,11 @@ export class AppComponent implements OnInit {
         this.pages = Math.floor(this.all_projects.length / 50);
 
         this.displayProjects();
-
       }); // momentan kann man nur die URL senden und nicht ein JSON Objekte
-      this.prepareProjectDataForSorting();
-      this.init_all_projects = this.all_projects.slice();
-      dialogRef.close();
+    this.prepareProjectDataForSorting();
+    this.init_all_projects = this.all_projects.slice();
+    dialogRef.close();
   }
- 
 
   addComponent(project) {
     // Fügt eine Komponente unter dem Tab Repositories hinzu
@@ -204,8 +203,11 @@ export class AppComponent implements OnInit {
     this.removeAllProjectsFromOverview();
 
     for (let item of this.all_projects) {
-      if (item.name.toUpperCase().startsWith(value.toUpperCase()) || value === '') {
-       this.addComponent(item);
+      if (
+        item.name.toUpperCase().startsWith(value.toUpperCase()) ||
+        value === ''
+      ) {
+        this.addComponent(item);
       }
     }
   }
@@ -229,7 +231,7 @@ export class AppComponent implements OnInit {
       var checkResultsLastMonth: CheckResults[] =
         this.all_projects[i].lintingResults[0].checkResults;
       //Zähler für erfolgreiche Checks pro Tag
-      
+
       var checksPassed: number[] = new Array(this.chipOptions.length).fill(0);
       //Zähler für erfolgreiche Checks letzten Monat pro Tag
       var checksPassedLastMonth: number[] = new Array(
@@ -334,60 +336,4 @@ export class AppComponent implements OnInit {
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
-} // Ende von AppComponent
-
-/***********************************************************
- * Interfaces
- ***********************************************************/
-
-// Interface für die repository Komponente welche grob die Informationen des repository zeigt
-interface Project {
-  gitlabInstance: string;
-  gitlabProjectId: number;
-  id: number;
-  name: string;
-  description: string;
-  results: [];
-  url: string;
-  passedTestsInFilter: number;
-  newPassedTestsLastMonth: number;
-  passedTestsPerTag: number[];
-  newPassedTestsPerTagLastMonth: number[];
-
-  lintingResults: LintingResult[];
-}
-
-// Zum speichern der Daten des Projekts
-interface CheckResults {
-  checkName: string;
-  severity: string;
-  result: boolean;
-  category: string;
-  description: string;
-  tag: string;
-  fix: string;
-  priority: number;
-  message: string; // ist Fehlermeldung
-}
-
-// Zum Speichern der Daten eines LintingResult
-interface LintingResult {
-  projectId: number;
-  id: number;
-  lintTime: string;
-  checkResults: CheckResults[];
-}
-
-interface Config {
-  checks: Check[];
-}
-
-interface Check {
-  enabled: boolean;
-  severity: string;
-  description: string;
-  message: string;
-  fix: string;
-  priority: number;
-  tag: string;
 }
