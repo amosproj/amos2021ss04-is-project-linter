@@ -41,6 +41,12 @@ public abstract class Check {
         checkResultRepository.save(cr);
     }
 
+
+    /**********************************************
+     ************* Hilfsfunktionen  ***************
+     **********************************************/
+
+
     protected boolean fileExists(GitLab gitLab, Project project, String filepath) {
         try {
             RepositoryFile file = gitLab.getApi().getRepositoryFileApi().getFileInfo(project.getId(), filepath, project.getDefaultBranch());

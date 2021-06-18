@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -59,18 +60,18 @@ public class Crawler {
             size = (long) projects.size();
             progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
             logger.info(progress);
-            LocalDateTime start = LocalDateTime.now();
+            LocalDateTime start = LocalDateTime.now(Clock.systemUTC());
 
             for (org.gitlab4j.api.models.Project proj : projects) {
                 logger.info("Linte Projekt " + proj.getWebUrl() + ", Fortschritt: " + ++idx + "/" + size);
                 linter.checkEverything(proj, start);
             }
 
-            LocalDateTime end = LocalDateTime.now();
+            LocalDateTime end = LocalDateTime.now(Clock.systemUTC());
             timeTaken = ChronoUnit.SECONDS.between(start, end);
         } catch (GitLabApiException e) {
             lastError = e.getMessage();
-            errorTime = LocalDateTime.now();
+            errorTime = LocalDateTime.now(Clock.systemUTC());
             e.printStackTrace();
         }
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();

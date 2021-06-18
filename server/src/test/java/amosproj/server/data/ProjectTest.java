@@ -20,7 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @TestPropertySource(locations = "classpath:test.properties")
 public class ProjectTest {
 
-    @Autowired ProjectRepository projectRepository;
+    @Autowired
+    ProjectRepository projectRepository;
 
     private Project testProj = null;
 
@@ -43,7 +44,7 @@ public class ProjectTest {
         Iterable<Project> projectIterable = projectRepository.findAll();
         Iterator<Project> projectIterator = projectIterable.iterator();
 
-        while(projectIterator.hasNext()) {
+        while (projectIterator.hasNext()) {
             Project integrity = projectIterator.next();
             assertNotNull(integrity);
             assertEquals(testProj.getId(), integrity.getId());
