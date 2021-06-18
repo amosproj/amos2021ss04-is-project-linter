@@ -9,6 +9,7 @@ import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Iterator;
@@ -42,7 +43,7 @@ public class Linter {
         org.gitlab4j.api.models.Project proj = api.getApi().getProjectApi().getProject(path);
         // start linting process
         assert proj != null;
-        checkEverything(proj, LocalDateTime.now());
+        checkEverything(proj, LocalDateTime.now(Clock.systemUTC()));
     }
 
     /**
