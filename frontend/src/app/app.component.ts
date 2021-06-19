@@ -13,6 +13,7 @@ import { RepositoryComponent } from './repository/repository.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
 import { Chart } from 'chart.js';
 import { Project, Config, CheckResults, LintingResult } from './schemas';
+import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-root',
@@ -88,7 +89,8 @@ export class AppComponent implements OnInit {
     public dialog: MatDialog,
     fb: FormBuilder,
     private _cfr: ComponentFactoryResolver,
-    private http: HttpClient
+    private http: HttpClient,
+    private apiService: ApiService
   ) {
     this.options = fb.group({
       hideRequired: this.hideRequiredControl,
@@ -99,14 +101,6 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.GetConfig();
     this.GetProjects();
-  }
-
-  manuallyStartCrawler() {
-    this.http
-      .post(`${environment.baseURL}/crawler`, null)
-      .subscribe((result: any) => {
-        console.log(result);
-      });
   }
 
   ngAfterViewInit() {}
