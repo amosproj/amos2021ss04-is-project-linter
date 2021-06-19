@@ -24,7 +24,8 @@ import { map } from 'rxjs/operators';
   ],
 })
 export class ChipsMultiSelectComponent
-  implements OnInit, AfterViewInit, ControlValueAccessor {
+  implements OnInit, AfterViewInit, ControlValueAccessor
+{
   @ViewChild(MatChipList)
   chipList!: MatChipList;
 
