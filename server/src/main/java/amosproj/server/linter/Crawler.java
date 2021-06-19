@@ -7,6 +7,7 @@ import amosproj.server.api.schemas.CrawlerStatusSchema;
 import org.gitlab4j.api.GitLabApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -24,13 +25,13 @@ public class Crawler {
     private final Linter linter;
     // end autowired
 
-    private AtomicBoolean crawlerActive;
-    private String progress;
-    private Long timeTaken;
-    private Long idx;
-    private String lastError;
-    private LocalDateTime errorTime;
-    private Long size;
+    private volatile AtomicBoolean crawlerActive;
+    private volatile String progress;
+    private volatile Long timeTaken;
+    private volatile Long idx;
+    private volatile String lastError;
+    private volatile LocalDateTime errorTime;
+    private volatile Long size;
 
     public Crawler(GitLab gitLab, Scheduler scheduler, Linter linter) {
         // set autowired
@@ -45,14 +46,15 @@ public class Crawler {
         errorTime = null;
         size = 0L;
         // init scheduling
-        scheduler.scheduling(this::startCrawler);
+        scheduler.scheduling(this::runCrawler);
     }
 
     /**
      * scheduled method that lints every repo in the instance at a specified cron time
      */
-    private synchronized void runCrawler() {
-        crawlerActive = new AtomicBoolean(true);
+    @Async
+    public synchronized void runCrawler() {
+        crawlerActive.set(true);
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
         logger.info(progress);
         try {
@@ -80,20 +82,8 @@ public class Crawler {
         idx = 0L;
     }
 
-    /**
-     * Used to stop post-spamming of the API endpoint
-     *
-     * @return Boolean, ob der crawler gestartet wurde oder nicht
-     */
-    public boolean startCrawler() {
-        if (!crawlerActive.get()) {// Only one crawler should run at any given time
-            Thread thread = new Thread(this::runCrawler);
-            thread.start();
-            return true;
-        } else {
-            return false;
-        }
-
+    public boolean getCrawlerActive() {
+        return crawlerActive.get();
     }
 
     public CrawlerStatusSchema crawlerStatus() {
