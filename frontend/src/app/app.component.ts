@@ -363,32 +363,6 @@ export class AppComponent implements OnInit {
     return 0;
   }
 
-<<<<<<< HEAD
-  setChartData(){
-    this.dataImportantChecks =  {
-      labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
-      yAxisID: 'yAxis',
-      datasets: [{
-        label: "Top 5",
-        data: [10, 11, 11, 11, 12, 14, 14],
-        backgroundColor: this.chartcolors.red,
-        borderColor: this.chartcolors.red,
-        pointRadius: 0,
-        fill: '1',
-        //fillOpacity: 
-      },{
-        label: "Top 10",
-        data: [7, 7, 7, 7, 8, 8, 9],
-        backgroundColor: this.chartcolors.blue,
-        borderColor: this.chartcolors.blue,
-        fill: '2',
-      },{
-        label: "Top 15",
-        data: [5,6,6,7,7,7,8],
-        backgroundColor: this.chartcolors.green,
-        borderColor: this.chartcolors.green,
-      }]
-=======
   setChartData() {
     this.dataImportantChecks = {
       labels: [
@@ -404,17 +378,28 @@ export class AppComponent implements OnInit {
         {
           label: 'Top 5',
           data: [10, 11, 11, 11, 12, 14, 14],
-          backgroundcolor: this.chartcolors.red,
-          bordercolor: this.chartcolors.red,
+          backgroundColor: this.chartcolors.red,
+          borderColor: this.chartcolors.red,
+          pointRadius: '0',
+          fill: '1',
         },
         {
           label: 'Top 10',
           data: [7, 7, 7, 7, 8, 8, 9],
-          backgroundcolor: this.chartcolors.blue,
-          bordercolor: this.chartcolors.blue,
+          backgroundColor: this.chartcolors.blue,
+          borderColor: this.chartcolors.blue,
+          pointRadius: '0',
+          fill: '2',
         },
+        {
+          label: 'Top 15',
+          data: [5, 6, 6, 7, 7, 7, 8],
+          backgroundColor: this.chartcolors.green,
+          borderColor: this.chartcolors.green,
+          pointRadius: '0',
+          fill: true
+        }
       ],
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
     };
 
     this.chartOptionsImportantChecks = {
@@ -440,17 +425,6 @@ export class AppComponent implements OnInit {
     };
 
     this.dataImportantChecksPercentage = {
-<<<<<<< HEAD
-      labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
-      yAxisID: 'yAxis',
-      datasets: [{
-        label: "Top 5",
-        data: [20, 22, 22, 22, 24, 28, 28],
-        fill: false,
-        backgroundColor: this.chartcolors.red,
-        borderColor: this.chartcolors.red,
-      }]
-=======
       labels: [
         '01.01.2020',
         '02.01.2020',
@@ -465,12 +439,11 @@ export class AppComponent implements OnInit {
           label: 'Top 5',
           data: [20, 22, 22, 22, 24, 28, 28],
           fill: false,
-          backgroundcolor: 'rgb(255, 99, 132)',
-          bordercolor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgb(255, 99, 132)',
+          borderColor: 'rgb(255, 99, 132)',
           color: 'rgb(255, 99, 132)',
         },
       ],
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
     };
 
     this.chartOptionsImportantChecksPercentage = {
@@ -500,17 +473,6 @@ export class AppComponent implements OnInit {
     };
 
     this.dataCheckPerCategorie = {
-<<<<<<< HEAD
-      labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
-      yAxisID: 'yAxis',
-      datasets: [{
-        label: "Car Color",
-        data: [0, 10, 5, 50, 20, 70, 45],
-      }]
-    };
-
-    this.chartOptionsCheckPerCategorie = {
-=======
       labels: ['0d', '10d', '20d', '30d', '40d', '50d', '60d'],
       datasets: [
         {
@@ -531,8 +493,7 @@ export class AppComponent implements OnInit {
       ],
     };
 
-    this.chartOptionsTotal = {
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
+    this.chartOptionsCheckPerCategorie = {
       responsive: true,
       legend: {
         position: 'right',
@@ -601,22 +562,14 @@ export class AppComponent implements OnInit {
       document.getElementById('importantChecks')
     );
 
-<<<<<<< HEAD
-    this.chartImportantChecks = new Chart(this.canvasImportantChecks.getContext('2d'), {
-      type: 'line',
-      data: this.dataImportantChecks,
-      options: this.chartOptionsImportantChecks
-    });
-=======
     this.chartImportantChecks = new Chart(
       this.canvasImportantChecks.getContext('2d'),
       {
         type: 'line',
         data: this.dataImportantChecks,
-        options: this.chartOptionsTotal,
+        options: this.chartOptionsImportantChecks,
       }
     );
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
 
     this.chartImportantChecks.update();
 
@@ -624,22 +577,14 @@ export class AppComponent implements OnInit {
       document.getElementById('importantChecksPercentage')
     );
 
-<<<<<<< HEAD
-    this.chartImportantChecksPercentage = new Chart(this.canvasImportantChecksPercentage.getContext('2d'), {
-      type: 'line',
-      data: this.dataImportantChecksPercentage,
-      options: this.chartOptionsImportantChecksPercentage
-    });
-=======
     this.chartImportantChecksPercentage = new Chart(
       this.canvasImportantChecksPercentage.getContext('2d'),
       {
         type: 'line',
         data: this.dataImportantChecksPercentage,
-        options: this.chartOptionsPercentage,
+        options: this.chartOptionsImportantChecksPercentage,
       }
     );
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
 
     this.chartImportantChecksPercentage.update();
 
@@ -647,22 +592,14 @@ export class AppComponent implements OnInit {
       document.getElementById('checksPerCategorie')
     );
 
-<<<<<<< HEAD
-    this.chartCheckPerCategorie = new Chart(this.canvasCheckPerCategorie.getContext('2d'), {
-      type: 'line',
-      data: this.dataCheckPerCategorie,
-      options: this.chartOptionsCheckPerCategorie
-    });
-=======
     this.chartCheckPerCategorie = new Chart(
       this.canvasCheckPerCategorie.getContext('2d'),
       {
         type: 'line',
         data: this.dataCheckPerCategorie,
-        options: this.chartOptionsTotal,
+        options: this.chartOptionsCheckPerCategorie,
       }
     );
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
 
     this.chartCheckPerCategorie.update();
 
@@ -670,22 +607,14 @@ export class AppComponent implements OnInit {
       document.getElementById('checksPerCategoriePercentage')
     );
 
-<<<<<<< HEAD
-    this.chartCheckPerCategoriePercentage = new Chart(this.canvasCheckPerCategoriePercantage.getContext('2d'), {
-      type: 'line',
-      data: this.dataCheckPerCategoriePercentage,
-      options: this.chartOptionsCheckPerCategoriePercantage
-    });
-=======
     this.chartCheckPerCategoriePercentage = new Chart(
       this.canvasCheckPerCategoriePercantage.getContext('2d'),
       {
         type: 'line',
         data: this.dataCheckPerCategoriePercentage,
-        options: this.chartOptionsPercentage,
+        options: this.chartOptionsCheckPerCategoriePercantage,
       }
     );
->>>>>>> da92f0e8c3258d34f98c798781afc0fb54e79a07
 
     this.chartCheckPerCategoriePercentage.update();
   }
