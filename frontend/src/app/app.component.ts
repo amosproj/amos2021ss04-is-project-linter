@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { environment } from 'src/environments/environment';
 import { RepositoryComponent } from './repository/repository.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
-import { Chart } from  'chart.js';
+import { Chart } from 'chart.js';
 import { Project, Config, CheckResults, LintingResult } from './schemas';
 
 @Component({

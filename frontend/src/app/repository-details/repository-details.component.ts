@@ -3,7 +3,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
-import { environment } from 'src/environments/environment';
 
 //import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -17,7 +16,6 @@ export class RepositoryDetailsComponent implements OnInit {
   // Diese Klasse ist nötig fürs Anzeigen des Dialogs
   // Aktuell muss man die gleichen Informationen 2-mal getten, da die HTTP-get Aufrufe asynchron sind.
   //      (1 mal onNGinit für die Erstellung der Tiles (geht nicht später), und 1 mal onngAfterView für die Graphen (Canvas ist davor undefined))
-
   // TODO: chartNames nicht dynamisch erstellen
   emojiMap = {
     /*unwichtig:"〰️",
