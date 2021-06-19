@@ -79,7 +79,6 @@ export class RepositoryDetailsComponent implements OnInit {
       );
       this.myChart.update();
     }
-    
   }
 
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
@@ -154,10 +153,10 @@ export class RepositoryDetailsComponent implements OnInit {
     ).format('DD.MM.YYYY - H:mm');
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
-    this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-      this.tags,
-      this.data.project.lintingResults[0].checkResults
-    )[0];
+      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+        this.tags,
+        this.data.project.lintingResults[0].checkResults
+      )[0];
     this.chartNames = this.getChartNames(this.tags);
     this.addTilesForCategoryGraphAndTipps();
     // sortiere die Checks um die 3 besten Tipps darzustellen
