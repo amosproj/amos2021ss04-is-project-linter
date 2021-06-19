@@ -28,11 +28,10 @@ import java.util.List;
 /**
  * Der ProjectController ist die API-Schnittstelle nach außen.
  * <p>
- * Die Dokumentation der API-Endpoints finden Sie in der
- * <a href="../../../api.yaml">api.yaml</a>
+ * Die Dokumentation der API-Endpoints finden sie im ordner docs/
  */
 @RestController
-@CrossOrigin(origins = "*") // origins, methods, allowedHeaders, exposedHeaders, allowCredentials, maxAge
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST}, maxAge = 600L)
 public class ProjectController {
 
     @Autowired
