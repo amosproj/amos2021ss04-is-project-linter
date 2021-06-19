@@ -1,13 +1,13 @@
 package amosproj.server.data;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * Das ProjectRepository ist das Interface zur Datenbank für die Projects.
  * Hier werden die Datenbank-Queries ausgeführt.
  * Der Name der Methoden ist die SQL query.
  */
-public interface ProjectRepository extends CrudRepository<Project, Long> {
+public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
 
     /**
      * @param url URL zum GitLab repo.

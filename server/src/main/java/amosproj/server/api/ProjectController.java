@@ -12,6 +12,7 @@ import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,8 +51,8 @@ public class ProjectController {
     private CSVExport csvExport;
 
     @GetMapping("/projects")
-    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended) {
-        var projectList = projectRepository.findAll();
+    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended, Pageable pageable) {
+        var projectList = projectRepository.findAll(pageable);
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
