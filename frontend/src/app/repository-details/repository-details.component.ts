@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Chart } from '../../../node_modules/chart.js';
+import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
 import { environment } from 'src/environments/environment';
 

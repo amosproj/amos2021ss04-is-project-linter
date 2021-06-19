@@ -2,10 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -31,10 +27,6 @@ import { SpinnerComponentComponent } from './spinner-component/spinner-component
     HttpClientModule,
     BrowserAnimationsModule,
     MaterialModule,
-    MatDialogModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatProgressSpinnerModule,
     FlexLayoutModule,
   ],
   providers: [],

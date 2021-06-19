@@ -1,17 +1,17 @@
-import { ComponentFactoryResolver, Input } from '@angular/core';
+import { ComponentFactoryResolver } from '@angular/core';
 import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatChip } from '@angular/material/chips';
 import { OnInit } from '@angular/core';
+import { MatChip } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 
 import { environment } from 'src/environments/environment';
 import { RepositoryComponent } from './repository/repository.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
-import { Chart } from '../../node_modules/chart.js';
+import { Chart } from  'chart.js';
 import { Project, Config, CheckResults, LintingResult } from './schemas';
 
 @Component({
