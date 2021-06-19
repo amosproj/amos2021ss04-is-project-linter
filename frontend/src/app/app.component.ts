@@ -52,17 +52,20 @@ export class AppComponent implements OnInit {
   chartImportantChecks;
   dataImportantChecks;
   canvasImportantChecks;
+  chartOptionsImportantChecks;
   chartImportantChecksPercentage;
   dataImportantChecksPercentage;
   canvasImportantChecksPercentage;
+  chartOptionsImportantChecksPercentage;
   chartCheckPerCategorie;
   dataCheckPerCategorie;
   canvasCheckPerCategorie;
+  chartOptionsCheckPerCategorie;
   chartCheckPerCategoriePercentage;
   dataCheckPerCategoriePercentage;
   canvasCheckPerCategoriePercantage;
-  chartOptionsTotal;
-  chartOptionsPercentage;
+  chartOptionsCheckPerCategoriePercantage;
+
 
   chartcolors = {
     red: 'rgb(255, 99, 132)',
@@ -377,75 +380,156 @@ export class AppComponent implements OnInit {
   setChartData(){
     this.dataImportantChecks =  {
       labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
+      yAxisID: 'yAxis',
       datasets: [{
         label: "Top 5",
         data: [10, 11, 11, 11, 12, 14, 14],
-        backgroundcolor: this.chartcolors.red,
-        bordercolor: this.chartcolors.red,
+        backgroundColor: this.chartcolors.red,
+        borderColor: this.chartcolors.red,
+        pointRadius: 0,
+        fill: '1',
+        //fillOpacity: 
       },{
         label: "Top 10",
         data: [7, 7, 7, 7, 8, 8, 9],
-        backgroundcolor: this.chartcolors.blue,
-        bordercolor: this.chartcolors.blue,
+        backgroundColor: this.chartcolors.blue,
+        borderColor: this.chartcolors.blue,
+        fill: '2',
+      },{
+        label: "Top 15",
+        data: [5,6,6,7,7,7,8],
+        backgroundColor: this.chartcolors.green,
+        borderColor: this.chartcolors.green,
       }]
+    };
+
+    this.chartOptionsImportantChecks = {
+      responsive: true,
+      legend: {
+        position: 'right',
+        display: true,
+      },
+      scales:{
+        yAxes: [{
+          id: 'yAxis',
+          display : true,
+          position: 'left',
+          ticks:{
+            beginAtZero: true,
+          },
+          scaleLabel:{
+            display: true,
+            labelString: 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben'
+          }
+        }]
+      }
     };
 
     this.dataImportantChecksPercentage = {
       labels: ["01.01.2020", "02.01.2020", "03.01.2020", "04.01.2020", "05.01.2020", "06.01.2020", "07.01.2020"],
+      yAxisID: 'yAxis',
       datasets: [{
         label: "Top 5",
         data: [20, 22, 22, 22, 24, 28, 28],
         fill: false,
-        backgroundcolor: 'rgb(255, 99, 132)',
-        bordercolor: 'rgb(255, 99, 132)',
-        color: 'rgb(255, 99, 132)',
+        backgroundColor: this.chartcolors.red,
+        borderColor: this.chartcolors.red,
       }]
+    };
+
+    this.chartOptionsImportantChecksPercentage = {
+      responsive: true,
+      legend: {
+        position: 'right',
+        display: true,
+      },
+      scales:{
+        yAxes: [{
+          id: 'yAxis',
+          display : true,
+          position: 'left',
+          ticks:{
+            beginAtZero: true,
+            callback: function(value, index, values) {
+              return value + "%";
+            },
+            max: 100
+          },
+          scaleLabel:{
+            display: true,
+            labelString: 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben'
+          }
+        }]
+      }
     };
 
     this.dataCheckPerCategorie = {
       labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      yAxisID: 'yAxis',
       datasets: [{
         label: "Car Color",
         data: [0, 10, 5, 50, 20, 70, 45],
       }]
     };
 
+    this.chartOptionsCheckPerCategorie = {
+      responsive: true,
+      legend: {
+        position: 'right',
+        display: true,
+      },
+      scales:{
+        yAxes: [{
+          id: 'yAxis',
+          display : true,
+          position: 'left',
+          ticks:{
+            beginAtZero: true,
+          },
+          scaleLabel:{
+            display: true,
+            labelString: 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben'
+          }
+        }]
+      }
+    };
+
     this.dataCheckPerCategoriePercentage = {
       labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      yAxisID: 'yAxis',
       datasets: [{
         label: "Car Cost",
-        data: [0, 100, 200, 50, 150, 70, 220],
+        data: [0, 10, 20, 5, 23, 22, 25],
         fill: false,
       }]
     }
-
-    this.chartOptionsTotal = {
+    
+    this.chartOptionsCheckPerCategoriePercantage = {
       responsive: true,
       legend: {
         position: 'right',
         display: true,
       },
-    };
-
-    this.chartOptionsPercentage = {
-      responsive: true,
-      legend: {
-        position: 'right',
-        display: true,
-      },
-      /*
       scales:{
-        y:{
+        yAxes: [{
+          id: 'yAxis',
+          display : true,
+          position: 'left',
           ticks:{
-            callback: function(value, index) {
-              return value + '%';
-            }
+            beginAtZero: true,
+            callback: function(value, index, values) {
+              return value + "%";
+            },
+            max: 100
+          },
+          scaleLabel:{
+            display: true,
+            labelString: 'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben'
           }
-        }
+        }]
       }
-      */
     };
-  };
+  }
 
   setOnStatistikTab(){
     this.setChartData();
@@ -460,7 +544,7 @@ export class AppComponent implements OnInit {
     this.chartImportantChecks = new Chart(this.canvasImportantChecks.getContext('2d'), {
       type: 'line',
       data: this.dataImportantChecks,
-      options: this.chartOptionsTotal
+      options: this.chartOptionsImportantChecks
     });
 
     this.chartImportantChecks.update();
@@ -472,7 +556,7 @@ export class AppComponent implements OnInit {
     this.chartImportantChecksPercentage = new Chart(this.canvasImportantChecksPercentage.getContext('2d'), {
       type: 'line',
       data: this.dataImportantChecksPercentage,
-      options: this.chartOptionsPercentage
+      options: this.chartOptionsImportantChecksPercentage
     });
 
     this.chartImportantChecksPercentage.update();
@@ -484,7 +568,7 @@ export class AppComponent implements OnInit {
     this.chartCheckPerCategorie = new Chart(this.canvasCheckPerCategorie.getContext('2d'), {
       type: 'line',
       data: this.dataCheckPerCategorie,
-      options: this.chartOptionsTotal
+      options: this.chartOptionsCheckPerCategorie
     });
 
     this.chartCheckPerCategorie.update();
@@ -496,7 +580,7 @@ export class AppComponent implements OnInit {
     this.chartCheckPerCategoriePercentage = new Chart(this.canvasCheckPerCategoriePercantage.getContext('2d'), {
       type: 'line',
       data: this.dataCheckPerCategoriePercentage,
-      options: this.chartOptionsPercentage
+      options: this.chartOptionsCheckPerCategoriePercantage
     });
 
     this.chartCheckPerCategoriePercentage.update();
