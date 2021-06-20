@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { SpinnerComponentComponent } from './spinner-component/spinner-component
     RepositoryComponent,
     RepositoryDetailsComponent,
     SpinnerComponentComponent,
+    FooterComponent,
   ],
   entryComponents: [RepositoryDetailsComponent],
   imports: [
