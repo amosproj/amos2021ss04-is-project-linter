@@ -3,10 +3,7 @@ package amosproj.server.api;
 import amosproj.server.Config;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
-import amosproj.server.data.LintingResult;
-import amosproj.server.data.LintingResultRepository;
-import amosproj.server.data.Project;
-import amosproj.server.data.ProjectRepository;
+import amosproj.server.data.*;
 import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -23,8 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Der ProjectController ist die API-Schnittstelle nach außen.
@@ -50,6 +46,10 @@ public class ProjectController {
     @Autowired
     private CSVExport csvExport;
 
+    //**********************************
+    //                GET
+    //**********************************
+
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended, Pageable pageable) {
         var projectList = projectRepository.findAll(pageable);
@@ -63,6 +63,101 @@ public class ProjectController {
             res.add(proj);
         }
         return res;
+    }
+
+    /**
+     * API Endpoint, der alle Projekte durch geht und zählt, wie viele davon alle Checks bestanden haben
+     * @return TreeMap, die, sortiert nach lintTime, die Anzahl der Projekte mit bestandenen checks ausgibt
+     */
+    @GetMapping("/projects/allCategories")
+    public TreeMap<LocalDateTime, HashMap<String, Long>> projectsByAllCategories() {
+        HashMap<String, String> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            String checkCategory = node.get(checkName).get("tag").asText();
+            map.put(checkName, checkCategory);
+        }
+        var projectList = projectRepository.findAll();
+        var it = projectList.iterator();
+        var res = new TreeMap<LocalDateTime, HashMap<String, Long>>();
+
+        while(it.hasNext()) {
+            Project project = it.next();
+            List<LintingResult> lintingResults = project.getResults();
+            for (LintingResult lr: lintingResults) {
+                List<CheckResult> checkResults = lr.getCheckResults();
+                var allChecksPassed = new HashMap<String, Boolean>();
+                for (CheckResult checkResult: checkResults) {
+                    String checkCategory = map.get(checkResult.getCheckName());
+                    if (!checkResult.getResult()) { // Did not pass all the checks for the category
+                        allChecksPassed.put(checkCategory, false);
+                        if (allChecksPassed.values().stream().allMatch(x -> x.equals(false))) { //No category passed all checks
+                            break;
+                        }
+                    } else {
+                        allChecksPassed.putIfAbsent(checkCategory, true); // So far all checks have passed in this category
+                    }
+                }
+                var categories = allChecksPassed.keySet();
+                res.putIfAbsent(lr.getLintTime(), new HashMap<String, Long>());
+                for (String category: categories) {
+                    if (allChecksPassed.get(category)) {
+                        HashMap<String, Long> resMap = res.get(lr.getLintTime());
+                        resMap.putIfAbsent(category, 0L);
+                        resMap.computeIfPresent(category, (key, value) -> value+1L);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    @GetMapping("/projects/byCategory")
+    public TreeMap<LocalDateTime, Long> projectsPassedByCategory(@RequestParam(name = "category", required = false) String category) {
+        HashMap<String, String> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            String checkCategory = node.get(checkName).get("tag").asText();
+            map.put(checkName, checkCategory);
+        }
+        var projectList = projectRepository.findAll();
+        var it = projectList.iterator();
+        var res = new TreeMap<LocalDateTime, Long>();
+
+        while(it.hasNext()) {
+            Project project = it.next();
+            List<LintingResult> lintingResults = project.getResults();
+            for (LintingResult lr: lintingResults) {
+                List<CheckResult> checkResults = lr.getCheckResults();
+                boolean allChecksPassed = true;
+                for (CheckResult checkResult: checkResults) {
+                    String checkCategory = map.get(checkResult.getCheckName());
+                    if (!checkCategory.equals(category) || !checkResult.getResult()) { // Did not pass all the checks
+                        allChecksPassed = false;
+                        break;
+                    }
+                }
+                res.putIfAbsent(lr.getLintTime(), 0L);
+                if (allChecksPassed) {
+                    res.computeIfPresent(lr.getLintTime(), (key, val) -> val + 1);
+                }
+            }
+        }
+        return res;
+    }
+
+    @GetMapping("/crawler")
+    public CrawlerStatusSchema statusCrawler() {
+        return crawler.crawlerStatus();
+    }
+
+    @GetMapping("/config")
+    public JsonNode sendConfig() {
+        return Config.getConfigNode();
     }
 
     @GetMapping("/project/{id}/lastMonth")
@@ -107,6 +202,10 @@ public class ProjectController {
         response.getWriter().close();
     }
 
+    //**********************************
+    //                POST
+    //**********************************
+
     @PostMapping("/projects")
     public @ResponseBody
     String lintProject(@RequestBody String url) {
@@ -126,16 +225,6 @@ public class ProjectController {
         } else {
             return new ResponseEntity("Crawler is already running, slow down!", HttpStatus.TOO_MANY_REQUESTS);
         }
-    }
-
-    @GetMapping("/crawler")
-    public CrawlerStatusSchema statusCrawler() {
-        return crawler.crawlerStatus();
-    }
-
-    @GetMapping("/config")
-    public JsonNode sendConfig() {
-        return Config.getConfigNode();
     }
 
 }
