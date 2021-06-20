@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Chart } from '../../../node_modules/chart.js';
+import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
-import { environment } from 'src/environments/environment';
 
 //import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -17,7 +16,6 @@ export class RepositoryDetailsComponent implements OnInit {
   // Diese Klasse ist nötig fürs Anzeigen des Dialogs
   // Aktuell muss man die gleichen Informationen 2-mal getten, da die HTTP-get Aufrufe asynchron sind.
   //      (1 mal onNGinit für die Erstellung der Tiles (geht nicht später), und 1 mal onngAfterView für die Graphen (Canvas ist davor undefined))
-
   // TODO: chartNames nicht dynamisch erstellen
   emojiMap = {
     /*unwichtig:"〰️",
@@ -79,7 +77,6 @@ export class RepositoryDetailsComponent implements OnInit {
       );
       this.myChart.update();
     }
-    
   }
 
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
@@ -154,10 +151,10 @@ export class RepositoryDetailsComponent implements OnInit {
     ).format('DD.MM.YYYY - H:mm');
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
-    this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-      this.tags,
-      this.data.project.lintingResults[0].checkResults
-    )[0];
+      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+        this.tags,
+        this.data.project.lintingResults[0].checkResults
+      )[0];
     this.chartNames = this.getChartNames(this.tags);
     this.addTilesForCategoryGraphAndTipps();
     // sortiere die Checks um die 3 besten Tipps darzustellen

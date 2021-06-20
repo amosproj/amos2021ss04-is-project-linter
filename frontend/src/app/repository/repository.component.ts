@@ -30,10 +30,9 @@ export class RepositoryComponent implements OnInit {
       width: '77%',
       height: '96%',
       panelClass: 'custom-dialog-container',
-      data: { project: this.project},
+      data: { project: this.project },
     });
   }
-
 }
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt
