@@ -40,6 +40,7 @@ export class RepositoryDetailsComponent implements OnInit {
   checksHighSeverity: CheckResults[]; // wird momentan nicht benützt
   checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
   checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
+  latestLintingIndex: number;
   latestLintingResults: CheckResults[];
   latestLintingResultsSortedPriority: CheckResults[];
   tags: String[];
@@ -61,6 +62,8 @@ export class RepositoryDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     // initalisiere Arrays sortiert bei severtity void
+    this.latestLintingIndex = this.data.project.lintingResults.length - 1;
+
     this.checksHighSeverity = new Array<CheckResults>();
     this.checksMediumSeverity = new Array<CheckResults>();
     this.checksLowSeverity = new Array<CheckResults>();
@@ -131,7 +134,7 @@ export class RepositoryDetailsComponent implements OnInit {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
     // fülle linting Kategorien array
     this.latestLintingResults =
-      this.data.project.lintingResults[0].checkResults;
+      this.data.project.lintingResults[this.latestLintingIndex].checkResults;
     //this.fillSeverityArrays(); // muss momentan nicht benützt werden
     this.tags = this.getTagsArray(this.latestLintingResults);
 
@@ -147,13 +150,13 @@ export class RepositoryDetailsComponent implements OnInit {
     this.RepoURL = this.data.project.url;
     this.RepoDescription = this.data.project.description;
     this.lastLintTime = dayjs(
-      this.data.project.lintingResults[0].lintTime
-    ).format('DD.MM.YYYY - H:mm');
+      this.data.project.lintingResults[this.latestLintingIndex].lintTime
+    ).format('DD.MM.YYYY - HH:mm');
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
       this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
         this.tags,
-        this.data.project.lintingResults[0].checkResults
+        this.data.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
     this.chartNames = this.getChartNames(this.tags);
     this.addTilesForCategoryGraphAndTipps();

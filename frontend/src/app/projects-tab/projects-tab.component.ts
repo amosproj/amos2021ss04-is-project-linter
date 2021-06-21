@@ -218,11 +218,11 @@ export class ProjectsTabComponent implements OnInit {
   prepareProjectDataForSorting() {
     for (var i = 0; i < this.all_projects.length; i++) {
       var checkResults: CheckResults[] =
+        this.all_projects[i].lintingResults[0].checkResults;
+      var checkResultsLastMonth: CheckResults[] =
         this.all_projects[i].lintingResults[
           this.all_projects[i].lintingResults.length - 1
         ].checkResults;
-      var checkResultsLastMonth: CheckResults[] =
-        this.all_projects[i].lintingResults[0].checkResults;
       //Zähler für erfolgreiche Checks pro Tag
 
       var checksPassed: number[] = new Array(this.chipOptions.length).fill(0);
