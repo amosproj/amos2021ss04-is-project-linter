@@ -12,6 +12,10 @@ import { AppComponent } from './app.component';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
 import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
+import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
+import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +23,10 @@ import { SpinnerComponentComponent } from './spinner-component/spinner-component
     RepositoryComponent,
     RepositoryDetailsComponent,
     SpinnerComponentComponent,
+    FooterComponent,
+    HeaderComponent,
+    ProjectsTabComponent,
+    StatisticsTabComponent,
   ],
   entryComponents: [RepositoryDetailsComponent],
   imports: [
