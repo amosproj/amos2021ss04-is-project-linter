@@ -272,7 +272,7 @@ export class StatisticsTabComponent implements OnInit {
 
   async getChartData() {
     await this.http
-      .get(`${environment.baseURL}/projects/allCategories`)
+      .get(`${environment.baseURL}/projects/allTags`)
       .toPromise()
       .then((results: any) => {
         //console.log('new api returns',results);
