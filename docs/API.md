@@ -11,7 +11,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Query:
     * `type=percentage|absolute` Liefert je nach `type` die Prozentzahl oder die absolute Anzahl der Projekte, die alle Checks eines Tags bestanden haben. Wird ein anderer Parameter als `percentage` oder `absolute` übergeben, wird nichts zurückgegeben.
 * Body: nichts
-* Response: Json(TreeMap<LocalDateTime, HashMap<String, Long>>) 
+* Response: Json(TreeMap<LocalDateTime, HashMap<String, `Typ`>>); `Typ` ist dabei entweder ein `Long` bei `absolute` oder ein `float` bei `percentage`
 
 ### POST - `/projects` - Linted ein einzelnes Repo
 * Body: url des zu lintenden Repos
