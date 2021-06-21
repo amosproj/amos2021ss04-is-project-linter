@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 /**
@@ -51,15 +53,21 @@ public class ProjectController {
     //**********************************
 
     @GetMapping("/projects")
-    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended, Pageable pageable) {
-        var projectList = projectRepository.findAll(pageable);
+    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
+                                           @RequestParam(name = "tag", required = false) String tag) {
+        var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
             Project projAlt = it.next();
             ProjectSchema proj;
-            if (extended != null && extended) proj = new ProjectSchema(projAlt, projAlt.getResults());
-            else proj = new ProjectSchema(projAlt, new LinkedList<>());
+            if (extended != null && extended) {
+                LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+                proj = new ProjectSchema(projAlt, lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
+                        (localDateTime, localDateTime.minusDays(30).minusMinutes(5), projAlt.getId()));
+            } else {
+                proj = new ProjectSchema(projAlt, new LinkedList<>());
+            }
             res.add(proj);
         }
         return res;
@@ -69,16 +77,10 @@ public class ProjectController {
      * API Endpoint, der alle Projekte durch geht und zählt, wie viele davon alle Checks bestanden haben
      * @return TreeMap, die, sortiert nach lintTime, die Anzahl der Projekte mit bestandenen checks ausgibt
      */
-    @GetMapping("/projects/allCategories")
-    public TreeMap<LocalDateTime, HashMap<String, Long>> projectsByAllCategories() {
-        HashMap<String, String> map = new HashMap<>();
-        JsonNode node = Config.getConfigNode().get("checks");
-        Iterator<String> iterator = node.fieldNames();
-        while (iterator.hasNext()) {
-            String checkName = iterator.next();
-            String checkCategory = node.get(checkName).get("tag").asText();
-            map.put(checkName, checkCategory);
-        }
+    @GetMapping("/projects/allTags")
+    public TreeMap<LocalDateTime, HashMap<String, Long>> projectsByAllTags() {
+        HashMap<String, String> map = getTags();
+
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new TreeMap<LocalDateTime, HashMap<String, Long>>();
@@ -114,18 +116,13 @@ public class ProjectController {
         return res;
     }
 
-    @GetMapping("/projects/byCategory")
-    public TreeMap<LocalDateTime, Long> projectsPassedByCategory(@RequestParam(name = "category", required = false) String category) {
-        HashMap<String, String> map = new HashMap<>();
-        JsonNode node = Config.getConfigNode().get("checks");
-        Iterator<String> iterator = node.fieldNames();
-        while (iterator.hasNext()) {
-            String checkName = iterator.next();
-            String checkCategory = node.get(checkName).get("tag").asText();
-            map.put(checkName, checkCategory);
-        }
+    @GetMapping("/projects/byTag")
+    public TreeMap<LocalDateTime, Long> projectsPassedByCategory(@RequestParam(name = "tag", required = false) String category) {
+        HashMap<String, String> map = getTags();
+
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
+
         var res = new TreeMap<LocalDateTime, Long>();
 
         while(it.hasNext()) {
@@ -227,4 +224,19 @@ public class ProjectController {
         }
     }
 
+    //**********************
+    //         Helper
+    //**********************
+
+    private HashMap<String, String> getTags() {
+        HashMap<String, String> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            String checkCategory = node.get(checkName).get("tag").asText();
+            map.put(checkName, checkCategory);
+        }
+        return map;
+    }
 }
