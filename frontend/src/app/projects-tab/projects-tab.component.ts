@@ -137,6 +137,7 @@ export class ProjectsTabComponent implements OnInit {
       .get(`${environment.baseURL}/projects?extended=true`)
       .toPromise()
       .then((results: any) => {
+        console.log('results',results);
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
         console.log('projekte', this.all_projects);
         console.log(this.all_projects);
