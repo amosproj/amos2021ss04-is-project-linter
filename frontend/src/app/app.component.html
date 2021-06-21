@@ -1,185 +1,192 @@
-<app-header></app-header>
+<!-- Header-->
+
+<mat-toolbar color="primary">
+ 
+  <mat-toolbar-row style="height: 38px">
+    <span style="
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        font-size: 32px;
+      ">Inner Source Project Linter</span>
+  </mat-toolbar-row>
+  <mat-toolbar-row style="height: 38px">
+    <p style="
+        text-align: center;
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+      ">
+      Werkzeug für Inner Source Entwicklung
+    </p>
+  </mat-toolbar-row>
+</mat-toolbar>
 
 <!-- Suchleiste-->
 <mat-card-content class="searchBar-mat">
-  <mat-form-field
-    appearance="fill"
-    [hideRequiredMarker]="hideRequiredControl.value"
-    [floatLabel]="floatLabelControl.value"
-    style="width: 420px !important"
-  >
+  
+  <mat-form-field appearance="fill" [hideRequiredMarker]="hideRequiredControl.value"
+    [floatLabel]="floatLabelControl.value" style="width: 420px !important">
     <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
-    <input
-      [(ngModel)]="suchBegriff"
-      #suchleiste
-      matInput
-      placeholder="z.B. Amos Testz"
-      required
-      (keyup)="searchProject(suchleiste.value)"
-    />
+    <input [(ngModel)]="suchBegriff" #suchleiste matInput placeholder="z.B. Amos Testz" required (keyup)="searchProject(suchleiste.value)" />
     <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
-    <mat-hint
-      *ngIf="getIfForwardLinkWorked() == false"
-      class="errorSearchBar"
-      >{{ errorMsgForwardLink }}</mat-hint
-    >
+    <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint>
   </mat-form-field>
   &nbsp;
+
+
 </mat-card-content>
 
 <!-- Tabs-->
-<mat-tab-group
-  mat-align-tabs="center"
-  color="accent"
-  (click)="setOnStatistikTab()"
->
+<mat-tab-group mat-align-tabs="center" color="accent" (click)="setOnStatistikTab()">
   <mat-tab label="Projekte">
-    <mat-card style="padding-bottom: 4%">
-      <mat-card-title
-        >Sortiere Projekte nach:<mat-icon
-          matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium"
-          style="padding-left: 10px"
-          color="primary"
-        >
+      <mat-card style="padding-bottom: 4%;">
+        <mat-card-title>Sortiere Projekte nach:<mat-icon matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium" style=" padding-left: 10px;" color="primary">
           info
-        </mat-icon></mat-card-title
-      >
-      <div style="font-size: large">Kategorie:</div>
-      <mat-card-content
-        style="background-color: white; height: 100px; padding-left: 3%"
-      >
-        <mat-chip-list selectable multiple [formControl]="chipsControl">
-          <mat-chip
-            #chip="matChip"
-            (click)="chip.toggleSelected(true)"
-            *ngFor="let option of chipOptions"
-            [value]="option"
-          >
-            <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
-            {{ option }}
-          </mat-chip>
-        </mat-chip-list>
-        <br />
-        <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
-      </mat-card-content>
+        </mat-icon></mat-card-title>
+        <div style="font-size: large;">Kategorie:</div>
+        <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
+          <mat-chip-list selectable multiple [formControl]="chipsControl">
+            <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of chipOptions" [value]="option">
+              <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
+              {{option}}
+            </mat-chip>
+          </mat-chip-list>
+          <br />
+          <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
+        </mat-card-content>
 
-      <div style="font-size: large">Sortierkriterium:</div>
-      <mat-card-content
-        style="background-color: white; height: 100px; padding-left: 3%"
-      >
-        <mat-radio-group
+        <div style="font-size: large;">
+          Sortierkriterium:
+        </div>
+        <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
+          <mat-radio-group
           aria-labelledby="example-radio-group-label"
           class="example-radio-group"
-          [formControl]="searchCriteria"
-        >
-          <mat-radio-button
-            class="example-radio-button"
-            *ngFor="let item of availableSearchCriteria"
-            [value]="item"
-          >
-            {{ item }}
-          </mat-radio-button>
-        </mat-radio-group>
-      </mat-card-content>
-      <!-- kategorie.value == bestandene_tests_pro_kategorie-->
-      <mat-card-content
-        style="
-          background-color: white;
-          padding-bottom: 1.5%;
-          border-bottom: 2px solid lightgray;
-        "
-      >
-        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap>
-          <button
-            mat-raised-button
-            [disabled]="
-              chipsControl.value.length == 0 || searchCriteria.value.length == 0
-            "
-            (click)="sortProjects()"
-          >
-            Sortieren
-          </button>
-          <mat-icon
-            matTooltip="{{ filterInfo }}"
-            style="padding-left: 10px"
-            color="primary"
-          >
-            info
-          </mat-icon>
-        </div>
-
-        <div style="float: right">
-          <div fxLayout="row" fxLayoutAlign="space-around center">
-            <div>
-              <mat-icon matTooltip="Vorherige 50" (click)="pageLeft()"
-                >arrow_back_ios</mat-icon
-              >
-            </div>
-            <div fxFlexAlign="baseline">Seite {{ currentPage }}</div>
-            <div>
-              <mat-icon matTooltip="Nächste 50" (click)="pageRight()"
-                >arrow_forward_ios</mat-icon
-              >
+          [formControl]="searchCriteria">
+            <mat-radio-button class="example-radio-button" *ngFor="let item of availableSearchCriteria" [value]="item">
+              {{item}}
+            </mat-radio-button>
+          </mat-radio-group>
+        </mat-card-content>
+        <!-- kategorie.value == bestandene_tests_pro_kategorie-->
+        <mat-card-content style="background-color: white; padding-bottom: 1.5%; border-bottom: 2px solid lightgray">
+          <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap >
+            <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
+            (click)="sortProjects()">Sortieren</button>
+            <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
+              info
+            </mat-icon>
+          </div>
+        
+          <div style="float: right;" >
+            <div fxLayout="row" fxLayoutAlign="space-around center" >
+              <div>
+                <mat-icon matTooltip="Vorherige 50"  (click)="pageLeft()" >arrow_back_ios</mat-icon>
+              </div>
+              <div fxFlexAlign="baseline">
+                Seite {{currentPage}}
+              </div>
+              <div>
+                <mat-icon matTooltip="Nächste 50"  (click)="pageRight()">arrow_forward_ios</mat-icon>
+              </div>
             </div>
           </div>
-        </div>
-      </mat-card-content>
-
+        </mat-card-content>
+   
+        
+     
       <mat-card-content>
-        <div *ngIf="all_projects != undefined">
+        <div *ngIf="all_projects != undefined ">
           <div *ngIf="all_projects.length > 50">
-            50 von {{ all_projects.length }}
+            50 von {{all_projects.length}}
           </div>
           <div *ngIf="all_projects.length < 50">
-            {{ all_projects.length }} von {{ all_projects.length }}
+            {{all_projects.length}} von {{all_projects.length}}
           </div>
         </div>
-        <div fxLayout="row wrap" fxLayoutAlign="center end">
-          <div fxLayoutAlign="center end" #parent></div>
+        <div fxLayout="row wrap" fxLayoutAlign="center end" >
+      
+          <div  fxLayoutAlign="center end" #parent></div>
         </div>
       </mat-card-content>
     </mat-card>
+
+    <!----Footer of Repositories-->
+    <mat-toolbar color="primary" style="position: fixed; bottom: 0%">
+      <mat-toolbar-row style="height: 24px; padding-top: 1%">
+        <span style="
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+          ">Bei Rückfragen oder Feedback Mail an:</span>
+        <span style="
+            text-align: right;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+            padding-top: 1%;
+          ">Powered by ACIDIC</span>
+      </mat-toolbar-row>
+      <mat-toolbar-row style="height: 18px; padding-top: 1%">
+        <span style="
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+          ">ria.inner.source@datev.com</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+    
   </mat-tab>
   <mat-tab label="Statistiken">
     <mat-card-content
-      style="
-        background-color: white;
-        padding-top: 3%;
-        padding-left: 2%;
-        font-size: large;
-        padding-bottom: 2%;
-        border-bottom: 2px solid lightgray;
-      "
-    >
-      Ergebnisse des Crawlers als .csv exportieren:
-      <a mat-raised-button download href="{{ csvExportLink }}" color="primary"
-        >Download</a
-      >
+      style="background-color: white; padding-top: 3%; padding-left: 2%; font-size: large; padding-bottom: 2%; border-bottom: 2px solid lightgray">
+      Ergebnisse des Crawlers als .csv exportieren: <a mat-raised-button download href={{csvExportLink}} color="primary">Download</a>
     </mat-card-content>
     <mat-card-content
-      style="
-        background-color: white;
-        padding-top: 3%;
-        padding-left: 2%;
-        font-size: large;
-        padding-bottom: 3%;
-        border-bottom: 2px solid lightgray;
-      "
-    >
-      <div style="width: 90%">
+      style="background-color: white; padding-top: 3%; padding-left: 2%; font-size: large; padding-bottom: 3%; border-bottom: 2px solid lightgray">
+      <div style="width:90%">
         <canvas id="importantChecks"></canvas>
       </div>
-      <div style="width: 90%">
+      <div style="width:90%">
         <canvas id="importantChecksPercentage"></canvas>
       </div>
-      <div style="width: 90%">
+      <div style="width:90%">
         <canvas id="checksPerCategorie"></canvas>
       </div>
-      <div style="width: 90%">
+      <div style="width:90%">
         <canvas id="checksPerCategoriePercentage"></canvas>
       </div>
     </mat-card-content>
+
+    <!----Footer of statistics-->
+    <mat-toolbar color="primary" style="position: fixed; bottom: 0%">
+      <mat-toolbar-row style="height: 24px; padding-top: 1%">
+        <span style="
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+          ">Bei Rückfragen oder Feedback Mail an:</span>
+        <span style="
+            text-align: right;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+            padding-top: 1%;
+          ">Powered by ACIDIC</span>
+      </mat-toolbar-row>
+      <mat-toolbar-row style="height: 18px; padding-top: 1%">
+        <span style="
+            text-align: left;
+            display: inline-block;
+            width: 100%;
+            font-size: 24px;
+          ">ria.inner.source@datev.com</span>
+      </mat-toolbar-row>
+    </mat-toolbar>
   </mat-tab>
 </mat-tab-group>
 
-<app-footer></app-footer>
