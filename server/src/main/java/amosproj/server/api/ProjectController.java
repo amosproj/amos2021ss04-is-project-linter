@@ -91,12 +91,18 @@ public class ProjectController {
      * @return TreeMap, die, sortiert nach lintTime, die Anzahl der Projekte mit bestandenen checks ausgibt
      */
     @GetMapping("/projects/allTags")
-    public TreeMap<LocalDateTime, HashMap<String, Long>> projectsByAllTags() {
+    public TreeMap<LocalDateTime, HashMap<String, Object>> projectsByAllTags(@RequestParam(name = "type") String type) {
+        if (type == null) {
+            return null;
+        }
+        if (!type.equals("absolute") && !type.equals("percentage")) { // Not a valid type
+            return null;
+        }
         HashMap<String, String> map = getTags();
 
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
-        var res = new TreeMap<LocalDateTime, HashMap<String, Long>>();
+        var res = new TreeMap<LocalDateTime, HashMap<String, Object>>();
 
         while (it.hasNext()) {
             Project project = it.next();
@@ -116,17 +122,32 @@ public class ProjectController {
                     }
                 }
                 var categories = allChecksPassed.keySet();
-                res.putIfAbsent(lr.getLintTime(), new HashMap<String, Long>());
+                res.putIfAbsent(lr.getLintTime(), new HashMap<String, Object>());
                 for (String category : categories) {
+                    HashMap<String, Object> resMap = res.get(lr.getLintTime());
+                    resMap.putIfAbsent(category, 0L);
                     if (allChecksPassed.get(category)) {
-                        HashMap<String, Long> resMap = res.get(lr.getLintTime());
-                        resMap.putIfAbsent(category, 0L);
-                        resMap.computeIfPresent(category, (key, value) -> value + 1L);
+                        resMap.computeIfPresent(category, (key, value) -> (Long) value + 1L);
                     }
                 }
             }
         }
-        return res;
+        if (type.equals("absolute")) { // Only the absolute value is wanted
+            return res;
+        }
+        // Percentage is wanted: Need to divide the total by number of projects
+        Set<LocalDateTime> timeSet = res.keySet();
+        var percentage = new TreeMap<LocalDateTime, HashMap<String, Object>>();
+        for (LocalDateTime localDateTime: timeSet) {
+            int projects = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
+            var tagPercentages = new HashMap<String, Object>();
+            var totals = res.get(localDateTime);
+            for (String string : totals.keySet()) {
+                tagPercentages.put(string, ((Long) totals.get(string) / (float) projects));
+            }
+            percentage.put(localDateTime, tagPercentages);
+        }
+        return percentage;
     }
 
     @GetMapping("/projects/byTag")

@@ -1,7 +1,5 @@
 package amosproj.server.data;
 
-import org.apache.tomcat.jni.Local;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
@@ -31,4 +29,6 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
 
 
     List<LintingResult> findAllByOrderByLintTimeAsc();
+
+    Integer countLintingResultsByLintTime(LocalDateTime localDateTime);
 }

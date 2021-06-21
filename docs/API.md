@@ -8,6 +8,8 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Response: Json(List(ProjectSchema))
 
 ### GET - `/projects/allTags` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle Checks eines Tags bestanden haben
+* Query:
+    * `type=percentage|absolute` Liefert je nach `type` die Prozentzahl oder die absolute Anzahl der Projekte, die alle Checks eines Tags bestanden haben. Wird ein anderer Parameter als `percentage` oder `absolute` übergeben, wird nichts zurückgegeben.
 * Body: nichts
 * Response: Json(TreeMap<LocalDateTime, HashMap<String, Long>>) 
 
