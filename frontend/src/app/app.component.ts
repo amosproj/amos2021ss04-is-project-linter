@@ -424,20 +424,23 @@ export class AppComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataImportantChecksPercentage = {
@@ -468,24 +471,27 @@ export class AppComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-            callback: function(value, index, values) {
-              return value + "%";
-            },
-            max: 100
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+              callback: function (value, index, values) {
+                return value + '%';
+              },
+              max: 100,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataCheckPerCategoriePercentage = {
@@ -505,56 +511,64 @@ export class AppComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataCheckPerCategoriePercentage = {
-      labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      labels: ['0d', '10d', '20d', '30d', '40d', '50d', '60d'],
       yAxisID: 'yAxis',
-      datasets: [{
-        label: "Car Cost",
-        data: [0, 10, 20, 5, 23, 22, 25],
-        fill: false,
-      }]
-    }
-    
+      datasets: [
+        {
+          label: 'Car Cost',
+          data: [0, 10, 20, 5, 23, 22, 25],
+          fill: false,
+        },
+      ],
+    };
+
     this.chartOptionsCheckPerCategoriePercantage = {
       responsive: true,
       legend: {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-            callback: function(value, index, values) {
-              return value + "%";
-            },
-            max: 100
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+              callback: function (value, index, values) {
+                return value + '%';
+              },
+              max: 100,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+            },
+          },
+        ],
+      },
     };
   }
 
