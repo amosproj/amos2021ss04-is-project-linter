@@ -1,69 +1,105 @@
-<mat-card style="padding-bottom: 4%;">
-    <mat-card-title>Sortiere Projekte nach:<mat-icon matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium" style=" padding-left: 10px;" color="primary">
+<mat-card style="padding-bottom: 4%">
+  <mat-card-title
+    >Sortiere Projekte nach:<mat-icon
+      matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium"
+      style="padding-left: 10px"
+      color="primary"
+    >
       info
-    </mat-icon></mat-card-title>
-    <div style="font-size: large;">Kategorie:</div>
-    <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
-      <mat-chip-list selectable multiple [formControl]="chipsControl">
-        <mat-chip #chip="matChip"   (click)="chip.toggleSelected(true)" *ngFor="let option of chipOptions" [value]="option">
-          <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
-          {{option}}
-        </mat-chip>
-      </mat-chip-list>
-      <br />
-      <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
-    </mat-card-content>
+    </mat-icon></mat-card-title
+  >
+  <div style="font-size: large">Kategorie:</div>
+  <mat-card-content
+    style="background-color: white; height: 100px; padding-left: 3%"
+  >
+    <mat-chip-list selectable multiple [formControl]="chipsControl">
+      <mat-chip
+        #chip="matChip"
+        (click)="chip.toggleSelected(true)"
+        *ngFor="let option of chipOptions"
+        [value]="option"
+      >
+        <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
+        {{ option }}
+      </mat-chip>
+    </mat-chip-list>
+    <br />
+    <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
+  </mat-card-content>
 
-    <div style="font-size: large;">
-      Sortierkriterium:
-    </div>
-    <mat-card-content style="background-color:white; height: 100px; padding-left: 3%;">
-      <mat-radio-group
+  <div style="font-size: large">Sortierkriterium:</div>
+  <mat-card-content
+    style="background-color: white; height: 100px; padding-left: 3%"
+  >
+    <mat-radio-group
       aria-labelledby="example-radio-group-label"
       class="example-radio-group"
-      [formControl]="searchCriteria">
-        <mat-radio-button class="example-radio-button" *ngFor="let item of availableSearchCriteria" [value]="item">
-          {{item}}
-        </mat-radio-button>
-      </mat-radio-group>
-    </mat-card-content>
-    <!-- kategorie.value == bestandene_tests_pro_kategorie-->
-    <mat-card-content style="background-color: white; padding-bottom: 1.5%; border-bottom: 2px solid lightgray">
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap >
-        <button mat-raised-button [disabled]=" chipsControl.value.length == 0 ||  searchCriteria.value.length == 0 "
-        (click)="sortProjects()">Sortieren</button>
-        <mat-icon matTooltip="{{filterInfo}}" style=" padding-left: 10px;" color="primary">
-          info
-        </mat-icon>
-      </div>
-    
-      <div style="float: right;" >
-        <div fxLayout="row" fxLayoutAlign="space-around center" >
-          <div>
-            <mat-icon matTooltip="Vorherige 50"  (click)="pageLeft()" >arrow_back_ios</mat-icon>
-          </div>
-          <div fxFlexAlign="baseline">
-            Seite {{currentPage}}
-          </div>
-          <div>
-            <mat-icon matTooltip="Nächste 50"  (click)="pageRight()">arrow_forward_ios</mat-icon>
-          </div>
+      [formControl]="searchCriteria"
+    >
+      <mat-radio-button
+        class="example-radio-button"
+        *ngFor="let item of availableSearchCriteria"
+        [value]="item"
+      >
+        {{ item }}
+      </mat-radio-button>
+    </mat-radio-group>
+  </mat-card-content>
+  <!-- kategorie.value == bestandene_tests_pro_kategorie-->
+  <mat-card-content
+    style="
+      background-color: white;
+      padding-bottom: 1.5%;
+      border-bottom: 2px solid lightgray;
+    "
+  >
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap>
+      <button
+        mat-raised-button
+        [disabled]="
+          chipsControl.value.length == 0 || searchCriteria.value.length == 0
+        "
+        (click)="sortProjects()"
+      >
+        Sortieren
+      </button>
+      <mat-icon
+        matTooltip="{{ filterInfo }}"
+        style="padding-left: 10px"
+        color="primary"
+      >
+        info
+      </mat-icon>
+    </div>
+
+    <div style="float: right">
+      <div fxLayout="row" fxLayoutAlign="space-around center">
+        <div>
+          <mat-icon matTooltip="Vorherige 50" (click)="pageLeft()"
+            >arrow_back_ios</mat-icon
+          >
+        </div>
+        <div fxFlexAlign="baseline">Seite {{ currentPage }}</div>
+        <div>
+          <mat-icon matTooltip="Nächste 50" (click)="pageRight()"
+            >arrow_forward_ios</mat-icon
+          >
         </div>
       </div>
-    </mat-card-content>
- 
+    </div>
+  </mat-card-content>
+
   <mat-card-content>
-    <div *ngIf="all_projects != undefined ">
+    <div *ngIf="all_projects != undefined">
       <div *ngIf="all_projects.length > 50">
-        50 von {{all_projects.length}}
+        50 von {{ all_projects.length }}
       </div>
       <div *ngIf="all_projects.length < 50">
-        {{all_projects.length}} von {{all_projects.length}}
+        {{ all_projects.length }} von {{ all_projects.length }}
       </div>
     </div>
-    <div fxLayout="row wrap" fxLayoutAlign="center end" >
-  
-      <div  fxLayoutAlign="center end" #parent></div>
+    <div fxLayout="row wrap" fxLayoutAlign="center end">
+      <div fxLayoutAlign="center end" #parent></div>
     </div>
   </mat-card-content>
 </mat-card>

@@ -10,7 +10,6 @@ import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAmount;
 import java.util.*;
 
 /**
@@ -75,20 +72,20 @@ public class ProjectController {
         // Sort by checks passed in tag
         if (extended != null && tag != null) {
             res.sort(
-                Comparator.comparingInt(x ->
-                    x.getLintingResults().size() == 0 ? 0 :
-                    checksPassedByTag(x.getLintingResults()
-                        .get(x.getLintingResults().size() - 1)
-                        .getCheckResults()
-                        .toArray(new CheckResultSchema[
-                                x.getLintingResults()
-                                        .get(x.getLintingResults().size() - 1)
-                                        .getCheckResults()
-                                        .size()
-                                ])
-                                , tag
+                    Comparator.comparingInt(x ->
+                            x.getLintingResults().size() == 0 ? 0 :
+                                    checksPassedByTag(x.getLintingResults()
+                                                    .get(x.getLintingResults().size() - 1)
+                                                    .getCheckResults()
+                                                    .toArray(new CheckResultSchema[
+                                                            x.getLintingResults()
+                                                                    .get(x.getLintingResults().size() - 1)
+                                                                    .getCheckResults()
+                                                                    .size()
+                                                            ])
+                                            , tag
+                                    )
                     )
-                )
             );
         }
         return res;
@@ -96,6 +93,7 @@ public class ProjectController {
 
     /**
      * API Endpoint, der alle Projekte durch geht und zählt, wie viele davon alle Checks bestanden haben
+     *
      * @return TreeMap, die, sortiert nach lintTime, die Anzahl der Projekte mit bestandenen checks ausgibt
      */
     @GetMapping("/projects/allTags")
@@ -106,13 +104,13 @@ public class ProjectController {
         var it = projectList.iterator();
         var res = new TreeMap<LocalDateTime, HashMap<String, Long>>();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Project project = it.next();
             List<LintingResult> lintingResults = project.getResults();
-            for (LintingResult lr: lintingResults) {
+            for (LintingResult lr : lintingResults) {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 var allChecksPassed = new HashMap<String, Boolean>();
-                for (CheckResult checkResult: checkResults) {
+                for (CheckResult checkResult : checkResults) {
                     String checkCategory = map.get(checkResult.getCheckName());
                     if (!checkResult.getResult()) { // Did not pass all the checks for the category
                         allChecksPassed.put(checkCategory, false);
@@ -125,11 +123,11 @@ public class ProjectController {
                 }
                 var categories = allChecksPassed.keySet();
                 res.putIfAbsent(lr.getLintTime(), new HashMap<String, Long>());
-                for (String category: categories) {
+                for (String category : categories) {
                     if (allChecksPassed.get(category)) {
                         HashMap<String, Long> resMap = res.get(lr.getLintTime());
                         resMap.putIfAbsent(category, 0L);
-                        resMap.computeIfPresent(category, (key, value) -> value+1L);
+                        resMap.computeIfPresent(category, (key, value) -> value + 1L);
                     }
                 }
             }
@@ -146,13 +144,13 @@ public class ProjectController {
 
         var res = new TreeMap<LocalDateTime, Long>();
 
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             Project project = it.next();
             List<LintingResult> lintingResults = project.getResults();
-            for (LintingResult lr: lintingResults) {
+            for (LintingResult lr : lintingResults) {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 boolean allChecksPassed = true;
-                for (CheckResult checkResult: checkResults) {
+                for (CheckResult checkResult : checkResults) {
                     String checkCategory = map.get(checkResult.getCheckName());
                     if (!checkCategory.equals(category) || !checkResult.getResult()) { // Did not pass all the checks
                         allChecksPassed = false;
@@ -266,7 +264,7 @@ public class ProjectController {
             return 0;
         }
 
-        for (CheckResultSchema resultSchema: checkResults) {
+        for (CheckResultSchema resultSchema : checkResults) {
             if (resultSchema == null) {
                 return 0;
             }
@@ -274,7 +272,7 @@ public class ProjectController {
 
         int i = 0;
         var map = getTags();
-        for (CheckResultSchema checkResult: checkResults) {
+        for (CheckResultSchema checkResult : checkResults) {
             String checkCategory = map.get(checkResult.getCheckName());
             if (checkResult.getResult() && checkCategory.equals(tag)) {
                 i++;

@@ -19,10 +19,9 @@ import * as dayjs from 'dayjs';
 @Component({
   selector: 'app-projects-tab',
   templateUrl: './projects-tab.component.html',
-  styleUrls: ['./projects-tab.component.css']
+  styleUrls: ['./projects-tab.component.css'],
 })
 export class ProjectsTabComponent implements OnInit {
-
   title = 'frontend';
   projectComponents = [];
   chipsControl = new FormControl('');
@@ -53,14 +52,12 @@ export class ProjectsTabComponent implements OnInit {
    * Init Methods
    ***********************************************************/
 
-   constructor(
+  constructor(
     public dialog: MatDialog,
     private _cfr: ComponentFactoryResolver,
     private http: HttpClient,
     private apiService: ApiService
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     this.GetConfig();
@@ -71,7 +68,7 @@ export class ProjectsTabComponent implements OnInit {
    * Functions
    ***********************************************************/
 
-   getIfForwardLinkWorked() {
+  getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
   }
 
@@ -137,7 +134,7 @@ export class ProjectsTabComponent implements OnInit {
       .get(`${environment.baseURL}/projects?extended=true`)
       .toPromise()
       .then((results: any) => {
-        console.log('results',results);
+        console.log('results', results);
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
         console.log('projekte', this.all_projects);
         console.log(this.all_projects);
@@ -325,5 +322,4 @@ export class ProjectsTabComponent implements OnInit {
     }
     return 0;
   }
-
 }

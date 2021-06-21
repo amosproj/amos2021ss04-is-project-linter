@@ -20,24 +20,17 @@ import * as dayjs from 'dayjs';
 @Component({
   selector: 'app-statistics-tab',
   templateUrl: './statistics-tab.component.html',
-  styleUrls: ['./statistics-tab.component.css']
+  styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
+  constructor(private http: HttpClient) {}
 
-  constructor(
-    private http: HttpClient,
-    ) { }
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-    
-  }
-
-  ngAfterViewInit(): void {
-   
-  }
+  ngAfterViewInit(): void {}
 
   csvExportLink = environment.baseURL + '/export/csv';
- 
+
   chartImportantChecks;
   dataImportantChecks;
   canvasImportantChecks;
@@ -55,32 +48,31 @@ export class StatisticsTabComponent implements OnInit {
   canvasCheckPerCategoriePercantage;
   chartOptionsCheckPerCategoriePercantage;
 
-
   chartColors = [
-    //green: 
+    //green:
     'rgb(75, 192, 192)',
-    //red: 
+    //red:
     'rgb(255, 99, 132)',
-    //orange: 
+    //orange:
     'rgb(255, 159, 64)',
-    //yellow: 
+    //yellow:
     'rgb(255, 205, 86)',
-    //blue: 
+    //blue:
     'rgb(54, 162, 235)',
-    //purple: 
+    //purple:
     'rgb(153, 102, 255)',
-    //grey: 
+    //grey:
     'rgb(231,233,237)',
   ];
 
-  timestamps : string[] = new Array();
-  tags : String[] = new Array();
-  values : number[][] = new Array();
+  timestamps: string[] = new Array();
+  tags: String[] = new Array();
+  values: number[][] = new Array();
 
-  seriesValues : number[][];
+  seriesValues: number[][];
 
   setChartData() {
-    console.log('timestamps',this.timestamps);
+    console.log('timestamps', this.timestamps);
 
     this.dataImportantChecks = {
       labels: [
@@ -115,8 +107,8 @@ export class StatisticsTabComponent implements OnInit {
           backgroundColor: this.chartColors[2],
           borderColor: this.chartColors[2],
           pointRadius: 0,
-          fill: true
-        }
+          fill: true,
+        },
       ],
     };
 
@@ -126,20 +118,23 @@ export class StatisticsTabComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataImportantChecksPercentage = {
@@ -170,24 +165,27 @@ export class StatisticsTabComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-            callback: function(value, index, values) {
-              return value + "%";
-            },
-            max: 100
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+              callback: function (value, index, values) {
+                return value + '%';
+              },
+              max: 100,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataCheckPerCategoriePercentage = {
@@ -207,107 +205,114 @@ export class StatisticsTabComponent implements OnInit {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+            },
+          },
+        ],
+      },
     };
 
     this.dataCheckPerCategoriePercentage = {
-      labels: ["0d", "10d", "20d", "30d", "40d", "50d", "60d"],
+      labels: ['0d', '10d', '20d', '30d', '40d', '50d', '60d'],
       yAxisID: 'yAxis',
-      datasets: [{
-        label: "Car Cost",
-        data: [0, 10, 20, 5, 23, 22, 25],
-        fill: false,
-      }]
-    }
-    
+      datasets: [
+        {
+          label: 'Car Cost',
+          data: [0, 10, 20, 5, 23, 22, 25],
+          fill: false,
+        },
+      ],
+    };
+
     this.chartOptionsCheckPerCategoriePercantage = {
       responsive: true,
       legend: {
         position: 'right',
         display: true,
       },
-      scales:{
-        yAxes: [{
-          id: 'yAxis',
-          display : true,
-          position: 'left',
-          ticks:{
-            beginAtZero: true,
-            callback: function(value, index, values) {
-              return value + "%";
-            },
-            max: 100
-          },
-          scaleLabel:{
+      scales: {
+        yAxes: [
+          {
+            id: 'yAxis',
             display: true,
-            labelString: 'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben'
-          }
-        }]
-      }
+            position: 'left',
+            ticks: {
+              beginAtZero: true,
+              callback: function (value, index, values) {
+                return value + '%';
+              },
+              max: 100,
+            },
+            scaleLabel: {
+              display: true,
+              labelString:
+                'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+            },
+          },
+        ],
+      },
     };
   }
 
   setOnStatistikTab() {
-
     this.getChartData();
   }
 
-  async getChartData(){
-    await this.http.get(`${environment.baseURL}/projects/allCategories`)
-    .toPromise()
-    .then((results: any) => {
-      //console.log('new api returns',results);
-      for (let x in results){
-        //console.log('timestamp',x);
-        if(this.timestamps.includes(dayjs(x).format('DD.MM.YYYY'))){
-          continue;
-        }
-        this.timestamps.push(dayjs(x).format('DD.MM.YYYY'));
-        var value : number[] = new Array();
-        for(let y in results[x]){
-          //console.log('tag',y);
-          if(!this.tags.includes(y)){
-            this.tags.push(y);
+  async getChartData() {
+    await this.http
+      .get(`${environment.baseURL}/projects/allCategories`)
+      .toPromise()
+      .then((results: any) => {
+        //console.log('new api returns',results);
+        for (let x in results) {
+          //console.log('timestamp',x);
+          if (this.timestamps.includes(dayjs(x).format('DD.MM.YYYY'))) {
+            continue;
           }
-          //console.log('value',results[x][y]);
-          value.push(results[x][y]);
+          this.timestamps.push(dayjs(x).format('DD.MM.YYYY'));
+          var value: number[] = new Array();
+          for (let y in results[x]) {
+            //console.log('tag',y);
+            if (!this.tags.includes(y)) {
+              this.tags.push(y);
+            }
+            //console.log('value',results[x][y]);
+            value.push(results[x][y]);
+          }
+          this.values.push(value);
         }
-        this.values.push(value);
-      }
-      //console.log(this.timestamps);
-      //console.log(this.tags);
-      //console.log(this.values);
+        //console.log(this.timestamps);
+        //console.log(this.tags);
+        //console.log(this.values);
 
-      this.seriesValues = new Array(this.tags.length);
-      for (var i = 0; i < this.tags.length; i++){
-        this.seriesValues[i] = new Array(this.timestamps.length);
-      }
-
-      for (var i = 0; i < this.timestamps.length; i++){
-        for (var j = 0; j < this.tags.length; j++){
-          this.seriesValues[j][i] = this.values[i][j];
+        this.seriesValues = new Array(this.tags.length);
+        for (var i = 0; i < this.tags.length; i++) {
+          this.seriesValues[i] = new Array(this.timestamps.length);
         }
-      }
 
-      console.log('timestamps in http',this.timestamps);
-      
+        for (var i = 0; i < this.timestamps.length; i++) {
+          for (var j = 0; j < this.tags.length; j++) {
+            this.seriesValues[j][i] = this.values[i][j];
+          }
+        }
 
-      this.setChartData();
-      this.renderStatistikCharts();
-    });
+        console.log('timestamps in http', this.timestamps);
+
+        this.setChartData();
+        this.renderStatistikCharts();
+      });
   }
 
   renderStatistikCharts() {
@@ -357,30 +362,31 @@ export class StatisticsTabComponent implements OnInit {
     this.chartCheckPerCategorie.data.labels = this.timestamps;
 
     var datasets = [];
-    for(var i = 0; i < this.tags.length; i++){
-      if(i != this.tags.length - 1){
-        datasets.push({label: this.tags[i],
-          data: this.seriesValues[i], 
-          backgroundColor: this.chartColors[i%this.chartColors.length],
-          borderColor: this.chartColors[i%this.chartColors.length],
+    for (var i = 0; i < this.tags.length; i++) {
+      if (i != this.tags.length - 1) {
+        datasets.push({
+          label: this.tags[i],
+          data: this.seriesValues[i],
+          backgroundColor: this.chartColors[i % this.chartColors.length],
+          borderColor: this.chartColors[i % this.chartColors.length],
           pointRadius: 0,
           fill: i + 1,
-         });
+        });
       } else {
-        datasets.push({label: this.tags[i],
-          data: this.seriesValues[i], 
-          backgroundColor: this.chartColors[i%this.chartColors.length],
-          borderColor: this.chartColors[i%this.chartColors.length],
+        datasets.push({
+          label: this.tags[i],
+          data: this.seriesValues[i],
+          backgroundColor: this.chartColors[i % this.chartColors.length],
+          borderColor: this.chartColors[i % this.chartColors.length],
           pointRadius: 0,
           fill: true,
-         });
+        });
       }
     }
     //test.push({label: this.tags[0], data: this.seriesValues[0]})
     //var test = [{label: this.tags[0], data: this.seriesValues[0]}];
 
     //this.chartCheckPerCategorie.data.datasets = [{label : 'Series1', data: [1,3]}];
-
 
     this.chartCheckPerCategorie.data.datasets = datasets;
 
@@ -401,8 +407,8 @@ export class StatisticsTabComponent implements OnInit {
       }
     );
 
-    for(var i = 0; i < this.tags.length; i++){
-      datasets[i].data = datasets[i].data.map(x => x * 100 / 10);
+    for (var i = 0; i < this.tags.length; i++) {
+      datasets[i].data = datasets[i].data.map((x) => (x * 100) / 10);
       datasets[i].fill = false;
     }
 
@@ -410,7 +416,10 @@ export class StatisticsTabComponent implements OnInit {
     this.chartCheckPerCategoriePercentage.data.datasets = datasets;
 
     this.chartCheckPerCategoriePercentage.update();
-    console.log('Dataset Percentage',this.chartCheckPerCategoriePercentage.data.datasets)
+    console.log(
+      'Dataset Percentage',
+      this.chartCheckPerCategoriePercentage.data.datasets
+    );
   }
 
   toggleSelection(chip: MatChip) {
@@ -420,8 +429,8 @@ export class StatisticsTabComponent implements OnInit {
   addData(chart, label, data) {
     chart.data.labels.push(label);
     chart.data.datasets.forEach((dataset) => {
-        dataset.data.push(data);
+      dataset.data.push(data);
     });
     chart.update();
-}
+  }
 }

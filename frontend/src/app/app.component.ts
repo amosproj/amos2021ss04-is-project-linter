@@ -15,14 +15,12 @@ import { StatisticsTabComponent } from './statistics-tab/statistics-tab.componen
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-
-
   /***********************************************************
    * Properties
    ***********************************************************/
 
-  @ViewChild(ProjectsTabComponent) projectsTab : ProjectsTabComponent;
-  @ViewChild(StatisticsTabComponent) statisticsTab : StatisticsTabComponent;
+  @ViewChild(ProjectsTabComponent) projectsTab: ProjectsTabComponent;
+  @ViewChild(StatisticsTabComponent) statisticsTab: StatisticsTabComponent;
 
   options: FormGroup;
 
@@ -30,25 +28,24 @@ export class AppComponent implements OnInit {
   floatLabelControl = new FormControl('auto');
 
   suchBegriff;
-  
+
   /***********************************************************
    * Init Methods
    ***********************************************************/
 
-  constructor(
-    private http: HttpClient,
-    fb: FormBuilder,
-  ){this.options = fb.group({
-    hideRequired: this.hideRequiredControl,
-    floatLabel: this.floatLabelControl,
-  });};
+  constructor(private http: HttpClient, fb: FormBuilder) {
+    this.options = fb.group({
+      hideRequired: this.hideRequiredControl,
+      floatLabel: this.floatLabelControl,
+    });
+  }
 
   ngOnInit() {}
 
   ngAfterViewInit() {}
 
-  checkTabChange($event){
-    if($event.index == 1){
+  checkTabChange($event) {
+    if ($event.index == 1) {
       //Wechsel to Statistics-Tab
       this.statisticsTab.setOnStatistikTab();
     }
