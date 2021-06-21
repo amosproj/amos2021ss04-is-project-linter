@@ -1,6 +1,7 @@
 package amosproj.server.api;
 
 import amosproj.server.Config;
+import amosproj.server.api.schemas.CheckResultSchema;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.*;
@@ -55,6 +56,7 @@ public class ProjectController {
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
                                            @RequestParam(name = "tag", required = false) String tag) {
+        HashMap<String, String> map = getTags();
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
@@ -62,13 +64,32 @@ public class ProjectController {
             Project projAlt = it.next();
             ProjectSchema proj;
             if (extended != null && extended) {
-                LocalDateTime localDateTime = LocalDateTime.now(ZoneId.of("UTC"));
+                LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
                 proj = new ProjectSchema(projAlt, lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
-                        (localDateTime, localDateTime.minusDays(30).minusMinutes(5), projAlt.getId()));
+                        (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId()));
             } else {
                 proj = new ProjectSchema(projAlt, new LinkedList<>());
             }
             res.add(proj);
+        }
+        // Sort by checks passed in tag
+        if (extended != null && tag != null) {
+            res.sort(
+                Comparator.comparingInt(x ->
+                    x.getLintingResults().size() == 0 ? 0 :
+                    checksPassedByTag(x.getLintingResults()
+                        .get(x.getLintingResults().size() - 1)
+                        .getCheckResults()
+                        .toArray(new CheckResultSchema[
+                                x.getLintingResults()
+                                        .get(x.getLintingResults().size() - 1)
+                                        .getCheckResults()
+                                        .size()
+                                ])
+                                , tag
+                    )
+                )
+            );
         }
         return res;
     }
@@ -238,5 +259,28 @@ public class ProjectController {
             map.put(checkName, checkCategory);
         }
         return map;
+    }
+
+    private int checksPassedByTag(CheckResultSchema checkResults[], String tag) {
+        if (checkResults == null || tag == null) {
+            return 0;
+        }
+
+        for (CheckResultSchema resultSchema: checkResults) {
+            if (resultSchema == null) {
+                return 0;
+            }
+        }
+
+        int i = 0;
+        var map = getTags();
+        for (CheckResultSchema checkResult: checkResults) {
+            String checkCategory = map.get(checkResult.getCheckName());
+            if (checkResult.getResult() && checkCategory.equals(tag)) {
+                i++;
+            }
+        }
+        System.out.println(i + checkResults.toString());
+        return i;
     }
 }
