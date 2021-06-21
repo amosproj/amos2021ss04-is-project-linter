@@ -71,21 +71,15 @@ public class ProjectController {
         }
         // Sort by checks passed in tag
         if (extended != null && tag != null) {
-            res.sort(
-                    Comparator.comparingInt(x ->
-                            x.getLintingResults().size() == 0 ? 0 :
-                                    checksPassedByTag(x.getLintingResults()
-                                                    .get(x.getLintingResults().size() - 1)
-                                                    .getCheckResults()
-                                                    .toArray(new CheckResultSchema[
-                                                            x.getLintingResults()
-                                                                    .get(x.getLintingResults().size() - 1)
-                                                                    .getCheckResults()
-                                                                    .size()
-                                                            ])
-                                            , tag
-                                    )
-                    )
+            res.sort( // Sort the resulting List according to the tag, if queried
+                Comparator.comparingInt(x ->
+                    x.getLintingResults().size() == 0 ? 0 : // If there are no LintingResults, display last
+                        checksPassedByTag(x.getLintingResults() // Use Helper function
+                            .get(x.getLintingResults().size() - 1)// access the latest LintingResult
+                            .getCheckResults() // get the CheckResults from the latest LintingResult and pass to helper
+                            , tag // Pass the tag so it can be counted by the helper function
+                        )
+                )
             );
         }
         return res;
@@ -259,7 +253,7 @@ public class ProjectController {
         return map;
     }
 
-    private int checksPassedByTag(CheckResultSchema checkResults[], String tag) {
+    private int checksPassedByTag(List<CheckResultSchema> checkResults, String tag) {
         if (checkResults == null || tag == null) {
             return 0;
         }
