@@ -1,11 +1,17 @@
 Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 
 ### GET - `/projects` - Übersicht aller Projekte
+* Query: 
+    * `extended=true|false` liefert auf Wunsch auch die Ergebnisse von allen Lint-Durchläufen der letzten 30 Tage.
+    * `tag=String` Sortiert die Projekte direkt nach dem übergebenen Tag in Absteigender Reihenfolge
 * Body: nichts
 * Response: Json(List(ProjectSchema))
 
+### GET - `/projects/allTags` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle Checks eines Tags bestanden haben
+* Body: nichts
+* Response: Json(TreeMap<LocalDateTime, HashMap<String, Long>>) 
+
 ### POST - `/projects` - Linted ein einzelnes Repo
-* Query: ?extended=true|false, liefert auf wunsch auch die Ergebnisse von allen Projekten.
 * Body: url des zu lintenden Repos
 * Response: 'ok' falls ok, HTTP Fehlercode sonst
 
