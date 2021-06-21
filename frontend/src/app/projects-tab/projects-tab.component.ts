@@ -125,8 +125,8 @@ export class ProjectsTabComponent implements OnInit {
   async GetProjects() {
     // Holt alle Projekte vom Backend-Server
     let dialogRef = this.dialog.open(SpinnerComponentComponent, {
-      width: '100%',
-      height: '100%',
+      width: '0px',
+      height: '0px',
       panelClass: 'custom-dialog-container',
     });
 
