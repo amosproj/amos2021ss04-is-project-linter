@@ -280,7 +280,6 @@ public class ProjectController {
                 i++;
             }
         }
-        System.out.println(i + checkResults.toString());
-        return i;
+        return -i;
     }
 }
