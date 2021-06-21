@@ -70,14 +70,14 @@ export class AppComponent implements OnInit {
 
 
   chartColors = [
+    //green: 
+    'rgb(75, 192, 192)',
     //red: 
     'rgb(255, 99, 132)',
     //orange: 
     'rgb(255, 159, 64)',
     //yellow: 
     'rgb(255, 205, 86)',
-    //green: 
-    'rgb(75, 192, 192)',
     //blue: 
     'rgb(54, 162, 235)',
     //purple: 
