@@ -13,6 +13,12 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Body: nichts
 * Response: Json(TreeMap<LocalDateTime, HashMap<String, `Typ`>>); `Typ` ist dabei entweder ein `Long` bei `absolute` oder ein `float` bei `percentage`
 
+### GET - `/projects/top` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle der Top 3, 5 und 10 wichtigsten Checks bestanden haben
+* Query:
+    * `type=percentage|absolute` Liefert je nach `type` die Prozentzahl oder die absolute Anzahl der Projekte, die alle der wichtigsten Checks bestanden haben. Wird ein anderer Parameter als `percentage` oder `absolute` übergeben, wird nichts zurückgegeben.
+* Body: nichts
+* Response: Json(TreeMap<LocalDateTime, TreeMap<Long, `Typ`>>); `Typ` ist dabei entweder ein `Long` bei `absolute` oder ein `float` bei `percentage`
+
 ### POST - `/projects` - Linted ein einzelnes Repo
 * Body: url des zu lintenden Repos
 * Response: 'ok' falls ok, HTTP Fehlercode sonst
