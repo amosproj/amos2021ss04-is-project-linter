@@ -53,7 +53,7 @@ public class ProjectController {
     @GetMapping("/projects")
     public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
                                            @RequestParam(name = "tag", required = false) String tag) {
-        HashMap<String, String> map = getTags();
+        HashMap<String, String> map = Config.getTags();
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
@@ -98,7 +98,7 @@ public class ProjectController {
         if (!type.equals("absolute") && !type.equals("percentage")) { // Not a valid type
             return null;
         }
-        HashMap<String, String> map = getTags();
+        HashMap<String, String> map = Config.getTags();
 
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
@@ -164,7 +164,7 @@ public class ProjectController {
 
         var projects = projectRepository.findAll();
         var it = projects.iterator();
-        var priorities = getPriorities();
+        var priorities = Config.getPriorities();
 
         JsonNode node = Config.getConfigNode().get("settings").get("mostImportantChecks");
 
@@ -304,30 +304,6 @@ public class ProjectController {
     //         Helper
     //**********************
 
-    private HashMap<String, String> getTags() {
-        HashMap<String, String> map = new HashMap<>();
-        JsonNode node = Config.getConfigNode().get("checks");
-        Iterator<String> iterator = node.fieldNames();
-        while (iterator.hasNext()) {
-            String checkName = iterator.next();
-            String checkCategory = node.get(checkName).get("tag").asText();
-            map.put(checkName, checkCategory);
-        }
-        return map;
-    }
-
-    private HashMap<String, Long> getPriorities() {
-        HashMap<String, Long> map = new HashMap<>();
-        JsonNode node = Config.getConfigNode().get("checks");
-        Iterator<String> iterator = node.fieldNames();
-        while (iterator.hasNext()) {
-            String checkName = iterator.next();
-            Long priority = node.get(checkName).get("priority").asLong();
-            map.put(checkName, priority);
-        }
-        return map;
-    }
-
     private int checksPassedByTag(List<CheckResultSchema> checkResults, String tag) {
         if (checkResults == null || tag == null) {
             return 0;
@@ -340,7 +316,7 @@ public class ProjectController {
         }
 
         int i = 0;
-        var map = getTags();
+        var map = Config.getTags();
         for (CheckResultSchema checkResult : checkResults) {
             String checkCategory = map.get(checkResult.getCheckName());
             if (checkResult.getResult() && checkCategory.equals(tag)) {

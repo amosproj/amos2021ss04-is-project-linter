@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
 
 @Service
 public class Config {
@@ -41,5 +43,29 @@ public class Config {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static HashMap<String, String> getTags() {
+        HashMap<String, String> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            String checkCategory = node.get(checkName).get("tag").asText();
+            map.put(checkName, checkCategory);
+        }
+        return map;
+    }
+
+    public static HashMap<String, Long> getPriorities() {
+        HashMap<String, Long> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            Long priority = node.get(checkName).get("priority").asLong();
+            map.put(checkName, priority);
+        }
+        return map;
     }
 }
