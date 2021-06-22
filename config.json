@@ -13,7 +13,12 @@
         "inactive": "Crawler ist inaktiv"
       },
       "maxProjects": 10
-    }
+    },
+    "mostImportantChecks": [
+      3,
+      5,
+      10
+    ]
   },
   "checks": {
     "CheckReadmeExistence": {

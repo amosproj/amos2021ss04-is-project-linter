@@ -11,13 +11,13 @@
     * `active`: Der Status, der angezeigt wird, während der Crawler läuft
     * `inactive`: Der Status, der angezeigt wird, wenn der Crawlingprozess abgeschlossen wurde
   * `maxProjects`: Die Maximale Anzahl der Projekte, die beim Crawlingprozess gelintet werden sollen.
+* `mostImportantChecks`: Die wichtigsten Checks, nach welchen im Frontend der Graph erstellt werden soll.
 
 ## Checks
 Jedes Check Objekt hat folgende Parameter:
 * `name`: Name des Checks (als Key)
 * `enabled`: Soll der Check ausgeführt werden?
 * `severity`: Wie schwerwiegend ist der Check (HIGH | MEDIUM | LOW)
-* `category`: interne Kategorie, die nur für die Ausführung relevant ist
 * `tag`: Bezeichner des Checks für Gruppierung (ein Wort)
 * `description`: Beschreibung des Checks
 * `message`: Nachricht im Fehlerfall
@@ -41,7 +41,12 @@ Jedes Check Objekt hat folgende Parameter:
         "inactive": "Crawler ist inaktiv"
       },
       "maxProjects": 10
-    }
+    },
+    "mostImportantChecks": [
+      3,
+      5,
+      10
+    ]
   },
   "checks": {
     "checkReadmeExistence": {
@@ -52,7 +57,7 @@ Jedes Check Objekt hat folgende Parameter:
       "message": "Keine README Datei gefunden!",
       "fix": "Legen Sie eine README Datei in der Projektwurzel an.",
       "tag": "Benutzerfreundlichkeit",
-      "priority": 100
+      "priority": 1
     },
     "checkContributingExistence": {
       "category": "file_checks",
@@ -62,7 +67,7 @@ Jedes Check Objekt hat folgende Parameter:
       "message": "Keine CONTRIBUTING Datei gefunden!",
       "fix": "Legen Sie eine CONTRIBUTING Datei in der Projektwurzel an.",
       "tag": "Benutzerfreundlichkeit",
-      "priority": 100
+      "priority": 2
     }
 }
 ```
