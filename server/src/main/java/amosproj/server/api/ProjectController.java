@@ -111,7 +111,10 @@ public class ProjectController {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 var allChecksPassed = new HashMap<String, Boolean>();
                 for (CheckResult checkResult : checkResults) {
-                    String checkCategory = map.get(checkResult.getCheckName());
+                    String checkCategory = map.getOrDefault(checkResult.getCheckName(), null);
+                    if (checkCategory == null) { // Check was deleted from config file
+                        continue;
+                    }
                     if (!checkResult.getResult()) { // Did not pass all the checks for the category
                         allChecksPassed.put(checkCategory, false);
                         if (allChecksPassed.values().stream().allMatch(x -> x.equals(false))) { //No category passed all checks
@@ -183,7 +186,7 @@ public class ProjectController {
 
                 Set<Long> keySet = checksPassedByPrio.keySet();
                 for (CheckResult checkResult : checkResults) {
-                    Long priority = priorities.get(checkResult.getCheckName());
+                    Long priority = priorities.getOrDefault(checkResult.getCheckName(), Long.MAX_VALUE);
                     if (checkResult.getResult()) { // Did pass the check
                         for (Long key : keySet) {
                             if (key >= priority) {
