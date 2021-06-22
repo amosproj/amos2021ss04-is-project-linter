@@ -8,6 +8,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 
@@ -28,7 +29,7 @@ public class LintingResultTest {
 
     @BeforeEach
     void setup() {
-        testProj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com");
+        testProj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com", "", 0, LocalDateTime.now(Clock.systemUTC()));
         projectRepository.save(testProj);
     }
 
