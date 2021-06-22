@@ -146,7 +146,7 @@ public class ProjectController {
             var tagPercentages = new HashMap<String, Object>();
             var totals = res.get(localDateTime);
             for (String string : totals.keySet()) {
-                tagPercentages.put(string, ((Long) totals.get(string) / (float) projects));
+                tagPercentages.put(string, ((Long) totals.get(string) / (float) projects) * 100.0);
             }
             percentage.put(localDateTime, tagPercentages);
         }
@@ -216,7 +216,7 @@ public class ProjectController {
             var tagPercentages = new TreeMap<Long, Object>();
             var totals = res.get(localDateTime);
             for (Long key : totals.keySet()) {
-                tagPercentages.put(key, ((Long) totals.get(key) / (float) projectCount));
+                tagPercentages.put(key, ((Long) totals.get(key) / (float) projectCount) * 100.0);
             }
             percentage.put(localDateTime, tagPercentages);
         }
