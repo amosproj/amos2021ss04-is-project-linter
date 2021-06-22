@@ -150,35 +150,70 @@ public class ProjectController {
         return percentage;
     }
 
-    @GetMapping("/projects/byTag")
-    public TreeMap<LocalDateTime, Long> projectsPassedByCategory(@RequestParam(name = "tag", required = false) String category) {
-        HashMap<String, String> map = getTags();
+    @GetMapping("/projects/top")
+    public TreeMap<LocalDateTime, TreeMap<Long, Object>> topXProjects(@RequestParam(name = "type") String type){
+        if (type == null)
+            return null;
 
-        var projectList = projectRepository.findAll();
-        var it = projectList.iterator();
+        if (!type.equals("absolute") && !type.equals("percentage")) { // Not a valid type
+            return null;
+        }
 
-        var res = new TreeMap<LocalDateTime, Long>();
+        var projects = projectRepository.findAll();
+        var it = projects.iterator();
+        var priorities = getPriorities();
+
+        var res = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
 
         while (it.hasNext()) {
             Project project = it.next();
             List<LintingResult> lintingResults = project.getResults();
             for (LintingResult lr : lintingResults) {
+                res.putIfAbsent(lr.getLintTime(), new TreeMap<>());
                 List<CheckResult> checkResults = lr.getCheckResults();
-                boolean allChecksPassed = true;
+                var checksPassedByPrio = new TreeMap<Long, Long>();
+
+                checksPassedByPrio.put(3L, 0L);
+                checksPassedByPrio.put(5L, 0L);
+                checksPassedByPrio.put(10L, 0L);
+
+                Set<Long> keySet = checksPassedByPrio.keySet();
                 for (CheckResult checkResult : checkResults) {
-                    String checkCategory = map.get(checkResult.getCheckName());
-                    if (!checkCategory.equals(category) || !checkResult.getResult()) { // Did not pass all the checks
-                        allChecksPassed = false;
-                        break;
+                    Long priority = priorities.get(checkResult.getCheckName());
+                    if (checkResult.getResult()) { // Did pass the check
+                        for (Long key : keySet) {
+                            if (key >= priority) {
+                                checksPassedByPrio.compute(key, (k,v) -> (Long) v + 1);
+                            }
+                        }
                     }
                 }
-                res.putIfAbsent(lr.getLintTime(), 0L);
-                if (allChecksPassed) {
-                    res.computeIfPresent(lr.getLintTime(), (key, val) -> val + 1);
+
+                res.putIfAbsent(lr.getLintTime(), new TreeMap<Long, Object>());
+                for (Long key: keySet) {
+                    TreeMap<Long, Object> resMap = res.get(lr.getLintTime());
+                    resMap.putIfAbsent(key, 0L);
+                    if (checksPassedByPrio.get(key) == key) // All checks passed
+                        resMap.compute(key, (k,v) -> (Long) v + 1);
                 }
             }
         }
-        return res;
+        if (type.equals("absolute")) { // Only the absolute value is wanted
+            return res;
+        }
+        // Percentage is wanted: Need to divide the total by number of projects
+        Set<LocalDateTime> timeSet = res.keySet();
+        var percentage = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
+        for (LocalDateTime localDateTime: timeSet) {
+            int projectCount = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
+            var tagPercentages = new TreeMap<Long, Object>();
+            var totals = res.get(localDateTime);
+            for (Long key : totals.keySet()) {
+                tagPercentages.put(key, ((Long) totals.get(key) / (float) projectCount));
+            }
+            percentage.put(localDateTime, tagPercentages);
+        }
+        return percentage;
     }
 
     @GetMapping("/crawler")
@@ -270,6 +305,18 @@ public class ProjectController {
             String checkName = iterator.next();
             String checkCategory = node.get(checkName).get("tag").asText();
             map.put(checkName, checkCategory);
+        }
+        return map;
+    }
+
+    private HashMap<String, Long> getPriorities() {
+        HashMap<String, Long> map = new HashMap<>();
+        JsonNode node = Config.getConfigNode().get("checks");
+        Iterator<String> iterator = node.fieldNames();
+        while (iterator.hasNext()) {
+            String checkName = iterator.next();
+            Long priority = node.get(checkName).get("priority").asLong();
+            map.put(checkName, priority);
         }
         return map;
     }
