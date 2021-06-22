@@ -163,6 +163,8 @@ public class ProjectController {
         var it = projects.iterator();
         var priorities = getPriorities();
 
+        JsonNode node = Config.getConfigNode().get("settings").get("mostImportantChecks");
+
         var res = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
 
         while (it.hasNext()) {
@@ -173,9 +175,11 @@ public class ProjectController {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 var checksPassedByPrio = new TreeMap<Long, Long>();
 
-                checksPassedByPrio.put(3L, 0L);
-                checksPassedByPrio.put(5L, 0L);
-                checksPassedByPrio.put(10L, 0L);
+                var nodeIterator = node.iterator();
+                while (nodeIterator.hasNext()) {
+                    Long l = nodeIterator.next().asLong();
+                    checksPassedByPrio.putIfAbsent(l, 0L);
+                }
 
                 Set<Long> keySet = checksPassedByPrio.keySet();
                 for (CheckResult checkResult : checkResults) {
