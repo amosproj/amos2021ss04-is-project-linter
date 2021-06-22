@@ -33,24 +33,12 @@ export class StatisticsTabComponent implements OnInit {
   csvExportLink = environment.baseURL + '/export/csv';
 
   chartImportantChecks;
-  //dataImportantChecks;
-  //canvasImportantChecks;
-  //chartOptionsImportantChecks;
 
   chartImportantChecksPercentage;
-  //dataImportantChecksPercentage;
-  //canvasImportantChecksPercentage;
-  //chartOptionsImportantChecksPercentage;
 
   chartCheckPerCategorie;
-  //dataCheckPerCategorie;
-  //canvasCheckPerCategorie;
-  //chartOptionsCheckPerCategorie;
 
   chartCheckPerCategoriePercentage;
-  //dataCheckPerCategoriePercentage;
-  //canvasCheckPerCategoriePercantage;
-  //chartOptionsCheckPerCategoriePercantage;
 
   chartColors = [
     //green:
@@ -69,26 +57,20 @@ export class StatisticsTabComponent implements OnInit {
     'rgb(231,233,237)',
   ];
 
-  //timestamps: string[] = new Array();
-  //tags: String[] = new Array();
-  //values: number[][] = new Array();
-
-  //seriesValues: number[][];
-
   setOnStatistikTab() {
-    this.getChartData("absolute","top");
-    this.getChartData("percentage","top");
-    this.getChartData("absolute","allTags");
-    this.getChartData("percentage","allTags");
+    this.getChartData("top", "absolute");
+    this.getChartData("top", "percentage");
+    this.getChartData("allTags", "absolute");
+    this.getChartData("allTags", "percentage");
   }
 
-  async getChartData(typ : string, apiCall : string) {
+  async getChartData(apiCall : string, typ : string) {
     let params = new HttpParams().set("type",typ);
     await this.http
       .get(`${environment.baseURL}/projects/` + apiCall ,  {params: params})
       .toPromise()
       .then((results: any) => {
-        console.log('results of call '+ apiCall + params ,results);
+        console.log('results of call '+ apiCall + params, results);
 
         var timestamps : string[] = new Array();
         var tags: String[] = new Array();
@@ -127,56 +109,20 @@ export class StatisticsTabComponent implements OnInit {
         }
 
         //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
-        this.renderStatistikCharts(timestamps, tags, seriesValues, typ, apiCall);
+        this.renderStatisticCharts(timestamps, tags, seriesValues,  apiCall, typ);
       });
   }
 
-  /*
-  setChartData(timestamps, tags, seriesValues, typ, apiCall) {
+ unchangedTicks(value, index, values){
+  return value;
+ }
+ 
+ percentageTicks(value, index, values){
+  return value+'%';
+ }
 
-    var data;
-    var options;
-
-    this.dataImportantChecks = {
-      labels: [
-        '01.01.2020',
-        '02.01.2020',
-        '03.01.2020',
-        '04.01.2020',
-        '05.01.2020',
-        '06.01.2020',
-        '07.01.2020',
-      ],
-      datasets: [
-        {
-          label: 'Top 5',
-          data: [10, 11, 11, 11, 12, 14, 14],
-          backgroundColor: this.chartColors[0],
-          borderColor: this.chartColors[0],
-          pointRadius: 0,
-          fill: 1,
-        },
-        {
-          label: 'Top 10',
-          data: [7, 7, 7, 7, 8, 8, 9],
-          backgroundColor: this.chartColors[1],
-          borderColor: this.chartColors[1],
-          pointRadius: 0,
-          fill: 2,
-        },
-        {
-          label: 'Top 15',
-          data: [5, 6, 6, 7, 7, 7, 8],
-          backgroundColor: this.chartColors[2],
-          borderColor: this.chartColors[2],
-          pointRadius: 0,
-          fill: true,
-        },
-      ],
-    };
-
-    this.chartOptionsImportantChecks = {
-      responsive: true,
+ getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, ticksCallbackFunction){
+  var options = { responsive: true,
       legend: {
         position: 'right',
         display: true,
@@ -189,395 +135,133 @@ export class StatisticsTabComponent implements OnInit {
             position: 'left',
             ticks: {
               beginAtZero: true,
+              callback: ticksCallbackFunction,
             },
             scaleLabel: {
               display: true,
-              labelString:
-                'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+              labelString: yAxisLabel,
             },
           },
         ],
       },
     };
-
-    this.dataImportantChecksPercentage = {
-      labels: [
-        '01.01.2020',
-        '02.01.2020',
-        '03.01.2020',
-        '04.01.2020',
-        '05.01.2020',
-        '06.01.2020',
-        '07.01.2020',
-      ],
-      datasets: [
-        {
-          label: 'Top 5',
-          data: [20, 22, 22, 22, 24, 28, 28],
-          fill: false,
-          backgroundColor: 'rgb(255, 99, 132)',
-          borderColor: 'rgb(255, 99, 132)',
-          color: 'rgb(255, 99, 132)',
-        },
-      ],
-    };
-
-    this.chartOptionsImportantChecksPercentage = {
-      responsive: true,
-      legend: {
-        position: 'right',
-        display: true,
-      },
-      scales: {
-        yAxes: [
-          {
-            id: 'yAxis',
-            display: true,
-            position: 'left',
-            ticks: {
-              beginAtZero: true,
-              callback: function (value, index, values) {
-                return value + '%';
-              },
-              max: 100,
-            },
-            scaleLabel: {
-              display: true,
-              labelString:
-                'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
-            },
-          },
-        ],
-      },
-    };
-
-    this.dataCheckPerCategoriePercentage = {
-      labels: ['0d', '10d', '20d', '30d', '40d', '50d', '60d'],
-      datasets: [
-        {
-          label: 'Car Cost',
-          data: [0, 100, 200, 50, 150, 70, 220],
-          fill: false,
-        },
-      ],
-    };
-
-    this.chartOptionsCheckPerCategorie = {
-      responsive: true,
-      legend: {
-        position: 'right',
-        display: true,
-      },
-      scales: {
-        yAxes: [
-          {
-            id: 'yAxis',
-            display: true,
-            position: 'left',
-            ticks: {
-              beginAtZero: true,
-            },
-            scaleLabel: {
-              display: true,
-              labelString:
-                'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-            },
-          },
-        ],
-      },
-    };
-
-    this.dataCheckPerCategoriePercentage = {
-      labels: ['0d', '10d', '20d', '30d', '40d', '50d', '60d'],
-      yAxisID: 'yAxis',
-      datasets: [
-        {
-          label: 'Car Cost',
-          data: [0, 10, 20, 5, 23, 22, 25],
-          fill: false,
-        },
-      ],
-    };
-
-    this.chartOptionsCheckPerCategoriePercantage = {
-      responsive: true,
-      legend: {
-        position: 'right',
-        display: true,
-      },
-      scales: {
-        yAxes: [
-          {
-            id: 'yAxis',
-            display: true,
-            position: 'left',
-            ticks: {
-              beginAtZero: true,
-              callback: function (value, index, values) {
-                return value + '%';
-              },
-              max: 100,
-            },
-            scaleLabel: {
-              display: true,
-              labelString:
-                'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-            },
-          },
-        ],
-      },
-    };
-  }
-  */
-
-  renderStatistikCharts(timestamps, tags, seriesValues, typ, apiCall) {
-    if(typ == "absolute"){
-      
-    }
-    var options = {
-      responsive: true,
-      legend: {
-        position: 'right',
-        display: true,
-      },
-      scales: {
-        yAxes: [
-          {
-            id: 'yAxis',
-            display: true,
-            position: 'left',
-            ticks: {
-              beginAtZero: true,
-              callback: function (value, index, values) { return value;},
-              max: 10,
-            },
-            scaleLabel: {
-              display: true,
-              labelString:
-                'dummy',
-            },
-          },
-        ],
-      },
-    };
-
-    var canvas;
-
-    if(typ == "percentage"){
-      options.scales.yAxes[0].ticks = {beginAtZero: true, callback: function (value, index, values) {
-        return value + '%';
-      }, max: 100};
-      if(apiCall == "allTags"){
-        options.scales.yAxes[0].scaleLabel.labelString = 'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben';
-        canvas = <HTMLCanvasElement>(document.getElementById('checksPerCategoriePercentage'));
-      } else {
-        options.scales.yAxes[0].scaleLabel.labelString = 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-        canvas = <HTMLCanvasElement>(document.getElementById('importantChecksPercentage'));
-      }
-    } else {
-      if(apiCall == "allTags"){
-        options.scales.yAxes[0].scaleLabel.labelString = 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
-        canvas = <HTMLCanvasElement>(document.getElementById('checksPerCategorie'));
-      } else {
-        options.scales.yAxes[0].scaleLabel.labelString = 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-        canvas = <HTMLCanvasElement>(document.getElementById('importantChecks'));
-      }
-    }
-
+    var canvas = <HTMLCanvasElement>(document.getElementById(canvasElementID));
     var datasets = [];
     for (var i = 0; i < tags.length; i++) {
       if (i != tags.length - 1) {
-        var series = {
+        datasets.push({
           label: tags[i],
           data: seriesValues[i],
           backgroundColor: this.chartColors[i % this.chartColors.length],
           borderColor: this.chartColors[i % this.chartColors.length],
           pointRadius: 0,
-          fill : false
-          //fill: '0'
-        };
-        //if(typ == "absolute"){
-          //var fill : string = (i+1).toString();
-          //series.fill = fill;
-        //}
-        datasets.push(series);
+          fill: false,
+        });
       } else {
-        var series = {
+        datasets.push({
           label: tags[i],
           data: seriesValues[i],
           backgroundColor: this.chartColors[i % this.chartColors.length],
           borderColor: this.chartColors[i % this.chartColors.length],
           pointRadius: 0,
-          fill : false
-          //fill: '0'
-        };
-        //if(typ == "absolute"){
-          //series.fill = (i+1).toString();
-        //}
-        datasets.push(series);
+          fill: false,
+        });
       }
     }
-    if(typ == "absolute"){
-      if(apiCall == "allTags"){
-        this.chartCheckPerCategorie = new Chart(
-          canvas.getContext('2d'),
-          {
-            type: 'line',
-            options: options,
-          }
-        );
-        this.chartCheckPerCategorie.data.labels = timestamps;
-        this.chartCheckPerCategorie.data.datasets = datasets;
-        this.chartCheckPerCategorie.update();
-        console.log(this.chartCheckPerCategorie.data);
-      } else {
+    var dataset = datasets;
+    var x : chartCanvasOptionsDataset = { options: options, canvas: canvas, dataset: dataset };  
+    return x;
+ }
+
+ renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
+   // API Call for statistics are either top or allTags (best ones, or all sorted via category)
+   // type is either absolute or in percentage
+   var chartInterface : chartCanvasOptionsDataset;
+   if(apiCall == "top") {
+
+      if(type == "absolute") {
+        var yAxisLabel = 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var canvasElementID = 'importantChecks';
+        chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.unchangedTicks);
         this.chartImportantChecks = new Chart(
-          canvas.getContext('2d'),
+          chartInterface.canvas.getContext('2d'),
           {
             type: 'line',
-            options: options,
+            options: chartInterface.options,
           }
         );
         this.chartImportantChecks.data.labels = timestamps;
-        this.chartImportantChecks.data.datasets = datasets;
+        this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
-        console.log(this.chartImportantChecks.data);
-      }
-    } else {
-      if(apiCall == "allTags") {
-        this.chartCheckPerCategoriePercentage = new Chart(
-          canvas.getContext('2d'),
-          {
-            type: 'line',
-            options: options,
-          }
-        );
-        this.chartCheckPerCategoriePercentage.data.labels = timestamps;
-        this.chartCheckPerCategoriePercentage.data.datasets = datasets;
-        this.chartCheckPerCategoriePercentage.update();
-        console.log(this.chartCheckPerCategoriePercentage.data);
-      } else {
+        //console.log(this.chartImportantChecks.data);
+
+      }else if(type == "percentage") {
+        var yAxisLabel = 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var canvasElementID = 'importantChecksPercentage';
+        chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.percentageTicks);
         this.chartImportantChecksPercentage = new Chart(
-          canvas.getContext('2d'),
+          chartInterface.canvas.getContext('2d'),
           {
             type: 'line',
-            options: options,
+            options: chartInterface.options,
           }
         );
         this.chartImportantChecksPercentage.data.labels = timestamps;
-        this.chartImportantChecksPercentage.data.datasets = datasets;
+        this.chartImportantChecksPercentage.data.datasets = chartInterface.dataset;
         this.chartImportantChecksPercentage.update();
-        console.log(this.chartImportantChecksPercentage.data);
+        //console.log(this.chartImportantChecksPercentage.data);
+      }else{
+        console.log("ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().");
       }
+
+   }else if(apiCall == "allTags") {
+
+    if(type == "absolute") {
+      var yAxisLabel = 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
+      var canvasElementID = 'checksPerCategorie';
+      chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.unchangedTicks);
+      this.chartCheckPerCategorie = new Chart(
+        chartInterface.canvas.getContext('2d'),
+        {
+          type: 'line',
+          options: chartInterface.options,
+        }
+      );
+      this.chartCheckPerCategorie.data.labels = timestamps;
+      this.chartCheckPerCategorie.data.datasets = chartInterface.dataset;
+      this.chartCheckPerCategorie.update();
+      //console.log(this.chartCheckPerCategorie.data);
+    }else if(type == "percentage") {
+      var yAxisLabel = 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+      var canvasElementID = 'checksPerCategoriePercentage';
+      chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.percentageTicks);
+      this.chartImportantChecksPercentage = new Chart(
+        chartInterface.canvas.getContext('2d'),
+        {
+          type: 'line',
+          options: chartInterface.options,
+        }
+      );
+      this.chartImportantChecksPercentage.data.labels = timestamps;
+      this.chartImportantChecksPercentage.data.datasets = chartInterface.dataset;
+      this.chartImportantChecksPercentage.update();
+      console.log(this.chartImportantChecksPercentage.data);
+    }else{
+      console.log("ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().");
     }
-    
-
-    /*
-    this.canvasImportantChecks = <HTMLCanvasElement>(
-      document.getElementById('importantChecks')
-    );
-
-    this.chartImportantChecks = new Chart(
-      this.canvasImportantChecks.getContext('2d'),
-      {
-        type: 'line',
-        data: this.dataImportantChecks,
-        options: this.chartOptionsImportantChecks,
-      }
-    );
-
-    this.chartImportantChecks.update();
-
-    this.canvasImportantChecksPercentage = <HTMLCanvasElement>(
-      document.getElementById('importantChecksPercentage')
-    );
-
-    this.chartImportantChecksPercentage = new Chart(
-      this.canvasImportantChecksPercentage.getContext('2d'),
-      {
-        type: 'line',
-        data: this.dataImportantChecksPercentage,
-        options: this.chartOptionsImportantChecksPercentage,
-      }
-    );
-
-    this.chartImportantChecksPercentage.update();
-
-    this.canvasCheckPerCategorie = <HTMLCanvasElement>(
-      document.getElementById('checksPerCategorie')
-    );
-
-    this.chartCheckPerCategorie = new Chart(
-      this.canvasCheckPerCategorie.getContext('2d'),
-      {
-        type: 'line',
-        options: this.chartOptionsCheckPerCategorie,
-      }
-    );
-
-    //console.log('timestamp in renderChart',this.timestamps);
-    this.chartCheckPerCategorie.data.labels = this.timestamps;
-
-    var datasets = [];
-    for (var i = 0; i < this.tags.length; i++) {
-      if (i != this.tags.length - 1) {
-        datasets.push({
-          label: this.tags[i],
-          data: this.seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 0,
-          fill: i + 1,
-        });
-      } else {
-        datasets.push({
-          label: this.tags[i],
-          data: this.seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 0,
-          fill: true,
-        });
-      }
-    }
-    //test.push({label: this.tags[0], data: this.seriesValues[0]})
-    //var test = [{label: this.tags[0], data: this.seriesValues[0]}];
-
-    //this.chartCheckPerCategorie.data.datasets = [{label : 'Series1', data: [1,3]}];
-
-    this.chartCheckPerCategorie.data.datasets = datasets;
-
-    this.chartCheckPerCategorie.update();
-
-    //console.log(this.chartCheckPerCategorie.data.labels);
-    //console.log('Dataset',this.chartCheckPerCategorie.data.datasets);
-
-    this.canvasCheckPerCategoriePercantage = <HTMLCanvasElement>(
-      document.getElementById('checksPerCategoriePercentage')
-    );
-
-    this.chartCheckPerCategoriePercentage = new Chart(
-      this.canvasCheckPerCategoriePercantage.getContext('2d'),
-      {
-        type: 'line',
-        options: this.chartOptionsCheckPerCategoriePercantage,
-      }
-    );
-
-    for (var i = 0; i < this.tags.length; i++) {
-      datasets[i].data = datasets[i].data.map((x) => (x * 100) / 10);
-      datasets[i].fill = false;
-    }
-
-    this.chartCheckPerCategoriePercentage.data.labels = this.timestamps;
-    this.chartCheckPerCategoriePercentage.data.datasets = datasets;
-
-    this.chartCheckPerCategoriePercentage.update();
-    */
-  }
+   }else{
+     console.log("ERROR in statistics-tab.component.ts. No corresponding apiCall for given parameter in renderStatisticCharts().");
+   }
+ }
 
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
 
+}
+
+interface chartCanvasOptionsDataset {
+  options;
+  canvas;
+  dataset;
 }
