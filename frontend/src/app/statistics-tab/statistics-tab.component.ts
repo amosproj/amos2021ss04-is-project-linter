@@ -3,7 +3,7 @@ import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 
 import { MatChip } from '@angular/material/chips';
@@ -271,8 +271,9 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   async getChartData() {
+    let params = new HttpParams().set("type","absolute")
     await this.http
-      .get(`${environment.baseURL}/projects/allTags`)
+      .get(`${environment.baseURL}/projects/allTags`,  {params: params})
       .toPromise()
       .then((results: any) => {
         //console.log('new api returns',results);
