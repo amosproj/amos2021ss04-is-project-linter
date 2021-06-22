@@ -49,3 +49,7 @@ export interface Check {
   priority: number;
   tag: string;
 }
+export interface ProjectSize {
+  value: string;
+  viewValue: string;
+}

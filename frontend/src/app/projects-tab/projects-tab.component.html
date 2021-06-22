@@ -5,10 +5,13 @@
       style="padding-left: 10px"
       color="primary"
     >
+ 
       info
     </mat-icon></mat-card-title
   >
+  <br>
   <div style="font-size: large">Kategorie:</div>
+  <br>
   <mat-card-content
     style="background-color: white; height: 100px; padding-left: 3%"
   >
@@ -71,14 +74,21 @@
         info
       </mat-icon>
     </div>
+    
+   
+      
 
+   
     <div style="float: right">
+    
       <div fxLayout="row" fxLayoutAlign="space-around center">
+       
         <div>
           <mat-icon matTooltip="Vorherige 50" (click)="pageLeft()"
             >arrow_back_ios</mat-icon
           >
         </div>
+       
         <div fxFlexAlign="baseline">Seite {{ currentPage }}</div>
         <div>
           <mat-icon matTooltip="Nächste 50" (click)="pageRight()"
@@ -90,14 +100,30 @@
   </mat-card-content>
 
   <mat-card-content>
-    <div *ngIf="all_projects != undefined">
-      <div *ngIf="all_projects.length > 50">
-        50 von {{ all_projects.length }}
+    <div >
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Anzahl der angezeigten Projekte</mat-label>
+          <select matNativeControl (change)="selectSize($event)">
+            <option value=""></option>
+            <option *ngFor="let option of projectSizes" [value]="option.value"
+                    [selected]="selectedSize === option.value">{{ option.viewValue }}</option>
+          </select>
+        </mat-form-field>
       </div>
-      <div *ngIf="all_projects.length < 50">
-        {{ all_projects.length }} von {{ all_projects.length }}
+
+      <div *ngIf="all_projects != undefined">
+        <div *ngIf="all_projects.length > selectedSize">
+          {{selectedSize}} von {{ all_projects.length }}
+        </div>
+        <div *ngIf="all_projects.length < selectedSize">
+          {{ all_projects.length }} von {{ all_projects.length }}
+        </div>
       </div>
+            
     </div>
+ 
+    
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end" #parent></div>
     </div>
