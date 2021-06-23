@@ -132,7 +132,8 @@ export class StatisticsTabComponent implements OnInit {
     seriesValues,
     yAxisLabel,
     canvasElementID,
-    ticksCallbackFunction
+    ticksCallbackFunction,
+    yAxisMaximum
   ) {
     var options = {
       responsive: true,
@@ -149,6 +150,7 @@ export class StatisticsTabComponent implements OnInit {
             ticks: {
               beginAtZero: true,
               callback: ticksCallbackFunction,
+              max: yAxisMaximum,
             },
             scaleLabel: {
               display: true,
@@ -190,6 +192,22 @@ export class StatisticsTabComponent implements OnInit {
     return x;
   }
 
+  getMaximumAndAddTenPercent(seriesValues){
+    //console.log('seriesValues',seriesValues);
+    var maxGlobal = 0;
+    for(var i = 0; i < seriesValues.length; i++){
+      var maxLocal = 0;
+      for( var j = 0; j < seriesValues[i].length; j++){
+        maxLocal = seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
+      }
+      //console.log('maxLocal',maxLocal);
+      maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
+    }
+    //console.log('maxGlobal',maxGlobal);
+    maxGlobal = maxGlobal + (maxGlobal* 10/100);
+    return Math.ceil(maxGlobal);
+  }
+
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
     // API Call for statistics are either top or allTags (best ones, or all sorted via category)
     // type is either absolute or in percentage
@@ -199,12 +217,16 @@ export class StatisticsTabComponent implements OnInit {
         var yAxisLabel =
           'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecks';
+        var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
+        console.log('seriesValues',seriesValues);
+        console.log('topMAax',yAxisMaximum);
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
           yAxisLabel,
           canvasElementID,
-          this.unchangedTicks
+          this.unchangedTicks,
+          yAxisMaximum
         );
         this.chartImportantChecks = new Chart(
           chartInterface.canvas.getContext('2d'),
@@ -221,12 +243,14 @@ export class StatisticsTabComponent implements OnInit {
         var yAxisLabel =
           'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecksPercentage';
+        var yAxisMaximum : number  = 100;
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
           yAxisLabel,
           canvasElementID,
-          this.percentageTicks
+          this.percentageTicks,
+          yAxisMaximum
         );
         this.chartImportantChecksPercentage = new Chart(
           chartInterface.canvas.getContext('2d'),
@@ -250,12 +274,14 @@ export class StatisticsTabComponent implements OnInit {
         var yAxisLabel =
           'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
         var canvasElementID = 'checksPerCategorie';
+        var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
           yAxisLabel,
           canvasElementID,
-          this.unchangedTicks
+          this.unchangedTicks,
+          yAxisMaximum
         );
         this.chartCheckPerCategorie = new Chart(
           chartInterface.canvas.getContext('2d'),
@@ -270,14 +296,16 @@ export class StatisticsTabComponent implements OnInit {
         //console.log(this.chartCheckPerCategorie.data);
       } else if (type == 'percentage') {
         var yAxisLabel =
-          'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+          'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben';
         var canvasElementID = 'checksPerCategoriePercentage';
+        var yAxisMaximum = 100;
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
           yAxisLabel,
           canvasElementID,
-          this.percentageTicks
+          this.percentageTicks,
+          yAxisMaximum
         );
         this.chartImportantChecksPercentage = new Chart(
           chartInterface.canvas.getContext('2d'),
