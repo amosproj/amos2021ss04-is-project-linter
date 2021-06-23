@@ -1,4 +1,6 @@
 <mat-card style="padding-bottom: 10%;">
     <mat-card-title>Status des Crawlers</mat-card-title>
-    {{ status }}
+    <mat-card-content>
+        <mat-progress-bar mode="determinate" [value]="status.lintingProgress * 100 / status.size"></mat-progress-bar>
+    </mat-card-content>
 </mat-card>
