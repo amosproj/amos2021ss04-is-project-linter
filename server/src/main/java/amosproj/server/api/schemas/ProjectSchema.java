@@ -30,6 +30,9 @@ public class ProjectSchema {
 
     public ProjectSchema(Project proj, List<LintingResult> lintingResults) {
         BeanUtils.copyProperties(proj, this);
+        if (description == null) {
+            description = "";
+        }
         this.lintingResults = new LinkedList<>();
         for (LintingResult lr : lintingResults) {
             this.lintingResults.add(new LintingResultSchema(lr));
