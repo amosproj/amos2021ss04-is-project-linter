@@ -4,3 +4,8 @@
         <mat-progress-bar mode="determinate" [value]="status.lintingProgress * 100 / status.size"></mat-progress-bar>
     </mat-card-content>
 </mat-card>
+
+<mat-card>
+    Crawler manuell starten:
+    <button mat-raised-button color="primary" (click)="startCrawler()">Los</button>
+</mat-card>

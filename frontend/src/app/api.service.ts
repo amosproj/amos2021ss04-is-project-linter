@@ -33,10 +33,8 @@ export class ApiService {
   }
 
   // Start Crawler
-  startCrawler(): Observable<any> {
-    return this.http
-      .post(`${this.apiUrl}/crawler`, null)
-      .pipe(catchError(this.error));
+  startCrawler(): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/crawler`, null);
   }
 
   // Crawler Status
