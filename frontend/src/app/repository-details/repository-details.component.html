@@ -40,18 +40,6 @@
       <span *ngIf="i == 0" style="width: 100%; height: 100%; overflow: auto"
         ><!-- Mit width: 100%;height: 100%; füllt man das ganze tile aus und kann dadurch alignen  >-->
         <div fxLayout="column" fxLayoutAlign="start start">
-          <mat-card-content>
-            <div *ngIf="RepoDescription.length > 0">
-              <div style="font-size: medium">{{ RepoDescription }}</div>
-            </div>
-            <div *ngIf="RepoDescription.length < 1">
-              <div style="font-size: medium">KeineBeschreibung vorhanden</div>
-            </div>
-            <div style="font-size: medium">URL: {{ RepoURL }}</div>
-            <div style="font-size: medium">
-              Zuletzt gelintet am: {{ lastLintTime }}
-            </div>
-          </mat-card-content>
           <mat-card-title> {{ tile.text }}: </mat-card-title>
           <!-- Left side Expansion Panel which shows all test results-->
           <mat-accordion style="width: 100%">
@@ -64,7 +52,7 @@
               <mat-list>
                 <mat-list-item
                   *ngFor="let check of LintingResultsInTags[i]"
-                  style="border-bottom: 1px solid #999999"
+                  style="border-bottom: 1px solid #999999; margin-top: 0.5%;"
                 >
                   <h3 matLine>
                     {{ returnEmojiBasedOnSeverity(check) }}
@@ -91,12 +79,27 @@
       </span>
       <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
       <span
-        *ngIf="i > 0 && i != tiles.length - 1"
+        *ngIf="i > 0 && i != tiles.length - 2"
         style="hyphens: auto; overflow: auto"
       >
         <mat-card-title> {{ tile.text }}: </mat-card-title>
         <div>
           <canvas id="{{ chartNames[i - 1] }}"></canvas>
+        </div>
+      </span><span *ngIf="i == tiles.length - 2" style="width: 100%; height: 100%">
+        <div fxLayout="column" fxLayoutAlign="end start" style="height: 100%;">
+          <mat-card-content>
+            <div *ngIf="RepoDescription.length > 0">
+              <div style="font-size: medium">{{ RepoDescription }}</div>
+            </div>
+            <div *ngIf="RepoDescription.length < 1">
+              <div style="font-size: medium">KeineBeschreibung vorhanden</div>
+            </div>
+            <div style="font-size: medium">URL: {{ RepoURL }}</div>
+            <div style="font-size: medium">
+              Zuletzt gelintet am: {{ lastLintTime }}
+            </div>
+          </mat-card-content>
         </div>
       </span>
       <span *ngIf="i == tiles.length - 1" style="width: 100%; height: 100%">
