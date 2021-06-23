@@ -30,6 +30,11 @@ export class StatisticsTabComponent implements OnInit {
 
   ngAfterViewInit(): void {}
 
+  chartNames =['Anzahl an Projekten, die die X wichtigsten Tests bestanden haben', 
+              'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+              'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+              'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben'];
+
   csvExportLink = environment.baseURL + '/export/csv';
 
   chartImportantChecks;
@@ -138,7 +143,7 @@ export class StatisticsTabComponent implements OnInit {
     var options = {
       responsive: true,
       legend: {
-        position: 'right',
+        position: 'bottom',
         display: true,
       },
       scales: {
@@ -214,8 +219,7 @@ export class StatisticsTabComponent implements OnInit {
     var chartInterface: chartCanvasOptionsDataset;
     if (apiCall == 'top') {
       if (type == 'absolute') {
-        var yAxisLabel =
-          'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var yAxisLabel = ''; //'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecks';
         var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
         console.log('seriesValues',seriesValues);
@@ -240,8 +244,7 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecks.update();
         //console.log(this.chartImportantChecks.data);
       } else if (type == 'percentage') {
-        var yAxisLabel =
-          'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var yAxisLabel =''; //'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecksPercentage';
         var yAxisMaximum : number  = 100;
         chartInterface = this.getChartInterfaceForCanvasChart(
@@ -271,8 +274,7 @@ export class StatisticsTabComponent implements OnInit {
       }
     } else if (apiCall == 'allTags') {
       if (type == 'absolute') {
-        var yAxisLabel =
-          'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
+        var yAxisLabel = ''; //'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
         var canvasElementID = 'checksPerCategorie';
         var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
         chartInterface = this.getChartInterfaceForCanvasChart(
@@ -295,8 +297,7 @@ export class StatisticsTabComponent implements OnInit {
         this.chartCheckPerCategorie.update();
         //console.log(this.chartCheckPerCategorie.data);
       } else if (type == 'percentage') {
-        var yAxisLabel =
-          'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben';
+        var yAxisLabel = ''; // 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'checksPerCategoriePercentage';
         var yAxisMaximum = 100;
         chartInterface = this.getChartInterfaceForCanvasChart(
