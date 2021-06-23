@@ -58,21 +58,21 @@ export class StatisticsTabComponent implements OnInit {
   ];
 
   setOnStatistikTab() {
-    this.getChartData("top", "absolute");
-    this.getChartData("top", "percentage");
-    this.getChartData("allTags", "absolute");
-    this.getChartData("allTags", "percentage");
+    this.getChartData('top', 'absolute');
+    this.getChartData('top', 'percentage');
+    this.getChartData('allTags', 'absolute');
+    this.getChartData('allTags', 'percentage');
   }
 
-  async getChartData(apiCall : string, typ : string) {
-    let params = new HttpParams().set("type",typ);
+  async getChartData(apiCall: string, typ: string) {
+    let params = new HttpParams().set('type', typ);
     await this.http
-      .get(`${environment.baseURL}/projects/` + apiCall ,  {params: params})
+      .get(`${environment.baseURL}/projects/` + apiCall, { params: params })
       .toPromise()
       .then((results: any) => {
-        console.log('results of call '+ apiCall + params, results);
+        console.log('results of call ' + apiCall + params, results);
 
-        var timestamps : string[] = new Array();
+        var timestamps: string[] = new Array();
         var tags: String[] = new Array();
         var values: number[][] = new Array();
 
@@ -83,9 +83,9 @@ export class StatisticsTabComponent implements OnInit {
           timestamps.push(dayjs(x).format('DD.MM.YYYY'));
           var value: number[] = new Array();
           for (let y in results[x]) {
-            if(apiCall == "top"){
-              if (!tags.includes("Top " + y)) {
-                tags.push("Top " + y);
+            if (apiCall == 'top') {
+              if (!tags.includes('Top ' + y)) {
+                tags.push('Top ' + y);
               }
             } else {
               if (!tags.includes(y)) {
@@ -109,20 +109,33 @@ export class StatisticsTabComponent implements OnInit {
         }
 
         //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
-        this.renderStatisticCharts(timestamps, tags, seriesValues,  apiCall, typ);
+        this.renderStatisticCharts(
+          timestamps,
+          tags,
+          seriesValues,
+          apiCall,
+          typ
+        );
       });
   }
 
- unchangedTicks(value, index, values){
-  return value;
- }
- 
- percentageTicks(value, index, values){
-  return value+'%';
- }
+  unchangedTicks(value, index, values) {
+    return value;
+  }
 
- getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, ticksCallbackFunction){
-  var options = { responsive: true,
+  percentageTicks(value, index, values) {
+    return value + '%';
+  }
+
+  getChartInterfaceForCanvasChart(
+    tags,
+    seriesValues,
+    yAxisLabel,
+    canvasElementID,
+    ticksCallbackFunction
+  ) {
+    var options = {
+      responsive: true,
       legend: {
         position: 'right',
         display: true,
@@ -145,7 +158,7 @@ export class StatisticsTabComponent implements OnInit {
         ],
       },
     };
-    var canvas = <HTMLCanvasElement>(document.getElementById(canvasElementID));
+    var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
     var datasets = [];
     for (var i = 0; i < tags.length; i++) {
       if (i != tags.length - 1) {
@@ -169,20 +182,30 @@ export class StatisticsTabComponent implements OnInit {
       }
     }
     var dataset = datasets;
-    var x : chartCanvasOptionsDataset = { options: options, canvas: canvas, dataset: dataset };  
+    var x: chartCanvasOptionsDataset = {
+      options: options,
+      canvas: canvas,
+      dataset: dataset,
+    };
     return x;
- }
+  }
 
- renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
-   // API Call for statistics are either top or allTags (best ones, or all sorted via category)
-   // type is either absolute or in percentage
-   var chartInterface : chartCanvasOptionsDataset;
-   if(apiCall == "top") {
-
-      if(type == "absolute") {
-        var yAxisLabel = 'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+  renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
+    // API Call for statistics are either top or allTags (best ones, or all sorted via category)
+    // type is either absolute or in percentage
+    var chartInterface: chartCanvasOptionsDataset;
+    if (apiCall == 'top') {
+      if (type == 'absolute') {
+        var yAxisLabel =
+          'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecks';
-        chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.unchangedTicks);
+        chartInterface = this.getChartInterfaceForCanvasChart(
+          tags,
+          seriesValues,
+          yAxisLabel,
+          canvasElementID,
+          this.unchangedTicks
+        );
         this.chartImportantChecks = new Chart(
           chartInterface.canvas.getContext('2d'),
           {
@@ -194,11 +217,17 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
         //console.log(this.chartImportantChecks.data);
-
-      }else if(type == "percentage") {
-        var yAxisLabel = 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+      } else if (type == 'percentage') {
+        var yAxisLabel =
+          'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecksPercentage';
-        chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.percentageTicks);
+        chartInterface = this.getChartInterfaceForCanvasChart(
+          tags,
+          seriesValues,
+          yAxisLabel,
+          canvasElementID,
+          this.percentageTicks
+        );
         this.chartImportantChecksPercentage = new Chart(
           chartInterface.canvas.getContext('2d'),
           {
@@ -207,57 +236,76 @@ export class StatisticsTabComponent implements OnInit {
           }
         );
         this.chartImportantChecksPercentage.data.labels = timestamps;
-        this.chartImportantChecksPercentage.data.datasets = chartInterface.dataset;
+        this.chartImportantChecksPercentage.data.datasets =
+          chartInterface.dataset;
         this.chartImportantChecksPercentage.update();
         //console.log(this.chartImportantChecksPercentage.data);
-      }else{
-        console.log("ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().");
+      } else {
+        console.log(
+          'ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().'
+        );
       }
-
-   }else if(apiCall == "allTags") {
-
-    if(type == "absolute") {
-      var yAxisLabel = 'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
-      var canvasElementID = 'checksPerCategorie';
-      chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.unchangedTicks);
-      this.chartCheckPerCategorie = new Chart(
-        chartInterface.canvas.getContext('2d'),
-        {
-          type: 'line',
-          options: chartInterface.options,
-        }
+    } else if (apiCall == 'allTags') {
+      if (type == 'absolute') {
+        var yAxisLabel =
+          'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
+        var canvasElementID = 'checksPerCategorie';
+        chartInterface = this.getChartInterfaceForCanvasChart(
+          tags,
+          seriesValues,
+          yAxisLabel,
+          canvasElementID,
+          this.unchangedTicks
+        );
+        this.chartCheckPerCategorie = new Chart(
+          chartInterface.canvas.getContext('2d'),
+          {
+            type: 'line',
+            options: chartInterface.options,
+          }
+        );
+        this.chartCheckPerCategorie.data.labels = timestamps;
+        this.chartCheckPerCategorie.data.datasets = chartInterface.dataset;
+        this.chartCheckPerCategorie.update();
+        //console.log(this.chartCheckPerCategorie.data);
+      } else if (type == 'percentage') {
+        var yAxisLabel =
+          'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var canvasElementID = 'checksPerCategoriePercentage';
+        chartInterface = this.getChartInterfaceForCanvasChart(
+          tags,
+          seriesValues,
+          yAxisLabel,
+          canvasElementID,
+          this.percentageTicks
+        );
+        this.chartImportantChecksPercentage = new Chart(
+          chartInterface.canvas.getContext('2d'),
+          {
+            type: 'line',
+            options: chartInterface.options,
+          }
+        );
+        this.chartImportantChecksPercentage.data.labels = timestamps;
+        this.chartImportantChecksPercentage.data.datasets =
+          chartInterface.dataset;
+        this.chartImportantChecksPercentage.update();
+        console.log(this.chartImportantChecksPercentage.data);
+      } else {
+        console.log(
+          'ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().'
+        );
+      }
+    } else {
+      console.log(
+        'ERROR in statistics-tab.component.ts. No corresponding apiCall for given parameter in renderStatisticCharts().'
       );
-      this.chartCheckPerCategorie.data.labels = timestamps;
-      this.chartCheckPerCategorie.data.datasets = chartInterface.dataset;
-      this.chartCheckPerCategorie.update();
-      //console.log(this.chartCheckPerCategorie.data);
-    }else if(type == "percentage") {
-      var yAxisLabel = 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-      var canvasElementID = 'checksPerCategoriePercentage';
-      chartInterface =  this.getChartInterfaceForCanvasChart(tags, seriesValues, yAxisLabel, canvasElementID, this.percentageTicks);
-      this.chartImportantChecksPercentage = new Chart(
-        chartInterface.canvas.getContext('2d'),
-        {
-          type: 'line',
-          options: chartInterface.options,
-        }
-      );
-      this.chartImportantChecksPercentage.data.labels = timestamps;
-      this.chartImportantChecksPercentage.data.datasets = chartInterface.dataset;
-      this.chartImportantChecksPercentage.update();
-      console.log(this.chartImportantChecksPercentage.data);
-    }else{
-      console.log("ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().");
     }
-   }else{
-     console.log("ERROR in statistics-tab.component.ts. No corresponding apiCall for given parameter in renderStatisticCharts().");
-   }
- }
+  }
 
   toggleSelection(chip: MatChip) {
     chip.toggleSelected();
   }
-
 }
 
 interface chartCanvasOptionsDataset {

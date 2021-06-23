@@ -12,7 +12,13 @@ import { environment } from 'src/environments/environment';
 import { RepositoryComponent } from '../repository/repository.component';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { Chart } from 'chart.js';
-import { Project, Config, CheckResults, LintingResult, ProjectSize } from '../schemas';
+import {
+  Project,
+  Config,
+  CheckResults,
+  LintingResult,
+  ProjectSize,
+} from '../schemas';
 import { ApiService } from '../api.service';
 import * as dayjs from 'dayjs';
 
@@ -39,12 +45,13 @@ export class ProjectsTabComponent implements OnInit {
   chipOptions: string[];
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   toggleToTrue = true;
-  projectSizes:ProjectSize[] =[
-    {value: '25', viewValue: '25'},
-    {value: '50', viewValue: '50'},
-    {value: '75', viewValue: '75'},
-    {value: '100', viewValue: '100'}]
-    selectedSize = this.projectSizes[1].value;
+  projectSizes: ProjectSize[] = [
+    { value: '25', viewValue: '25' },
+    { value: '50', viewValue: '50' },
+    { value: '75', viewValue: '75' },
+    { value: '100', viewValue: '100' },
+  ];
+  selectedSize = this.projectSizes[1].value;
   form: FormGroup;
   sizeControl = new FormControl(this.projectSizes[2]);
   currentPage: number = 0;
@@ -66,20 +73,21 @@ export class ProjectsTabComponent implements OnInit {
     private apiService: ApiService
   ) {
     this.form = new FormGroup({
-      size:this.sizeControl
+      size: this.sizeControl,
     });
   }
 
   ngOnInit(): void {
-
     this.GetConfig();
     this.GetProjects();
   }
   selectSize(event: Event) {
     this.removeAllProjectsFromOverview();
-    console.log("size changed");
+    console.log('size changed');
     this.selectedSize = (event.target as HTMLSelectElement).value;
-    this.pages = Math.floor(this.all_projects.length / Number(this.selectedSize));
+    this.pages = Math.floor(
+      this.all_projects.length / Number(this.selectedSize)
+    );
 
     this.displayProjects(Number(this.selectedSize));
   }
@@ -179,7 +187,8 @@ export class ProjectsTabComponent implements OnInit {
   displayProjects(numberOfProjecs) {
     for (
       var i = numberOfProjecs * this.currentPage;
-      i < numberOfProjecs * (this.currentPage + 1) && i < this.all_projects.length;
+      i < numberOfProjecs * (this.currentPage + 1) &&
+      i < this.all_projects.length;
       i++
     ) {
       this.addComponent(this.all_projects[i]);
