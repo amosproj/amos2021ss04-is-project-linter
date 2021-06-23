@@ -1,6 +1,6 @@
 
 ## Umgebungsvariablen (Environment variables)
-Setzen Sie diese Umgebungsvariablen in einer .env Datei in der Projektwurzel.
+Setzen Sie diese Umgebungsvariablen in einer .env Datei in der Wurzel des Repositories (Datei ist neu zu erstellen).
 Umgebungsvariablen werden sowohl von Frontend als auch Backend verwendet.
 
 - `DB_PASSWORD`: Postgres Passwort
