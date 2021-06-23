@@ -12,9 +12,7 @@ public class HasForkingEnabled extends Check {
         try {
             JsonNode node = gitLab.makeApiRequest("/projects/" + project.getId());
             String forkingAccessLevel = node.get("forking_access_level").asText();
-            if (forkingAccessLevel.equals("disabled"))
-                return false;
-            return true;
+            return !forkingAccessLevel.equals("disabled");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;

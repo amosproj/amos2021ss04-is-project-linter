@@ -54,5 +54,5 @@ public class LintingResultTest {
             assertEquals(testProj.getId(), lintingResult1.getProjectId());
         }
     }
-    
+
 }

@@ -17,10 +17,7 @@ public class HasSquashingDisabled extends Check {
                 return false;
             }
             String forkingAccessLevel = squashNode.asText();
-            if (forkingAccessLevel.equals("default_off")) {
-                return true;
-            }
-            return false;
+            return forkingAccessLevel.equals("default_off");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
             return false;

@@ -25,11 +25,7 @@ public class NotDefaultReadme extends Check {
                     line += scanner.nextLine();
                 }
 
-                if (line.equals(defaultReadme)) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return !line.equals(defaultReadme);
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableAsync
 public class ServerApplication {
-    
+
     /**
      * Dies ist der Einstiegspunkt des Programms.
      *

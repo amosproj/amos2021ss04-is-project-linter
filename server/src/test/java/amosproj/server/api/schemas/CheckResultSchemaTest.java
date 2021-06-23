@@ -10,7 +10,8 @@ import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest // DataJPATest baut kein richtigen Spring Context auf, und liest somit nicht die ENV Variablen ein, die wir brauchen.
+@SpringBootTest
+// DataJPATest baut kein richtigen Spring Context auf, und liest somit nicht die ENV Variablen ein, die wir brauchen.
 @TestPropertySource(locations = "classpath:test.properties")
 public class CheckResultSchemaTest {
 
