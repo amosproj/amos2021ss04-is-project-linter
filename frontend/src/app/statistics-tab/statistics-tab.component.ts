@@ -33,7 +33,7 @@ export class StatisticsTabComponent implements OnInit {
   chartNames =['Anzahl an Projekten, die die X wichtigsten Tests bestanden haben', 
               'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
               'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-              'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben'];
+              'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben'];
 
   csvExportLink = environment.baseURL + '/export/csv';
 
