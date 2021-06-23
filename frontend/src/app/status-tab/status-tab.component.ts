@@ -20,7 +20,7 @@ import { Status } from '../schemas';
   styleUrls: ['./status-tab.component.css'],
 })
 export class StatusTabComponent implements OnInit {
-  status: Status;
+  status: Status = {} as Status;
 
   constructor(private api: ApiService) {}
 
@@ -31,18 +31,17 @@ export class StatusTabComponent implements OnInit {
       .pipe(concatMap((_) => this.api.crawlerStatus()))
       .subscribe(
         (res) => {
-          console.log(res);
           this.status = res;
         },
-        (err) => {
-          console.log(err);
+        (error) => {
+          console.log(error);
         }
       );
   }
 
   startCrawler(): void {
-    this.api.startCrawler().subscribe((err) => {
-      console.log(err);
+    this.api.startCrawler().subscribe((error) => {
+      console.log(error);
     });
   }
 }
