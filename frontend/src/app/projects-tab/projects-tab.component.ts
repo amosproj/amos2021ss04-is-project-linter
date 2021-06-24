@@ -57,6 +57,7 @@ export class ProjectsTabComponent implements OnInit {
   currentPage: number = 0;
   pages: number;
   config: Config;
+  currentSize = this.selectedSize;
 
   suchBegriff: string;
 
@@ -80,15 +81,16 @@ export class ProjectsTabComponent implements OnInit {
   ngOnInit(): void {
     this.GetConfig();
     this.GetProjects();
+   
   }
   selectSize(event: Event) {
     this.removeAllProjectsFromOverview();
-    console.log('size changed');
+   
     this.selectedSize = (event.target as HTMLSelectElement).value;
     this.pages = Math.floor(
       this.all_projects.length / Number(this.selectedSize)
     );
-
+    this.currentSize = this.selectedSize;
     this.displayProjects(Number(this.selectedSize));
   }
   /***********************************************************
@@ -165,7 +167,7 @@ export class ProjectsTabComponent implements OnInit {
         this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
         console.log('projekte', this.all_projects);
         console.log(this.all_projects);
-        this.pages = Math.floor(this.all_projects.length / 50);
+        this.pages = Math.floor(this.all_projects.length / Number(this.selectedSize));
 
         this.displayProjects(Number(this.selectedSize));
       }); // momentan kann man nur die URL senden und nicht ein JSON Objekte
@@ -184,7 +186,7 @@ export class ProjectsTabComponent implements OnInit {
     this.projectComponents.push(expComponent);
   }
 
-  displayProjects(numberOfProjecs) {
+  displayProjects(numberOfProjecs:number) {
     for (
       var i = numberOfProjecs * this.currentPage;
       i < numberOfProjecs * (this.currentPage + 1) &&
@@ -196,21 +198,48 @@ export class ProjectsTabComponent implements OnInit {
   }
 
   pageRight() {
-    if (this.currentPage == this.pages || this.suchBegriff != '') {
+    if (this.currentPage == this.pages || this.suchBegriff != undefined) {
+      console.log(this.currentPage);
+      console.log(this.pages)
+      console.log(this.suchBegriff != '');
       return;
     } else {
       this.currentPage += 1;
       this.removeAllProjectsFromOverview();
       this.displayProjects(Number(this.selectedSize));
+      if(this.currentPage == 0){
+        this.currentSize =this.selectedSize;
+      }else{
+        if(this.all_projects.length-Number(this.currentSize) - Number(this.selectedSize)< 0)
+        {
+          this.currentSize = (this.all_projects.length - Number(this.currentSize) + Number(this.currentSize)).toString();
+        }else{
+          this.currentSize = (Number(this.currentSize) +Number(this.selectedSize)).toString();
+        }
+      
+       
+      }
+
     }
   }
 
   pageLeft() {
-    if (this.currentPage == 0 || this.suchBegriff != '') {
+    if (this.currentPage == 0 || this.suchBegriff != undefined) {
       return;
     } else {
       this.currentPage -= 1;
-      this.removeAllProjectsFromOverview();
+      if(this.currentPage == 0){
+        this.currentSize =this.selectedSize;
+      }else{
+
+        if(Number(this.currentSize)%Number(this.selectedSize) == 0){
+          this.currentSize = (Number(this.currentSize) -25).toString();
+        }else{
+          this.currentSize = (Number(this.currentSize) -(Number(this.all_projects.length)-(Number(this.selectedSize)*2))).toString()
+        }
+
+         }
+         this.removeAllProjectsFromOverview();  
       this.displayProjects(Number(this.selectedSize));
     }
   }
