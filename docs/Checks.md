@@ -1,4 +1,41 @@
-Alle verfügbaren Checks:
+# Checks
+
+## Neue Checks hinzufügen
+
+Um neue Checks hinzuzufügen muss lediglich eine neue Klasse in dem Modul [Checks](../server/src/main/java/amosproj/server/linter/checks) mit dem Check-Namen als Klassennamen angelegt werden, die von `Check` erbt.
+Darin muss dann die Methode `boolean evaluate(GitLab gitlab, Project project)` implementiert werden, die den Check durchführt.
+Dabei sollte `true` dann zurückgegeben werden, wenn der Check erfolgreich war und das Kriterium erfüllt wurde, `false` andernfalls.
+
+Beispieldatei:
+
+```java
+package amosproj.server.linter.checks;
+
+import amosproj.server.GitLab;
+import org.gitlab4j.api.GitLabApiException;
+import org.gitlab4j.api.models.Project;
+
+public class HasBadges extends Check {
+
+    @Override
+    protected boolean evaluate(GitLab gitLab, Project project) {
+        try {
+            var badgelist = gitLab.getApi().getProjectApi().getBadges(project);
+            if (!badgelist.isEmpty()) {
+                return true;
+            }
+        } catch (GitLabApiException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}
+
+```
+
+Damit der Check ausgeführt wird, muss in der `config.json` in `checks` noch der neue Check hinzugefügt und `enabled=true` gesetzt werden (siehe [Config](Config-File.md)).
+
+## Alle verfügbaren Checks:
 
 Einstellungen die Standardmäßig verfügar sind: `enable`, `severity`, `tag`
 
