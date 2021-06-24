@@ -1,12 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpErrorResponse,
-} from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Status } from './schemas';
 
 @Injectable({
@@ -20,16 +15,12 @@ export class ApiService {
 
   // All Project
   getAllProjects(extended: boolean): Observable<any> {
-    return this.http
-      .get(`${this.apiUrl}/projects`)
-      .pipe(catchError(this.error));
+    return this.http.get(`${this.apiUrl}/projects`);
   }
 
   // One Project
   getProject(id: number): Observable<any> {
-    return this.http
-      .get(`${this.http}/project/${id}`)
-      .pipe(catchError(this.error));
+    return this.http.get(`${this.http}/project/${id}`);
   }
 
   // Start Crawler
@@ -44,18 +35,6 @@ export class ApiService {
 
   // Config
   getConfig(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/config`).pipe(catchError(this.error));
-  }
-
-  // Handle Errors
-  error(error: HttpErrorResponse) {
-    let errorMessage = '';
-    if (error.error instanceof ErrorEvent) {
-      errorMessage = error.error.message;
-    } else {
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    console.log(errorMessage);
-    return throwError(errorMessage);
+    return this.http.get(`${this.apiUrl}/config`);
   }
 }

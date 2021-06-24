@@ -52,7 +52,7 @@
               <mat-list>
                 <mat-list-item
                   *ngFor="let check of LintingResultsInTags[i]"
-                  style="border-bottom: 1px solid #999999; margin-top: 0.5%;"
+                  style="border-bottom: 1px solid #999999; margin-top: 0.5%"
                 >
                   <h3 matLine>
                     {{ returnEmojiBasedOnSeverity(check) }}
@@ -85,9 +85,9 @@
         <mat-card-title> {{ tile.text }}: </mat-card-title>
         <div>
           <canvas id="{{ chartNames[i - 1] }}"></canvas>
-        </div>
-      </span><span *ngIf="i == tiles.length - 2" style="width: 100%; height: 100%">
-        <div fxLayout="column" fxLayoutAlign="end start" style="height: 100%;">
+        </div> </span
+      ><span *ngIf="i == tiles.length - 2" style="width: 100%; height: 100%">
+        <div fxLayout="column" fxLayoutAlign="end start" style="height: 100%">
           <mat-card-content>
             <div *ngIf="RepoDescription.length > 0">
               <div style="font-size: medium">{{ RepoDescription }}</div>

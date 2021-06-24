@@ -1,15 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, timer, Subscription, Subject } from 'rxjs';
-import {
-  switchMap,
-  startWith,
-  tap,
-  share,
-  retry,
-  takeUntil,
-  concatMap,
-  map,
-} from 'rxjs/operators';
+import { timer } from 'rxjs';
+import { concatMap } from 'rxjs/operators';
+//import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
 import { Status } from '../schemas';
@@ -22,7 +14,7 @@ import { Status } from '../schemas';
 export class StatusTabComponent implements OnInit {
   status: Status = {} as Status;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService) {} //, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     console.log('hello from status tab');
@@ -40,7 +32,9 @@ export class StatusTabComponent implements OnInit {
   }
 
   startCrawler(): void {
+    // FIXME always prints error
     this.api.startCrawler().subscribe((error) => {
+      //this._snackBar.open(error, 'ok');
       console.log(error);
     });
   }
