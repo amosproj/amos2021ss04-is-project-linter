@@ -17,7 +17,6 @@ import { HeaderComponent } from './header/header.component';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 import { StatusTabComponent } from './status-tab/status-tab.component';
-import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +29,6 @@ import { SearchComponent } from './search/search.component';
     ProjectsTabComponent,
     StatisticsTabComponent,
     StatusTabComponent,
-    SearchComponent,
   ],
   entryComponents: [RepositoryDetailsComponent],
   imports: [
