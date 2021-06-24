@@ -1,12 +1,17 @@
 <mat-card style="padding-bottom: 10%">
   <mat-card-title>Status des Crawlers</mat-card-title>
   <mat-card-content>
-    {{ status.status }}
+    <p>
+      {{ status.status }}
+    </p>
+    <p *ngIf="status.lastError && status.lastError != ''" style="color: red">
+      {{ status.lastError }}
+    </p>
     <mat-progress-bar
       mode="determinate"
       [value]="(status.lintingProgress * 100) / status.size"
     ></mat-progress-bar>
-    Dauer des letzten Durchlaufs: {{ status.lintingTime }} Sekunden
+    <p>Dauer des letzten Durchlaufs: {{ status.lintingTime }} Sekunden</p>
   </mat-card-content>
 </mat-card>
 
