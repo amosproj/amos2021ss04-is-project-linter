@@ -7,6 +7,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { Status } from './schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -32,15 +33,13 @@ export class ApiService {
   }
 
   // Start Crawler
-  startCrawler(): Observable<any> {
-    return this.http
-      .post(`${this.apiUrl}/crawler`, null)
-      .pipe(catchError(this.error));
+  startCrawler(): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/crawler`, null);
   }
 
   // Crawler Status
-  crawlerStatus(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/crawler`).pipe(catchError(this.error));
+  crawlerStatus(): Observable<Status> {
+    return this.http.get<Status>(`${this.apiUrl}/crawler`);
   }
 
   // Config

@@ -53,3 +53,13 @@ export interface ProjectSize {
   value: string;
   viewValue: string;
 }
+
+export interface Status {
+  status: string;
+  lastError: string;
+  errorTime: string;
+  crawlerActive: boolean;
+  size: number;
+  lintingProgress: number;
+  lintingTime: number;
+}

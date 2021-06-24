@@ -30,10 +30,12 @@ export class StatisticsTabComponent implements OnInit {
 
   ngAfterViewInit(): void {}
 
-  chartNames =['Anzahl an Projekten, die die X wichtigsten Tests bestanden haben', 
-              'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
-              'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-              'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben'];
+  chartNames = [
+    'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+    'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+    'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+    'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+  ];
 
   csvExportLink = environment.baseURL + '/export/csv';
 
@@ -197,19 +199,20 @@ export class StatisticsTabComponent implements OnInit {
     return x;
   }
 
-  getMaximumAndAddTenPercent(seriesValues){
+  getMaximumAndAddTenPercent(seriesValues) {
     //console.log('seriesValues',seriesValues);
     var maxGlobal = 0;
-    for(var i = 0; i < seriesValues.length; i++){
+    for (var i = 0; i < seriesValues.length; i++) {
       var maxLocal = 0;
-      for( var j = 0; j < seriesValues[i].length; j++){
-        maxLocal = seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
+      for (var j = 0; j < seriesValues[i].length; j++) {
+        maxLocal =
+          seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
       }
       //console.log('maxLocal',maxLocal);
       maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
     }
     //console.log('maxGlobal',maxGlobal);
-    maxGlobal = maxGlobal + (maxGlobal* 10/100);
+    maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
     return Math.ceil(maxGlobal);
   }
 
@@ -221,9 +224,10 @@ export class StatisticsTabComponent implements OnInit {
       if (type == 'absolute') {
         var yAxisLabel = ''; //'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecks';
-        var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
-        console.log('seriesValues',seriesValues);
-        console.log('topMAax',yAxisMaximum);
+        var yAxisMaximum: number =
+          this.getMaximumAndAddTenPercent(seriesValues);
+        console.log('seriesValues', seriesValues);
+        console.log('topMAax', yAxisMaximum);
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
@@ -244,9 +248,9 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecks.update();
         //console.log(this.chartImportantChecks.data);
       } else if (type == 'percentage') {
-        var yAxisLabel =''; //'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
+        var yAxisLabel = ''; //'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecksPercentage';
-        var yAxisMaximum : number  = 100;
+        var yAxisMaximum: number = 100;
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
@@ -276,7 +280,8 @@ export class StatisticsTabComponent implements OnInit {
       if (type == 'absolute') {
         var yAxisLabel = ''; //'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
         var canvasElementID = 'checksPerCategorie';
-        var yAxisMaximum : number = this.getMaximumAndAddTenPercent(seriesValues);
+        var yAxisMaximum: number =
+          this.getMaximumAndAddTenPercent(seriesValues);
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
