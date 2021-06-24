@@ -89,8 +89,8 @@ export class StatisticsTabComponent implements OnInit {
           var value: number[] = new Array();
           for (let y in results[x]) {
             if (apiCall == 'top') {
-              if (!tags.includes('Top ' + y)) {
-                tags.push('Top ' + y);
+              if (!tags.includes(y + ' wichtigsten')) {
+                tags.push(y + ' wichtigsten');
               }
             } else {
               if (!tags.includes(y)) {
