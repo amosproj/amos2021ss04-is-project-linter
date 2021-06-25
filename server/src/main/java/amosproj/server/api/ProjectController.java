@@ -322,15 +322,12 @@ public class ProjectController {
             return 0;
         }
 
-        for (CheckResultSchema resultSchema : checkResults) {
-            if (resultSchema == null) {
-                return 0;
-            }
-        }
-
         int i = 0;
         var map = Config.getTags();
         for (CheckResultSchema checkResult : checkResults) {
+            if (checkResult == null) {
+                return 0;
+            }
             String checkCategory = map.get(checkResult.getCheckName());
             if (checkResult.getResult() && checkCategory.equals(tag)) {
                 i++;
