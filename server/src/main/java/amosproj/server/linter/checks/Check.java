@@ -49,8 +49,14 @@ public abstract class Check {
 
     protected boolean fileExists(GitLab gitLab, Project project, String filepath) {
         try {
-            RepositoryFile file = gitLab.getApi().getRepositoryFileApi().getFileInfo(project.getId(), filepath, project.getDefaultBranch());
-            if (file == null) return false;
+            String defaultBranch = project.getDefaultBranch();
+            if (defaultBranch == null) { // Project does not have a (default) branch
+                return false;
+            }
+            RepositoryFile file = gitLab.getApi().getRepositoryFileApi().getFileInfo(project.getId(), filepath, defaultBranch);
+            if (file == null){
+                return false;
+            }
         } catch (GitLabApiException | IllegalArgumentException e) {
             return false;
         }
