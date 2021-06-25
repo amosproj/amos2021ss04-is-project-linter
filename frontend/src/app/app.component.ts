@@ -1,9 +1,4 @@
-import { ViewChild } from '@angular/core';
-import { Component } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
-import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,9 +7,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  @ViewChild(ProjectsTabComponent) projectsTab: ProjectsTabComponent;
-  @ViewChild(StatisticsTabComponent) statisticsTab: StatisticsTabComponent;
-
   constructor(private router: Router) {}
 
   ngOnInit() {
