@@ -58,15 +58,22 @@ public class Crawler {
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
         logger.info(progress);
         try {
-            var projects = gitLab.getApi().getProjectApi().getProjects(0, Config.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE));
-            size = (long) projects.size();
+            int maxProjects = Config.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE);
+            var projects = gitLab.getApi().getProjectApi().getProjects(50);
+            size = Math.min((long) projects.getTotalItems(), maxProjects);
             progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
             logger.info(progress);
             LocalDateTime start = LocalDateTime.now(Clock.systemUTC());
 
-            for (org.gitlab4j.api.models.Project proj : projects) {
-                logger.info("Linte Projekt " + proj.getWebUrl() + ", Fortschritt: " + ++idx + "/" + size);
-                linter.checkEverything(proj, start);
+            int currentPage = 1;
+            while (idx < maxProjects) {
+                for (org.gitlab4j.api.models.Project proj : projects.page(currentPage)) {
+                    logger.info("Linte Projekt " + proj.getWebUrl() + ", Fortschritt: " + ++idx + "/" + size);
+                    linter.checkEverything(proj, start);
+                    if (idx == maxProjects)
+                        break;
+                }
+                currentPage++;
             }
 
             LocalDateTime end = LocalDateTime.now(Clock.systemUTC());
