@@ -26,7 +26,10 @@ import { variable } from '@angular/compiler/src/output/output_ast';
 export class StatisticsTabComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    console.log("Statistik ausgewählt");
+    this.setOnStatistikTab();
+  }
 
   ngAfterViewInit(): void {}
 

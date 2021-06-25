@@ -1,23 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 //import { RepositoryListComponent } from './repository-list/repository-list.component';
 import { RepositoryComponent } from './repository/repository.component';
+import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
+import { StatusTabComponent } from './status-tab/status-tab.component';
 
 const routes: Routes = [
-  /*{
-    path: 'list',
-    component: RepositoryListComponent,
-    data: { title: 'List of Teams' }
-  },*/
-  {
-    path: 'details/:id',
-    component: RepositoryComponent,
-    data: { title: 'Team Details' },
-  },
-  /*{ path: '',
-    redirectTo: '/list',
-    pathMatch: 'full'
-  }*/
+{path:'',component:ProjectsTabComponent},
+{path:'projects',component:ProjectsTabComponent},
+{path:'statistics',component:StatisticsTabComponent},
+{path:'status',component:StatusTabComponent}
 ];
 
 @NgModule({
@@ -25,3 +18,4 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
+export const routingComponents = [ProjectsTabComponent,StatisticsTabComponent,StatusTabComponent]

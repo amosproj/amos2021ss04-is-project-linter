@@ -8,6 +8,7 @@ import { OnInit } from '@angular/core';
 
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -33,21 +34,31 @@ export class AppComponent implements OnInit {
    * Init Methods
    ***********************************************************/
 
-  constructor(private http: HttpClient, fb: FormBuilder) {
+  constructor(private http: HttpClient, fb: FormBuilder,private router:Router) {
     this.options = fb.group({
       hideRequired: this.hideRequiredControl,
       floatLabel: this.floatLabelControl,
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.router.navigate(["projects"]);
+  }
 
   ngAfterViewInit() {}
 
   checkTabChange($event) {
+    if ($event.index == 0) {
+      //Wechsel to Statistics-Tab
+      this.router.navigate(["projects"]);
+    }
     if ($event.index == 1) {
       //Wechsel to Statistics-Tab
-      this.statisticsTab.setOnStatistikTab();
+      this.router.navigate(["statistics"]);
+    }
+    if ($event.index == 2) {
+      //Wechsel to Statistics-Tab
+      this.router.navigate(["status"]);
     }
   }
 }
