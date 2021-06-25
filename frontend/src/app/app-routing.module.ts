@@ -7,10 +7,10 @@ import { StatisticsTabComponent } from './statistics-tab/statistics-tab.componen
 import { StatusTabComponent } from './status-tab/status-tab.component';
 
 const routes: Routes = [
-{path:'',component:ProjectsTabComponent},
-{path:'projects',component:ProjectsTabComponent},
-{path:'statistics',component:StatisticsTabComponent},
-{path:'status',component:StatusTabComponent}
+  { path: '', component: ProjectsTabComponent },
+  { path: 'projects', component: ProjectsTabComponent },
+  { path: 'statistics', component: StatisticsTabComponent },
+  { path: 'status', component: StatusTabComponent },
 ];
 
 @NgModule({
@@ -18,4 +18,8 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class AppRoutingModule {}
-export const routingComponents = [ProjectsTabComponent,StatisticsTabComponent,StatusTabComponent]
+export const routingComponents = [
+  ProjectsTabComponent,
+  StatisticsTabComponent,
+  StatusTabComponent,
+];
