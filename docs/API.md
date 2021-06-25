@@ -4,8 +4,9 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Query: 
     * `extended=true|false` liefert auf Wunsch auch die Ergebnisse von allen Lint-Durchläufen der letzten 30 Tage.
     * `tag=String` Sortiert die Projekte direkt nach dem übergebenen Tag in Absteigender Reihenfolge
+    * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`
 * Body: nichts
-* Response: Json(List(ProjectSchema))
+* Response: Json(Page(ProjectSchema))
 
 ### GET - `/projects/allTags` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle Checks eines Tags bestanden haben
 * Query:
