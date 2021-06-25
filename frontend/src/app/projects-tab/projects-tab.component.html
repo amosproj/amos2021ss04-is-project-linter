@@ -98,7 +98,6 @@
         <mat-form-field appearance="fill">
           <mat-label>Anzahl der angezeigten Projekte</mat-label>
           <select matNativeControl (change)="selectSize($event)">
-            <option value=""></option>
             <option
               *ngFor="let option of projectSizes"
               [value]="option.value"
