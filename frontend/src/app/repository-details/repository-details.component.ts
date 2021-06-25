@@ -165,6 +165,7 @@ export class RepositoryDetailsComponent implements OnInit {
       this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
     );
     this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
+    this.removePassedChecks();
   }
 
   getTagsArray(latestLintingResults) {
@@ -312,6 +313,16 @@ export class RepositoryDetailsComponent implements OnInit {
       return 1;
     }
     return 0;
+  }
+
+  removePassedChecks(){
+    var onlyFailedChecks = new Array();
+    for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++){ 
+      if(!this.latestLintingResultsSortedPriority[i].result){
+        onlyFailedChecks.push(this.latestLintingResultsSortedPriority[i]);
+      }
+    }
+    this.latestLintingResultsSortedPriority = onlyFailedChecks;
   }
 }
 
