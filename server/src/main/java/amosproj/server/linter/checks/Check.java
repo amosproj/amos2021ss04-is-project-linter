@@ -52,6 +52,7 @@ public abstract class Check {
             RepositoryFile file = gitLab.getApi().getRepositoryFileApi().getFileInfo(project.getId(), filepath, project.getDefaultBranch());
             if (file == null) return false;
         } catch (GitLabApiException | IllegalArgumentException e) {
+            e.printStackTrace();
             return false;
         }
         return true;
