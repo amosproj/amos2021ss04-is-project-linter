@@ -55,6 +55,7 @@ public class Crawler {
     @Async
     public synchronized void runCrawler() {
         crawlerActive.set(true);
+        lastError = ""; // clear error message, but not error time as the maintainer might need to see what went wrong
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
         logger.info(progress);
         try {
