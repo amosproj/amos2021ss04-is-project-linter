@@ -324,6 +324,10 @@ export class RepositoryDetailsComponent implements OnInit {
     }
     this.latestLintingResultsSortedPriority = onlyFailedChecks;
   }
+
+  fixOverflowingDescription(){
+    return this.RepoDescription.substring(0,150) + '...';
+  }
 }
 
 // Um das Projekt zu bekommen

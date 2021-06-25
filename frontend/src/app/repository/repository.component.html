@@ -5,8 +5,11 @@
     <mat-card-title style="text-align: left">
       {{ project.name }}</mat-card-title
     >
-    <div *ngIf="project.description.length > 0">
+    <div *ngIf="project.description.length > 0 && project.description.length <= 100">
       {{ project.description }}
+    </div>
+    <div *ngIf="project.description.length > 100">
+      {{ fixOverflowingDescription() }}
     </div>
     <div *ngIf="project.description.length < 1">
       Keine Beschreibung vorhanden
