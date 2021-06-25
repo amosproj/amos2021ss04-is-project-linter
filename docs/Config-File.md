@@ -22,7 +22,7 @@ Jedes Check Objekt hat folgende Parameter:
 * `description`: Beschreibung des Checks
 * `message`: Nachricht im Fehlerfall
 * `fix`: Tipp zur Behebung des Fehlers
-* `priority`: Gewichtung für Sortierung im FrontEnd
+* `priority`: Gewichtung für Sortierung im front end, dabei ist eine kleinere Zahl höher Prior
 
 ## Beispieldatei
 ```json
