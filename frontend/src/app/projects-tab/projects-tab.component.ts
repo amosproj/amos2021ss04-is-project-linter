@@ -75,7 +75,10 @@ export class ProjectsTabComponent implements OnInit {
     this.GetConfig();
     this.GetProjects();
 
-    this.state.searchQuery.subscribe((data) => console.log(data));
+    this.state.searchQuery.subscribe((query) => {
+      console.log(query);
+      this.searchProjects(query);
+    });
   }
 
   selectSize(event: Event) {
@@ -88,7 +91,7 @@ export class ProjectsTabComponent implements OnInit {
     this.currentSize = this.selectedSize;
     this.displayProjects(Number(this.selectedSize));
   }
-  
+
   /***********************************************************
    * Functions
    ***********************************************************/
@@ -134,7 +137,7 @@ export class ProjectsTabComponent implements OnInit {
 
   removeAllProjectsFromOverview() {
     // Löscht alle angezeigten Projekte
-    this.container.clear();
+    this.container.clear(); // FIXME ist broken
   }
 
   async GetConfig() {
