@@ -28,7 +28,7 @@
 <mat-card>
   <mat-grid-list
     cols="{{ maxColsForTiles }}"
-    rowHeight="100"
+    rowHeight="110"
     class="rowClass custom"
   >
     <mat-grid-tile
@@ -113,7 +113,7 @@
           <mat-card-content>
             <span
               *ngFor="
-                let lintingRes of latestLintingResultsSortedPriority;
+                let lintingRes of latestLintingResultsFailedChecks;
                 let i = index
               "
             >
