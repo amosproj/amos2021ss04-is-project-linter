@@ -90,8 +90,12 @@ public class ProjectController {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
 
-        Page<ProjectSchema> page = new PageImpl<ProjectSchema>(res.subList(start, end), pageable, res.size());
-        return page;
+        if (start > end) {
+            return new PageImpl<>(new LinkedList<>(), pageable, res.size());
+        } else {
+            Page<ProjectSchema> page = new PageImpl<ProjectSchema>(res.subList(start, end), pageable, res.size());
+            return page;
+        }
     }
 
     /**
