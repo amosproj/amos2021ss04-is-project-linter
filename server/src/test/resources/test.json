@@ -37,7 +37,7 @@
       "HasForkingEnabled": false,
       "HasAvatar": false,
       "HasDescription": false,
-      "HasSquashingDisabled": false,
+      "HasSquashingDisabled": true,
       "GuestRoleDisabled": false,
       "DeveloperRoleDisabled": false,
       "HasBadges": false,
