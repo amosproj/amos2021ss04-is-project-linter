@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { ApiService } from './api.service';
+import { StateService } from './state.service';
 import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RepositoryComponent } from './repository/repository.component';
@@ -42,7 +43,7 @@ import { SearchComponent } from './search/search.component';
     MaterialModule,
     FlexLayoutModule,
   ],
-  providers: [ApiService], // Make available throughout entire app
+  providers: [ApiService, StateService], // Make available throughout entire app
   bootstrap: [AppComponent],
 })
 export class AppModule {}

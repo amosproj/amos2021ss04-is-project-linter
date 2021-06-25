@@ -1,22 +1,22 @@
+<!-- header -->
 <app-header></app-header>
 
-<!-- Suchleiste-->
+<!-- search bar-->
 <app-search></app-search>
 
-<!-- Tabs-->
+<!-- tabs-->
 <mat-tab-group
   mat-align-tabs="center"
   color="accent"
   (selectedTabChange)="checkTabChange($event)"
 >
-  <mat-tab label="Projekte">
-  </mat-tab>
-  <mat-tab label="Statistiken">
-  </mat-tab>
-  <mat-tab label="Status">
-
-  </mat-tab>
- 
+  <mat-tab label="Projekte"> </mat-tab>
+  <mat-tab label="Statistiken"> </mat-tab>
+  <mat-tab label="Status"> </mat-tab>
 </mat-tab-group>
-<router-outlet></router-outlet>
+
+<!-- view of the page -->
+<router-outlet #view></router-outlet>
+
+<!-- footer -->
 <app-footer></app-footer>

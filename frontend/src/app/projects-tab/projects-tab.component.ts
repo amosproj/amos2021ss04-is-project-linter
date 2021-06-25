@@ -12,6 +12,7 @@ import { Project, Config, CheckResults, ProjectSize } from '../schemas';
 import { RepositoryComponent } from '../repository/repository.component';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-projects-tab',
@@ -62,7 +63,8 @@ export class ProjectsTabComponent implements OnInit {
     public dialog: MatDialog,
     private _cfr: ComponentFactoryResolver,
     private http: HttpClient,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private state: StateService
   ) {
     this.form = new FormGroup({
       size: this.sizeControl,
@@ -72,7 +74,10 @@ export class ProjectsTabComponent implements OnInit {
   ngOnInit(): void {
     this.GetConfig();
     this.GetProjects();
+
+    this.state.searchQuery.subscribe((data) => console.log(data));
   }
+
   selectSize(event: Event) {
     this.removeAllProjectsFromOverview();
 
@@ -83,6 +88,7 @@ export class ProjectsTabComponent implements OnInit {
     this.currentSize = this.selectedSize;
     this.displayProjects(Number(this.selectedSize));
   }
+  
   /***********************************************************
    * Functions
    ***********************************************************/
@@ -244,9 +250,8 @@ export class ProjectsTabComponent implements OnInit {
     }
   }
 
-  searchProject(value: string) {
+  searchProjects(value: string) {
     // Erstellt alle Komponenten im Repostiories Tab
-    // TODO: Methoden Benennung ändern
     this.removeAllProjectsFromOverview();
 
     for (let item of this.all_projects) {

@@ -12,7 +12,7 @@
       matInput
       placeholder="z.B. HerbstluftWM"
       required
-      (keyup.enter)="this.projectsTab.searchProject(searchbar.value)"
+      (keyup)="setSearch(searchbar.value)"
     />
     <!-- FIXME Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
     <!-- FIXME <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint> -->

@@ -17,15 +17,12 @@ export class AppComponent implements OnInit {
 
   checkTabChange($event) {
     if ($event.index == 0) {
-      //Wechsel to Statistics-Tab
       this.router.navigate(['projects']);
     }
     if ($event.index == 1) {
-      //Wechsel to Statistics-Tab
       this.router.navigate(['statistics']);
     }
     if ($event.index == 2) {
-      //Wechsel to Statistics-Tab
       this.router.navigate(['status']);
     }
   }
