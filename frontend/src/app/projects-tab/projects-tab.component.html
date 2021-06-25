@@ -77,14 +77,18 @@
     <div style="float: right">
       <div fxLayout="row" fxLayoutAlign="space-around center">
         <div>
-          <mat-icon matTooltip="Vorherige {{selectedSize}}" (click)="pageLeft()"
+          <mat-icon
+            matTooltip="Vorherige {{ selectedSize }}"
+            (click)="pageLeft()"
             >arrow_back_ios</mat-icon
           >
         </div>
 
         <div fxFlexAlign="baseline">Seite {{ currentPage }}</div>
         <div>
-          <mat-icon matTooltip="Nächste {{selectedSize}}" (click)="pageRight()"
+          <mat-icon
+            matTooltip="Nächste {{ selectedSize }}"
+            (click)="pageRight()"
             >arrow_forward_ios</mat-icon
           >
         </div>

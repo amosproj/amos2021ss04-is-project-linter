@@ -1,42 +1,22 @@
+<!-- header -->
 <app-header></app-header>
 
-<!-- Suchleiste-->
-<mat-card-content class="searchBar-mat">
-  <mat-form-field
-    appearance="fill"
-    [hideRequiredMarker]="hideRequiredControl.value"
-    [floatLabel]="floatLabelControl.value"
-    style="width: 420px !important"
-  >
-    <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
-    <input
-      [(ngModel)]="suchBegriff"
-      #suchleiste
-      matInput
-      placeholder="z.B. Amos Testz"
-      required
-      (keyup)="this.projectsTab.searchProject(suchleiste.value)"
-    />
-    <!-- Use mat-error instead of mat-hint. But formControl needs to be activated for input and i don't know how to tie it to result of Post request -->
-    <!-- <mat-hint *ngIf="getIfForwardLinkWorked() == false" class="errorSearchBar">{{ errorMsgForwardLink }}</mat-hint> -->
-  </mat-form-field>
-  &nbsp;
-</mat-card-content>
+<!-- search bar-->
+<app-search></app-search>
 
-<!-- Tabs-->
+<!-- tabs-->
 <mat-tab-group
   mat-align-tabs="center"
   color="accent"
   (selectedTabChange)="checkTabChange($event)"
 >
-  <mat-tab label="Projekte">
-  </mat-tab>
-  <mat-tab label="Statistiken">
-  </mat-tab>
-  <mat-tab label="Status">
-
-  </mat-tab>
- 
+  <mat-tab label="Projekte"> </mat-tab>
+  <mat-tab label="Statistiken"> </mat-tab>
+  <mat-tab label="Status"> </mat-tab>
 </mat-tab-group>
-<router-outlet></router-outlet>
+
+<!-- view of the page -->
+<router-outlet #view></router-outlet>
+
+<!-- footer -->
 <app-footer></app-footer>

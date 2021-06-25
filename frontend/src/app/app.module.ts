@@ -7,6 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AppComponent } from './app.component';
 import { ApiService } from './api.service';
+import { StateService } from './state.service';
 import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RepositoryComponent } from './repository/repository.component';
@@ -17,6 +18,7 @@ import { HeaderComponent } from './header/header.component';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 import { StatusTabComponent } from './status-tab/status-tab.component';
+import { SearchComponent } from './search/search.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,7 @@ import { StatusTabComponent } from './status-tab/status-tab.component';
     ProjectsTabComponent,
     StatisticsTabComponent,
     StatusTabComponent,
+    SearchComponent,
   ],
   entryComponents: [RepositoryDetailsComponent],
   imports: [
@@ -40,7 +43,7 @@ import { StatusTabComponent } from './status-tab/status-tab.component';
     MaterialModule,
     FlexLayoutModule,
   ],
-  providers: [ApiService], // Make available throughout entire app
+  providers: [ApiService, StateService], // Make available throughout entire app
   bootstrap: [AppComponent],
 })
 export class AppModule {}
