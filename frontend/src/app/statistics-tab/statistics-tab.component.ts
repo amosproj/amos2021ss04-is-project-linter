@@ -84,10 +84,14 @@ export class StatisticsTabComponent implements OnInit {
         var values: number[][] = new Array();
 
         for (let x in results) {
-          if (timestamps.includes(dayjs(x).format('DD.MM.YYYY'))) {
+          /*if (timestamps.includes(dayjs(x).format('DD.MM.YYYY'))) {
             continue;
           }
-          timestamps.push(dayjs(x).format('DD.MM.YYYY'));
+          timestamps.push(dayjs(x).format('DD.MM.YYYY'));*/
+          if (timestamps.includes(x)) {
+            continue;
+          }
+          timestamps.push(x);
           var value: number[] = new Array();
           for (let y in results[x]) {
             if (apiCall == 'top') {
@@ -151,6 +155,9 @@ export class StatisticsTabComponent implements OnInit {
       scales: {
         yAxes: [
           {
+            gridLines: {
+              display:true,
+            },
             id: 'yAxis',
             display: true,
             position: 'left',
@@ -165,6 +172,30 @@ export class StatisticsTabComponent implements OnInit {
             },
           },
         ],
+        xAxes: [
+          {
+            gridLines: {
+              display:true,
+            },
+            type: 'time',
+            time: {
+              displayFormats: {
+                'millisecond': 'DD MM YYYY',
+                'second':      'DD MM YYYY',
+                'minute':      'DD MM YYYY',
+                'hour':        'DD MM YYYY',
+                'day':         'DD MM YYYY',
+                'week':        'DD MM YYYY',
+                'month':       'DD MM YYYY',
+                'quarter':     'DD MM YYYY',
+                'year':        'DD MM YYYY',
+              }
+            },
+            ticks: {
+                autoSkip: true,
+                maxTicksLimit: 10
+            }
+          }]
       },
     };
     var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
@@ -244,6 +275,7 @@ export class StatisticsTabComponent implements OnInit {
           }
         );
         this.chartImportantChecks.data.labels = timestamps;
+        console.log(timestamps)
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
         //console.log(this.chartImportantChecks.data);
