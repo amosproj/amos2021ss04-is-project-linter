@@ -10,6 +10,9 @@ import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,8 +54,9 @@ public class ProjectController {
     //**********************************
 
     @GetMapping("/projects")
-    public List<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
-                                           @RequestParam(name = "tag", required = false) String tag) {
+    public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
+                                           @RequestParam(name = "tag", required = false) String tag,
+                                           Pageable pageable) {
         HashMap<String, String> map = Config.getTags();
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
@@ -82,7 +86,12 @@ public class ProjectController {
                 )
             );
         }
-        return res;
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), res.size());
+
+        Page<ProjectSchema> page = new PageImpl<ProjectSchema>(res.subList(start, end), pageable, res.size());
+        return page;
     }
 
     /**
