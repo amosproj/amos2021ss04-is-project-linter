@@ -33,6 +33,10 @@ export class RepositoryComponent implements OnInit {
       data: { project: this.project },
     });
   }
+
+  fixOverflowingDescription(){
+    return this.project.description.substring(0,100) + '...';
+  }
 }
 
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt

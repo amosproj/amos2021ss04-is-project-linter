@@ -1,12 +1,13 @@
-<mat-card class="example-card">
-  <mat-card-header> </mat-card-header>
-  <!img mat-card-image src="{{image}}">
+<mat-card class="example-card"> 
   <mat-card-content (click)="showDetailsViaDialog()">
     <mat-card-title style="text-align: left">
       {{ project.name }}</mat-card-title
     >
-    <div *ngIf="project.description.length > 0">
+    <div *ngIf="project.description.length > 0 && project.description.length <= 100">
       {{ project.description }}
+    </div>
+    <div *ngIf="project.description.length > 100">
+      {{ fixOverflowingDescription() }}
     </div>
     <div *ngIf="project.description.length < 1">
       Keine Beschreibung vorhanden
@@ -18,7 +19,7 @@
     <br />
 
     <mat-toolbar-row style="bottom: 0%; position: absolute">
-      <button mat-raised-button>Anzeigen</button>
+      <button mat-raised-button style="background-color: #80c6ff;">Anzeigen</button>
     </mat-toolbar-row>
   </mat-card-content>
 </mat-card>

@@ -43,6 +43,7 @@ export class RepositoryDetailsComponent implements OnInit {
   latestLintingIndex: number;
   latestLintingResults: CheckResults[];
   latestLintingResultsSortedPriority: CheckResults[];
+  latestLintingResultsFailedChecks: CheckResults[];
   tags: String[];
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
@@ -165,6 +166,7 @@ export class RepositoryDetailsComponent implements OnInit {
       this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
     );
     this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
+    this.removePassedChecks();
   }
 
   getTagsArray(latestLintingResults) {
@@ -312,6 +314,28 @@ export class RepositoryDetailsComponent implements OnInit {
       return 1;
     }
     return 0;
+  }
+
+  removePassedChecks(){
+    console.log(this.tiles);
+    this.latestLintingResultsFailedChecks = new Array();
+    for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++){ 
+      if(!this.latestLintingResultsSortedPriority[i].result){
+        this.latestLintingResultsFailedChecks.push(this.latestLintingResultsSortedPriority[i]);
+      }
+    }
+    if(this.latestLintingResultsFailedChecks.length == 0){
+      this.tiles[this.tiles.length - 1].text = 'Glückwunsch! Alle Tests bestanden.'
+    } else if (this.latestLintingResultsFailedChecks.length < 2){
+      this.tiles[this.tiles.length - 1].text = 'Top Tipp';
+    } else if (this.latestLintingResultsFailedChecks.length < 3){
+      this.tiles[this.tiles.length - 1].text = 'Top ' + this.latestLintingResultsFailedChecks.length + ' Tipps';
+    }
+    
+  }
+
+  fixOverflowingDescription(){
+    return this.RepoDescription.substring(0,150) + '...';
   }
 }
 
