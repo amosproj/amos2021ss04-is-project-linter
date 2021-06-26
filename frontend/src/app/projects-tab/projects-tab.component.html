@@ -58,7 +58,7 @@
         [disabled]="
           chipsControl.value.length == 0 || searchCriteria.value.length == 0
         "
-        (click)="sortProjects()"
+        (click)="getProjects()"
       >
         Sortieren
       </button>
@@ -81,7 +81,9 @@
     </mat-paginator>
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
-      <div fxLayoutAlign="center end" #parent></div>
+      <div fxLayoutAlign="center end">
+        <app-repository *ngFor="let proj of projects">{{ proj }}</app-repository>
+      </div>
     </div>
   </mat-card-content>
 </mat-card>
