@@ -1,4 +1,9 @@
 // Interface für die repository Komponente welche grob die Informationen des repository zeigt
+export interface PagedProjects {
+  content: Project[];
+  totalElements: number;
+}
+
 export interface Project {
   gitlabInstance: string;
   gitlabProjectId: number;

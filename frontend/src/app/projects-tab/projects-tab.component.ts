@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Project, Config } from '../schemas';
+import { Config, PagedProjects } from '../schemas';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
@@ -15,13 +15,12 @@ import { StateService } from '../state.service';
 })
 export class ProjectsTabComponent implements OnInit {
   // for search form
-  chipsControl = new FormControl('');
-  kategorie = new FormControl('');
-  searchCriteria = new FormControl('');
   availableSearchCriteria: string[] = [
     'Bestandene Tests',
     'Neue bestandene Tests in den letzten 30 Tagen',
   ];
+  chipsControl = new FormControl('');
+  searchCriteria = new FormControl(this.availableSearchCriteria[0]);
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   // query, sorting parameters
   delta: boolean = false; // whether the bottom radio button is selected
@@ -30,7 +29,7 @@ export class ProjectsTabComponent implements OnInit {
   // other params
   chipOptions: string[];
   config: Config;
-  projects: Project[];
+  projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
 
   constructor(
     public dialog: MatDialog,
@@ -54,6 +53,16 @@ export class ProjectsTabComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    this.chipsControl.valueChanges.subscribe((data) => {
+      this.sort = data;
+    });
+
+    this.searchCriteria.valueChanges.subscribe((data) => {
+      this.delta = data == this.availableSearchCriteria[1];
+    });
+  }
+
   getProjects() {
     // Holt alle Projekte vom Backend-Server
     let dialogRef = this.dialog.open(SpinnerComponentComponent, {
@@ -63,7 +72,7 @@ export class ProjectsTabComponent implements OnInit {
     });
 
     this.api
-      .getAllProjects(false, this.delta, this.searchQuery, this.sort)
+      .getAllProjects(true, this.delta, this.searchQuery, this.sort)
       .subscribe((data) => {
         console.log(data);
         this.projects = data;

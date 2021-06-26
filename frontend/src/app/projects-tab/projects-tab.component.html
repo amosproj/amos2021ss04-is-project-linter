@@ -74,14 +74,14 @@
 
   <mat-card-content>
     <mat-paginator
-      [length]="100"
+      [length]="projects.totalElements"
       [pageSize]="8"
       [pageSizeOptions]="[8, 25, 100]"
     >
     </mat-paginator>
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
-      <div fxLayoutAlign="center end" *ngFor="let proj of projects">
+      <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">
         <app-repository [project]="proj"></app-repository>
       </div>
     </div>

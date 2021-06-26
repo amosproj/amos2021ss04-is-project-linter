@@ -13,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Clock;
@@ -58,7 +58,11 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
                                            @RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
-                                           Pageable pageable) {
+                                           Pageable pageable, HttpServletRequest request) {
+        System.out.println(request.getRequestURI());
+        for (var key : request.getParameterMap().keySet()) {
+            System.out.println(key + " " + Arrays.toString(request.getParameterMap().get(key)));
+        }
         LinkedList<String> allProperties = new LinkedList<>();
         var iterator = pageable.getSort().stream().iterator();
         while (iterator.hasNext()) {
@@ -89,7 +93,7 @@ public class ProjectController {
                 var latest = proj.getLatestPassedByTag();
                 var oldest = proj.getPassedByTag30DaysAgo();
                 for (String property : allProperties) {
-                    allRequestedProperties += latest.getOrDefault(property,0L);
+                    allRequestedProperties += latest.getOrDefault(property, 0L);
                     allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
                 }
                 proj.setLatestPassedTotal(allRequestedProperties);
@@ -174,7 +178,7 @@ public class ProjectController {
         // Percentage is wanted: Need to divide the total by number of projects
         Set<LocalDateTime> timeSet = res.keySet();
         var percentage = new TreeMap<LocalDateTime, HashMap<String, Object>>();
-        for (LocalDateTime localDateTime: timeSet) {
+        for (LocalDateTime localDateTime : timeSet) {
             int projects = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
             var tagPercentages = new HashMap<String, Object>();
             var totals = res.get(localDateTime);
@@ -187,7 +191,7 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/top")
-    public TreeMap<LocalDateTime, TreeMap<Long, Object>> topXProjects(@RequestParam(name = "type") String type){
+    public TreeMap<LocalDateTime, TreeMap<Long, Object>> topXProjects(@RequestParam(name = "type") String type) {
         if (type == null)
             return null;
 
@@ -223,18 +227,18 @@ public class ProjectController {
                     if (checkResult.getResult()) { // Did pass the check
                         for (Long key : keySet) {
                             if (key >= priority) {
-                                checksPassedByPrio.compute(key, (k,v) -> (Long) v + 1);
+                                checksPassedByPrio.compute(key, (k, v) -> (Long) v + 1);
                             }
                         }
                     }
                 }
 
                 res.putIfAbsent(lr.getLintTime(), new TreeMap<Long, Object>());
-                for (Long key: keySet) {
+                for (Long key : keySet) {
                     TreeMap<Long, Object> resMap = res.get(lr.getLintTime());
                     resMap.putIfAbsent(key, 0L);
                     if (checksPassedByPrio.get(key).equals(key)) // All checks passed
-                        resMap.compute(key, (k,v) -> (Long) v + 1);
+                        resMap.compute(key, (k, v) -> (Long) v + 1);
                 }
             }
         }
@@ -244,7 +248,7 @@ public class ProjectController {
         // Percentage is wanted: Need to divide the total by number of projects
         Set<LocalDateTime> timeSet = res.keySet();
         var percentage = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
-        for (LocalDateTime localDateTime: timeSet) {
+        for (LocalDateTime localDateTime : timeSet) {
             int projectCount = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
             var tagPercentages = new TreeMap<Long, Object>();
             var totals = res.get(localDateTime);

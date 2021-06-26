@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Status, Project, Config } from './schemas';
+import { Status, Project, Config, PagedProjects } from './schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -19,20 +19,23 @@ export class ApiService {
     delta: boolean = false,
     query: string,
     sort: string[] = []
-  ): Observable<any> {
+  ): Observable<PagedProjects> {
     const params = new HttpParams()
       .set('extended', String(extended))
       .set('delta', String(delta))
       .set('name', query)
       .set('page', String(0))
-      .set('size', String(20));
+      .set('size', String(20))
+      .set('sort', String(sort));
     // TODO add sort params
-    return this.http.get<Project[]>(`${this.apiUrl}/projects`, { params });
+    console.log(params);
+
+    return this.http.get<PagedProjects>(`${this.apiUrl}/projects`, { params });
   }
 
   // One Project
-  getProject(id: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/project/${id}`);
+  getProject(id: number): Observable<Project> {
+    return this.http.get<Project>(`${this.apiUrl}/project/${id}`);
   }
 
   // Start Crawler
