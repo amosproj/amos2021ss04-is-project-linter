@@ -3,10 +3,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 ### GET - `/projects` - Übersicht aller Projekte
 * Query: 
     * `extended=true|false` liefert auf Wunsch auch die Ergebnisse von allen Lint-Durchläufen der letzten 30 Tage.
-    * `sort=new_passed|last_month` Sortierreihenfolge (radio buttons im frontend)
-    * `order=asc|desc` Legt die reihenfolge der Ausgabe fest
-    * `search` Limitiert die Ausgabe auf die Projekte die dem Parameter teilweise entsprechen 
-    * `tag=String` Sortiert die Projekte direkt nach dem übergebenen Tag in Absteigender Reihenfolge
+    * `delta=true|false` Soll nach dem Delta oder dem letzten Ergebnis sortiert werden?
     * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`
 * Body: nichts
 * Response: Json(Page(ProjectSchema))
