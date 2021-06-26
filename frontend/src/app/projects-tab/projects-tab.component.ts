@@ -55,10 +55,6 @@ export class ProjectsTabComponent implements OnInit {
 
   @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
 
-  /***********************************************************
-   * Init Methods
-   ***********************************************************/
-
   constructor(
     public dialog: MatDialog,
     private _cfr: ComponentFactoryResolver,
@@ -77,7 +73,7 @@ export class ProjectsTabComponent implements OnInit {
 
     this.state.searchQuery.subscribe((query) => {
       console.log(query);
-      // this.searchProjects(query);
+      this.searchProjects(query);
     });
   }
 
@@ -91,10 +87,6 @@ export class ProjectsTabComponent implements OnInit {
     this.currentSize = this.selectedSize;
     this.displayProjects(Number(this.selectedSize));
   }
-
-  /***********************************************************
-   * Functions
-   ***********************************************************/
 
   getIfForwardLinkWorked() {
     return this.forwardLinkWorked;
@@ -254,8 +246,9 @@ export class ProjectsTabComponent implements OnInit {
   }
 
   searchProjects(value: string) {
+    
     // Erstellt alle Komponenten im Repostiories Tab
-    this.removeAllProjectsFromOverview();
+    // this.removeAllProjectsFromOverview();
 
     for (let item of this.all_projects) {
       if (
