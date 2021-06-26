@@ -32,7 +32,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Body: nichts
 * Response: Json(ProjectSchema)
 
-### GET - `/project/{Id}/lastMonth` - Lint Ergebnisse des Letzten Monats für ein Projekt
+### GET - `/project/{Id}/lastMonth` - Lint Ergebnisse des Letzten Monats für ein Projekt [DEPRECATED]
 * Body: nichts
 * Response: Json(ProjectSchema)
 
