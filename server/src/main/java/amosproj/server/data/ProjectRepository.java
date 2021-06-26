@@ -20,4 +20,6 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
      * @return das erste Project welches zu Id gehört
      */
     Project findFirstByGitlabProjectId(Integer Id);
+
+    Iterable<Project> findAllByNameContainsIgnoreCase(String name);
 }

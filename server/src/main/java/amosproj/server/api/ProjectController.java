@@ -57,6 +57,7 @@ public class ProjectController {
     @GetMapping("/projects")
     public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
                                            @RequestParam(name = "delta", required = false) Boolean delta,
+                                           @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
         LinkedList<String> allProperties = new LinkedList<>();
         var iterator = pageable.getSort().stream().iterator();
@@ -65,7 +66,12 @@ public class ProjectController {
             allProperties.add(next.getProperty());
         }
 
-        var projectList = projectRepository.findAll();
+        Iterable<Project> projectList;
+        if (name == null || name.equals("")) {
+            projectList = projectRepository.findAll();
+        } else {
+            projectList = projectRepository.findAllByNameContainsIgnoreCase(name);
+        }
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
@@ -330,25 +336,7 @@ public class ProjectController {
     //**********************
     //         Helper
     //**********************
-
-    private int checksPassedByTag(List<CheckResultSchema> checkResults, String tag) {
-        if (checkResults == null || tag == null) {
-            return 0;
-        }
-
-        int i = 0;
-        var map = Config.getTags();
-        for (CheckResultSchema checkResult : checkResults) {
-            if (checkResult == null) {
-                return 0;
-            }
-            String checkCategory = map.get(checkResult.getCheckName());
-            if (checkResult.getResult() && checkCategory.equals(tag)) {
-                i++;
-            }
-        }
-        return -i;
-    }
+    
 
     private HashMap<String, Long> checksPassedByTags(List<CheckResultSchema> checkResults) {
         if (checkResults == null) {
