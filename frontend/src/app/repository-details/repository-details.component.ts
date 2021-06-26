@@ -1,27 +1,20 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
+import { ApiService } from '../api.service';
 
-//import { FlexLayoutModule } from '@angular/flex-layout';
+import { Project, LintingResult, CheckResults } from '../schemas';
 
 @Component({
   selector: 'app-repository-details',
   templateUrl: './repository-details.component.html',
   styleUrls: ['./repository-details.component.css'],
-  //imports: [FlexLayoutModule],
 })
 export class RepositoryDetailsComponent implements OnInit {
-  // Diese Klasse ist nötig fürs Anzeigen des Dialogs
-  // Aktuell muss man die gleichen Informationen 2-mal getten, da die HTTP-get Aufrufe asynchron sind.
-  //      (1 mal onNGinit für die Erstellung der Tiles (geht nicht später), und 1 mal onngAfterView für die Graphen (Canvas ist davor undefined))
-  // TODO: chartNames nicht dynamisch erstellen
+  project: Project;
+
   emojiMap = {
-    /*unwichtig:"〰️",
-    warning: "⚠️",
-    false: "❌",
-    correct: "✅"*/
     notImportant: '🟡',
     warning: '🟠',
     false: '🔴',
@@ -47,8 +40,7 @@ export class RepositoryDetailsComponent implements OnInit {
   tags: String[];
   LintingResultsInTags: CheckResults[][];
   numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
-  //wenn neue Tags hinzugefügt werden muss folgende Variable erweitert werden
-  chartNames: String[];
+  chartNames: String[]; //wenn neue Tags hinzugefügt werden muss diese Variable erweitert werden
   maxColsForTiles = 9;
   tiles: Tile[] = [
     { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
@@ -57,19 +49,21 @@ export class RepositoryDetailsComponent implements OnInit {
   ];
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private http: HttpClient
+    @Inject(MAT_DIALOG_DATA) public projectId: number,
+    private api: ApiService
   ) {}
 
   ngOnInit(): void {
-    // initalisiere Arrays sortiert bei severtity void
-    this.latestLintingIndex = this.data.project.lintingResults.length - 1;
-
-    this.checksHighSeverity = new Array<CheckResults>();
-    this.checksMediumSeverity = new Array<CheckResults>();
-    this.checksLowSeverity = new Array<CheckResults>();
-    this.latestLintingResultsSortedPriority = new Array<CheckResults>();
-    this.initializeClassValuesAndTiles(); // sendet erste HTTP Anfrage ans backend
+    this.api.getProject(this.projectId).subscribe((proj) => {
+      this.project = proj;
+      // initalisiere Arrays sortiert bei severtity void
+      this.latestLintingIndex = this.project.lintingResults.length - 1;
+      this.checksHighSeverity = new Array<CheckResults>();
+      this.checksMediumSeverity = new Array<CheckResults>();
+      this.checksLowSeverity = new Array<CheckResults>();
+      this.latestLintingResultsSortedPriority = new Array<CheckResults>();
+      this.initializeClassValuesAndTiles(); // sendet erste HTTP Anfrage ans backend
+    });
   }
 
   ngAfterViewInit(): void {
@@ -135,7 +129,7 @@ export class RepositoryDetailsComponent implements OnInit {
     // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
     // fülle linting Kategorien array
     this.latestLintingResults =
-      this.data.project.lintingResults[this.latestLintingIndex].checkResults;
+      this.project.lintingResults[this.latestLintingIndex].checkResults;
     //this.fillSeverityArrays(); // muss momentan nicht benützt werden
     this.tags = this.getTagsArray(this.latestLintingResults);
 
@@ -147,17 +141,17 @@ export class RepositoryDetailsComponent implements OnInit {
     //console.log('LintingResultInTags', this.LintingResultsInTags);
 
     // Speichere Informationen
-    this.RepoName = this.data.project.name;
-    this.RepoURL = this.data.project.url;
-    this.RepoDescription = this.data.project.description;
+    this.RepoName = this.project.name;
+    this.RepoURL = this.project.url;
+    this.RepoDescription = this.project.description;
     this.lastLintTime = dayjs(
-      this.data.project.lintingResults[this.latestLintingIndex].lintTime
+      this.project.lintingResults[this.latestLintingIndex].lintTime
     ).format('DD.MM.YYYY - HH:mm');
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
       this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
         this.tags,
-        this.data.project.lintingResults[this.latestLintingIndex].checkResults
+        this.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
     this.chartNames = this.getChartNames(this.tags);
     this.addTilesForCategoryGraphAndTipps();
@@ -342,54 +336,10 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 }
 
-// Um das Projekt zu bekommen
-export interface DialogData {
-  project: Project;
-}
-
-// Interface für die repository Komponente welche grob die Informationen des repository zeigt
-interface Project {
-  gitlabInstance: string;
-  gitlabProjectId: number;
-  id: number;
-  name: string;
-  description: string;
-  results: [];
-  url: string;
-  passedTestsInFilter: number;
-  newPassedTestsLastMonth: number;
-  passedTestsPerTag: number[];
-  newPassedTestsPerTagLastMonth: number[];
-
-  lintingResults: LintingResult[];
-}
-
-// Zum speichern der Daten des Projekts
-interface CheckResults {
-  checkName: string;
-  severity: string;
-  result: boolean;
-  category: string;
-  description: string;
-  tag: string;
-  fix: string;
-  priority: number;
-  message: string; // ist Fehlermeldung
-}
-
 // FÜr angular tiles
 export interface Tile {
   color: string;
   cols: number;
   rows: number;
   text: string;
-}
-
-// Zum Speichern der Daten eines LintingResult
-interface LintingResult {
-  // wird gerade nicht benutzt
-  projectId: number;
-  id: number;
-  lintTime: string;
-  checkResults: CheckResults[];
 }

@@ -28,7 +28,7 @@ export class RepositoryComponent implements OnInit {
       width: '77%',
       height: '96%',
       panelClass: 'custom-dialog-container',
-      data: { projectId: this.project.id },
+      data: this.project.id,
     });
   }
 

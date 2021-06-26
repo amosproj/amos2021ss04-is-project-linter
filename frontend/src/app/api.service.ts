@@ -17,7 +17,7 @@ export class ApiService {
   getAllProjects(
     extended: boolean = false,
     delta: boolean = false,
-    query: string,
+    query: string
   ): Observable<any> {
     const params = new HttpParams()
       .set('extended', String(extended))
@@ -31,7 +31,7 @@ export class ApiService {
 
   // One Project
   getProject(id: number): Observable<any> {
-    return this.http.get(`${this.http}/project/${id}`);
+    return this.http.get(`${this.apiUrl}/project/${id}`);
   }
 
   // Start Crawler
