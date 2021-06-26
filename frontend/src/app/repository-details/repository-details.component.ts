@@ -37,10 +37,10 @@ export class RepositoryDetailsComponent implements OnInit {
   latestLintingResults: CheckResults[];
   latestLintingResultsSortedPriority: CheckResults[];
   latestLintingResultsFailedChecks: CheckResults[];
-  tags: String[];
+  tags: String[] = [];
   LintingResultsInTags: CheckResults[][];
-  numberOfTestsPerSeverityInTags: number[][]; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
-  chartNames: String[]; //wenn neue Tags hinzugefügt werden muss diese Variable erweitert werden
+  numberOfTestsPerSeverityInTags: number[][] = []; // 2D Array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, hoch, medium, niedrig]
+  chartNames: String[] = ['Alle Tests:']; //wenn neue Tags hinzugefügt werden muss diese Variable erweitert werden
   maxColsForTiles = 9;
   tiles: Tile[] = [
     { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
@@ -56,13 +56,14 @@ export class RepositoryDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.api.getProject(this.projectId).subscribe((proj) => {
       this.project = proj;
+      console.log(proj);
       // initalisiere Arrays sortiert bei severtity void
       this.latestLintingIndex = this.project.lintingResults.length - 1;
       this.checksHighSeverity = new Array<CheckResults>();
       this.checksMediumSeverity = new Array<CheckResults>();
       this.checksLowSeverity = new Array<CheckResults>();
       this.latestLintingResultsSortedPriority = new Array<CheckResults>();
-      this.initializeClassValuesAndTiles(); // sendet erste HTTP Anfrage ans backend
+      this.initializeClassValuesAndTiles();
     });
   }
 
@@ -126,11 +127,8 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   initializeClassValuesAndTiles() {
-    // Initialisiert Klassenvariablen die unteranderem für das erstellen der Tiles nötig sind
-    // fülle linting Kategorien array
     this.latestLintingResults =
       this.project.lintingResults[this.latestLintingIndex].checkResults;
-    //this.fillSeverityArrays(); // muss momentan nicht benützt werden
     this.tags = this.getTagsArray(this.latestLintingResults);
 
     this.LintingResultsInTags =
@@ -138,8 +136,6 @@ export class RepositoryDetailsComponent implements OnInit {
         this.tags,
         this.latestLintingResults
       )[1];
-    //console.log('LintingResultInTags', this.LintingResultsInTags);
-
     // Speichere Informationen
     this.RepoName = this.project.name;
     this.RepoURL = this.project.url;
@@ -153,7 +149,10 @@ export class RepositoryDetailsComponent implements OnInit {
         this.tags,
         this.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
-    this.chartNames = this.getChartNames(this.tags);
+
+    console.log('chartNames');
+    this.chartNames = this.chartNames.concat(this.tags);
+    console.log(this.chartNames);
     this.addTilesForCategoryGraphAndTipps();
     // sortiere die Checks um die 3 besten Tipps darzustellen
     this.latestLintingResults.forEach((val) =>
@@ -184,21 +183,6 @@ export class RepositoryDetailsComponent implements OnInit {
       }
     }
     return tags;
-  }
-
-  getChartNames(tags) {
-    if (!tags) {
-      console.log(
-        'Error in getChartNames() in repository-details.components.ts\n  this.tags is empty'
-      );
-      return [];
-    }
-    var chartNames: String[] = [];
-    chartNames.push('Alle Tests:');
-    for (var i = 0; i < tags.length; i++) {
-      chartNames.push(tags[i]);
-    }
-    return chartNames;
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(
