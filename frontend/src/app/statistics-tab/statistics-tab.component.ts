@@ -27,7 +27,7 @@ export class StatisticsTabComponent implements OnInit {
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
-    console.log("Statistik ausgewählt");
+    console.log('Statistik ausgewählt');
     this.setOnStatistikTab();
   }
 
@@ -159,7 +159,7 @@ export class StatisticsTabComponent implements OnInit {
         yAxes: [
           {
             gridLines: {
-              display:true,
+              display: true,
             },
             id: 'yAxis',
             display: true,
@@ -178,27 +178,28 @@ export class StatisticsTabComponent implements OnInit {
         xAxes: [
           {
             gridLines: {
-              display:true,
+              display: true,
             },
             type: 'time',
             time: {
               displayFormats: {
-                'millisecond': 'DD MM YYYY',
-                'second':      'DD MM YYYY',
-                'minute':      'DD MM YYYY',
-                'hour':        'DD MM YYYY',
-                'day':         'DD MM YYYY',
-                'week':        'DD MM YYYY',
-                'month':       'DD MM YYYY',
-                'quarter':     'DD MM YYYY',
-                'year':        'DD MM YYYY',
-              }
+                millisecond: 'DD MM YYYY',
+                second: 'DD MM YYYY',
+                minute: 'DD MM YYYY',
+                hour: 'DD MM YYYY',
+                day: 'DD MM YYYY',
+                week: 'DD MM YYYY',
+                month: 'DD MM YYYY',
+                quarter: 'DD MM YYYY',
+                year: 'DD MM YYYY',
+              },
             },
             ticks: {
-                autoSkip: true,
-                maxTicksLimit: 10
-            }
-          }]
+              autoSkip: true,
+              maxTicksLimit: 10,
+            },
+          },
+        ],
       },
     };
     var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
@@ -278,7 +279,7 @@ export class StatisticsTabComponent implements OnInit {
           }
         );
         this.chartImportantChecks.data.labels = timestamps;
-        console.log(timestamps)
+        console.log(timestamps);
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
         //console.log(this.chartImportantChecks.data);

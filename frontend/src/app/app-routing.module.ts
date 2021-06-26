@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
-//import { RepositoryListComponent } from './repository-list/repository-list.component';
-import { RepositoryComponent } from './repository/repository.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 import { StatusTabComponent } from './status-tab/status-tab.component';
 
