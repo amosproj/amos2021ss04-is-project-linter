@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { Project, Config, CheckResults } from '../schemas';
+import { Project, Config } from '../schemas';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
@@ -15,32 +14,26 @@ import { StateService } from '../state.service';
   styleUrls: ['./projects-tab.component.css'],
 })
 export class ProjectsTabComponent implements OnInit {
-  title = 'frontend';
-  projectComponents = [];
+  // for search form
   chipsControl = new FormControl('');
-  chipsValue$ = this.chipsControl.valueChanges;
   kategorie = new FormControl('');
-  all_projects: Project[];
-  init_all_projects: Project[];
-  forwardLinkWorked = true;
-  errorMsgForwardLink = '';
   searchCriteria = new FormControl('');
   availableSearchCriteria: string[] = [
     'Bestandene Tests',
     'Neue bestandene Tests in den letzten 30 Tagen',
   ];
-  chipOptions: string[];
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
-  toggleToTrue = true;
-
+  // query, sorting parameters
+  delta: boolean = false; // whether the bottom radio button is selected
+  searchQuery: string = ''; // query from the search bar
+  sort: string[]; // selected chips
+  // other params
+  chipOptions: string[];
   config: Config;
-  suchBegriff: string;
   projects: Project[];
-  searchQuery: string = '';
 
   constructor(
     public dialog: MatDialog,
-    private http: HttpClient,
     private api: ApiService,
     private state: StateService
   ) {}
@@ -49,6 +42,7 @@ export class ProjectsTabComponent implements OnInit {
     // get Config
     this.api.getConfig().subscribe((data) => {
       this.config = data;
+      this.getChipOptions();
     });
 
     this.getProjects();
@@ -68,11 +62,23 @@ export class ProjectsTabComponent implements OnInit {
       panelClass: 'custom-dialog-container',
     });
 
-    this.api.getAllProjects(false, true, this.searchQuery).subscribe((data) => {
-      console.log(data);
-      this.projects = data;
-    });
+    this.api
+      .getAllProjects(false, this.delta, this.searchQuery, this.sort)
+      .subscribe((data) => {
+        console.log(data);
+        this.projects = data;
+      });
 
     dialogRef.close();
+  }
+
+  getChipOptions() {
+    //hole alle verschiedenen tags aus der config.json datei
+    this.chipOptions = [];
+    for (let [key, value] of Object.entries(this.config.checks)) {
+      if (!this.chipOptions.includes(value.tag)) {
+        this.chipOptions.push(value.tag);
+      }
+    }
   }
 }

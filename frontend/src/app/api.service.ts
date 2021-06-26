@@ -17,7 +17,8 @@ export class ApiService {
   getAllProjects(
     extended: boolean = false,
     delta: boolean = false,
-    query: string
+    query: string,
+    sort: string[] = []
   ): Observable<any> {
     const params = new HttpParams()
       .set('extended', String(extended))
@@ -25,7 +26,7 @@ export class ApiService {
       .set('name', query)
       .set('page', String(0))
       .set('size', String(20));
-
+    // TODO add sort params
     return this.http.get<Project[]>(`${this.apiUrl}/projects`, { params });
   }
 

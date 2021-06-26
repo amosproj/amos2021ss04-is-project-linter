@@ -47,6 +47,7 @@ export class RepositoryDetailsComponent implements OnInit {
     { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
     // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
   ];
+
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public projectId: number,

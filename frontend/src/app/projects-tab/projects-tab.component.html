@@ -81,11 +81,8 @@
     </mat-paginator>
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
-      <div fxLayoutAlign="center end">
-        <app-repository
-          *ngFor="let proj of projects"
-          [project]="proj"
-        ></app-repository>
+      <div fxLayoutAlign="center end" *ngFor="let proj of projects">
+        <app-repository [project]="proj"></app-repository>
       </div>
     </div>
   </mat-card-content>
