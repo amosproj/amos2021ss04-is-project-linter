@@ -233,7 +233,7 @@ public class ProjectController {
                 for (Long key: keySet) {
                     TreeMap<Long, Object> resMap = res.get(lr.getLintTime());
                     resMap.putIfAbsent(key, 0L);
-                    if (checksPassedByPrio.get(key) == key) // All checks passed
+                    if (checksPassedByPrio.get(key).equals(key)) // All checks passed
                         resMap.compute(key, (k,v) -> (Long) v + 1);
                 }
             }
@@ -336,7 +336,7 @@ public class ProjectController {
     //**********************
     //         Helper
     //**********************
-    
+
 
     private HashMap<String, Long> checksPassedByTags(List<CheckResultSchema> checkResults) {
         if (checkResults == null) {
