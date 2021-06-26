@@ -57,7 +57,9 @@ public abstract class Check {
             if (file == null){
                 return false;
             }
-        } catch (GitLabApiException | IllegalArgumentException e) {
+        } catch (GitLabApiException e) {
+            return false;
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return false;
         }
