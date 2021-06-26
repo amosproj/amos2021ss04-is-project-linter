@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Status } from './schemas';
+import { Status, Project } from './schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -14,8 +14,19 @@ export class ApiService {
   constructor(private http: HttpClient) {}
 
   // All Project
-  getAllProjects(extended: boolean): Observable<any> {
-    return this.http.get(`${this.apiUrl}/projects`);
+  getAllProjects(
+    extended: boolean = false,
+    delta: boolean = false,
+    query: string
+  ): Observable<any> {
+    const params = new HttpParams()
+      .set('extended', String(extended))
+      .set('delta', String(delta))
+      .set('name', query)
+      .set('page', String(0))
+      .set('size', String(20));
+
+    return this.http.get<Project[]>(`${this.apiUrl}/projects`, { params });
   }
 
   // One Project

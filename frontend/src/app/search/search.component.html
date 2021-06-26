@@ -1,0 +1,19 @@
+<mat-card-content class="searchBar-mat">
+  <mat-form-field
+    appearance="fill"
+    hideRequiredMarker="false"
+    floatLabel="auto"
+    style="width: 420px !important"
+  >
+    <mat-label>Zum Suchen eines Projektes Name eingeben </mat-label>
+    <input
+      id="searchQuery"
+      type="text"
+      [formControl]="searchQuery"
+      matInput
+      placeholder="z.B. HerbstluftWM"
+      required
+      (keyup.enter)="setSearch(searchQuery.value)"
+    />
+  </mat-form-field>
+</mat-card-content>

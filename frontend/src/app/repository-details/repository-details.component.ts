@@ -316,26 +316,29 @@ export class RepositoryDetailsComponent implements OnInit {
     return 0;
   }
 
-  removePassedChecks(){
+  removePassedChecks() {
     console.log(this.tiles);
     this.latestLintingResultsFailedChecks = new Array();
-    for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++){ 
-      if(!this.latestLintingResultsSortedPriority[i].result){
-        this.latestLintingResultsFailedChecks.push(this.latestLintingResultsSortedPriority[i]);
+    for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
+      if (!this.latestLintingResultsSortedPriority[i].result) {
+        this.latestLintingResultsFailedChecks.push(
+          this.latestLintingResultsSortedPriority[i]
+        );
       }
     }
-    if(this.latestLintingResultsFailedChecks.length == 0){
-      this.tiles[this.tiles.length - 1].text = 'Glückwunsch! Alle Tests bestanden.'
-    } else if (this.latestLintingResultsFailedChecks.length < 2){
+    if (this.latestLintingResultsFailedChecks.length == 0) {
+      this.tiles[this.tiles.length - 1].text =
+        'Glückwunsch! Alle Tests bestanden.';
+    } else if (this.latestLintingResultsFailedChecks.length < 2) {
       this.tiles[this.tiles.length - 1].text = 'Top Tipp';
-    } else if (this.latestLintingResultsFailedChecks.length < 3){
-      this.tiles[this.tiles.length - 1].text = 'Top ' + this.latestLintingResultsFailedChecks.length + ' Tipps';
+    } else if (this.latestLintingResultsFailedChecks.length < 3) {
+      this.tiles[this.tiles.length - 1].text =
+        'Top ' + this.latestLintingResultsFailedChecks.length + ' Tipps';
     }
-    
   }
 
-  fixOverflowingDescription(){
-    return this.RepoDescription.substring(0,150) + '...';
+  fixOverflowingDescription() {
+    return this.RepoDescription.substring(0, 150) + '...';
   }
 }
 

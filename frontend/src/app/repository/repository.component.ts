@@ -34,8 +34,8 @@ export class RepositoryComponent implements OnInit {
     });
   }
 
-  fixOverflowingDescription(){
-    return this.project.description.substring(0,100) + '...';
+  fixOverflowingDescription() {
+    return this.project.description.substring(0, 100) + '...';
   }
 }
 
