@@ -1,8 +1,10 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
 import { HttpClient } from '@angular/common/http';
+
+import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
+import { Project } from '../schemas'
 
 @Component({
   selector: 'app-repository',
@@ -11,8 +13,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class RepositoryComponent implements OnInit {
   @Input() project: Project;
-
   @ViewChild(RepositoryDetailsComponent) child;
+
   constructor(
     public route: ActivatedRoute,
     public router: Router,
@@ -21,6 +23,7 @@ export class RepositoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {}
+
   showDetailsViaDialog() {
     //Erstellt das Dialogfenster
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {
@@ -34,42 +37,4 @@ export class RepositoryComponent implements OnInit {
   fixOverflowingDescription() {
     return this.project.description.substring(0, 100) + '...';
   }
-}
-
-// Interface für die repository Komponente welche grob die Informationen des repository zeigt
-interface Project {
-  gitlabInstance: string;
-  gitlabProjectId: number;
-  id: number;
-  name: string;
-  description: string;
-  results: [];
-  url: string;
-  passedTestsInFilter: number;
-  newPassedTestsLastMonth: number;
-  passedTestsPerTag: number[];
-  newPassedTestsPerTagLastMonth: number[];
-
-  lintingResults: LintingResult[];
-}
-
-// Zum speichern der Daten des Projekts
-interface CheckResults {
-  checkName: string;
-  severity: string;
-  result: boolean;
-  category: string;
-  description: string;
-  tag: string;
-  fix: string;
-  priority: number;
-  message: string; // ist Fehlermeldung
-}
-
-// Zum Speichern der Daten eines LintingResult
-interface LintingResult {
-  projectId: number;
-  id: number;
-  lintTime: string;
-  checkResults: CheckResults[];
 }
