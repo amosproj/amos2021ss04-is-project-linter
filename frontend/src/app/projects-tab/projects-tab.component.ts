@@ -75,45 +75,4 @@ export class ProjectsTabComponent implements OnInit {
 
     dialogRef.close();
   }
-
-  // forwardLink(URL) {
-  //   let HTTPOptions: Object = {
-  //     headers: new HttpHeaders({
-  //       'Content-Type': 'application/json',
-  //     }),
-  //     responseType: 'text',
-  //   };
-  //   this.http
-  //     .post<String>(`${environment.baseURL}/projects`, URL, HTTPOptions)
-  //     .subscribe(
-  //       (val: any) => {
-  //         console.log('POST call successful value returned in body', val);
-  //         var regex404 = new RegExp('404 NOT_FOUND', 'i');
-  //         console.log(val.search(regex404));
-  //         if (val.search(regex404) != -1) {
-  //           this.errorMsgForwardLink = 'Fehler 404, bitte URL überprüfen';
-  //           this.forwardLinkWorked = false;
-  //           console.log(this.forwardLinkWorked);
-  //         } else {
-  //           this.forwardLinkWorked = true;
-  //         }
-  //         console.log(this.forwardLinkWorked);
-  //       },
-  //       (error) => {
-  //         console.log('POST call in error', error);
-  //         this.errorMsgForwardLink = 'Internal server error';
-  //         this.forwardLinkWorked = false;
-  //       }
-  //     );
-  // }
-
-  // getChipOptions() {
-  //   //hole alle verschiedenen tags aus der config.json datei
-  //   this.chipOptions = [];
-  //   for (let [key, value] of Object.entries(this.config.checks)) {
-  //     if (!this.chipOptions.includes(value.tag)) {
-  //       this.chipOptions.push(value.tag);
-  //     }
-  //   }
-  // }
 }
