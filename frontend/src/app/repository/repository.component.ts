@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
 import { HttpClient } from '@angular/common/http';
@@ -10,12 +10,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./repository.component.css'],
 })
 export class RepositoryComponent implements OnInit {
-  _ref: any;
-  project: Project;
+  @Input() project: Project;
+
   @ViewChild(RepositoryDetailsComponent) child;
-  removeObject() {
-    this._ref.destroy();
-  }
   constructor(
     public route: ActivatedRoute,
     public router: Router,

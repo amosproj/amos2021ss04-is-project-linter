@@ -82,7 +82,10 @@
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end">
-        <app-repository *ngFor="let proj of projects">{{ proj }}</app-repository>
+        <app-repository
+          *ngFor="let proj of projects"
+          [project]="proj"
+        ></app-repository>
       </div>
     </div>
   </mat-card-content>

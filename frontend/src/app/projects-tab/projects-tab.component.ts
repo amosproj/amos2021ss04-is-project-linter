@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { environment } from 'src/environments/environment';
 import { Project, Config, CheckResults } from '../schemas';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
