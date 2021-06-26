@@ -1,5 +1,3 @@
-import { ComponentFactoryResolver } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
 import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -8,7 +6,7 @@ import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { environment } from 'src/environments/environment';
-import { Project, Config, CheckResults, ProjectSize } from '../schemas';
+import { Project, Config, CheckResults } from '../schemas';
 import { RepositoryComponent } from '../repository/repository.component';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
@@ -37,59 +35,49 @@ export class ProjectsTabComponent implements OnInit {
   chipOptions: string[];
   filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   toggleToTrue = true;
-  projectSizes: ProjectSize[] = [
-    { value: '25', viewValue: '25' },
-    { value: '50', viewValue: '50' },
-    { value: '75', viewValue: '75' },
-    { value: '100', viewValue: '100' },
-  ];
-  selectedSize = this.projectSizes[1].value;
-  form: FormGroup;
-  sizeControl = new FormControl(this.projectSizes[2]);
-  currentPage: number = 0;
-  pages: number;
+
   config: Config;
-  currentSize = this.selectedSize;
-
   suchBegriff: string;
-
-  @ViewChild('parent', { read: ViewContainerRef }) container: ViewContainerRef;
+  projects: Project[];
+  searchQuery: string = '';
 
   constructor(
     public dialog: MatDialog,
-    private _cfr: ComponentFactoryResolver,
     private http: HttpClient,
-    private apiService: ApiService,
+    private api: ApiService,
     private state: StateService
-  ) {
-    this.form = new FormGroup({
-      size: this.sizeControl,
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    this.GetConfig();
-    this.GetProjects();
+    // get Config
+    this.api.getConfig().subscribe((data) => {
+      this.config = data;
+    });
 
+    this.getProjects();
+
+    // search query
     this.state.searchQuery.subscribe((query) => {
+      this.searchQuery = query;
       console.log(query);
-      this.searchProjects(query);
     });
   }
 
-  selectSize(event: Event) {
-    this.removeAllProjectsFromOverview();
 
-    this.selectedSize = (event.target as HTMLSelectElement).value;
-    this.pages = Math.floor(
-      this.all_projects.length / Number(this.selectedSize)
-    );
-    this.currentSize = this.selectedSize;
-    this.displayProjects(Number(this.selectedSize));
-  }
+  getProjects() {
+    // Holt alle Projekte vom Backend-Server
+    let dialogRef = this.dialog.open(SpinnerComponentComponent, {
+      width: '0px',
+      height: '0px',
+      panelClass: 'custom-dialog-container',
+    });
 
-  getIfForwardLinkWorked() {
-    return this.forwardLinkWorked;
+    this.api.getAllProjects(false, true, this.searchQuery).subscribe((data) => {
+      console.log(data);
+      this.projects = data;
+    });
+
+    dialogRef.close();
   }
 
   forwardLink(URL) {
@@ -127,138 +115,7 @@ export class ProjectsTabComponent implements OnInit {
       );
   }
 
-  removeAllProjectsFromOverview() {
-    // Löscht alle angezeigten Projekte
-    this.container.clear(); // FIXME ist broken
-  }
-
-  async GetConfig() {
-    await this.http
-      .get(`${environment.baseURL}/config`)
-      .toPromise()
-      .then((results: any) => {
-        this.config = results;
-        this.getChipOptions();
-      });
-  }
-
-  async GetProjects() {
-    // Holt alle Projekte vom Backend-Server
-    let dialogRef = this.dialog.open(SpinnerComponentComponent, {
-      width: '0px',
-      height: '0px',
-      panelClass: 'custom-dialog-container',
-    });
-
-    await this.http
-      .get(`${environment.baseURL}/projects?extended=true`)
-      .toPromise()
-      .then((results: any) => {
-        console.log('results', results);
-        this.all_projects = JSON.parse(JSON.stringify(results)) as Project[];
-        console.log('projekte', this.all_projects);
-        console.log(this.all_projects);
-        this.pages = Math.floor(
-          this.all_projects.length / Number(this.selectedSize)
-        );
-
-        this.displayProjects(Number(this.selectedSize));
-      }); // momentan kann man nur die URL senden und nicht ein JSON Objekte
-    this.prepareProjectDataForSorting();
-    this.init_all_projects = this.all_projects.slice();
-    dialogRef.close();
-  }
-
-  addComponent(project) {
-    // Fügt eine Komponente unter dem Tab Repositories hinzu
-    var comp = this._cfr.resolveComponentFactory(RepositoryComponent);
-    var expComponent = this.container.createComponent(comp);
-    expComponent.instance._ref = expComponent;
-    expComponent.instance.project = project;
-    //Zum Suchen
-    this.projectComponents.push(expComponent);
-  }
-
-  displayProjects(numberOfProjecs: number) {
-    for (
-      var i = numberOfProjecs * this.currentPage;
-      i < numberOfProjecs * (this.currentPage + 1) &&
-      i < this.all_projects.length;
-      i++
-    ) {
-      this.addComponent(this.all_projects[i]);
-    }
-  }
-
-  pageRight() {
-    if (this.currentPage == this.pages || this.suchBegriff != undefined) {
-      console.log(this.currentPage);
-      console.log(this.pages);
-      console.log(this.suchBegriff != '');
-      return;
-    } else {
-      this.currentPage += 1;
-      this.removeAllProjectsFromOverview();
-      this.displayProjects(Number(this.selectedSize));
-      if (this.currentPage == 0) {
-        this.currentSize = this.selectedSize;
-      } else {
-        if (
-          this.all_projects.length -
-            Number(this.currentSize) -
-            Number(this.selectedSize) <
-          0
-        ) {
-          this.currentSize = (
-            this.all_projects.length -
-            Number(this.currentSize) +
-            Number(this.currentSize)
-          ).toString();
-        } else {
-          this.currentSize = (
-            Number(this.currentSize) + Number(this.selectedSize)
-          ).toString();
-        }
-      }
-    }
-  }
-
-  pageLeft() {
-    if (this.currentPage == 0 || this.suchBegriff != undefined) {
-      return;
-    } else {
-      this.currentPage -= 1;
-      if (this.currentPage == 0) {
-        this.currentSize = this.selectedSize;
-      } else {
-        if (Number(this.currentSize) % Number(this.selectedSize) == 0) {
-          this.currentSize = (Number(this.currentSize) - 25).toString();
-        } else {
-          this.currentSize = (
-            Number(this.currentSize) -
-            (Number(this.all_projects.length) - Number(this.selectedSize) * 2)
-          ).toString();
-        }
-      }
-      this.removeAllProjectsFromOverview();
-      this.displayProjects(Number(this.selectedSize));
-    }
-  }
-
-  searchProjects(value: string) {
-    
-    // Erstellt alle Komponenten im Repostiories Tab
-    // this.removeAllProjectsFromOverview();
-
-    for (let item of this.all_projects) {
-      if (
-        item.name.toUpperCase().startsWith(value.toUpperCase()) ||
-        value === ''
-      ) {
-        this.addComponent(item);
-      }
-    }
-  }
+  
 
   getChipOptions() {
     //hole alle verschiedenen tags aus der config.json datei
@@ -355,10 +212,6 @@ export class ProjectsTabComponent implements OnInit {
       }
     }
     console.log('Projekte nach sortieren', this.all_projects);
-
-    this.removeAllProjectsFromOverview();
-
-    this.displayProjects(Number(this.selectedSize));
   }
 
   compareNewTestsPassedSinceLastMonthFilter(a, b) {

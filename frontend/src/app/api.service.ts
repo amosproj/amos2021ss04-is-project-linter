@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Status, Project } from './schemas';
+import { Status, Project, Config } from './schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,7 @@ export class ApiService {
   getAllProjects(
     extended: boolean = false,
     delta: boolean = false,
-    query: string
+    query: string,
   ): Observable<any> {
     const params = new HttpParams()
       .set('extended', String(extended))
@@ -45,7 +45,7 @@ export class ApiService {
   }
 
   // Config
-  getConfig(): Observable<any> {
-    return this.http.get(`${this.apiUrl}/config`);
+  getConfig(): Observable<Config> {
+    return this.http.get<Config>(`${this.apiUrl}/config`);
   }
 }

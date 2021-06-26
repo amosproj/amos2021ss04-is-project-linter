@@ -8,9 +8,9 @@
       info
     </mat-icon></mat-card-title
   >
-  <br />
+
   <div style="font-size: large">Kategorie:</div>
-  <br />
+
   <mat-card-content
     style="background-color: white; height: 5%; padding-left: 3%"
   >
@@ -25,8 +25,6 @@
         {{ option }}
       </mat-chip>
     </mat-chip-list>
-    <br />
-    <!-- <div>Wert: {{chipsValue$ | async}}</div> -->
   </mat-card-content>
 
   <div style="font-size: large">Sortierkriterium:</div>
@@ -47,7 +45,6 @@
       </mat-radio-button>
     </mat-radio-group>
   </mat-card-content>
-  <!-- kategorie.value == bestandene_tests_pro_kategorie-->
   <mat-card-content
     style="
       background-color: white;
@@ -73,55 +70,15 @@
         info
       </mat-icon>
     </div>
-
-    <div style="float: right">
-      <div fxLayout="row" fxLayoutAlign="space-around center">
-        <div>
-          <mat-icon
-            matTooltip="Vorherige {{ selectedSize }}"
-            (click)="pageLeft()"
-            >arrow_back_ios</mat-icon
-          >
-        </div>
-
-        <div fxFlexAlign="baseline">Seite {{ currentPage }}</div>
-        <div>
-          <mat-icon
-            matTooltip="Nächste {{ selectedSize }}"
-            (click)="pageRight()"
-            >arrow_forward_ios</mat-icon
-          >
-        </div>
-      </div>
-    </div>
   </mat-card-content>
 
   <mat-card-content>
-    <div>
-      <div>
-        <mat-form-field appearance="fill">
-          <mat-label>Anzahl der angezeigten Projekte</mat-label>
-          <select matNativeControl (change)="selectSize($event)">
-            <option
-              *ngFor="let option of projectSizes"
-              [value]="option.value"
-              [selected]="selectedSize === option.value"
-            >
-              {{ option.viewValue }}
-            </option>
-          </select>
-        </mat-form-field>
-      </div>
-
-      <div *ngIf="all_projects != undefined">
-        <div *ngIf="all_projects.length > selectedSize">
-          {{ currentSize }} von {{ all_projects.length }}
-        </div>
-        <div *ngIf="all_projects.length < selectedSize">
-          {{ all_projects.length }} von {{ all_projects.length }}
-        </div>
-      </div>
-    </div>
+    <mat-paginator
+      [length]="100"
+      [pageSize]="8"
+      [pageSizeOptions]="[8, 25, 100]"
+    >
+    </mat-paginator>
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end" #parent></div>

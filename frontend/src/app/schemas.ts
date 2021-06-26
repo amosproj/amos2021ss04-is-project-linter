@@ -50,11 +50,6 @@ export interface Check {
   tag: string;
 }
 
-export interface ProjectSize {
-  value: string;
-  viewValue: string;
-}
-
 export interface Status {
   status: string;
   lastError: string;
