@@ -1,10 +1,9 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
-import { Project } from '../schemas'
+import { Project } from '../schemas';
 
 @Component({
   selector: 'app-repository',
@@ -18,8 +17,7 @@ export class RepositoryComponent implements OnInit {
   constructor(
     public route: ActivatedRoute,
     public router: Router,
-    public dialog: MatDialog,
-    private http: HttpClient
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {}
@@ -30,11 +28,17 @@ export class RepositoryComponent implements OnInit {
       width: '77%',
       height: '96%',
       panelClass: 'custom-dialog-container',
-      data: { project: this.project },
+      data: { projectId: this.project.id },
     });
   }
 
-  fixOverflowingDescription() {
-    return this.project.description.substring(0, 100) + '...';
+  truncateDescription() {
+    if (this.project.description == '') {
+      return 'Keine Beschreibung vorhanden';
+    } else if (this.project.description.length <= 100) {
+      return this.project.description;
+    } else {
+      return this.project.description.substring(0, 100) + '...';
+    }
   }
 }
