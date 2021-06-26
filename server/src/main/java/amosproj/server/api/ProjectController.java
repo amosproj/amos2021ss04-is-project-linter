@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +56,15 @@ public class ProjectController {
 
     @GetMapping("/projects")
     public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
-                                           @RequestParam(name = "tag", required = false) String tag,
+                                           @RequestParam(name = "delta", required = false) Boolean delta,
                                            Pageable pageable) {
-        HashMap<String, String> map = Config.getTags();
+        LinkedList<String> allProperties = new LinkedList<>();
+        var iterator = pageable.getSort().stream().iterator();
+        while (iterator.hasNext()) {
+            var next = iterator.next();
+            allProperties.add(next.getProperty());
+        }
+
         var projectList = projectRepository.findAll();
         var it = projectList.iterator();
         var res = new LinkedList<ProjectSchema>();
@@ -68,23 +75,30 @@ public class ProjectController {
                 LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
                 proj = new ProjectSchema(projAlt, lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
                         (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId()));
+                proj.setLatestPassedByTag(checksPassedByTags(proj.getLintingResults().get(proj.getLintingResults().size() - 1).getCheckResults()));
+                proj.setPassedByTag30DaysAgo(checksPassedByTags(proj.getLintingResults().get(0).getCheckResults()));
+
+                int allRequestedProperties = 0;
+                int allRequested30DaysAgo = 0;
+                var latest = proj.getLatestPassedByTag();
+                var oldest = proj.getPassedByTag30DaysAgo();
+                for (String property : allProperties) {
+                    allRequestedProperties += latest.getOrDefault(property,0L);
+                    allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
+                }
+                proj.setLatestPassedTotal(allRequestedProperties);
+                proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
+
             } else {
                 proj = new ProjectSchema(projAlt, new LinkedList<>());
             }
             res.add(proj);
         }
         // Sort by checks passed in tag
-        if (extended != null && tag != null) {
-            res.sort( // Sort the resulting List according to the tag, if queried
-                Comparator.comparingInt(x ->
-                    x.getLintingResults().size() == 0 ? 0 : // If there are no LintingResults, display last
-                        checksPassedByTag(x.getLintingResults() // Use Helper function
-                            .get(x.getLintingResults().size() - 1)// access the latest LintingResult
-                            .getCheckResults() // get the CheckResults from the latest LintingResult and pass to helper
-                            , tag // Pass the tag so it can be counted by the helper function
-                        )
-                )
-            );
+        if (delta == null || !delta) {
+            res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
+        } else {
+            res.sort(Comparator.comparingInt(x -> -x.getDelta()));
         }
 
         int start = (int) pageable.getOffset();
@@ -334,5 +348,26 @@ public class ProjectController {
             }
         }
         return -i;
+    }
+
+    private HashMap<String, Long> checksPassedByTags(List<CheckResultSchema> checkResults) {
+        if (checkResults == null) {
+            return new HashMap<>();
+        }
+
+        int i = 0;
+        var map = Config.getTags();
+        var res = new HashMap<String, Long>();
+        for (CheckResultSchema checkResult : checkResults) {
+            if (checkResult == null) {
+                return new HashMap<String, Long>();
+            }
+            String checkCategory = map.get(checkResult.getCheckName());
+            if (checkResult.getResult()) {
+                res.putIfAbsent(checkCategory, 0L);
+                res.compute(checkCategory, (key, value) -> value + 1L);
+            }
+        }
+        return res;
     }
 }

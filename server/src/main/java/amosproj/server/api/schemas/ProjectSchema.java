@@ -6,6 +6,7 @@ import org.gitlab4j.api.utils.JacksonJson;
 import org.springframework.beans.BeanUtils;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class ProjectSchema {
     // relations
     private List<LintingResultSchema> lintingResults;
     // extra info
+
+    private HashMap<String, Long> latestPassedByTag;
+    private  HashMap<String, Long> passedByTag30DaysAgo;
+    private int latestPassedTotal;
+    private int delta;
 
     public ProjectSchema(Project proj, List<LintingResult> lintingResults) {
         BeanUtils.copyProperties(proj, this);
@@ -109,6 +115,38 @@ public class ProjectSchema {
 
     public void setLintingResults(List<LintingResultSchema> lintingResults) {
         this.lintingResults = lintingResults;
+    }
+
+    public HashMap<String, Long> getLatestPassedByTag() {
+        return latestPassedByTag;
+    }
+
+    public void setLatestPassedByTag(HashMap<String, Long> latestPassedByTag) {
+        this.latestPassedByTag = latestPassedByTag;
+    }
+
+    public HashMap<String, Long> getPassedByTag30DaysAgo() {
+        return passedByTag30DaysAgo;
+    }
+
+    public void setPassedByTag30DaysAgo(HashMap<String, Long> passedByTag30DaysAgo) {
+        this.passedByTag30DaysAgo = passedByTag30DaysAgo;
+    }
+
+    public int getLatestPassedTotal() {
+        return latestPassedTotal;
+    }
+
+    public void setLatestPassedTotal(int latestPassedTotal) {
+        this.latestPassedTotal = latestPassedTotal;
+    }
+
+    public int getDelta() {
+        return delta;
+    }
+
+    public void setDelta(int delta) {
+        this.delta = delta;
     }
 
     @Override
