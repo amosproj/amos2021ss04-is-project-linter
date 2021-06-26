@@ -30,6 +30,9 @@ export class ProjectsTabComponent implements OnInit {
   chipOptions: string[];
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
+  // paging 
+  currentPage : number= 0;
+  pageSize : number = 8;
 
   constructor(
     public dialog: MatDialog,
@@ -72,7 +75,7 @@ export class ProjectsTabComponent implements OnInit {
     });
 
     this.api
-      .getAllProjects(true, this.delta, this.searchQuery, this.sort)
+      .getAllProjects(true, this.delta, this.searchQuery, this.sort, this.pageSize, this.currentPage)
       .subscribe((data) => {
         console.log(data);
         this.projects = data;

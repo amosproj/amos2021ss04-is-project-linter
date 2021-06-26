@@ -18,16 +18,17 @@ export class ApiService {
     extended: boolean = false,
     delta: boolean = false,
     query: string,
-    sort: string[] = []
+    sort: string[] = [],
+    pageSize: number,
+    currentPage: number
   ): Observable<PagedProjects> {
     const params = new HttpParams()
       .set('extended', String(extended))
       .set('delta', String(delta))
       .set('name', query)
-      .set('page', String(0))
-      .set('size', String(20))
+      .set('number', String(currentPage))
+      .set('size', String(pageSize))
       .set('sort', String(sort));
-    // TODO add sort params
     console.log(params);
 
     return this.http.get<PagedProjects>(`${this.apiUrl}/projects`, { params });
