@@ -4,6 +4,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 * Query: 
     * `extended=true|false` liefert auf Wunsch auch die Ergebnisse von allen Lint-Durchläufen der letzten 30 Tage.
     * `delta=true|false` Soll nach dem Delta oder dem letzten Ergebnis sortiert werden?
+    * `name=String` Der partielle oder ganze Name, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet
     * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`
 * Body: nichts
 * Response: Json(Page(ProjectSchema))
