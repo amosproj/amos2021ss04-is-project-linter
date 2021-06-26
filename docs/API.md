@@ -82,6 +82,18 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
     "lastCommit": "2021-05-29T00:10:11.411+00:00", 
                                         // Zeitstempel der letzten Aktivität auf dem Projekt
     "lintingResults": [],               // Array von LintingResultSchemas
+    "latestPassedByTag": {              // Anzahl der Checks pro Tag, die erfolgreich waren
+        "Entwicklerfreundlichkeit": 7,
+        "Maintainerfreundlichkeit": 1,
+        "Benutzerfreundlichkeit": 10
+    },
+    "passedByTag30DaysAgo": {           // Anzahl der Checks pro Tag, die vor 30 Tagen erfolgreich waren
+        "Entwicklerfreundlichkeit": 7,
+        "Maintainerfreundlichkeit": 1,
+        "Benutzerfreundlichkeit": 10
+    },
+    "latestPassedTotal": 17,            // Anzahl der Checks, die erfolgreich waren und nach denen sortiert werden sollen
+    "delta": 0,                         // Das Delta zwischen dem Ergebnis vor 30 Tagen und dem neuestem
     "id": 1                             // Die ACIDIC-Interne ID
 }
 ```
