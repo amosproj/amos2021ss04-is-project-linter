@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpErrorResponse,
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { Status, Project, Config, PagedProjects } from './schemas';
 
 @Injectable({
@@ -12,6 +18,17 @@ export class ApiService {
   headers = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) {}
+
+  // Handle Errors
+  error(error: HttpErrorResponse): Observable<String> {
+    let errorMessage: string = '';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = error.error.message;
+    } else {
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    return throwError(errorMessage);
+  }
 
   // All Project
   getAllProjects(
@@ -38,8 +55,8 @@ export class ApiService {
   }
 
   // Start Crawler
-  startCrawler(): Observable<string> {
-    return this.http.post<string>(`${this.apiUrl}/crawler`, null);
+  startCrawler(): Observable<String> {
+    return this.http.post<String>(`${this.apiUrl}/crawler`, null);
   }
 
   // Crawler Status

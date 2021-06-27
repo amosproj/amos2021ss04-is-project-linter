@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { timer } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
-//import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
 import { Status } from '../schemas';
@@ -14,10 +14,14 @@ import { Status } from '../schemas';
 export class StatusTabComponent implements OnInit {
   status: Status = {} as Status;
 
-  constructor(private api: ApiService) {} //, private _snackBar: MatSnackBar) {}
+  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
+
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
 
   ngOnInit(): void {
-    timer(1, 3000)
+    timer(1, 2000)
       .pipe(concatMap((_) => this.api.crawlerStatus()))
       .subscribe(
         (res) => {
@@ -25,15 +29,20 @@ export class StatusTabComponent implements OnInit {
         },
         (error) => {
           console.log(error);
+          this.openSnackBar('Fehler beim holen von Crawler Status', 'OK');
         }
       );
   }
 
   startCrawler(): void {
-    // FIXME always prints error
-    this.api.startCrawler().subscribe((error) => {
-      //this._snackBar.open(error, 'ok');
-      console.log(error);
-    });
+    this.api.startCrawler().subscribe(
+      (res) => {
+        console.log(res);
+      },
+      (error) => {
+        console.log(error);
+        this.openSnackBar('Fehler beim starten des Crawlers', 'OK');
+      }
+    );
   }
 }
