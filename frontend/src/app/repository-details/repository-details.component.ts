@@ -12,7 +12,7 @@ import { Project, LintingResult, CheckResults } from '../schemas';
   styleUrls: ['./repository-details.component.css'],
 })
 export class RepositoryDetailsComponent implements OnInit {
-  project: Project;
+  project: Project = <Project>{};
 
   emojiMap = {
     notImportant: '🟡',
@@ -27,9 +27,6 @@ export class RepositoryDetailsComponent implements OnInit {
   canvas;
   context;
   lastLintTime;
-  RepoName = '';
-  RepoURL = '';
-  RepoDescription = '';
   checksHighSeverity: CheckResults[]; // wird momentan nicht benützt
   checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
   checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
@@ -138,9 +135,6 @@ export class RepositoryDetailsComponent implements OnInit {
         this.latestLintingResults
       )[1];
     // Speichere Informationen
-    this.RepoName = this.project.name;
-    this.RepoURL = this.project.url;
-    this.RepoDescription = this.project.description;
     this.lastLintTime = dayjs(
       this.project.lintingResults[this.latestLintingIndex].lintTime
     ).format('DD.MM.YYYY - HH:mm');
@@ -316,8 +310,17 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 
-  fixOverflowingDescription() {
-    return this.RepoDescription.substring(0, 150) + '...';
+  truncateDescription() {
+    if (!this.project) {
+      return '';
+    }
+    if (!this.project.description || this.project.description == '') {
+      return 'Keine Beschreibung vorhanden';
+    } else if (this.project.description.length <= 300) {
+      return this.project.description;
+    } else {
+      return this.project.description.substring(0, 300) + '...';
+    }
   }
 }
 

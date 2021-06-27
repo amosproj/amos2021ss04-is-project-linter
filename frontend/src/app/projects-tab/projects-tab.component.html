@@ -77,10 +77,10 @@
       [length]="projects.totalElements"
       [pageSize]="pageSize"
       [pageSizeOptions]="[8, 25, 100]"
-      (page)="updatePagination($event)">
+      (page)="updatePagination($event)"
     >
+      >
     </mat-paginator>
-
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">

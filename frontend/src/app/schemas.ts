@@ -16,7 +16,6 @@ export interface Project {
   newPassedTestsLastMonth: number;
   passedTestsPerTag: number[];
   newPassedTestsPerTagLastMonth: number[];
-
   lintingResults: LintingResult[];
 }
 
