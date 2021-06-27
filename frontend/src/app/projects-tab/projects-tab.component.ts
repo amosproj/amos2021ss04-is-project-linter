@@ -22,7 +22,6 @@ export class ProjectsTabComponent implements OnInit {
   ];
   chipsControl = new FormControl('');
   searchCriteria = new FormControl(this.availableSearchCriteria[0]);
-  filterInfo = 'Momentan sortiert nach Kategorie: - und Sortierkriterium: -';
   // query, sorting parameters
   delta: boolean = false; // whether the bottom radio button is selected
   searchQuery: string = ''; // query from the search bar

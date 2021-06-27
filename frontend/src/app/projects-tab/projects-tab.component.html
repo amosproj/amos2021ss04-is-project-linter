@@ -1,4 +1,6 @@
 <mat-card style="padding-bottom: 4%">
+
+  <!-- Sorting -->
   <mat-card-title
     >Sortiere Projekte nach:<mat-icon
       matTooltip="Bitte wählen Sie mindestens eine Kategorie und ein Sortierkriterium"
@@ -10,7 +12,6 @@
   >
 
   <div style="font-size: large">Kategorie:</div>
-
   <mat-card-content
     style="background-color: white; height: 5%; padding-left: 3%"
   >
@@ -21,7 +22,8 @@
         *ngFor="let option of chipOptions"
         [value]="option"
       >
-        <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon>
+        <!-- FIXME rutscht hin und her, deshalb auskommentiert -->
+        <!-- <mat-icon *ngIf="chip.selected" color="accent">check</mat-icon> -->
         {{ option }}
       </mat-chip>
     </mat-chip-list>
@@ -62,16 +64,11 @@
       >
         Sortieren
       </button>
-      <mat-icon
-        matTooltip="{{ filterInfo }}"
-        style="padding-left: 10px"
-        color="primary"
-      >
-        info
-      </mat-icon>
     </div>
   </mat-card-content>
+  <!-- END Sortierung -->
 
+  <!-- Paginator and Repositories -->
   <mat-card-content>
     <mat-paginator
       [length]="projects.totalElements"
@@ -88,4 +85,5 @@
       </div>
     </div>
   </mat-card-content>
+  <!-- END Paginator and Repositories -->
 </mat-card>
