@@ -1,0 +1,17 @@
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+}
+
+app-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+router-outlet {
+  scroll-margin-bottom: 50px;
+}
