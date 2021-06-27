@@ -1,21 +1,24 @@
-<mat-card class="example-card">
-  <mat-card-content>
+<mat-card class="repository-card">
+  <mat-card-header>
     <mat-card-title style="text-align: left">
       {{ project.name }}
     </mat-card-title>
-
-    {{ truncateDescription() }}
-    <br />
-    <a [href]="project.url" target="_blank">URL</a>
-
-    <mat-toolbar-row style="bottom: 0%; position: absolute">
-      <button
-        mat-raised-button
-        style="background-color: #80c6ff"
-        (click)="showDetailsViaDialog()"
-      >
-        Anzeigen
-      </button>
-    </mat-toolbar-row>
+  </mat-card-header>
+  <mat-card-content style="padding-left: 16px;">
+    <p>
+      {{ truncateDescription() }}
+    </p>
+    <p>
+      <a [href]="project.url" target="_blank">Link zum Repository</a>
+    </p>
   </mat-card-content>
+  <mat-card-actions style="bottom: 16%; left: 8%; position: absolute">
+    <button 
+      mat-raised-button
+      style="background-color: #80c6ff"
+      (click)="showDetailsViaDialog()"
+    >
+      Anzeigen
+    </button>
+  </mat-card-actions>
 </mat-card>

@@ -25,8 +25,8 @@ export class RepositoryComponent implements OnInit {
   showDetailsViaDialog() {
     //Erstellt das Dialogfenster
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {
-      width: '77%',
-      height: '96%',
+      width: '80%',
+      height: '95%',
       panelClass: 'custom-dialog-container',
       data: this.project.id,
     });

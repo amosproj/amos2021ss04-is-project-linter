@@ -1,16 +1,16 @@
-.example-card {
+.repository-card {
   width: 370px;
-  height: 160px;
-
+  height: 160px; 
   margin: 20px;
   -moz-border-radius: 30px;
   -webkit-border-radius: 30px;
   border-radius: 30px;
-  hyphens: auto;
+
   background-color: #b3ddff;
+  hyphens: auto;
   transition: all 0.25s ease-in-out;
 }
 
-.example-card:hover {
+.repository-card:hover {
   transform: scale(1.1);
 }

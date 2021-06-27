@@ -2,9 +2,9 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
-import { ApiService } from '../api.service';
 
-import { Project, LintingResult, CheckResults } from '../schemas';
+import { ApiService } from '../api.service';
+import { Project, CheckResults } from '../schemas';
 
 @Component({
   selector: 'app-repository-details',
@@ -13,7 +13,6 @@ import { Project, LintingResult, CheckResults } from '../schemas';
 })
 export class RepositoryDetailsComponent implements OnInit {
   project: Project = <Project>{};
-
   emojiMap = {
     notImportant: '🟡',
     warning: '🟠',
@@ -21,7 +20,6 @@ export class RepositoryDetailsComponent implements OnInit {
     correct: '🟢',
     bug: '🐛',
   };
-
   getdata = false;
   myChart;
   canvas;
@@ -40,9 +38,9 @@ export class RepositoryDetailsComponent implements OnInit {
   chartNames: String[] = ['Alle Tests:']; //wenn neue Tags hinzugefügt werden muss diese Variable erweitert werden
   maxColsForTiles = 9;
   tiles: Tile[] = [
-    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' }, // gibt es immer
-    { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' }, // gibt es immer
-    // Kacheln die hinzugefügt werden: Doughnut chart pro Tag
+    { text: 'Kategorien', cols: 5, rows: 6, color: 'white' },
+    { text: 'Ergebnisse Aller Tests', cols: 4, rows: 2, color: 'white' },
+    // Kacheln die hinzugefügt werden: Donut chart pro Tag
   ];
 
   constructor(
