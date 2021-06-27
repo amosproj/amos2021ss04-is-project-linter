@@ -52,7 +52,7 @@ export class ProjectsTabComponent implements OnInit {
     // search query
     this.state.searchQuery.subscribe((query) => {
       this.searchQuery = query;
-      console.log(query);
+      this.getProjects();
     });
   }
 
