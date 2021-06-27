@@ -86,7 +86,6 @@ export class ProjectsTabComponent implements OnInit {
         this.currentPage
       )
       .subscribe((data) => {
-        console.log(data);
         this.projects = data;
       });
 
@@ -105,7 +104,6 @@ export class ProjectsTabComponent implements OnInit {
   }
 
   updatePagination(pageEvent: PageEvent) {
-    console.log(pageEvent);
     this.pageSize = pageEvent.pageSize;
     this.currentPage = pageEvent.pageIndex;
     this.getProjects();

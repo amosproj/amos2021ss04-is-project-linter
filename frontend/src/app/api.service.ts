@@ -29,8 +29,6 @@ export class ApiService {
       .set('page', String(currentPage))
       .set('size', String(pageSize))
       .set('sort', String(sort));
-    console.log(params);
-
     return this.http.get<PagedProjects>(`${this.apiUrl}/projects`, { params });
   }
 

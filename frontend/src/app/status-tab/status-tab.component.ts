@@ -17,8 +17,6 @@ export class StatusTabComponent implements OnInit {
   constructor(private api: ApiService) {} //, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    console.log('hello from status tab');
-
     timer(1, 3000)
       .pipe(concatMap((_) => this.api.crawlerStatus()))
       .subscribe(

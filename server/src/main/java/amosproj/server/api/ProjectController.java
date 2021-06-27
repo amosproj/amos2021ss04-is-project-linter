@@ -19,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Clock;
@@ -58,11 +57,7 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
                                            @RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
-                                           Pageable pageable, HttpServletRequest request) {
-        System.out.println(request.getRequestURI());
-        for (var key : request.getParameterMap().keySet()) {
-            System.out.println(key + " " + Arrays.toString(request.getParameterMap().get(key)));
-        }
+                                           Pageable pageable) {
         LinkedList<String> allProperties = new LinkedList<>();
         var iterator = pageable.getSort().stream().iterator();
         while (iterator.hasNext()) {
