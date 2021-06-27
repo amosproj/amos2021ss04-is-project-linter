@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { PageEvent } from '@angular/material/paginator';
 
 import { Config, PagedProjects } from '../schemas';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
@@ -30,9 +31,9 @@ export class ProjectsTabComponent implements OnInit {
   chipOptions: string[];
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
-  // paging 
-  currentPage : number= 0;
-  pageSize : number = 8;
+  // paging
+  currentPage: number = 0;
+  pageSize: number = 8;
 
   constructor(
     public dialog: MatDialog,
@@ -67,20 +68,29 @@ export class ProjectsTabComponent implements OnInit {
   }
 
   getProjects() {
-    // Holt alle Projekte vom Backend-Server
+    // open spinner
     let dialogRef = this.dialog.open(SpinnerComponentComponent, {
       width: '0px',
       height: '0px',
       panelClass: 'custom-dialog-container',
     });
 
+    // make api request
     this.api
-      .getAllProjects(true, this.delta, this.searchQuery, this.sort, this.pageSize, this.currentPage)
+      .getAllProjects(
+        true,
+        this.delta,
+        this.searchQuery,
+        this.sort,
+        this.pageSize,
+        this.currentPage
+      )
       .subscribe((data) => {
         console.log(data);
         this.projects = data;
       });
 
+    // close spinner
     dialogRef.close();
   }
 
@@ -92,5 +102,12 @@ export class ProjectsTabComponent implements OnInit {
         this.chipOptions.push(value.tag);
       }
     }
+  }
+
+  updatePagination(pageEvent: PageEvent) {
+    console.log(pageEvent);
+    this.pageSize = pageEvent.pageSize;
+    this.currentPage = pageEvent.pageIndex;
+    this.getProjects();
   }
 }

@@ -75,10 +75,12 @@
   <mat-card-content>
     <mat-paginator
       [length]="projects.totalElements"
-      [pageSize]="8"
+      [pageSize]="pageSize"
       [pageSizeOptions]="[8, 25, 100]"
+      (page)="updatePagination($event)">
     >
     </mat-paginator>
+
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">

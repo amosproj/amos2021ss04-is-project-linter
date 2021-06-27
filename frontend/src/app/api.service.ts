@@ -26,7 +26,7 @@ export class ApiService {
       .set('extended', String(extended))
       .set('delta', String(delta))
       .set('name', query)
-      .set('number', String(currentPage))
+      .set('page', String(currentPage))
       .set('size', String(pageSize))
       .set('sort', String(sort));
     console.log(params);
