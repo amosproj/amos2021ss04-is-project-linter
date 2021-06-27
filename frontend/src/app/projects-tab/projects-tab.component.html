@@ -73,7 +73,7 @@
     <mat-paginator
       [length]="projects.totalElements"
       [pageSize]="pageSize"
-      [pageSizeOptions]="[8, 25, 100]"
+      [pageSizeOptions]="pageSizeOptions"
       (page)="updatePagination($event)"
     >
       >

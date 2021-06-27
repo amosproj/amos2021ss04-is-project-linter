@@ -22,7 +22,7 @@ export class RepositoryComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  showDetailsViaDialog() {
+  openDetailsDialog() {
     //Erstellt das Dialogfenster
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {
       width: '80%',

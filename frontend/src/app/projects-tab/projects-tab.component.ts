@@ -31,8 +31,9 @@ export class ProjectsTabComponent implements OnInit {
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
   // paging
+  pageSizeOptions : number[] = [10, 25, 100]
   currentPage: number = 0;
-  pageSize: number = 8;
+  pageSize: number = this.pageSizeOptions[0];
 
   constructor(
     public dialog: MatDialog,
