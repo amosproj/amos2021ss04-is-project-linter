@@ -37,13 +37,17 @@ services:
         container_name: "amos-linter-nginx"
         image: "amoslinter/frontend:${ENVIRONMENT}"
         volumes: # more like: load nginx configuration
-            - ./nginx.conf:/etc/nginx/templates/default.conf.template
+            - ${NGINX_CONFIG}:/etc/nginx/templates/default.conf.template
+            - ${SSL_CERTIFICATE:-/dev/null}:/ssl/fullchain.pem
+            - ${SSL_CERTIFICATE_KEY:-/dev/null}:/ssl/privkey.pem
         environment:
-            - HOST=${HOST}
+            - HOST=${HOST:-localhost}
         depends_on:
             - backend
         ports: # only connection to outside world
             - 6969:80
+            - 80:80
+            - 443:443
         links:
             - backend
 
