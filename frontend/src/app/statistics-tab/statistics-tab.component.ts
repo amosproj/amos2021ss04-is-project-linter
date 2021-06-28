@@ -1,22 +1,9 @@
-import { ComponentFactoryResolver } from '@angular/core';
-import { ViewContainerRef } from '@angular/core';
-import { ViewChild } from '@angular/core';
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { OnInit } from '@angular/core';
-
 import { MatChip } from '@angular/material/chips';
-import { MatDialog } from '@angular/material/dialog';
-
 import { environment } from 'src/environments/environment';
-import { RepositoryComponent } from '../repository/repository.component';
-import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { Chart } from 'chart.js';
-import { Project, Config, CheckResults, LintingResult } from '../schemas';
-import { ApiService } from '../api.service';
-import * as dayjs from 'dayjs';
-import { variable } from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -76,6 +63,7 @@ export class StatisticsTabComponent implements OnInit {
 
   async getChartData(apiCall: string, typ: string) {
     let params = new HttpParams().set('type', typ);
+    // TODO use API Service instead
     await this.http
       .get(`${environment.baseURL}/projects/` + apiCall, { params: params })
       .toPromise()
