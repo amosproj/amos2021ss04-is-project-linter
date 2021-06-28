@@ -79,15 +79,15 @@
           </div>
         </span>
         <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
-        <span
+        <span class="donut"
           *ngIf="i > 0 && i != tiles.length - 2"
-          style="hyphens: auto; overflow: auto"
         >
           <mat-card-title> {{ tile.text }}: </mat-card-title>
           <div>
             <canvas id="{{ chartNames[i - 1] }}"></canvas>
-          </div> </span
-        ><span *ngIf="i == tiles.length - 2" style="width: 100%; height: 100%">
+          </div>
+        </span>
+        <span *ngIf="i == tiles.length - 2" style="width: 100%; height: 100%">
           <div fxLayout="column" fxLayoutAlign="end start" style="height: 100%">
             <mat-card-content>
               <p style="font-size: medium">
