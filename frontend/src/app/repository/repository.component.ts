@@ -23,9 +23,9 @@ export class RepositoryComponent implements OnInit {
   ngOnInit(): void {}
 
   openDetailsDialog() {
-    //Erstellt das Dialogfenster
+    // Öffnet das Dialogfenster für die Repository Details
     let dialogRef = this.dialog.open(RepositoryDetailsComponent, {
-      width: '80%',
+      width: '85%',
       height: '95%',
       panelClass: 'custom-dialog-container',
       data: this.project.id,
