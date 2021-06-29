@@ -27,7 +27,7 @@ export class ProjectsTabComponent implements OnInit {
   searchQuery: string = ''; // query from the search bar
   sort: string[]; // selected chips
   // other params
-  chipOptions: string[];
+  chipOptions: string[] = [];
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
   // paging
