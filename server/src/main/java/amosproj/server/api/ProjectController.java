@@ -57,13 +57,12 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
+        // get sort criteria
         LinkedList<String> allProperties = new LinkedList<>();
-        Iterator<Sort.Order> iterator = pageable.getSort().stream().iterator();
-        while (iterator.hasNext()) {
-            Sort.Order next = iterator.next();
+        for (Sort.Order next : pageable.getSort()) {
             allProperties.add(next.getProperty());
         }
-
+        // get projects (matching name if present)
         Iterable<Project> projectList;
         if (name == null || name.equals("")) {
             projectList = projectRepository.findAll();
@@ -71,10 +70,11 @@ public class ProjectController {
             projectList = projectRepository.findAllByNameContainsIgnoreCase(name);
         }
         Iterator<Project> it = projectList.iterator();
-        LinkedList<ProjectSchema> res = new LinkedList<ProjectSchema>();
+        // run query and sorting
+        LinkedList<ProjectSchema> res = new LinkedList<>();
         while (it.hasNext()) {
             Project projAlt = it.next();
-            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());;
+            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
 
             LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
             LinkedList<LintingResult> lr = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
@@ -107,12 +107,10 @@ public class ProjectController {
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
-
         if (start > end) {
             return new PageImpl<>(new LinkedList<>(), pageable, res.size());
         } else {
-            Page<ProjectSchema> page = new PageImpl<ProjectSchema>(res.subList(start, end), pageable, res.size());
-            return page;
+            return new PageImpl<>(res.subList(start, end), pageable, res.size());
         }
     }
 
