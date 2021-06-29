@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -7,13 +8,14 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router,  private cdRef:ChangeDetectorRef ) {}
   selectedIndex = 0;
   ngOnInit() {}
 
   ngAfterViewInit() {}
   selectTab(index: number): void {
     this.selectedIndex = index;
+    this.cdRef.detectChanges();
   }
   checkTabChange($event) {
     if ($event.index == 0) {
