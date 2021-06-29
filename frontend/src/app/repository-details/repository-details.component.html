@@ -52,28 +52,28 @@
                 </mat-expansion-panel-header>
                 <mat-list>
                   <span *ngIf="LintingResultsInTags != undefined">
-                  <mat-list-item
-                    *ngFor="let check of LintingResultsInTags[i]"
-                    style="border-bottom: 1px solid #999999; margin-top: 0.5%"
-                  >
-                    <h3 matLine>
-                      {{ returnEmojiBasedOnSeverity(check) }}
-                      {{ check.checkName }}
-                      <mat-icon
-                        matTooltip="{{ check.description }}"
-                        style="float: right"
-                        color="primary"
-                        >info</mat-icon
-                      >
-                    </h3>
-                    <!-- Tooltip integrieren!!-->
-                    <h4 matLine *ngIf="check.result == false">
-                      <span> {{ check.message }}</span>
-                      <br />
-                      <span>Tipp: {{ check.fix }}</span>
-                    </h4>
-                  </mat-list-item>
-                  <p></p>
+                    <mat-list-item
+                      *ngFor="let check of LintingResultsInTags[i]"
+                      style="border-bottom: 1px solid #999999; margin-top: 0.5%"
+                    >
+                      <h3 matLine>
+                        {{ returnEmojiBasedOnSeverity(check) }}
+                        {{ check.checkName }}
+                        <mat-icon
+                          matTooltip="{{ check.description }}"
+                          style="float: right"
+                          color="primary"
+                          >info</mat-icon
+                        >
+                      </h3>
+                      <!-- Tooltip integrieren!!-->
+                      <h4 matLine *ngIf="check.result == false">
+                        <span> {{ check.message }}</span>
+                        <br />
+                        <span>Tipp: {{ check.fix }}</span>
+                      </h4>
+                    </mat-list-item>
+                    <p></p>
                   </span>
                 </mat-list>
               </mat-expansion-panel>

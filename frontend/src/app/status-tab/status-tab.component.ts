@@ -15,7 +15,11 @@ import { AppComponent } from '../app.component';
 export class StatusTabComponent implements OnInit {
   status: Status = {} as Status;
 
-  constructor(private api: ApiService, private _snackBar: MatSnackBar,private appController: AppComponent) {}
+  constructor(
+    private api: ApiService,
+    private _snackBar: MatSnackBar,
+    private appController: AppComponent
+  ) {}
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
