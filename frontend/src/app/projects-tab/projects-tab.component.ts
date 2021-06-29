@@ -78,7 +78,6 @@ export class ProjectsTabComponent implements OnInit {
     // make api request
     this.api
       .getAllProjects(
-        true,
         this.delta,
         this.searchQuery,
         this.sort,

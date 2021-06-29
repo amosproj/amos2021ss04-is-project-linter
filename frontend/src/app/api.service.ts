@@ -32,15 +32,13 @@ export class ApiService {
 
   // All Project
   getAllProjects(
-    extended: boolean = false,
     delta: boolean = false,
-    query: string,
+    query: string = "",
     sort: string[] = [],
     pageSize: number,
     currentPage: number
   ): Observable<PagedProjects> {
     const params = new HttpParams()
-      .set('extended', String(extended))
       .set('delta', String(delta))
       .set('name', query)
       .set('page', String(currentPage))
