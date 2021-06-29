@@ -64,14 +64,29 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    for (var i = 0; i < this.tags.length + 1; i++) {
-      this.renderChart(
-        this.chartNames[i],
-        i,
-        this.numberOfTestsPerSeverityInTags
-      );
-      this.myChart.update();
-    }
+    this.api.getProject(this.projectId).subscribe((proj) => {
+      //-----------------------------------------------------------
+      // Same call as in onInit(), is needed because of asynchronity of the requests.
+      var latestLintingIndex = proj.lintingResults.length - 1;
+      var latestLintingResults = proj.lintingResults[latestLintingIndex].checkResults;
+      var tags = this.getTagsArray(latestLintingResults);
+
+      var numberOfTestsPerSeverityInTags =
+      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+        tags,
+        proj.lintingResults[latestLintingIndex].checkResults
+      )[0];
+      //-----------------------------------------------------------
+
+      for (var i = 0; i < this.tags.length + 1; i++) {
+        this.renderChart(
+          this.chartNames[i],
+          i,
+          numberOfTestsPerSeverityInTags
+        );
+        this.myChart.update();
+      }
+    });
   }
 
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
