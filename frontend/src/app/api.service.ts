@@ -30,7 +30,7 @@ export class ApiService {
     return throwError(errorMessage);
   }
 
-  // All Project
+  // All Project - /projects
   getAllProjects(
     delta: boolean = false,
     query: string = '',
@@ -47,7 +47,7 @@ export class ApiService {
     return this.http.get<PagedProjects>(`${this.apiUrl}/projects`, { params });
   }
 
-  // One Project
+  // One Project - /project/:id
   getProject(id: number): Observable<Project> {
     return this.http.get<Project>(`${this.apiUrl}/project/${id}`);
   }
@@ -65,5 +65,18 @@ export class ApiService {
   // Config
   getConfig(): Observable<Config> {
     return this.http.get<Config>(`${this.apiUrl}/config`);
+  }
+
+  // Projects By All Tags - /projects/allTags
+  // TODO FIXME return type
+  getProjectsByAllTags(type: String): any {
+    const params = new HttpParams().set('type', String(type));
+    return this.http.get(`${this.apiUrl}/projects/allTags`, { params });
+  }
+
+  // Get Projects By top - /projects/top
+  getProjectsByTop(type: String): any {
+    const params = new HttpParams().set('type', String(type));
+    return this.http.get(`${this.apiUrl}/projects/top`, { params });
   }
 }

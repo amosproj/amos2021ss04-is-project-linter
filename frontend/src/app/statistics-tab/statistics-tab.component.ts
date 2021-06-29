@@ -13,7 +13,7 @@ import { AppComponent } from '../app.component';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private http: HttpClient,private appController: AppComponent) {}
+  constructor(private http: HttpClient, private appController: AppComponent) {}
 
   ngOnInit(): void {
     console.log('Statistik ausgewählt');
