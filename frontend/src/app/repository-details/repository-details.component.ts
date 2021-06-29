@@ -55,8 +55,8 @@ export class RepositoryDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.state.config.subscribe((data) => {
       this.config = data;
+      this.tags = this.state.getTags(this.config);
       this.addTilesForCategoryGraphAndTipps();
-      //console.log('chartNames',this.chartNames);
       this.chartNames = this.chartNames.concat(this.tags);
       this.load();
     });

@@ -21,4 +21,14 @@ export class StateService {
   updateSearchQuery(query: string) {
     this.searchQuerySource.next(query);
   }
+
+  getTags(config: Config): String[] {
+    let tags: String[] = [];
+    for (let [key, value] of Object.entries(config.checks)) {
+      if (!tags.includes(value.tag)) {
+        tags.push(value.tag);
+      }
+    }
+    return tags;
+  }
 }

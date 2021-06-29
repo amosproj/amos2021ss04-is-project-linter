@@ -27,7 +27,7 @@ export class ProjectsTabComponent implements OnInit {
   searchQuery: string = ''; // query from the search bar
   sort: string[]; // selected chips
   // other params
-  chipOptions: string[] = [];
+  chipOptions: String[] = [];
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
   // paging
@@ -44,7 +44,7 @@ export class ProjectsTabComponent implements OnInit {
   ngOnInit(): void {
     this.state.config.subscribe((data) => {
       this.config = data;
-      this.getChipOptions();
+      this.chipOptions = this.state.getTags(this.config);
     });
 
     this.getProjects();
@@ -89,16 +89,6 @@ export class ProjectsTabComponent implements OnInit {
 
     // close spinner
     dialogRef.close();
-  }
-
-  getChipOptions() {
-    //hole alle verschiedenen tags aus der config.json datei
-    this.chipOptions = [];
-    for (let [key, value] of Object.entries(this.config.checks)) {
-      if (!this.chipOptions.includes(value.tag)) {
-        this.chipOptions.push(value.tag);
-      }
-    }
   }
 
   updatePagination(pageEvent: PageEvent) {
