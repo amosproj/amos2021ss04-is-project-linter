@@ -1,6 +1,5 @@
 import { MatDialog } from '@angular/material/dialog';
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, Input, ViewChild } from '@angular/core';
 
 import { RepositoryDetailsComponent } from '../repository-details/repository-details.component';
 import { Project } from '../schemas';
@@ -10,17 +9,11 @@ import { Project } from '../schemas';
   templateUrl: './repository.component.html',
   styleUrls: ['./repository.component.css'],
 })
-export class RepositoryComponent implements OnInit {
+export class RepositoryComponent {
   @Input() project: Project;
   @ViewChild(RepositoryDetailsComponent) child;
 
-  constructor(
-    public route: ActivatedRoute,
-    public router: Router,
-    public dialog: MatDialog
-  ) {}
-
-  ngOnInit(): void {}
+  constructor(public dialog: MatDialog) {}
 
   openDetailsDialog() {
     // Öffnet das Dialogfenster für die Repository Details
