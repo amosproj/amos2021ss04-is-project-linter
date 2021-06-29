@@ -38,7 +38,7 @@ export class ProjectsTabComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    private state: StateService,
+    private state: StateService
   ) {}
 
   ngOnInit(): void {
