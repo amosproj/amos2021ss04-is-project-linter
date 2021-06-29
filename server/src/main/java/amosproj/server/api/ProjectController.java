@@ -77,15 +77,24 @@ public class ProjectController {
             // calculate properties required for sorting
             LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
 
-            // TODO terrible performance
-            LinkedList<LintingResult> lr = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
-                    (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId());
+            List<LintingResult> lr = projAlt.getResults();
+            LintingResult lrs = null;
+            for (LintingResult lintingResult : lr) {
+                if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
+                    lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
+                    break;
+                }
+            }
             int lastIdx = Math.max(lr.size() - 1, 0);
             if (lastIdx < lr.size()) { // At least one LintingResult exists
                 proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
-                proj.setPassedByTag30DaysAgo(checksPassedByTags(lr.get(0).getCheckResults()));
+                if (lrs != null) {
+                    proj.setPassedByTag30DaysAgo(checksPassedByTags(lrs.getCheckResults()));
+                }
+            } else {
+                proj.setLatestPassedByTag(new HashMap<>());
+                proj.setPassedByTag30DaysAgo(new HashMap<>());
             }
-            // ~~~ TODO terrible performance
 
             int allRequestedProperties = 0;
             int allRequested30DaysAgo = 0;
