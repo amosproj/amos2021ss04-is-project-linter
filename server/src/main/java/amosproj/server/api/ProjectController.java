@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,14 +55,13 @@ public class ProjectController {
     //**********************************
 
     @GetMapping("/projects")
-    public Page<ProjectSchema> allProjects(@RequestParam(name = "extended", required = false) Boolean extended,
-                                           @RequestParam(name = "delta", required = false) Boolean delta,
+    public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
         LinkedList<String> allProperties = new LinkedList<>();
-        var iterator = pageable.getSort().stream().iterator();
+        Iterator<Sort.Order> iterator = pageable.getSort().stream().iterator();
         while (iterator.hasNext()) {
-            var next = iterator.next();
+            Sort.Order next = iterator.next();
             allProperties.add(next.getProperty());
         }
 
@@ -71,32 +71,29 @@ public class ProjectController {
         } else {
             projectList = projectRepository.findAllByNameContainsIgnoreCase(name);
         }
-        var it = projectList.iterator();
-        var res = new LinkedList<ProjectSchema>();
+        Iterator<Project> it = projectList.iterator();
+        LinkedList<ProjectSchema> res = new LinkedList<ProjectSchema>();
         while (it.hasNext()) {
             Project projAlt = it.next();
-            ProjectSchema proj;
-            if (extended != null && extended) {
-                LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
-                proj = new ProjectSchema(projAlt, lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
-                        (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId()));
-                proj.setLatestPassedByTag(checksPassedByTags(proj.getLintingResults().get(proj.getLintingResults().size() - 1).getCheckResults()));
-                proj.setPassedByTag30DaysAgo(checksPassedByTags(proj.getLintingResults().get(0).getCheckResults()));
+            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());;
 
-                int allRequestedProperties = 0;
-                int allRequested30DaysAgo = 0;
-                var latest = proj.getLatestPassedByTag();
-                var oldest = proj.getPassedByTag30DaysAgo();
-                for (String property : allProperties) {
-                    allRequestedProperties += latest.getOrDefault(property, 0L);
-                    allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
-                }
-                proj.setLatestPassedTotal(allRequestedProperties);
-                proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
+            LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
+            LinkedList<LintingResult> lr = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
+                    (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId());
+            proj.setLatestPassedByTag(checksPassedByTags(lr.get(lr.size() - 1).getCheckResults()));
+            proj.setPassedByTag30DaysAgo(checksPassedByTags(lr.get(0).getCheckResults()));
 
-            } else {
-                proj = new ProjectSchema(projAlt, new LinkedList<>());
+            int allRequestedProperties = 0;
+            int allRequested30DaysAgo = 0;
+            var latest = proj.getLatestPassedByTag();
+            var oldest = proj.getPassedByTag30DaysAgo();
+            for (String property : allProperties) {
+                allRequestedProperties += latest.getOrDefault(property, 0L);
+                allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
             }
+            proj.setLatestPassedTotal(allRequestedProperties);
+            proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
+
             res.add(proj);
         }
         // Sort by checks passed in tag
@@ -265,16 +262,6 @@ public class ProjectController {
         return Config.getConfigNode();
     }
 
-    @GetMapping("/project/{id}/lastMonth")
-    public ProjectSchema getProjectLintsLastMonth(@PathVariable("id") Long id) {
-        LocalDateTime before = LocalDateTime.now(Clock.systemUTC());
-        LocalDateTime after = before.minusDays(30);
-        LinkedList<LintingResult> list = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs(after, before, id);
-        return new ProjectSchema(projectRepository.findById(id).orElseThrow(
-                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found")
-        ), list);
-    }
-
     @GetMapping("/project/{id}")  // id is the project id in _our_ database
     public ProjectSchema getProject(@PathVariable("id") Long id) {
         LinkedList<LintingResult> list = new LinkedList<>();
@@ -337,7 +324,7 @@ public class ProjectController {
     //**********************
 
 
-    private HashMap<String, Long> checksPassedByTags(List<CheckResultSchema> checkResults) {
+    private HashMap<String, Long> checksPassedByTags(List<CheckResult> checkResults) {
         if (checkResults == null) {
             return new HashMap<>();
         }
@@ -345,7 +332,7 @@ public class ProjectController {
         int i = 0;
         var map = Config.getTags();
         var res = new HashMap<String, Long>();
-        for (CheckResultSchema checkResult : checkResults) {
+        for (CheckResult checkResult : checkResults) {
             if (checkResult == null) {
                 return new HashMap<String, Long>();
             }

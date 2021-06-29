@@ -2,10 +2,9 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 
 ### GET - `/projects` - Übersicht aller Projekte
 * Query: 
-    * `extended=true|false` liefert auf Wunsch auch die Ergebnisse von allen Lint-Durchläufen der letzten 30 Tage.
     * `delta=true|false` Soll nach dem Delta oder dem letzten Ergebnis sortiert werden?
     * `name=String` Der partielle oder ganze Name, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet
-    * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`
+    * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`, `sort=Benutzerfreundlichkeit`
 * Body: nichts
 * Response: Json(Page(ProjectSchema))
 
@@ -27,10 +26,6 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 
 ### GET - `/project/{Id}` - Ergebnisse für das Projekt mit der Id
 * Hinweis: Es handelt sich bei der Id um eine interne Benennung der Datenbank, nicht die GitLab Project-Id.
-* Body: nichts
-* Response: Json(ProjectSchema)
-
-### GET - `/project/{Id}/lastMonth` - Lint Ergebnisse des Letzten Monats für ein Projekt [DEPRECATED]
 * Body: nichts
 * Response: Json(ProjectSchema)
 

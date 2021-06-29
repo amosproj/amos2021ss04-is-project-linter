@@ -81,17 +81,6 @@ public class ProjectControllerTest {
     }
 
     @Test
-    public void testGetProjectLintsLastMonth() throws Exception {
-        Project proj = new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com", "", 0, LocalDateTime.now(Clock.systemUTC()));
-        lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
-        lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now().minusDays(50)));
-        proj = projectRepository.save(proj);
-
-        mockMvc.perform(get("/project/" + proj.getId() + "/lastMonth")).andExpect(status().isOk());
-        // TODO check that only ONE linting result is returned
-    }
-
-    @Test
     public void testProjectsTop() throws Exception {
         Project project = new Project("repo", "https://url.com/repo", 4711, "url.com", "", 0, LocalDateTime.now(Clock.systemUTC()));
         projectRepository.save(project);
