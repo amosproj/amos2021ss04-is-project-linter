@@ -11,7 +11,7 @@ import { Project } from '../schemas';
   styleUrls: ['./repository.component.css'],
 })
 export class RepositoryComponent implements OnInit {
-  @Input() project: Project;
+  @Input() projectAndTags: {project: Project; tags: string[]};
   @ViewChild(RepositoryDetailsComponent) child;
 
   constructor(
@@ -28,17 +28,17 @@ export class RepositoryComponent implements OnInit {
       width: '85%',
       height: '95%',
       panelClass: 'custom-dialog-container',
-      data: this.project.id,
+      data: {projectId: this.projectAndTags.project.id, tags: this.projectAndTags.tags},
     });
   }
 
   truncateDescription() {
-    if (this.project.description == '') {
+    if (this.projectAndTags.project.description == '') {
       return 'Keine Beschreibung vorhanden';
-    } else if (this.project.description.length <= 100) {
-      return this.project.description;
+    } else if (this.projectAndTags.project.description.length <= 100) {
+      return this.projectAndTags.project.description;
     } else {
-      return this.project.description.substring(0, 100) + '...';
+      return this.projectAndTags.project.description.substring(0, 100) + '...';
     }
   }
 }

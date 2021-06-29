@@ -51,6 +51,7 @@
                   {{ tag }}
                 </mat-expansion-panel-header>
                 <mat-list>
+                  <span *ngIf="LintingResultsInTags != undefined">
                   <mat-list-item
                     *ngFor="let check of LintingResultsInTags[i]"
                     style="border-bottom: 1px solid #999999; margin-top: 0.5%"
@@ -73,6 +74,7 @@
                     </h4>
                   </mat-list-item>
                   <p></p>
+                  </span>
                 </mat-list>
               </mat-expansion-panel>
             </mat-accordion>

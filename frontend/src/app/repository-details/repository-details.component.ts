@@ -45,44 +45,27 @@ export class RepositoryDetailsComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public projectId: number,
+    @Inject(MAT_DIALOG_DATA) public params: parametersFromDialogCall,
     private api: ApiService
-  ) {}
+  ) {this.tags = this.params.tags;}
 
   ngOnInit(): void {
-    this.api.getProject(this.projectId).subscribe((proj) => {
-      this.project = proj;
-      console.log(proj);
-      // initalisiere Arrays sortiert bei severtity void
-      this.latestLintingIndex = this.project.lintingResults.length - 1;
-      this.checksHighSeverity = new Array<CheckResults>();
-      this.checksMediumSeverity = new Array<CheckResults>();
-      this.checksLowSeverity = new Array<CheckResults>();
-      this.latestLintingResultsSortedPriority = new Array<CheckResults>();
-      this.initializeClassValuesAndTiles();
-    });
+    this.addTilesForCategoryGraphAndTipps();
+    //console.log('chartNames',this.chartNames);
+    this.chartNames = this.chartNames.concat(this.tags);
   }
 
   ngAfterViewInit(): void {
-    this.api.getProject(this.projectId).subscribe((proj) => {
-      //-----------------------------------------------------------
-      // Same call as in onInit(), is needed because of asynchronity of the requests.
-      var latestLintingIndex = proj.lintingResults.length - 1;
-      var latestLintingResults = proj.lintingResults[latestLintingIndex].checkResults;
-      var tags = this.getTagsArray(latestLintingResults);
-
-      var numberOfTestsPerSeverityInTags =
-      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-        tags,
-        proj.lintingResults[latestLintingIndex].checkResults
-      )[0];
-      //-----------------------------------------------------------
-
+    this.api.getProject(this.params.projectId).subscribe((proj) => {
+      this.project = proj;
+      this.latestLintingIndex = this.project.lintingResults.length - 1;
+      this.latestLintingResultsSortedPriority = new Array<CheckResults>();
+      this.initializeClassValuesAndTiles();
       for (var i = 0; i < this.tags.length + 1; i++) {
         this.renderChart(
           this.chartNames[i],
           i,
-          numberOfTestsPerSeverityInTags
+          this.numberOfTestsPerSeverityInTags
         );
         this.myChart.update();
       }
@@ -140,7 +123,7 @@ export class RepositoryDetailsComponent implements OnInit {
   initializeClassValuesAndTiles() {
     this.latestLintingResults =
       this.project.lintingResults[this.latestLintingIndex].checkResults;
-    this.tags = this.getTagsArray(this.latestLintingResults);
+    //this.tags = this.getTagsArray(this.latestLintingResults);
 
     this.LintingResultsInTags =
       this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
@@ -158,10 +141,8 @@ export class RepositoryDetailsComponent implements OnInit {
         this.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
 
-    console.log('chartNames');
-    this.chartNames = this.chartNames.concat(this.tags);
-    console.log(this.chartNames);
-    this.addTilesForCategoryGraphAndTipps();
+    //console.log(this.chartNames);
+    //this.addTilesForCategoryGraphAndTipps();
     // sortiere die Checks um die 3 besten Tipps darzustellen
     this.latestLintingResults.forEach((val) =>
       this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
@@ -337,7 +318,12 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 }
 
-// FÜr angular tiles
+export interface parametersFromDialogCall {
+  projectId: number;
+  tags: string[];
+}
+
+// Für angular tiles
 export interface Tile {
   color: string;
   cols: number;

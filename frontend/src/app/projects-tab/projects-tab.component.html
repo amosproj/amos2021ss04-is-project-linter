@@ -81,7 +81,7 @@
 
     <div fxLayout="row wrap" fxLayoutAlign="center end">
       <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">
-        <app-repository [project]="proj"></app-repository>
+        <app-repository [projectAndTags]="{project: proj, tags: chipOptions}"></app-repository>
       </div>
     </div>
   </mat-card-content>
