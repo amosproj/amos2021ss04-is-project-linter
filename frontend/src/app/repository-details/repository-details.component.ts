@@ -4,7 +4,8 @@ import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
 
 import { ApiService } from '../api.service';
-import { Project, CheckResults } from '../schemas';
+import { Project, CheckResults, Config } from '../schemas';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-repository-details',
@@ -13,6 +14,7 @@ import { Project, CheckResults } from '../schemas';
 })
 export class RepositoryDetailsComponent implements OnInit {
   project: Project = <Project>{};
+  config: Config;
   emojiMap = {
     notImportant: '🟡',
     warning: '🟠',
@@ -45,18 +47,23 @@ export class RepositoryDetailsComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public params: parametersFromDialogCall,
-    private api: ApiService
-  ) {this.tags = this.params.tags;}
+    @Inject(MAT_DIALOG_DATA) public projectId: number,
+    private api: ApiService,
+    private state: StateService
+  ) {}
 
   ngOnInit(): void {
-    this.addTilesForCategoryGraphAndTipps();
-    //console.log('chartNames',this.chartNames);
-    this.chartNames = this.chartNames.concat(this.tags);
+    this.state.config.subscribe((data) => {
+      this.config = data;
+      this.addTilesForCategoryGraphAndTipps();
+      //console.log('chartNames',this.chartNames);
+      this.chartNames = this.chartNames.concat(this.tags);
+      this.load();
+    });
   }
 
-  ngAfterViewInit(): void {
-    this.api.getProject(this.params.projectId).subscribe((proj) => {
+  load(): void {
+    this.api.getProject(this.projectId).subscribe((proj) => {
       this.project = proj;
       this.latestLintingIndex = this.project.lintingResults.length - 1;
       this.latestLintingResultsSortedPriority = new Array<CheckResults>();
@@ -316,11 +323,6 @@ export class RepositoryDetailsComponent implements OnInit {
       return this.project.description.substring(0, 300) + '...';
     }
   }
-}
-
-export interface parametersFromDialogCall {
-  projectId: number;
-  tags: string[];
 }
 
 // Für angular tiles

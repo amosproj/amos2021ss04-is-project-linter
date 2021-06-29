@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,6 +19,10 @@ import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 import { StatusTabComponent } from './status-tab/status-tab.component';
 import { SearchComponent } from './search/search.component';
+
+export function init_app(state: StateService) {
+  return () => state.loadConfig();
+}
 
 @NgModule({
   declarations: [
@@ -43,7 +47,16 @@ import { SearchComponent } from './search/search.component';
     MaterialModule,
     FlexLayoutModule,
   ],
-  providers: [ApiService, StateService], // Make available throughout entire app
+  providers: [
+    ApiService,
+    StateService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: init_app,
+      deps: [StateService],
+      multi: true,
+    },
+  ], // Make available throughout entire app
   bootstrap: [AppComponent],
 })
 export class AppModule {}

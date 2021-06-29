@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ApiService } from '../api.service';
 import { Config } from '../schemas';
+import { StateService } from '../state.service';
 
 @Component({
   selector: 'app-footer',
@@ -8,12 +8,12 @@ import { Config } from '../schemas';
   styleUrls: ['./footer.component.css'],
 })
 export class FooterComponent implements OnInit {
-  constructor(private api: ApiService) {}
-
   config: Config;
 
-  ngOnInit(): void {
-    this.api.getConfig().subscribe((data) => {
+  constructor(private state: StateService) {}
+
+  ngOnInit() {
+    this.state.config.subscribe((data) => {
       this.config = data;
     });
   }

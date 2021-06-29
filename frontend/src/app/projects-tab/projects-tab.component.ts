@@ -31,7 +31,7 @@ export class ProjectsTabComponent implements OnInit {
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
   // paging
-  pageSizeOptions : number[] = [10, 25, 100]
+  pageSizeOptions: number[] = [10, 25, 100];
   currentPage: number = 0;
   pageSize: number = this.pageSizeOptions[0];
 
@@ -42,8 +42,7 @@ export class ProjectsTabComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // get Config
-    this.api.getConfig().subscribe((data) => {
+    this.state.config.subscribe((data) => {
       this.config = data;
       this.getChipOptions();
     });

@@ -33,7 +33,7 @@ export class ApiService {
   // All Project
   getAllProjects(
     delta: boolean = false,
-    query: string = "",
+    query: string = '',
     sort: string[] = [],
     pageSize: number,
     currentPage: number
