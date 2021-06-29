@@ -1,6 +1,7 @@
 {
   "settings": {
     "gitLabHost": "https://gitlab.cs.fau.de",
+    "feedbackMail": "amoslinter@example.com",
     "readMeLinks": [
       "https://this.website.com/doesntexist",
       "https://that.doesnt.either"

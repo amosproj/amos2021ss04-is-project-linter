@@ -41,10 +41,15 @@ export interface LintingResult {
 }
 
 export interface Config {
+  settings: Settings;
   checks: Check[];
 }
 
-export interface Check {
+interface Settings {
+  feedbackMail: string;
+}
+
+interface Check {
   enabled: boolean;
   severity: string;
   description: string;

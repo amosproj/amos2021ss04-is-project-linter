@@ -5,13 +5,10 @@
     <span>Powered by ACIDIC</span>
   </mat-toolbar-row>
   <mat-toolbar-row class="line">
-    <span>
-      <a
-        mat-button
-        href="mailto:ria.innter.source@datev.com"
-      >
+    <span *ngIf="config">
+      <a mat-button href="mailto:{{ config.settings.feedbackMail }}">
         <mat-icon>email</mat-icon>
-        ria.inner.source@datev.com
+        {{ config.settings.feedbackMail }}
       </a>
     </span>
     <span class="spacer"></span>
