@@ -8,13 +8,17 @@ import { Router } from '@angular/router';
 })
 export class AppComponent implements OnInit {
   constructor(private router: Router) {}
-
+  selectedIndex = 0;
   ngOnInit() {
-    this.router.navigate(['projects']);
+ 
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit() {
 
+  }
+  selectTab(index: number): void {
+    this.selectedIndex = index;
+  }
   checkTabChange($event) {
     if ($event.index == 0) {
       this.router.navigate(['projects']);

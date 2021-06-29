@@ -5,6 +5,7 @@ import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -12,10 +13,11 @@ import * as dayjs from 'dayjs';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,private appController: AppComponent) {}
 
   ngOnInit(): void {
     console.log('Statistik ausgewählt');
+    this.appController.selectTab(1);
     this.setOnStatistikTab();
   }
 

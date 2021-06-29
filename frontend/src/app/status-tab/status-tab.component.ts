@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
 import { Status } from '../schemas';
+import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-status-tab',
@@ -14,13 +15,14 @@ import { Status } from '../schemas';
 export class StatusTabComponent implements OnInit {
   status: Status = {} as Status;
 
-  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
+  constructor(private api: ApiService, private _snackBar: MatSnackBar,private appController: AppComponent) {}
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
 
   ngOnInit(): void {
+    this.appController.selectTab(2);
     timer(1, 2000)
       .pipe(concatMap((_) => this.api.crawlerStatus()))
       .subscribe(
