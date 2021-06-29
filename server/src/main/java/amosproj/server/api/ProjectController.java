@@ -69,14 +69,15 @@ public class ProjectController {
         } else {
             projectList = projectRepository.findAllByNameContainsIgnoreCase(name);
         }
-        Iterator<Project> it = projectList.iterator();
         // run query and sorting
         LinkedList<ProjectSchema> res = new LinkedList<>();
-        while (it.hasNext()) {
-            Project projAlt = it.next();
+        for (Project projAlt : projectList) {
+            // create schema
             ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
-
+            // calculate properties required for sorting
             LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
+
+            // TODO terrible performance
             LinkedList<LintingResult> lr = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
                     (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId());
             int lastIdx = Math.max(lr.size() - 1, 0);
@@ -84,6 +85,7 @@ public class ProjectController {
                 proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
                 proj.setPassedByTag30DaysAgo(checksPassedByTags(lr.get(0).getCheckResults()));
             }
+            // ~~~ TODO terrible performance
 
             int allRequestedProperties = 0;
             int allRequested30DaysAgo = 0;
@@ -104,7 +106,7 @@ public class ProjectController {
         } else {
             res.sort(Comparator.comparingInt(x -> -x.getDelta()));
         }
-
+        // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
         if (start > end) {
