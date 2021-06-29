@@ -1,7 +1,6 @@
 package amosproj.server.api;
 
 import amosproj.server.Config;
-import amosproj.server.api.schemas.CheckResultSchema;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.*;
@@ -80,8 +79,11 @@ public class ProjectController {
             LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
             LinkedList<LintingResult> lr = lintingResultRepository.findByLintTimeBetweenAndProjectIdIs
                     (localDateTime.minusDays(30).minusMinutes(5), localDateTime, projAlt.getId());
-            proj.setLatestPassedByTag(checksPassedByTags(lr.get(lr.size() - 1).getCheckResults()));
-            proj.setPassedByTag30DaysAgo(checksPassedByTags(lr.get(0).getCheckResults()));
+            int lastIdx = Math.max(lr.size() - 1, 0);
+            if (lastIdx < lr.size()) { // At least one LintingResult exists
+                proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
+                proj.setPassedByTag30DaysAgo(checksPassedByTags(lr.get(0).getCheckResults()));
+            }
 
             int allRequestedProperties = 0;
             int allRequested30DaysAgo = 0;
