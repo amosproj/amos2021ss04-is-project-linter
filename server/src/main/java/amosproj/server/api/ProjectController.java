@@ -87,8 +87,8 @@ public class ProjectController {
 
             int allRequestedProperties = 0;
             int allRequested30DaysAgo = 0;
-            var latest = proj.getLatestPassedByTag();
-            var oldest = proj.getPassedByTag30DaysAgo();
+            HashMap<String, Long> latest = proj.getLatestPassedByTag();
+            HashMap<String, Long> oldest = proj.getPassedByTag30DaysAgo();
             for (String property : allProperties) {
                 allRequestedProperties += latest.getOrDefault(property, 0L);
                 allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
@@ -131,16 +131,16 @@ public class ProjectController {
         }
         HashMap<String, String> map = Config.getTags();
 
-        var projectList = projectRepository.findAll();
-        var it = projectList.iterator();
-        var res = new TreeMap<LocalDateTime, HashMap<String, Object>>();
+        Iterable<Project> projectList = projectRepository.findAll();
+        Iterator<Project> it = projectList.iterator();
+        TreeMap<LocalDateTime, HashMap<String, Object>> res = new TreeMap<LocalDateTime, HashMap<String, Object>>();
 
         while (it.hasNext()) {
             Project project = it.next();
             List<LintingResult> lintingResults = project.getResults();
             for (LintingResult lr : lintingResults) {
                 List<CheckResult> checkResults = lr.getCheckResults();
-                var allChecksPassed = new HashMap<String, Boolean>();
+                HashMap<String, Boolean> allChecksPassed = new HashMap<String, Boolean>();
                 for (CheckResult checkResult : checkResults) {
                     String checkCategory = map.getOrDefault(checkResult.getCheckName(), null);
                     if (checkCategory == null) { // Check was deleted from config file
@@ -155,7 +155,7 @@ public class ProjectController {
                         allChecksPassed.putIfAbsent(checkCategory, true); // So far all checks have passed in this category
                     }
                 }
-                var categories = allChecksPassed.keySet();
+                Set<String> categories = allChecksPassed.keySet();
                 res.putIfAbsent(lr.getLintTime(), new HashMap<String, Object>());
                 for (String category : categories) {
                     HashMap<String, Object> resMap = res.get(lr.getLintTime());
@@ -171,11 +171,11 @@ public class ProjectController {
         }
         // Percentage is wanted: Need to divide the total by number of projects
         Set<LocalDateTime> timeSet = res.keySet();
-        var percentage = new TreeMap<LocalDateTime, HashMap<String, Object>>();
+        TreeMap<LocalDateTime, HashMap<String, Object>> percentage = new TreeMap<LocalDateTime, HashMap<String, Object>>();
         for (LocalDateTime localDateTime : timeSet) {
             int projects = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
-            var tagPercentages = new HashMap<String, Object>();
-            var totals = res.get(localDateTime);
+            HashMap<String, Object> tagPercentages = new HashMap<String, Object>();
+            HashMap<String, Object> totals = res.get(localDateTime);
             for (String string : totals.keySet()) {
                 tagPercentages.put(string, ((Long) totals.get(string) / (float) projects) * 100.0);
             }
@@ -193,13 +193,13 @@ public class ProjectController {
             return null;
         }
 
-        var projects = projectRepository.findAll();
-        var it = projects.iterator();
-        var priorities = Config.getPriorities();
+        Iterable<Project> projects = projectRepository.findAll();
+        Iterator<Project> it = projects.iterator();
+        HashMap<String, Long> priorities = Config.getPriorities();
 
         JsonNode node = Config.getConfigNode().get("settings").get("mostImportantChecks");
 
-        var res = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
+        TreeMap<LocalDateTime, TreeMap<Long, Object>> res = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
 
         while (it.hasNext()) {
             Project project = it.next();
@@ -207,9 +207,9 @@ public class ProjectController {
             for (LintingResult lr : lintingResults) {
                 res.putIfAbsent(lr.getLintTime(), new TreeMap<>());
                 List<CheckResult> checkResults = lr.getCheckResults();
-                var checksPassedByPrio = new TreeMap<Long, Long>();
+                TreeMap<Long, Long> checksPassedByPrio = new TreeMap<Long, Long>();
 
-                var nodeIterator = node.iterator();
+                Iterator<JsonNode> nodeIterator = node.iterator();
                 while (nodeIterator.hasNext()) {
                     Long l = nodeIterator.next().asLong();
                     checksPassedByPrio.putIfAbsent(l, 0L);
@@ -241,11 +241,11 @@ public class ProjectController {
         }
         // Percentage is wanted: Need to divide the total by number of projects
         Set<LocalDateTime> timeSet = res.keySet();
-        var percentage = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
+        TreeMap<LocalDateTime, TreeMap<Long, Object>> percentage = new TreeMap<LocalDateTime, TreeMap<Long, Object>>();
         for (LocalDateTime localDateTime : timeSet) {
             int projectCount = lintingResultRepository.countLintingResultsByLintTime(localDateTime);
-            var tagPercentages = new TreeMap<Long, Object>();
-            var totals = res.get(localDateTime);
+            TreeMap<Long, Object> tagPercentages = new TreeMap<Long, Object>();
+            TreeMap<Long, Object> totals = res.get(localDateTime);
             for (Long key : totals.keySet()) {
                 tagPercentages.put(key, ((Long) totals.get(key) / (float) projectCount) * 100.0);
             }
@@ -332,8 +332,8 @@ public class ProjectController {
         }
 
         int i = 0;
-        var map = Config.getTags();
-        var res = new HashMap<String, Long>();
+        HashMap<String, String> map = Config.getTags();
+        HashMap<String, Long> res = new HashMap<String, Long>();
         for (CheckResult checkResult : checkResults) {
             if (checkResult == null) {
                 return new HashMap<String, Long>();
