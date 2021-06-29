@@ -4,6 +4,7 @@ import { OnInit } from '@angular/core';
 import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
+import * as dayjs from 'dayjs';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -73,15 +74,15 @@ export class StatisticsTabComponent implements OnInit {
         var timestamps: string[] = new Array();
         var tags: String[] = new Array();
         var values: number[][] = new Array();
+        var dayAndTime;
+        var allDayAndTime: string[] = new Array();
 
         for (let x in results) {
-          /*if (timestamps.includes(dayjs(x).format('DD.MM.YYYY'))) {
+          dayAndTime = dayjs(x).format('DD.MM.YYYY');
+          if (allDayAndTime.includes(dayAndTime)) {
             continue;
           }
-          timestamps.push(dayjs(x).format('DD.MM.YYYY'));*/
-          if (timestamps.includes(x)) {
-            continue;
-          }
+          allDayAndTime.push(dayAndTime);
           timestamps.push(x);
           var value: number[] = new Array();
           for (let y in results[x]) {
