@@ -1,7 +1,19 @@
+mat-toolbar {
+  height: 10px;
+  font-size: 20px;
+}
+
 .line {
-    height: 20px;
+  height: 28px;
+  align-items: center;
+  text-align: center;
+  align-content: center;
 }
 
 .spacer {
-    flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+a {
+  font-size: 20px;
 }

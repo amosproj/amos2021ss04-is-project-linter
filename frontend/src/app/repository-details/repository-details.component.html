@@ -79,9 +79,7 @@
           </div>
         </span>
         <!-- there needs to be a canvas for every chart so if you want more tags this has to be extended -->
-        <span class="donut"
-          *ngIf="i > 0 && i != tiles.length - 2"
-        >
+        <span class="donut" *ngIf="i > 0 && i != tiles.length - 2">
           <mat-card-title> {{ tile.text }}: </mat-card-title>
           <div>
             <canvas id="{{ chartNames[i - 1] }}"></canvas>
@@ -93,9 +91,9 @@
               <p style="font-size: medium">
                 {{ truncateDescription() }}
               </p>
-              <a style="font-size: medium" [href]="project.url">{{
-                project.url
-              }}</a>
+              <a style="font-size: medium" [href]="project.url" target="_blank">
+                {{ project.url }}
+              </a>
               <div style="font-size: medium">
                 Zuletzt gelintet am: {{ lastLintTime }}
               </div>
