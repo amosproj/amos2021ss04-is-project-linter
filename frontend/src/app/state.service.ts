@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { share } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Config } from './schemas';
 
@@ -8,14 +9,15 @@ import { Config } from './schemas';
 })
 export class StateService {
   private searchQuerySource = new BehaviorSubject<string>('');
-  searchQuery: Observable<string> = this.searchQuerySource.asObservable();
-
+  searchQuery: Observable<string> = this.searchQuerySource
+    .asObservable()
+    .pipe(share());
   config: Observable<Config>;
 
   constructor(private api: ApiService) {}
 
   loadConfig() {
-    this.config = this.api.getConfig();
+    this.config = this.api.getConfig().pipe(share());
   }
 
   updateSearchQuery(query: string) {
