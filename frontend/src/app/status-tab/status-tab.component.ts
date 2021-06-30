@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { timer } from 'rxjs';
-import { concatMap } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject, timer } from 'rxjs';
+import { concatMap, retry, share, takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
@@ -11,8 +11,9 @@ import { Status } from '../schemas';
   templateUrl: './status-tab.component.html',
   styleUrls: ['./status-tab.component.css'],
 })
-export class StatusTabComponent implements OnInit {
+export class StatusTabComponent implements OnInit, OnDestroy {
   status: Status = {} as Status;
+  private stopPolling = new Subject();
 
   constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
@@ -21,8 +22,15 @@ export class StatusTabComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('StatusTabComponent:OnInit');
+
     timer(1, 2000)
-      .pipe(concatMap((_) => this.api.crawlerStatus()))
+      .pipe(
+        concatMap((_) => this.api.crawlerStatus()),
+        retry(),
+        share(),
+        takeUntil(this.stopPolling)
+      )
       .subscribe(
         (res) => {
           this.status = res;
@@ -32,6 +40,11 @@ export class StatusTabComponent implements OnInit {
           this.openSnackBar('Fehler beim holen von Crawler Status', 'OK');
         }
       );
+  }
+
+  ngOnDestroy() {
+    console.log('StatusTabComponent:OnDestroy');
+    this.stopPolling.next();
   }
 
   startCrawler(): void {

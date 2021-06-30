@@ -10,7 +10,6 @@ import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-
 @Component({
   selector: 'app-projects-tab',
   templateUrl: './projects-tab.component.html',
@@ -47,27 +46,29 @@ export class ProjectsTabComponent implements OnInit {
     this._snackBar.open(message, action);
   }
   ngOnInit(): void {
-    this.state.config.subscribe((data) => {
-      this.config = data;
-      this.chipOptions = this.state.getTags(this.config);
-    },
-    (error) => {
-      console.log(error);
-      this.openSnackBar('Fehler beim holen der Config-Datei', 'OK');
-    }
+    this.state.config.subscribe(
+      (data) => {
+        this.config = data;
+        this.chipOptions = this.state.getTags(this.config);
+      },
+      (error) => {
+        console.log(error);
+        this.openSnackBar('Fehler beim holen der Config-Datei', 'OK');
+      }
     );
 
     this.getProjects();
 
     // search query
-    this.state.searchQuery.subscribe((query) => {
-      this.searchQuery = query;
-      this.getProjects();
-    },
-    (error)=> {
-      console.log("error");
-      this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
-    }
+    this.state.searchQuery.subscribe(
+      (query) => {
+        this.searchQuery = query;
+        this.getProjects();
+      },
+      (error) => {
+        console.log('error');
+        this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
+      }
     );
   }
 
@@ -98,13 +99,14 @@ export class ProjectsTabComponent implements OnInit {
         this.pageSize,
         this.currentPage
       )
-      .subscribe((data) => {
-        this.projects = data;
-      },
-      (error)=>{
-        console.log("error");
-        this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
-      }
+      .subscribe(
+        (data) => {
+          this.projects = data;
+        },
+        (error) => {
+          console.log('error');
+          this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
+        }
       );
 
     // close spinner
