@@ -42,10 +42,13 @@ export class ProjectsTabComponent implements OnInit {
     private state: StateService,
     private _snackBar: MatSnackBar
   ) {}
+
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+
   ngOnInit(): void {
+    // get config
     this.state.config.subscribe(
       (data) => {
         this.config = data;
@@ -57,6 +60,7 @@ export class ProjectsTabComponent implements OnInit {
       }
     );
 
+    // get projects
     this.getProjects();
 
     // search query
@@ -73,10 +77,11 @@ export class ProjectsTabComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    // update sorting query param on change
     this.chipsControl.valueChanges.subscribe((data) => {
       this.sort = data;
     });
-
+    // update sorting query param on change
     this.searchCriteria.valueChanges.subscribe((data) => {
       this.delta = data == this.availableSearchCriteria[1];
     });
@@ -107,10 +112,11 @@ export class ProjectsTabComponent implements OnInit {
           console.log('error');
           this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
         }
-      );
-
-    // close spinner
-    dialogRef.close();
+      )
+      .add(() => {
+        // close spinner
+        dialogRef.close();
+      });
   }
 
   updatePagination(pageEvent: PageEvent) {
