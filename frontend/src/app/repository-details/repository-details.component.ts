@@ -262,13 +262,13 @@ export class RepositoryDetailsComponent implements OnInit {
     }
     this.tiles.push(<Tile>{
       color: 'white',
-      cols: 4, // set to 4 (maxColsForTiles should not change)
+      cols: 5, // set to 5 (maxColsForTiles should not change)
       rows: 1,
       text: 'Informationen',
     });
     this.tiles.push(<Tile>{
       color: 'white',
-      cols: 5, // set to 5 (maxColsForTiles should not change)
+      cols: 4, // set to 5 (maxColsForTiles should not change)
       rows: 1,
       text: 'Top 3 Tipps',
     });
