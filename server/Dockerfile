@@ -16,4 +16,4 @@ WORKDIR /home/amos
 ARG JAR_FILE=build/libs/server.jar
 COPY ${JAR_FILE} app.jar
 
-ENTRYPOINT ["dumb-init", "java","-jar","app.jar"]
+ENTRYPOINT ["dumb-init", "java","-jar","-Xms1G" ,"-Xmx2G", "app.jar"]

@@ -19,7 +19,6 @@
     "@angular/platform-browser": "~11.2.13",
     "@angular/platform-browser-dynamic": "~11.2.13",
     "@angular/router": "~11.2.13",
-    "chart": "^0.1.2",
     "chart.js": "^2.9.4",
     "dayjs": "^1.10.4",
     "rxjs": "~6.6.0",
