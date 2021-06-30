@@ -141,7 +141,7 @@ export class StatisticsTabComponent implements OnInit {
     yAxisMaximum
   ) {
     var options = {
-      responsive: true,
+      responsive: false,
       legend: {
         position: 'bottom',
         display: true,
