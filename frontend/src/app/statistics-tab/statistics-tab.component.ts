@@ -71,9 +71,9 @@ export class StatisticsTabComponent implements OnInit {
 
   initStats() {
     this.getChartData('top', 'absolute');
-    //this.getChartData('top', 'percentage');
-    //this.getChartData('allTags', 'absolute');
-    //this.getChartData('allTags', 'percentage');
+    this.getChartData('top', 'percentage');
+    this.getChartData('allTags', 'absolute');
+    this.getChartData('allTags', 'percentage');
   }
 
   // Displays errors
