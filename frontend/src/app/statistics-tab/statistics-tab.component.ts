@@ -4,6 +4,7 @@ import { OnInit } from '@angular/core';
 import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
+import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -147,56 +148,42 @@ export class StatisticsTabComponent implements OnInit {
     yAxisMaximum
   ) {
     var options = {
-      responsive: false,
-      legend: {
-        position: 'bottom',
-        display: true,
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          display: true,
+        },
       },
       scales: {
-        yAxes: [
-          {
-            gridLines: {
-              display: true,
-            },
-            id: 'yAxis',
+        y: {
+          gridLines: {
             display: true,
-            position: 'left',
-            ticks: {
-              beginAtZero: true,
-              callback: ticksCallbackFunction,
-              max: yAxisMaximum,
-            },
-            scaleLabel: {
-              display: true,
-              labelString: yAxisLabel,
+          },
+          display: true,
+          position: 'left',
+          beginAtZero: true,  
+          max: yAxisMaximum,
+          ticks: {
+            callback: ticksCallbackFunction,
+          },
+          title: yAxisLabel,
+        },
+        x: {
+          gridLines: {
+            display: true,
+          },
+          type: 'time',
+          time: {
+            displayFormats: {
+              day: 'dd.MM.yyyy',
             },
           },
-        ],
-        xAxes: [
-          {
-            gridLines: {
-              display: true,
-            },
-            type: 'time',
-            time: {
-              displayFormats: {
-                millisecond: 'DD MM YYYY',
-                second: 'DD MM YYYY',
-                minute: 'DD MM YYYY',
-                hour: 'DD MM YYYY',
-                day: 'DD MM YYYY',
-                week: 'DD MM YYYY',
-                month: 'DD MM YYYY',
-                quarter: 'DD MM YYYY',
-                year: 'DD MM YYYY',
-              },
-            },
-            ticks: {
-              autoSkip: true,
-              maxTicksLimit: 10,
-            },
+          ticks: {
+            maxTicksLimit: 10,
+            source: 'data', 
           },
-        ],
+        }
       },
     };
     var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
@@ -269,12 +256,11 @@ export class StatisticsTabComponent implements OnInit {
           yAxisMaximum
         );
         this.chartImportantChecks = new Chart(
-          chartInterface.canvas.getContext('2d'),
-          {
-            type: 'line',
-            options: chartInterface.options,
-          }
-        );
+          chartInterface.canvas.getContext('2d'), {
+          type: 'line',
+          data: null,
+          options: chartInterface.options,
+        });
         this.chartImportantChecks.data.labels = timestamps;
         console.log(timestamps);
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
@@ -296,6 +282,7 @@ export class StatisticsTabComponent implements OnInit {
           chartInterface.canvas.getContext('2d'),
           {
             type: 'line',
+            data: null,
             options: chartInterface.options,
           }
         );
@@ -327,6 +314,7 @@ export class StatisticsTabComponent implements OnInit {
           chartInterface.canvas.getContext('2d'),
           {
             type: 'line',
+            data: null,
             options: chartInterface.options,
           }
         );
@@ -350,6 +338,7 @@ export class StatisticsTabComponent implements OnInit {
           chartInterface.canvas.getContext('2d'),
           {
             type: 'line',
+            data: null,
             options: chartInterface.options,
           }
         );

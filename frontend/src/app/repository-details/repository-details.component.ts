@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Chart } from 'chart.js';
+//import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 import * as dayjs from 'dayjs';
 
 import { ApiService } from '../api.service';
@@ -113,8 +114,10 @@ export class RepositoryDetailsComponent implements OnInit {
         ],
       },
       options: {
-        legend: {
-          display: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
         },
         maintainAspectRatio: false,
       },
