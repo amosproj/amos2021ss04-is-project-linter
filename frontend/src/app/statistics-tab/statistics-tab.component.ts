@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
@@ -8,6 +7,8 @@ import * as dateFns from 'date-fns';
 import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ApiService } from '../api.service';
+import { Statistics } from '../schemas';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -15,7 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private http: HttpClient, private _snackBar: MatSnackBar) {}
+  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     console.log('Statistik ausgewählt');
@@ -68,70 +69,75 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   async getChartData(apiCall: string, typ: string) {
-    let params = new HttpParams().set('type', typ);
-    // TODO use API Service instead
-    await this.http
-      .get(`${environment.baseURL}/projects/` + apiCall, { params: params })
-      .toPromise()
-      .then(
-        (results: any) => {
-          console.log('results of call ' + apiCall + params, results);
-
-          var timestamps: string[] = new Array();
-          var tags: String[] = new Array();
-          var values: number[][] = new Array();
-          var dayAndTime;
-          var allDayAndTime: string[] = new Array();
-
-          for (let x in results) {
-            dayAndTime = dayjs(x).format('DD.MM.YYYY');
-            if (allDayAndTime.includes(dayAndTime)) {
-              continue;
-            }
-            allDayAndTime.push(dayAndTime);
-            //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
-            timestamps.push(x);
-            var value: number[] = new Array();
-            for (let y in results[x]) {
-              if (apiCall == 'top') {
-                if (!tags.includes(y + ' wichtigsten')) {
-                  tags.push(y + ' wichtigsten');
-                }
-              } else {
-                if (!tags.includes(y)) {
-                  tags.push(y);
-                }
-              }
-              value.push(results[x][y]);
-            }
-            values.push(value);
-          }
-
-          var seriesValues = new Array(tags.length);
-          for (var i = 0; i < tags.length; i++) {
-            seriesValues[i] = new Array(timestamps.length);
-          }
-
-          for (var i = 0; i < timestamps.length; i++) {
-            for (var j = 0; j < tags.length; j++) {
-              seriesValues[j][i] = values[i][j];
-            }
-          }
-
-          //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
-          this.renderStatisticCharts(
-            timestamps,
-            tags,
-            seriesValues,
-            apiCall,
-            typ
-          );
+    if (apiCall == 'allTags') {
+      this.api.getProjectsByAllTags(typ).subscribe(
+        (data) => {
+          console.log(data);
+          this.processStats(data, apiCall, typ);
         },
         (error) => {
           console.log(error);
           this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
         }
       );
+    } else if (apiCall == 'top') {
+      this.api.getProjectsByTop(typ).subscribe(
+        (data) => {
+          console.log(data);
+          this.processStats(data, apiCall, typ);
+        },
+        (error) => {
+          console.log(error);
+          this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
+        }
+      );
+    }
+  }
+
+  processStats(results: Statistics, apiCall: string, typ: string) {
+    var timestamps: string[] = new Array();
+    var tags: String[] = new Array();
+    var values: number[][] = new Array();
+    var dayAndTime;
+    var allDayAndTime: string[] = new Array();
+
+    for (let x in results) {
+      dayAndTime = dayjs(x).format('DD.MM.YYYY');
+      if (allDayAndTime.includes(dayAndTime)) {
+        continue;
+      }
+      allDayAndTime.push(dayAndTime);
+      //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
+      timestamps.push(x);
+      var value: number[] = new Array();
+      for (let y in results[x]) {
+        if (apiCall == 'top') {
+          if (!tags.includes(y + ' wichtigsten')) {
+            tags.push(y + ' wichtigsten');
+          }
+        } else {
+          if (!tags.includes(y)) {
+            tags.push(y);
+          }
+        }
+        value.push(results[x][y]);
+      }
+      values.push(value);
+    }
+
+    var seriesValues = new Array(tags.length);
+    for (var i = 0; i < tags.length; i++) {
+      seriesValues[i] = new Array(timestamps.length);
+    }
+
+    for (var i = 0; i < timestamps.length; i++) {
+      for (var j = 0; j < tags.length; j++) {
+        seriesValues[j][i] = values[i][j];
+      }
+    }
+
+    //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
+    this.renderStatisticCharts(timestamps, tags, seriesValues, apiCall, typ);
   }
 
   unchangedTicks(value, index, values) {
@@ -183,7 +189,7 @@ export class StatisticsTabComponent implements OnInit {
               day: 'dd.MM.yy',
             },
             tooltipFormat: 'dd.MM.yyyy',
-            minUnit: 'day'
+            minUnit: 'day',
           },
           ticks: {
             maxTicksLimit: 10,
