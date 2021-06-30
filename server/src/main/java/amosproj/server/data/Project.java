@@ -16,9 +16,9 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     private String name;
+    private String nameSpace;
     private String url;
     private Integer gitlabProjectId;
-    private String gitlabInstance;
     private String description;
     private Integer forkCount;
     private LocalDateTime lastCommit;
@@ -31,11 +31,11 @@ public class Project {
     } // only for JPA, dont use directly!
 
 
-    public Project(String name, String url, Integer gitlabProjectId, String gitlabInstance, String description, Integer forkCount, LocalDateTime lastCommit) {
+    public Project(String name, String url, Integer gitlabProjectId, String nameSpace, String description, Integer forkCount, LocalDateTime lastCommit) {
         this.name = name;
+        this.nameSpace = nameSpace;
         this.url = url;
         this.gitlabProjectId = gitlabProjectId;
-        this.gitlabInstance = gitlabInstance;
         this.description = description;
         this.forkCount = forkCount;
         this.lastCommit = lastCommit;
@@ -69,12 +69,12 @@ public class Project {
         this.gitlabProjectId = gitlabProjectId;
     }
 
-    public String getGitlabInstance() {
-        return gitlabInstance;
+    public String getNameSpace() {
+        return nameSpace;
     }
 
-    public void setGitlabInstance(String gitlabInstance) {
-        this.gitlabInstance = gitlabInstance;
+    public void setNameSpace(String nameSpace) {
+        this.nameSpace = nameSpace;
     }
 
     public List<LintingResult> getResults() {

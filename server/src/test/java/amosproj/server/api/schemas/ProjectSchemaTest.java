@@ -33,7 +33,7 @@ public class ProjectSchemaTest {
         assertEquals(projectSchema.getId(), project.getId());
         assertEquals(projectSchema.getLintingResults(), new LinkedList<>());
         assertEquals(projectSchema.getGitlabProjectId(), project.getGitlabProjectId());
-        assertEquals(projectSchema.getGitlabInstance(), project.getGitlabInstance());
+        assertEquals(projectSchema.getNameSpace(), project.getNameSpace());
         assertEquals(projectSchema.getName(), project.getName());
         assertEquals(projectSchema.getUrl(), project.getUrl());
         assertEquals(projectSchema.getDescription(), project.getDescription());
