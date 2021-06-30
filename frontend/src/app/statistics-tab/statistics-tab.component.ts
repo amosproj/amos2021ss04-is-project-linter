@@ -4,6 +4,7 @@ import { OnInit } from '@angular/core';
 import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
+import * as dateFns from 'date-fns';
 import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 
@@ -84,6 +85,7 @@ export class StatisticsTabComponent implements OnInit {
             continue;
           }
           allDayAndTime.push(dayAndTime);
+          //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
           timestamps.push(x);
           var value: number[] = new Array();
           for (let y in results[x]) {
@@ -167,13 +169,15 @@ export class StatisticsTabComponent implements OnInit {
           },
           type: 'time',
           time: {
+            round: 'day',
             displayFormats: {
-              day: 'dd.MM.yyyy',
+              day: 'dd.MM.yy',
             },
+            tooltipFormat: 'dd.MM.yyyy',
           },
           ticks: {
             maxTicksLimit: 10,
-            source: 'data', 
+            source: 'auto', 
           },
         }
       },
@@ -187,7 +191,7 @@ export class StatisticsTabComponent implements OnInit {
           data: seriesValues[i],
           backgroundColor: this.chartColors[i % this.chartColors.length],
           borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 0,
+          pointRadius: 3,
           fill: false,
         });
       } else {
@@ -196,7 +200,7 @@ export class StatisticsTabComponent implements OnInit {
           data: seriesValues[i],
           backgroundColor: this.chartColors[i % this.chartColors.length],
           borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 0,
+          pointRadius: 3,
           fill: false,
         });
       }
