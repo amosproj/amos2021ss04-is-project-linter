@@ -3,7 +3,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 ### GET - `/projects` - Übersicht aller Projekte
 * Query: 
     * `delta=true|false` Soll nach dem Delta oder dem letzten Ergebnis sortiert werden?
-    * `name=String` Der partielle oder ganze Name, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet
+    * `name=String` Der partielle oder ganze Name des Projekts oder Name-Spaces, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet
     * `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`, `sort=Benutzerfreundlichkeit`
 * Body: nichts
 * Response: Json(Page(ProjectSchema))

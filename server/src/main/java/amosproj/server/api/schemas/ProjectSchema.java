@@ -21,7 +21,7 @@ public class ProjectSchema {
     private String name;
     private String url;
     private Integer gitlabProjectId;
-    private String gitlabInstance;
+    private String nameSpace;
     private String description;
     private Integer forkCount;
     private LocalDateTime lastCommit;
@@ -76,12 +76,12 @@ public class ProjectSchema {
         this.gitlabProjectId = gitlabProjectId;
     }
 
-    public String getGitlabInstance() {
-        return gitlabInstance;
+    public String getNameSpace() {
+        return nameSpace;
     }
 
-    public void setGitlabInstance(String gitlabInstance) {
-        this.gitlabInstance = gitlabInstance;
+    public void setNameSpace(String nameSpace) {
+        this.nameSpace = nameSpace;
     }
 
     public String getDescription() {

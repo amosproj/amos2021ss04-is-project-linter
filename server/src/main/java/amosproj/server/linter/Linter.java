@@ -57,7 +57,7 @@ public class Linter {
         Project currLintingProject = projectRepository.findFirstByGitlabProjectId(apiProject.getId());
         if (currLintingProject == null) {
             // Erstelle neues Projekt mit Description und ForkCount
-            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), api.getGitlabHost(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
+            currLintingProject = new Project(apiProject.getName(), apiProject.getWebUrl(), apiProject.getId(), apiProject.getNamespace().getFullPath(), apiProject.getDescription(), apiProject.getForksCount(), apiProject.getLastActivityAt().toInstant().atZone(ZoneId.of("UTC")).toLocalDateTime());
             projectRepository.save(currLintingProject);
         } else {
             // Update Description, LastActivity und ForkCount

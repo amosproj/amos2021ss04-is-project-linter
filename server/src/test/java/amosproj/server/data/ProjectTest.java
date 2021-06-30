@@ -49,7 +49,7 @@ public class ProjectTest {
             assertNotNull(integrity);
             assertEquals(testProj.getId(), integrity.getId());
             assertEquals(testProj.getGitlabProjectId(), integrity.getGitlabProjectId());
-            assertEquals(testProj.getGitlabInstance(), integrity.getGitlabInstance());
+            assertEquals(testProj.getNameSpace(), integrity.getNameSpace());
             assertEquals(testProj.getResults(), integrity.getResults());
             assertEquals(testProj.getName(), integrity.getName());
             assertEquals(testProj.getUrl(), integrity.getUrl());
