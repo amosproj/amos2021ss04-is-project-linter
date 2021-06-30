@@ -73,63 +73,64 @@ export class StatisticsTabComponent implements OnInit {
     await this.http
       .get(`${environment.baseURL}/projects/` + apiCall, { params: params })
       .toPromise()
-      .then((results: any) => {
-        console.log('results of call ' + apiCall + params, results);
+      .then(
+        (results: any) => {
+          console.log('results of call ' + apiCall + params, results);
 
-        var timestamps: string[] = new Array();
-        var tags: String[] = new Array();
-        var values: number[][] = new Array();
-        var dayAndTime;
-        var allDayAndTime: string[] = new Array();
+          var timestamps: string[] = new Array();
+          var tags: String[] = new Array();
+          var values: number[][] = new Array();
+          var dayAndTime;
+          var allDayAndTime: string[] = new Array();
 
-        for (let x in results) {
-          dayAndTime = dayjs(x).format('DD.MM.YYYY');
-          if (allDayAndTime.includes(dayAndTime)) {
-            continue;
-          }
-          allDayAndTime.push(dayAndTime);
-          //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
-          timestamps.push(x);
-          var value: number[] = new Array();
-          for (let y in results[x]) {
-            if (apiCall == 'top') {
-              if (!tags.includes(y + ' wichtigsten')) {
-                tags.push(y + ' wichtigsten');
-              }
-            } else {
-              if (!tags.includes(y)) {
-                tags.push(y);
-              }
+          for (let x in results) {
+            dayAndTime = dayjs(x).format('DD.MM.YYYY');
+            if (allDayAndTime.includes(dayAndTime)) {
+              continue;
             }
-            value.push(results[x][y]);
+            allDayAndTime.push(dayAndTime);
+            //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
+            timestamps.push(x);
+            var value: number[] = new Array();
+            for (let y in results[x]) {
+              if (apiCall == 'top') {
+                if (!tags.includes(y + ' wichtigsten')) {
+                  tags.push(y + ' wichtigsten');
+                }
+              } else {
+                if (!tags.includes(y)) {
+                  tags.push(y);
+                }
+              }
+              value.push(results[x][y]);
+            }
+            values.push(value);
           }
-          values.push(value);
-        }
 
-        var seriesValues = new Array(tags.length);
-        for (var i = 0; i < tags.length; i++) {
-          seriesValues[i] = new Array(timestamps.length);
-        }
-
-        for (var i = 0; i < timestamps.length; i++) {
-          for (var j = 0; j < tags.length; j++) {
-            seriesValues[j][i] = values[i][j];
+          var seriesValues = new Array(tags.length);
+          for (var i = 0; i < tags.length; i++) {
+            seriesValues[i] = new Array(timestamps.length);
           }
-        }
 
-        //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
-        this.renderStatisticCharts(
-          timestamps,
-          tags,
-          seriesValues,
-          apiCall,
-          typ
-        );
-      },
-      (error)=>{
-        console.log(error);
-        this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
-      }
+          for (var i = 0; i < timestamps.length; i++) {
+            for (var j = 0; j < tags.length; j++) {
+              seriesValues[j][i] = values[i][j];
+            }
+          }
+
+          //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
+          this.renderStatisticCharts(
+            timestamps,
+            tags,
+            seriesValues,
+            apiCall,
+            typ
+          );
+        },
+        (error) => {
+          console.log(error);
+          this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
+        }
       );
   }
 
@@ -164,7 +165,7 @@ export class StatisticsTabComponent implements OnInit {
           },
           display: true,
           position: 'left',
-          beginAtZero: true,  
+          beginAtZero: true,
           max: yAxisMaximum,
           ticks: {
             callback: ticksCallbackFunction,
@@ -185,9 +186,9 @@ export class StatisticsTabComponent implements OnInit {
           },
           ticks: {
             maxTicksLimit: 10,
-            source: 'auto', 
+            source: 'auto',
           },
-        }
+        },
       },
     };
     var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
@@ -260,11 +261,13 @@ export class StatisticsTabComponent implements OnInit {
           yAxisMaximum
         );
         this.chartImportantChecks = new Chart(
-          chartInterface.canvas.getContext('2d'), {
-          type: 'line',
-          data: null,
-          options: chartInterface.options,
-        });
+          chartInterface.canvas.getContext('2d'),
+          {
+            type: 'line',
+            data: null,
+            options: chartInterface.options,
+          }
+        );
         this.chartImportantChecks.data.labels = timestamps;
         console.log(timestamps);
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
