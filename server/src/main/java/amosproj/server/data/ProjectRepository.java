@@ -21,5 +21,5 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
      */
     Project findFirstByGitlabProjectId(Integer Id);
 
-    Iterable<Project> findAllByNameContainsOrNameSpaceContainsIgnoreCase(String name, String nameSpace);
+    Iterable<Project> findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(String name, String nameSpace);
 }

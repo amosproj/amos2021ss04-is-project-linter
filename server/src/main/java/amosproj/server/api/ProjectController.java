@@ -67,7 +67,7 @@ public class ProjectController {
         if (name == null || name.equals("")) {
             projectList = projectRepository.findAll();
         } else {
-            projectList = projectRepository.findAllByNameContainsOrNameSpaceContainsIgnoreCase(name, name);
+            projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
         }
         // run query and sorting
         LinkedList<ProjectSchema> res = new LinkedList<>();
