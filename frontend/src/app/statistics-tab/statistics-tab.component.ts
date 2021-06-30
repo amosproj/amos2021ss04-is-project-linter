@@ -7,6 +7,7 @@ import { Chart } from 'chart.js';
 import * as dateFns from 'date-fns';
 import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -14,13 +15,15 @@ import * as dayjs from 'dayjs';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     console.log('Statistik ausgewählt');
     this.initStats();
   }
-
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
   ngAfterViewInit(): void {}
 
   chartNames = [
@@ -122,7 +125,12 @@ export class StatisticsTabComponent implements OnInit {
           apiCall,
           typ
         );
-      });
+      },
+      (error)=>{
+        console.log(error);
+        this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
+      }
+      );
   }
 
   unchangedTicks(value, index, values) {
