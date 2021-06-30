@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { OnInit } from '@angular/core';
 import { MatChip } from '@angular/material/chips';
 import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
 import * as dayjs from 'dayjs';
-import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -13,12 +12,11 @@ import { AppComponent } from '../app.component';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private http: HttpClient, private appController: AppComponent) {}
+  constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     console.log('Statistik ausgewählt');
-    this.appController.selectTab(1);
-    this.setOnStatistikTab();
+    this.initStats();
   }
 
   ngAfterViewInit(): void {}
@@ -57,7 +55,7 @@ export class StatisticsTabComponent implements OnInit {
     'rgb(231,233,237)',
   ];
 
-  setOnStatistikTab() {
+  initStats() {
     this.getChartData('top', 'absolute');
     this.getChartData('top', 'percentage');
     this.getChartData('allTags', 'absolute');

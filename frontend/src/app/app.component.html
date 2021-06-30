@@ -5,16 +5,7 @@
 <app-search></app-search>
 
 <!-- tabs-->
-<mat-tab-group
-  [selectedIndex]="selectedIndex"
-  mat-align-tabs="center"
-  color="accent"
-  (selectedTabChange)="checkTabChange($event)"
->
-  <mat-tab label="Projekte"> </mat-tab>
-  <mat-tab label="Statistiken"> </mat-tab>
-  <mat-tab label="Status"> </mat-tab>
-</mat-tab-group>
+<app-nav></app-nav>
 
 <!-- view of the page -->
 <router-outlet #view></router-outlet>
