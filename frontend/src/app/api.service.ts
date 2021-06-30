@@ -8,7 +8,7 @@ import {
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Status, Project, Config, PagedProjects } from './schemas';
+import { Status, Project, Config, PagedProjects, Statistics } from './schemas';
 
 @Injectable({
   providedIn: 'root',
@@ -68,15 +68,18 @@ export class ApiService {
   }
 
   // Projects By All Tags - /projects/allTags
-  // TODO FIXME return type
-  getProjectsByAllTags(type: String): any {
+  getProjectsByAllTags(type: String): Observable<Statistics> {
     const params = new HttpParams().set('type', String(type));
-    return this.http.get(`${this.apiUrl}/projects/allTags`, { params });
+    return this.http.get<Statistics>(`${this.apiUrl}/projects/allTags`, {
+      params,
+    });
   }
 
   // Get Projects By top - /projects/top
-  getProjectsByTop(type: String): any {
+  getProjectsByTop(type: String): Observable<Statistics> {
     const params = new HttpParams().set('type', String(type));
-    return this.http.get(`${this.apiUrl}/projects/top`, { params });
+    return this.http.get<Statistics>(`${this.apiUrl}/projects/top`, {
+      params,
+    });
   }
 }

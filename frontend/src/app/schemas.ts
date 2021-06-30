@@ -68,3 +68,9 @@ export interface Status {
   lintingProgress: number;
   lintingTime: number;
 }
+
+export interface Statistics {
+  [key: string]: {
+    [key: string]: number;
+  };
+}
