@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
-import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
 
 @Component({
@@ -13,7 +12,7 @@ import { StateService } from '../state.service';
 export class SearchComponent implements OnInit {
   searchQuery: FormControl = new FormControl('');
 
-  constructor(private api: ApiService, private state: StateService) {}
+  constructor(private state: StateService) {}
 
   ngOnInit(): void {
     this.searchQuery.valueChanges
