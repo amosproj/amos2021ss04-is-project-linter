@@ -8,6 +8,8 @@ import { Config, PagedProjects } from '../schemas';
 import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
 import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-projects-tab',
@@ -38,14 +40,22 @@ export class ProjectsTabComponent implements OnInit {
   constructor(
     public dialog: MatDialog,
     private api: ApiService,
-    private state: StateService
+    private state: StateService,
+    private _snackBar: MatSnackBar
   ) {}
-
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
   ngOnInit(): void {
     this.state.config.subscribe((data) => {
       this.config = data;
       this.chipOptions = this.state.getTags(this.config);
-    });
+    },
+    (error) => {
+      console.log(error);
+      this.openSnackBar('Fehler beim holen der Config-Datei', 'OK');
+    }
+    );
 
     this.getProjects();
 
@@ -53,7 +63,12 @@ export class ProjectsTabComponent implements OnInit {
     this.state.searchQuery.subscribe((query) => {
       this.searchQuery = query;
       this.getProjects();
-    });
+    },
+    (error)=> {
+      console.log("error");
+      this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
+    }
+    );
   }
 
   ngAfterViewInit() {
@@ -85,7 +100,12 @@ export class ProjectsTabComponent implements OnInit {
       )
       .subscribe((data) => {
         this.projects = data;
-      });
+      },
+      (error)=>{
+        console.log("error");
+        this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
+      }
+      );
 
     // close spinner
     dialogRef.close();
