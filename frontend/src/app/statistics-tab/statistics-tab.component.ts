@@ -9,6 +9,7 @@ import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ApiService } from '../api.service';
 import { Statistics } from '../schemas';
+import { newArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -16,25 +17,10 @@ import { Statistics } from '../schemas';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
-
-  ngOnInit(): void {
-    this.initStats();
-  }
-
-  openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action);
-  }
-
-  ngAfterViewInit(): void {}
-
-  chartNames = [
-    'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
-    'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
-    'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-    'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
-  ];
-
+  
+  //---------------------------------------------------
+  // Class variables
+  //----------------------------------------------------
   csvExportLink = environment.baseURL + '/export/csv';
 
   chartImportantChecks;
@@ -44,6 +30,13 @@ export class StatisticsTabComponent implements OnInit {
   chartCheckPerCategorie;
 
   chartCheckPerCategoriePercentage;
+  
+  chartNames = [
+    'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+    'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
+    'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+    'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
+  ];
 
   chartColors = [
     //green:
@@ -62,12 +55,36 @@ export class StatisticsTabComponent implements OnInit {
     'rgb(231,233,237)',
   ];
 
+  //---------------------------------------------------
+  // Init Methods
+  //---------------------------------------------------
+
+  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
+
+  ngOnInit(): void {
+    this.initStats();
+  }
+
+
+  ngAfterViewInit(): void {}
+
+
   initStats() {
     this.getChartData('top', 'absolute');
-    this.getChartData('top', 'percentage');
-    this.getChartData('allTags', 'absolute');
-    this.getChartData('allTags', 'percentage');
+    //this.getChartData('top', 'percentage');
+    //this.getChartData('allTags', 'absolute');
+    //this.getChartData('allTags', 'percentage');
   }
+
+  // Displays errors
+  openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action);
+  }
+
+  
+  //---------------------------------------------------
+  // Fetch Data for Charts
+  //---------------------------------------------------
 
   async getChartData(apiCall: string, typ: string) {
     if (apiCall == 'allTags') {
@@ -94,155 +111,106 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   processStats(results: Statistics, apiCall: string, typ: string) {
-    var timestamps: string[] = new Array();
-    var tags: String[] = new Array();
-    var values: number[][] = new Array();
-    var dayAndTime;
-    var allDayAndTime: string[] = new Array();
+    var timestamps: string[] = new Array();     // X-Axis values
+    var tags: String[] = new Array();           // Number of lines in plot
+    var values: number[][] = new Array();       // Y-Axis values 2D in shape of [lines][y-axisValues]
 
-    for (let x in results) {
-      dayAndTime = dayjs(x).format('DD.MM.YYYY');
-      if (allDayAndTime.includes(dayAndTime)) {
-        continue;
-      }
-      allDayAndTime.push(dayAndTime);
-      //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
-      timestamps.push(x);
-      var value: number[] = new Array();
-      for (let y in results[x]) {
-        if (apiCall == 'top') {
-          if (!tags.includes(y + ' wichtigsten')) {
-            tags.push(y + ' wichtigsten');
-          }
-        } else {
-          if (!tags.includes(y)) {
-            tags.push(y);
-          }
-        }
-        value.push(results[x][y]);
-      }
-      values.push(value);
-    }
+    this.inPlaceFilterForMultipleDays(results, apiCall, timestamps, tags, values)
 
-    var seriesValues = new Array(tags.length);
-    for (var i = 0; i < tags.length; i++) {
-      seriesValues[i] = new Array(timestamps.length);
-    }
-
-    for (var i = 0; i < timestamps.length; i++) {
-      for (var j = 0; j < tags.length; j++) {
-        seriesValues[j][i] = values[i][j];
-      }
-    }
+    //var seriesValues = values;
+    var seriesValues = this.transpose(values);
 
     //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
     this.renderStatisticCharts(timestamps, tags, seriesValues, apiCall, typ);
   }
 
-  unchangedTicks(value, index, values) {
-    return value;
-  }
+  /*inPlaceFilterForMultipleDays_with_internal_transpose(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], yAxisValues: number[][]){
 
-  percentageTicks(value, index, values) {
-    return value + '%';
-  }
+    // currently not working
 
-  getChartInterfaceForCanvasChart(
-    tags,
-    seriesValues,
-    yAxisLabel,
-    canvasElementID,
-    ticksCallbackFunction,
-    yAxisMaximum
-  ) {
-    var options = {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          display: true,
-        },
-      },
-      scales: {
-        y: {
-          gridLines: {
-            display: true,
-          },
-          display: true,
-          position: 'left',
-          beginAtZero: true,
-          max: yAxisMaximum,
-          ticks: {
-            callback: ticksCallbackFunction,
-          },
-          title: yAxisLabel,
-        },
-        x: {
-          gridLines: {
-            display: true,
-          },
-          type: 'time',
-          time: {
-            round: 'day',
-            displayFormats: {
-              day: 'dd.MM.yy',
-            },
-            tooltipFormat: 'dd.MM.yyyy',
-            minUnit: 'day',
-          },
-          ticks: {
-            maxTicksLimit: 10,
-            source: 'auto',
-          },
-        },
-      },
-    };
-    var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
-    var datasets = [];
-    for (var i = 0; i < tags.length; i++) {
-      if (i != tags.length - 1) {
-        datasets.push({
-          label: tags[i],
-          data: seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 3,
-          fill: false,
-        });
-      } else {
-        datasets.push({
-          label: tags[i],
-          data: seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 3,
-          fill: false,
-        });
-      }
+    // get number of lines
+    var num_of_lines = Object.keys(results).length;
+    var y_axis_values = new Array(num_of_lines);
+    if(num_of_lines == 0){
+      this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK');
     }
-    var dataset = datasets;
-    var x: chartCanvasOptionsDataset = {
-      options: options,
-      canvas: canvas,
-      dataset: dataset,
-    };
-    return x;
-  }
-
-  getMaximumAndAddTenPercent(seriesValues) {
-    var maxGlobal = 0;
-    for (var i = 0; i < seriesValues.length; i++) {
-      var maxLocal = 0;
-      for (var j = 0; j < seriesValues[i].length; j++) {
-        maxLocal =
-          seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
+    var daysWhichAlreadyWereAdded: string[] = new Array();
+    for (let curr_x in results) {
+      var dayAndTime = dayjs(curr_x).format('DD.MM.YYYY');
+      if (daysWhichAlreadyWereAdded.includes(dayAndTime)) {
+        continue;
       }
-      maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
+      daysWhichAlreadyWereAdded.push(dayAndTime);
+      //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
+      xAxisValues.push(curr_x);
+      var value: number[] = new Array();
+      for (let y in results[curr_x]) {
+        var index_of_line = -1;
+        if (apiCall == 'top') {
+          if (!lines.includes(y + ' wichtigsten')) {
+           lines.push(y + ' wichtigsten');
+          }
+          index_of_line = lines.indexOf((y + ' wichtigsten'));
+        } else {
+          if (!lines.includes(y)) {
+           lines.push(y);
+          }
+          index_of_line = lines.indexOf((y + ' wichtigsten'));
+        }
+        value.push(results[curr_x][y]);
+        console.log(y_axis_values.length, " index", index_of_line, " y vals", y_axis_values)
+        y_axis_values[index_of_line].push(results[curr_x][y])
+        console.log("y",y, results[curr_x])
+      }
+      yAxisValues.push(value);
     }
-    maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
-    return Math.ceil(maxGlobal);
+    console.log("old",yAxisValues)
+    console.log("transposed",y_axis_values)
+ }*/
+
+  inPlaceFilterForMultipleDays(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], yAxisValues: number[][]){
+     // Filter only 
+     var daysWhichAlreadyWereAdded: string[] = new Array();
+     for (let curr_x in results) {
+       var dayAndTime = dayjs(curr_x).format('DD.MM.YYYY');
+       if (daysWhichAlreadyWereAdded.includes(dayAndTime)) {
+         continue;
+       }
+       daysWhichAlreadyWereAdded.push(dayAndTime);
+       //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
+       xAxisValues.push(curr_x);
+       var value: number[] = new Array();
+       for (let y in results[curr_x]) {
+         if (apiCall == 'top') {
+           if (!lines.includes(y + ' wichtigsten')) {
+            lines.push(y + ' wichtigsten');
+           }
+         } else {
+           if (!lines.includes(y)) {
+            lines.push(y);
+           }
+         }
+         value.push(results[curr_x][y]);
+         console.log("y",y, results[curr_x])
+       }
+       console.log(value)
+       yAxisValues.push(value);
+     }
   }
 
+  transpose(a) {
+    return Object.keys(a[0]).map(function(c) {
+        return a.map(function(r) { return r[c]; });
+    });
+  }
+
+
+  
+  //---------------------------------------------------
+  // Create Charts
+  //---------------------------------------------------
+
+  
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
     // API Call for statistics are either top or allTags (best ones, or all sorted via category)
     // type is either absolute or in percentage
@@ -364,6 +332,115 @@ export class StatisticsTabComponent implements OnInit {
         'ERROR in statistics-tab.component.ts. No corresponding apiCall for given parameter in renderStatisticCharts().'
       );
     }
+  }
+
+  
+
+  getChartInterfaceForCanvasChart(
+    tags,
+    seriesValues,
+    yAxisLabel,
+    canvasElementID,
+    ticksCallbackFunction,
+    yAxisMaximum
+  ) {
+    var options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          display: true,
+        },
+      },
+      scales: {
+        y: {
+          gridLines: {
+            display: true,
+          },
+          display: true,
+          position: 'left',
+          beginAtZero: true,
+          max: yAxisMaximum,
+          ticks: {
+            callback: ticksCallbackFunction,
+          },
+          title: yAxisLabel,
+        },
+        x: {
+          gridLines: {
+            display: true,
+          },
+          type: 'time',
+          time: {
+            round: 'day',
+            displayFormats: {
+              day: 'dd.MM.yy',
+            },
+            tooltipFormat: 'dd.MM.yyyy',
+            minUnit: 'day',
+          },
+          ticks: {
+            maxTicksLimit: 10,
+            source: 'auto',
+          },
+        },
+      },
+    };
+    var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
+    var datasets = [];
+    for (var i = 0; i < tags.length; i++) {
+      if (i != tags.length - 1) {
+        datasets.push({
+          label: tags[i],
+          data: seriesValues[i],
+          backgroundColor: this.chartColors[i % this.chartColors.length],
+          borderColor: this.chartColors[i % this.chartColors.length],
+          pointRadius: 3,
+          fill: false,
+        });
+      } else {
+        datasets.push({
+          label: tags[i],
+          data: seriesValues[i],
+          backgroundColor: this.chartColors[i % this.chartColors.length],
+          borderColor: this.chartColors[i % this.chartColors.length],
+          pointRadius: 3,
+          fill: false,
+        });
+      }
+    }
+    var dataset = datasets;
+    var x: chartCanvasOptionsDataset = {
+      options: options,
+      canvas: canvas,
+      dataset: dataset,
+    };
+    return x;
+  }
+
+  unchangedTicks(value, index, values) {
+    // Ticks for y axis
+    return value;
+  }
+
+  percentageTicks(value, index, values) {
+    // Ticks for y axis
+    return value + '%';
+  }
+
+  
+  getMaximumAndAddTenPercent(seriesValues) {
+    var maxGlobal = 0;
+    for (var i = 0; i < seriesValues.length; i++) {
+      var maxLocal = 0;
+      for (var j = 0; j < seriesValues[i].length; j++) {
+        maxLocal =
+          seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
+      }
+      maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
+    }
+    maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
+    return Math.ceil(maxGlobal);
   }
 
   toggleSelection(chip: MatChip) {
