@@ -1,5 +1,5 @@
 import { ChangeDetectorRef } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -7,14 +7,10 @@ import { Router } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   selectedIndex = 0;
 
   constructor(private router: Router, private cdRef: ChangeDetectorRef) {}
-
-  ngOnInit() {}
-
-  ngAfterViewInit() {}
 
   selectTab(index: number): void {
     this.selectedIndex = index;
