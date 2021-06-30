@@ -19,7 +19,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  // Handle Errors
+  // Handle Errors -- TODO use it
   error(error: HttpErrorResponse): Observable<String> {
     let errorMessage: string = '';
     if (error.error instanceof ErrorEvent) {

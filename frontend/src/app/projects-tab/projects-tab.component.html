@@ -78,11 +78,25 @@
       >
     </mat-paginator>
 
-    <div fxLayout="row wrap" fxLayoutAlign="center end">
-      <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">
-        <app-repository [project]="proj"></app-repository>
+    <ng-container *ngIf="projects.content.length > 0; else no_projects">
+      <div fxLayout="row wrap" fxLayoutAlign="center end">
+        <div fxLayoutAlign="center end" *ngFor="let proj of projects.content">
+          <app-repository [project]="proj"></app-repository>
+        </div>
       </div>
-    </div>
+    </ng-container>
+    <ng-template #no_projects>
+      <p>
+        Leider keine Projekte vorhanden, starten sie doch den Crawler unter
+        <a
+          [routerLink]="['/status']"
+          [queryParams]="{ debug: true }"
+          queryParamsHandling="merge"
+        >
+          Status
+        </a>
+      </p>
+    </ng-template>
   </mat-card-content>
   <!-- END Paginator and Repositories -->
 </mat-card>

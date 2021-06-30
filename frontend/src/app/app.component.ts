@@ -8,15 +8,19 @@ import { Router } from '@angular/router';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private router: Router,  private cdRef:ChangeDetectorRef ) {}
   selectedIndex = 0;
+
+  constructor(private router: Router, private cdRef: ChangeDetectorRef) {}
+
   ngOnInit() {}
 
   ngAfterViewInit() {}
+
   selectTab(index: number): void {
     this.selectedIndex = index;
     this.cdRef.detectChanges();
   }
+
   checkTabChange($event) {
     if ($event.index == 0) {
       this.router.navigate(['projects']);

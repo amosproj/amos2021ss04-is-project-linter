@@ -5,7 +5,6 @@ import { StatisticsTabComponent } from './statistics-tab/statistics-tab.componen
 import { StatusTabComponent } from './status-tab/status-tab.component';
 
 const routes: Routes = [
-  
   { path: 'projects', component: ProjectsTabComponent },
   { path: 'statistics', component: StatisticsTabComponent },
   { path: 'status', component: StatusTabComponent },
