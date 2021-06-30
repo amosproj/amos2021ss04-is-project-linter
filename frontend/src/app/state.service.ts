@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { share } from 'rxjs/operators';
+import { share, skip } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { Config } from './schemas';
 
@@ -11,7 +11,7 @@ export class StateService {
   private searchQuerySource = new BehaviorSubject<string>('');
   searchQuery: Observable<string> = this.searchQuerySource
     .asObservable()
-    .pipe(share());
+    .pipe(share(), skip(1));
   config: Observable<Config>;
 
   constructor(private api: ApiService) {}
