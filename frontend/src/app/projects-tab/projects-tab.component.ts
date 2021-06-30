@@ -114,7 +114,7 @@ export class ProjectsTabComponent implements OnInit {
         }
       )
       .add(() => {
-        // close spinner
+        // finally close spinner
         dialogRef.close();
       });
   }
@@ -122,6 +122,7 @@ export class ProjectsTabComponent implements OnInit {
   updatePagination(pageEvent: PageEvent) {
     this.pageSize = pageEvent.pageSize;
     this.currentPage = pageEvent.pageIndex;
+    console.log('call from pagination');
     this.getProjects();
   }
 }
