@@ -1,11 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { timer } from 'rxjs';
 import { concatMap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
 import { Status } from '../schemas';
-import { AppComponent } from '../app.component';
 
 @Component({
   selector: 'app-status-tab',
@@ -15,19 +14,13 @@ import { AppComponent } from '../app.component';
 export class StatusTabComponent implements OnInit {
   status: Status = {} as Status;
 
-  constructor(
-    private api: ApiService,
-    private _snackBar: MatSnackBar,
-    private appController: AppComponent
-  ) {}
+  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
 
   ngOnInit(): void {
-    this.appController.selectTab(2);
-
     timer(1, 2000)
       .pipe(concatMap((_) => this.api.crawlerStatus()))
       .subscribe(

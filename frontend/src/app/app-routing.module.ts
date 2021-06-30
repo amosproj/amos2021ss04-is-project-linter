@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'projects', component: ProjectsTabComponent },
   { path: 'statistics', component: StatisticsTabComponent },
   { path: 'status', component: StatusTabComponent },
+  { path: '**', redirectTo: 'projects' },
 ];
 
 @NgModule({
