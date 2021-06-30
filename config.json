@@ -13,7 +13,7 @@
         "active": "Crawler läuft",
         "inactive": "Crawler ist inaktiv"
       },
-      "maxProjects": 10
+      "maxProjects": 50
     },
     "mostImportantChecks": [
       3,

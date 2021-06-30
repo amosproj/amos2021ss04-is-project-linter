@@ -88,13 +88,7 @@
     <ng-template #no_projects>
       <p>
         Leider keine Projekte vorhanden, starten sie doch den Crawler unter
-        <a
-          [routerLink]="['/status']"
-          [queryParams]="{ debug: true }"
-          queryParamsHandling="merge"
-        >
-          Status
-        </a>
+        <a [routerLink]="['/status']">Status</a>
       </p>
     </ng-template>
   </mat-card-content>
