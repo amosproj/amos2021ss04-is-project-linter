@@ -183,6 +183,7 @@ export class StatisticsTabComponent implements OnInit {
               day: 'dd.MM.yy',
             },
             tooltipFormat: 'dd.MM.yyyy',
+            minUnit: 'day'
           },
           ticks: {
             maxTicksLimit: 10,
