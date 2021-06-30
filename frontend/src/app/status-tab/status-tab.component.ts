@@ -22,8 +22,6 @@ export class StatusTabComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('StatusTabComponent:OnInit');
-
     timer(1, 2000)
       .pipe(
         concatMap((_) => this.api.crawlerStatus()),
@@ -36,14 +34,12 @@ export class StatusTabComponent implements OnInit, OnDestroy {
           this.status = res;
         },
         (error) => {
-          console.log(error);
           this.openSnackBar('Fehler beim holen von Crawler Status', 'OK');
         }
       );
   }
 
   ngOnDestroy() {
-    console.log('StatusTabComponent:OnDestroy');
     this.stopPolling.next();
   }
 
@@ -53,7 +49,6 @@ export class StatusTabComponent implements OnInit, OnDestroy {
         console.log(res);
       },
       (error) => {
-        console.log(error);
         this.openSnackBar('Fehler beim starten des Crawlers', 'OK');
       }
     );

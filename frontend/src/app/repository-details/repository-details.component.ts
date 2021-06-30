@@ -150,9 +150,6 @@ export class RepositoryDetailsComponent implements OnInit {
         this.tags,
         this.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
-
-    //console.log(this.chartNames);
-    //this.addTilesForCategoryGraphAndTipps();
     // sortiere die Checks um die 3 besten Tipps darzustellen
     this.latestLintingResults.forEach((val) =>
       this.latestLintingResultsSortedPriority.push(Object.assign({}, val))

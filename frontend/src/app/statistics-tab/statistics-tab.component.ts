@@ -19,12 +19,13 @@ export class StatisticsTabComponent implements OnInit {
   constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    console.log('Statistik ausgewählt');
     this.initStats();
   }
+
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
+
   ngAfterViewInit(): void {}
 
   chartNames = [
@@ -76,7 +77,6 @@ export class StatisticsTabComponent implements OnInit {
           this.processStats(data, apiCall, typ);
         },
         (error) => {
-          console.log(error);
           this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
         }
       );
@@ -87,7 +87,6 @@ export class StatisticsTabComponent implements OnInit {
           this.processStats(data, apiCall, typ);
         },
         (error) => {
-          console.log(error);
           this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
         }
       );
@@ -231,7 +230,6 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   getMaximumAndAddTenPercent(seriesValues) {
-    //console.log('seriesValues',seriesValues);
     var maxGlobal = 0;
     for (var i = 0; i < seriesValues.length; i++) {
       var maxLocal = 0;
@@ -239,10 +237,8 @@ export class StatisticsTabComponent implements OnInit {
         maxLocal =
           seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
       }
-      //console.log('maxLocal',maxLocal);
       maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
     }
-    //console.log('maxGlobal',maxGlobal);
     maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
     return Math.ceil(maxGlobal);
   }
@@ -279,7 +275,6 @@ export class StatisticsTabComponent implements OnInit {
         console.log(timestamps);
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
-        //console.log(this.chartImportantChecks.data);
       } else if (type == 'percentage') {
         var yAxisLabel = ''; //'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'importantChecksPercentage';
@@ -304,7 +299,6 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecksPercentage.data.datasets =
           chartInterface.dataset;
         this.chartImportantChecksPercentage.update();
-        //console.log(this.chartImportantChecksPercentage.data);
       } else {
         console.log(
           'ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().'
@@ -335,7 +329,6 @@ export class StatisticsTabComponent implements OnInit {
         this.chartCheckPerCategorie.data.labels = timestamps;
         this.chartCheckPerCategorie.data.datasets = chartInterface.dataset;
         this.chartCheckPerCategorie.update();
-        //console.log(this.chartCheckPerCategorie.data);
       } else if (type == 'percentage') {
         var yAxisLabel = ''; // 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
         var canvasElementID = 'checksPerCategoriePercentage';

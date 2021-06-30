@@ -55,7 +55,6 @@ export class ProjectsTabComponent implements OnInit {
         this.chipOptions = this.state.getTags(this.config);
       },
       (error) => {
-        console.log(error);
         this.openSnackBar('Fehler beim holen der Config-Datei', 'OK');
       }
     );
@@ -70,7 +69,6 @@ export class ProjectsTabComponent implements OnInit {
         this.getProjects();
       },
       (error) => {
-        console.log('error');
         this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
       }
     );
@@ -109,7 +107,6 @@ export class ProjectsTabComponent implements OnInit {
           this.projects = data;
         },
         (error) => {
-          console.log('error');
           this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
         }
       )
@@ -122,7 +119,6 @@ export class ProjectsTabComponent implements OnInit {
   updatePagination(pageEvent: PageEvent) {
     this.pageSize = pageEvent.pageSize;
     this.currentPage = pageEvent.pageIndex;
-    console.log('call from pagination');
     this.getProjects();
   }
 }
