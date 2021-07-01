@@ -90,7 +90,6 @@ export class StatisticsTabComponent implements OnInit {
     if (apiCall == 'allTags') {
       this.api.getProjectsByAllTags(typ).subscribe(
         (data) => {
-          console.log(data);
           this.processStats(data, apiCall, typ);
         },
         (error) => {
@@ -100,7 +99,6 @@ export class StatisticsTabComponent implements OnInit {
     } else if (apiCall == 'top') {
       this.api.getProjectsByTop(typ).subscribe(
         (data) => {
-          console.log(data);
           this.processStats(data, apiCall, typ);
         },
         (error) => {
@@ -113,98 +111,63 @@ export class StatisticsTabComponent implements OnInit {
   processStats(results: Statistics, apiCall: string, typ: string) {
     var timestamps: string[] = new Array();     // X-Axis values
     var tags: String[] = new Array();           // Number of lines in plot
-    var values: number[][] = new Array();       // Y-Axis values 2D in shape of [lines][y-axisValues]
+    var keys: string[] = new Array();           // Name/key of the lines for access in result
+    var values: number[][] = new Array();       // Y-Axis values 2D in shape of [lines][y-axisValues] 
 
-    this.inPlaceFilterForMultipleDays(results, apiCall, timestamps, tags, values)
-
-    //var seriesValues = values;
-    var seriesValues = this.transpose(values);
-
-    //this.setChartData(timestamps, tags, seriesValues, typ, apiCall);
-    this.renderStatisticCharts(timestamps, tags, seriesValues, apiCall, typ);
-  }
-
-  /*inPlaceFilterForMultipleDays_with_internal_transpose(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], yAxisValues: number[][]){
-
-    // currently not working
-
-    // get number of lines
-    var num_of_lines = Object.keys(results).length;
-    var y_axis_values = new Array(num_of_lines);
-    if(num_of_lines == 0){
+    if(Object.keys(results).length == 0){
       this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK');
+      return;
     }
+
+    this.inPlaceFillTimestamps(results, timestamps);
+    this.inPlaceFillKeysAndLines(results, apiCall, timestamps, tags, keys);
+    values = new Array(tags.length).fill(0).map(() => new Array(timestamps.length).fill(0));
+    this.inPlaceFillValues(results, apiCall, timestamps, keys, values);
+    this.renderStatisticCharts(timestamps, tags, values, apiCall, typ);
+  }
+  
+  inPlaceFillTimestamps(results: Statistics, xAxisValues: String[]){
     var daysWhichAlreadyWereAdded: string[] = new Array();
     for (let curr_x in results) {
-      var dayAndTime = dayjs(curr_x).format('DD.MM.YYYY');
-      if (daysWhichAlreadyWereAdded.includes(dayAndTime)) {
+      var timestamp = dayjs(curr_x).format('DD.MM.YYYY');
+      if (daysWhichAlreadyWereAdded.includes(timestamp)) {
         continue;
       }
-      daysWhichAlreadyWereAdded.push(dayAndTime);
-      //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
+      daysWhichAlreadyWereAdded.push(timestamp);
       xAxisValues.push(curr_x);
-      var value: number[] = new Array();
-      for (let y in results[curr_x]) {
-        var index_of_line = -1;
-        if (apiCall == 'top') {
-          if (!lines.includes(y + ' wichtigsten')) {
-           lines.push(y + ' wichtigsten');
-          }
-          index_of_line = lines.indexOf((y + ' wichtigsten'));
-        } else {
-          if (!lines.includes(y)) {
-           lines.push(y);
-          }
-          index_of_line = lines.indexOf((y + ' wichtigsten'));
-        }
-        value.push(results[curr_x][y]);
-        console.log(y_axis_values.length, " index", index_of_line, " y vals", y_axis_values)
-        y_axis_values[index_of_line].push(results[curr_x][y])
-        console.log("y",y, results[curr_x])
-      }
-      yAxisValues.push(value);
     }
-    console.log("old",yAxisValues)
-    console.log("transposed",y_axis_values)
- }*/
-
-  inPlaceFilterForMultipleDays(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], yAxisValues: number[][]){
-     // Filter only 
-     var daysWhichAlreadyWereAdded: string[] = new Array();
-     for (let curr_x in results) {
-       var dayAndTime = dayjs(curr_x).format('DD.MM.YYYY');
-       if (daysWhichAlreadyWereAdded.includes(dayAndTime)) {
-         continue;
-       }
-       daysWhichAlreadyWereAdded.push(dayAndTime);
-       //timestamps.push(dateFns.setMinutes(dateFns.setHours(new Date(x),0),0).toISOString());
-       xAxisValues.push(curr_x);
-       var value: number[] = new Array();
-       for (let y in results[curr_x]) {
-         if (apiCall == 'top') {
-           if (!lines.includes(y + ' wichtigsten')) {
-            lines.push(y + ' wichtigsten');
-           }
-         } else {
-           if (!lines.includes(y)) {
-            lines.push(y);
-           }
-         }
-         value.push(results[curr_x][y]);
-         console.log("y",y, results[curr_x])
-       }
-       console.log(value)
-       yAxisValues.push(value);
-     }
   }
 
-  transpose(a) {
-    return Object.keys(a[0]).map(function(c) {
-        return a.map(function(r) { return r[c]; });
-    });
+  inPlaceFillKeysAndLines(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], keys: string[]){
+    for (let y in results[String(xAxisValues[0])]) {
+      if (apiCall == 'top') {
+        if (!lines.includes(y + ' wichtigsten')) {
+          lines.push(y + ' wichtigsten');
+          keys.push(y);
+        }else{
+          this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK'); // double labels for a single timestamp
+        }
+      } else {
+        if (!lines.includes(y)) {
+         lines.push(y);
+         keys.push(y);
+        }else{
+          this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK'); // double labels for a single timestamp
+        }
+      }
+    }
   }
 
+  inPlaceFillValues(results: Statistics, apiCall: string, xAxisValues: String[], keys: string[], yAxisValues: number[][]){
+    for (let x_val = 0; x_val < xAxisValues.length; x_val++){
+      for(let line_idx = 0; line_idx < keys.length; line_idx++){
+        var curr_timestamp = results[String(xAxisValues[x_val])];
+        yAxisValues[line_idx][x_val] = curr_timestamp[keys[line_idx]];
+      }
+    }
+  }
 
+  
   
   //---------------------------------------------------
   // Create Charts
@@ -221,8 +184,6 @@ export class StatisticsTabComponent implements OnInit {
         var canvasElementID = 'importantChecks';
         var yAxisMaximum: number =
           this.getMaximumAndAddTenPercent(seriesValues);
-        console.log('seriesValues', seriesValues);
-        console.log('topMAax', yAxisMaximum);
         chartInterface = this.getChartInterfaceForCanvasChart(
           tags,
           seriesValues,
@@ -240,7 +201,6 @@ export class StatisticsTabComponent implements OnInit {
           }
         );
         this.chartImportantChecks.data.labels = timestamps;
-        console.log(timestamps);
         this.chartImportantChecks.data.datasets = chartInterface.dataset;
         this.chartImportantChecks.update();
       } else if (type == 'percentage') {
@@ -268,9 +228,7 @@ export class StatisticsTabComponent implements OnInit {
           chartInterface.dataset;
         this.chartImportantChecksPercentage.update();
       } else {
-        console.log(
-          'ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().'
-        );
+        this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
       }
     } else if (apiCall == 'allTags') {
       if (type == 'absolute') {
@@ -323,14 +281,10 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecksPercentage.update();
         console.log(this.chartImportantChecksPercentage.data);
       } else {
-        console.log(
-          'ERROR in statistics-tab.component.ts. No corresponding type for given parameter in renderStatisticCharts().'
-        );
+        this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
       }
     } else {
-      console.log(
-        'ERROR in statistics-tab.component.ts. No corresponding apiCall for given parameter in renderStatisticCharts().'
-      );
+      this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
     }
   }
 
@@ -441,10 +395,6 @@ export class StatisticsTabComponent implements OnInit {
     }
     maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
     return Math.ceil(maxGlobal);
-  }
-
-  toggleSelection(chip: MatChip) {
-    chip.toggleSelected();
   }
 }
 
