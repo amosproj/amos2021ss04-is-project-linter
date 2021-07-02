@@ -105,7 +105,7 @@ export class StatisticsTabComponent implements OnInit {
     values = new Array(tags.length)
       .fill(0)
       .map(() => new Array(timestamps.length).fill(0));
-    this.inPlaceFillValues(results, apiCall, timestamps, keys, values);
+    this.inPlaceFillValues(results, timestamps, keys, values);
     this.renderStatisticCharts(timestamps, tags, values, apiCall, typ);
   }
 
@@ -149,7 +149,6 @@ export class StatisticsTabComponent implements OnInit {
 
   inPlaceFillValues(
     results: Statistics,
-    apiCall: string,
     xAxisValues: String[],
     keys: string[],
     yAxisValues: number[][]
@@ -289,12 +288,12 @@ export class StatisticsTabComponent implements OnInit {
     return x;
   }
 
-  unchangedTicks(value, index, values) {
+  unchangedTicks(value) {
     // Ticks for y axis
     return value;
   }
 
-  percentageTicks(value, index, values) {
+  percentageTicks(value) {
     // Ticks for y axis
     return value + '%';
   }
