@@ -55,8 +55,8 @@ public class ProjectController {
     //**********************************
 
     @GetMapping("/projects")
-    public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false) Boolean delta,
-                                           @RequestParam(name = "name", required = false) String name,
+    public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false, defaultValue = "false") Boolean delta,
+                                           @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                            Pageable pageable) {
         // get sort criteria
         List<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toList();
@@ -90,7 +90,7 @@ public class ProjectController {
 
         Iterable<Project> projectList = projectRepository.findAll();
         Iterator<Project> it = projectList.iterator();
-        TreeMap<LocalDateTime, HashMap<String, Object>> res = new TreeMap<LocalDateTime, HashMap<String, Object>>();
+        TreeMap<LocalDateTime, HashMap<String, Object>> res = new TreeMap<>();
 
         while (it.hasNext()) {
             Project project = it.next();
@@ -167,9 +167,8 @@ public class ProjectController {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 TreeMap<Long, Long> checksPassedByPrio = new TreeMap<Long, Long>();
 
-                Iterator<JsonNode> nodeIterator = node.iterator();
-                while (nodeIterator.hasNext()) {
-                    Long l = nodeIterator.next().asLong();
+                for (JsonNode jsonNode : node) {
+                    Long l = jsonNode.asLong();
                     checksPassedByPrio.putIfAbsent(l, 0L);
                 }
 
@@ -234,7 +233,6 @@ public class ProjectController {
     /**
      * API endpoint der eine CSV mit allen results returned
      *
-     * @param response
      * @throws Exception
      */
     @GetMapping("/export/csv")
@@ -273,9 +271,9 @@ public class ProjectController {
     public ResponseEntity<String> crawl() {
         if (!crawler.getCrawlerActive()) {
             crawler.runCrawler();
-            return new ResponseEntity("ok", HttpStatus.OK);
+            return new ResponseEntity<>("ok", HttpStatus.OK);
         } else {
-            return new ResponseEntity("Crawler is already running, slow down!", HttpStatus.TOO_MANY_REQUESTS);
+            return new ResponseEntity<>("Crawler is already running, slow down!", HttpStatus.TOO_MANY_REQUESTS);
         }
     }
 
@@ -309,7 +307,7 @@ public class ProjectController {
     public List<ProjectSchema> cachedProjects(String name, Boolean delta, List<String> allProperties) {
         // get projects (matching name if present)
         Iterable<Project> projectList;
-        if (name == null || name.equals("")) {
+        if (name.equals("")) {
             projectList = projectRepository.findAll();
         } else {
             projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
@@ -354,7 +352,7 @@ public class ProjectController {
             res.add(proj);
         }
         // Sort by checks passed in tag
-        if (delta == null || !delta) {
+        if (!delta) {
             res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
         } else {
             res.sort(Comparator.comparingInt(x -> -x.getDelta()));
