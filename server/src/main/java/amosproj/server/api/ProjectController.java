@@ -59,17 +59,14 @@ public class ProjectController {
                                            @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
         // get sort criteria
-        LinkedList<String> allProperties = new LinkedList<>();
-        for (Sort.Order next : pageable.getSort()) {
-            allProperties.add(next.getProperty());
-        }
+        List<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toList();
         // get result set
-        LinkedList<ProjectSchema> res = cachedProjects(name, delta, allProperties);
+        List<ProjectSchema> res = cachedProjects(name, delta, allProperties);
         // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
         if (start > end) {
-            return new PageImpl<>(new LinkedList<>(), pageable, res.size());
+            return new PageImpl<>(new ArrayList<>(), pageable, res.size());
         } else {
             return new PageImpl<>(res.subList(start, end), pageable, res.size());
         }
@@ -309,7 +306,7 @@ public class ProjectController {
     }
 
     @Cacheable("projectList")
-    public LinkedList<ProjectSchema> cachedProjects(String name, Boolean delta, LinkedList<String> allProperties) {
+    public List<ProjectSchema> cachedProjects(String name, Boolean delta, List<String> allProperties) {
         // get projects (matching name if present)
         Iterable<Project> projectList;
         if (name == null || name.equals("")) {
@@ -341,7 +338,6 @@ public class ProjectController {
                     }
                 }
                 proj.setLatestPassedByTag(checksPassedByTags(lr.get(lr.size() - 1).getCheckResults()));
-
 
                 int allRequestedProperties = 0;
                 int allRequested30DaysAgo = 0;
