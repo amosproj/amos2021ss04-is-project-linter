@@ -5,8 +5,10 @@ import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
 
 import { environment } from 'src/environments/environment';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { ApiService } from '../api.service';
 import { Statistics } from '../schemas';
 
@@ -39,13 +41,27 @@ export class StatisticsTabComponent implements OnInit {
     'rgb(231,233,237)', //grey
   ];
 
-  constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
+  constructor(
+    private api: ApiService,
+    private _snackBar: MatSnackBar,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
+    // open spinner
+    let dialogRef = this.dialog.open(SpinnerComponent, {
+      width: '0px',
+      height: '0px',
+      panelClass: 'custom-dialog-container',
+    });
+
     this.getChartData('top', 'absolute');
     this.getChartData('top', 'percentage');
     this.getChartData('allTags', 'absolute');
     this.getChartData('allTags', 'percentage');
+
+    // close spinner
+    dialogRef.close();
   }
 
   openSnackBar(message: string, action: string) {
