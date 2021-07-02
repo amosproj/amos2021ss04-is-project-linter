@@ -82,7 +82,6 @@ export class RepositoryDetailsComponent implements OnInit {
 
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
     //rendert eine Chart
-    console.log(chartName);
     const canvas = <HTMLCanvasElement>(
       document.getElementById(String(chartName))
     );
@@ -243,10 +242,6 @@ export class RepositoryDetailsComponent implements OnInit {
     } else if (lintingResult.severity == 'HIGH') {
       numberOfTestsPerSeverityInTags[index][3] += 1;
       numberOfTestsPerSeverityInTags[0][3] += 1;
-    } else {
-      console.log(
-        'In Repository Details component: addTestToFillNumTestsPerSeverity() found test which does not have a severity label!'
-      );
     }
     return numberOfTestsPerSeverityInTags;
   }
@@ -291,7 +286,6 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   removePassedChecks() {
-    console.log(this.tiles);
     this.latestLintingResultsFailedChecks = new Array();
     for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
       if (!this.latestLintingResultsSortedPriority[i].result) {

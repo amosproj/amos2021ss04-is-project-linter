@@ -286,7 +286,6 @@ export class StatisticsTabComponent implements OnInit {
         this.chartImportantChecksPercentage.data.datasets =
           chartInterface.dataset;
         this.chartImportantChecksPercentage.update();
-        console.log(this.chartImportantChecksPercentage.data);
       } else {
         this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
       }
