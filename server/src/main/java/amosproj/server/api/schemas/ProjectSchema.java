@@ -28,8 +28,8 @@ public class ProjectSchema {
     // relations
     private List<LintingResultSchema> lintingResults;
     // extra info
-    private HashMap<String, Long> latestPassedByTag;
-    private HashMap<String, Long> passedByTag30DaysAgo;
+    private HashMap<String, Long> latestPassedByTag = new HashMap<>();
+    private HashMap<String, Long> passedByTag30DaysAgo = new HashMap<>();
     private int latestPassedTotal;
     private int delta;
 

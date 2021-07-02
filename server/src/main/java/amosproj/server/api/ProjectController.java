@@ -317,44 +317,44 @@ public class ProjectController {
         } else {
             projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
         }
+        // calculate properties required for sorting
+        LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
         // calculate sorting parameters
         LinkedList<ProjectSchema> res = new LinkedList<>();
         for (Project projAlt : projectList) {
             // create schema
             ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
-            // calculate properties required for sorting
-            LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
-
+            // get results
             List<LintingResult> lr = projAlt.getResults();
-            LintingResult lrs = null;
-            for (LintingResult lintingResult : lr) {
-                if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
-                    lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
-                    break;
+            if (!lr.isEmpty()) {
+                // TODO performance
+                if (delta) {
+                    LintingResult lrs = null;
+                    for (LintingResult lintingResult : lr) { // TODO go backwards to increase search speed
+                        if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
+                            lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
+                            break;
+                        }
+                    }
+                    if (lrs != null) {
+                        proj.setPassedByTag30DaysAgo(checksPassedByTags(lrs.getCheckResults()));
+                    }
                 }
-            }
-            int lastIdx = Math.max(lr.size() - 1, 0);
-            if (lastIdx < lr.size()) { // At least one LintingResult exists
-                proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
-                if (lrs != null) {
-                    proj.setPassedByTag30DaysAgo(checksPassedByTags(lrs.getCheckResults()));
+                proj.setLatestPassedByTag(checksPassedByTags(lr.get(lr.size() - 1).getCheckResults()));
+
+
+                int allRequestedProperties = 0;
+                int allRequested30DaysAgo = 0;
+                HashMap<String, Long> latest = proj.getLatestPassedByTag();
+                HashMap<String, Long> oldest = proj.getPassedByTag30DaysAgo();
+                for (String property : allProperties) {
+                    allRequestedProperties += latest.getOrDefault(property, 0L);
+                    allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
                 }
-            } else {
-                proj.setLatestPassedByTag(new HashMap<>());
-                proj.setPassedByTag30DaysAgo(new HashMap<>());
+                proj.setLatestPassedTotal(allRequestedProperties);
+                proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
+                // ~~~~ TODO performance
             }
-
-            int allRequestedProperties = 0;
-            int allRequested30DaysAgo = 0;
-            HashMap<String, Long> latest = proj.getLatestPassedByTag();
-            HashMap<String, Long> oldest = proj.getPassedByTag30DaysAgo();
-            for (String property : allProperties) {
-                allRequestedProperties += latest.getOrDefault(property, 0L);
-                allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
-            }
-            proj.setLatestPassedTotal(allRequestedProperties);
-            proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
-
             res.add(proj);
         }
         // Sort by checks passed in tag
