@@ -21,22 +21,16 @@ export class StatisticsTabComponent implements OnInit {
   // Class variables
   //----------------------------------------------------
   csvExportLink = environment.baseURL + '/export/csv';
-
   chartImportantChecks;
-
   chartImportantChecksPercentage;
-
   chartCheckPerCategorie;
-
   chartCheckPerCategoriePercentage;
-
   chartNames = [
     'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
     'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
     'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben',
     'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
   ];
-
   chartColors = [
     //green:
     'rgb(75, 192, 192)',
@@ -61,28 +55,17 @@ export class StatisticsTabComponent implements OnInit {
   constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.initStats();
-  }
-
-  ngAfterViewInit(): void {}
-
-  initStats() {
     this.getChartData('top', 'absolute');
     this.getChartData('top', 'percentage');
     this.getChartData('allTags', 'absolute');
     this.getChartData('allTags', 'percentage');
   }
 
-  // Displays errors
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
   }
 
-  //---------------------------------------------------
-  // Fetch Data for Charts
-  //---------------------------------------------------
-
-  async getChartData(apiCall: string, typ: string) {
+  getChartData(apiCall: string, typ: string) {
     if (apiCall == 'allTags') {
       this.api.getProjectsByAllTags(typ).subscribe(
         (data) => {
@@ -177,13 +160,7 @@ export class StatisticsTabComponent implements OnInit {
     }
   }
 
-  //---------------------------------------------------
-  // Create Charts
-  //---------------------------------------------------
-
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
-    // API Call for statistics are either top or allTags (best ones, or all sorted via category)
-    // type is either absolute or in percentage
     var chartInterface: chartCanvasOptionsDataset;
     if (apiCall == 'top') {
       if (type == 'absolute') {
