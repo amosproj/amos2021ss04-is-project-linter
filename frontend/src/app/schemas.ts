@@ -74,3 +74,10 @@ export interface Statistics {
     [key: string]: number;
   };
 }
+// Für angular tiles
+export interface Tile {
+  color: string;
+  cols: number;
+  rows: number;
+  text: string;
+}

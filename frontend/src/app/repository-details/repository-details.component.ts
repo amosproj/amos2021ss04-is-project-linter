@@ -5,7 +5,7 @@ import Chart from 'chart.js/auto';
 import * as dayjs from 'dayjs';
 
 import { ApiService } from '../api.service';
-import { Project, CheckResults, Config } from '../schemas';
+import { Project, CheckResults, Config, Tile } from '../schemas';
 import { StateService } from '../state.service';
 
 @Component({
@@ -44,7 +44,6 @@ export class RepositoryDetailsComponent implements OnInit {
   ];
 
   constructor(
-    public dialogRef: MatDialogRef<RepositoryDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public projectId: number,
     private api: ApiService,
     private state: StateService
@@ -122,9 +121,7 @@ export class RepositoryDetailsComponent implements OnInit {
     this.myChart.update();
   }
 
-  closeDialog() {
-    this.dialogRef.close();
-  }
+ 
 
   initializeClassValuesAndTiles() {
     this.latestLintingResults =
@@ -302,10 +299,3 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 }
 
-// Für angular tiles
-export interface Tile {
-  color: string;
-  cols: number;
-  rows: number;
-  text: string;
-}
