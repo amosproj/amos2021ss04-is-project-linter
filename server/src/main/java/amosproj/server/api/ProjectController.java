@@ -60,7 +60,13 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
-        LinkedList<ProjectSchema> res = cachedProjects(name, delta, pageable);
+        // get sort criteria
+        LinkedList<String> allProperties = new LinkedList<>();
+        for (Sort.Order next : pageable.getSort()) {
+            allProperties.add(next.getProperty());
+        }
+
+        LinkedList<ProjectSchema> res = cachedProjects(name, delta, allProperties);
         // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
@@ -305,12 +311,7 @@ public class ProjectController {
     }
 
     @Cacheable("projectList")
-    public LinkedList<ProjectSchema> cachedProjects(String name, Boolean delta, Pageable pageable) {
-        // get sort criteria
-        LinkedList<String> allProperties = new LinkedList<>();
-        for (Sort.Order next : pageable.getSort()) {
-            allProperties.add(next.getProperty());
-        }
+    public LinkedList<ProjectSchema> cachedProjects(String name, Boolean delta, LinkedList<String> allProperties) {
         // get projects (matching name if present)
         Iterable<Project> projectList;
         if (name == null || name.equals("")) {
