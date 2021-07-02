@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
 
 import { Config, PagedProjects } from '../schemas';
-import { SpinnerComponentComponent } from '../spinner-component/spinner-component.component';
+import { SpinnerComponent } from '../spinner/spinner.component';
 import { ApiService } from '../api.service';
 import { StateService } from '../state.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -87,7 +87,7 @@ export class ProjectsTabComponent implements OnInit {
 
   getProjects() {
     // open spinner
-    let dialogRef = this.dialog.open(SpinnerComponentComponent, {
+    let dialogRef = this.dialog.open(SpinnerComponent, {
       width: '0px',
       height: '0px',
       panelClass: 'custom-dialog-container',

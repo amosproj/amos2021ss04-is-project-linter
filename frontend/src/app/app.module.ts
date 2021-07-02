@@ -12,7 +12,7 @@ import { MaterialModule } from './material/material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { RepositoryComponent } from './repository/repository.component';
 import { RepositoryDetailsComponent } from './repository-details/repository-details.component';
-import { SpinnerComponentComponent } from './spinner-component/spinner-component.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
@@ -30,7 +30,7 @@ export function init_app(state: StateService) {
     AppComponent,
     RepositoryComponent,
     RepositoryDetailsComponent,
-    SpinnerComponentComponent,
+    SpinnerComponent,
     FooterComponent,
     HeaderComponent,
     ProjectsTabComponent,
