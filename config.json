@@ -87,7 +87,7 @@
     },
     "HasAvatar": {
       "enabled": true,
-      "severity": "NOT_SPECIFIED",
+      "severity": "LOW",
       "description": "Überprüft, ob das Repository ein Avatar (Bild) hat.",
       "message": "Das Repository hat keinen Avatar!",
       "fix": "Fügen Sie einen Avatar hinzu.",

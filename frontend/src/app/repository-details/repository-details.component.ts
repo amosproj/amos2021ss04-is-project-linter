@@ -28,9 +28,6 @@ export class RepositoryDetailsComponent implements OnInit {
   canvas;
   context;
   lastLintTime;
-  checksHighSeverity: CheckResults[]; // wird momentan nicht benützt
-  checksMediumSeverity: CheckResults[]; // wird momentan nicht benützt
-  checksLowSeverity: CheckResults[]; // wird momentan nicht benützt
   latestLintingIndex: number;
   latestLintingResults: CheckResults[];
   latestLintingResultsSortedPriority: CheckResults[];
@@ -204,23 +201,9 @@ export class RepositoryDetailsComponent implements OnInit {
         latestLintingResults[i],
         numberOfTestsPerSeverityInTags
       );
-      //this.numberOfTestsPerSeverityInTags= numberOfTestsPerSeverityInTags;
     }
 
     return [numberOfTestsPerSeverityInTags, LintingResultsInTags];
-  }
-
-  fillSeverityArrays() {
-    // Zurzeit nicht benutzt
-    for (var i = 0; i < this.latestLintingResults.length; i++) {
-      if (this.latestLintingResults[i].severity == 'HIGH') {
-        this.checksHighSeverity.push(this.latestLintingResults[i]);
-      } else if (this.latestLintingResults[i].severity == 'MEDIUM') {
-        this.checksMediumSeverity.push(this.latestLintingResults[i]);
-      } else if (this.latestLintingResults[i].severity == 'LOW') {
-        this.checksLowSeverity.push(this.latestLintingResults[i]);
-      }
-    }
   }
 
   addTestToFillNumTestsPerSeverity(
