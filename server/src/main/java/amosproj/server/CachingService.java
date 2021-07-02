@@ -13,9 +13,6 @@ public class CachingService {
     @Autowired
     private CacheManager cacheManager;
 
-//    @Autowired
-//    private ProjectController projectController;
-
     @Autowired
     private SortingService sortingService;
 
@@ -26,10 +23,10 @@ public class CachingService {
     public void repopulateCaches() {
         Set<String> tags = Config.getAllTags();
         List<Set<String>> tagsPermutated = allTagSets(tags);
-//        projectController.projectsByAllTags("absolute");
-//        projectController.projectsByAllTags("percentage");
-//        projectController.topXProjects("absolute");
-//        projectController.topXProjects("percentage");
+        sortingService.projectsByAllTags("absolute");
+        sortingService.projectsByAllTags("percentage");
+        sortingService.topXProjects("absolute");
+        sortingService.topXProjects("percentage");
         for (Set<String> tag : tagsPermutated) {
             sortingService.cachedSorting(true, tag);
             sortingService.cachedSorting(false, tag);
