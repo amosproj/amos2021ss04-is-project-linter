@@ -23,18 +23,11 @@ public class SortingService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Cacheable(value = "cachedProjects")
-    public List<ProjectSchema> cachedProjects(String name, Boolean delta, List<String> allProperties) {
-        // get projects (matching name if present)
-        Iterable<Project> projectList;
-        if (name.equals("")) {
-            projectList = projectRepository.findAll();
-        } else {
-            projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
-        }
+    @Cacheable(value = "cachedSorting", key = "{#delta, #allProperties.toArray()}")
+    public List<ProjectSchema> cachedSorting(Boolean delta, List<String> allProperties) {
+        Iterable<Project> projectList = projectRepository.findAll();
         // calculate properties required for sorting
         LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
-        // calculate sorting parameters
         LinkedList<ProjectSchema> res = new LinkedList<>();
         for (Project projAlt : projectList) {
             // create schema
@@ -84,8 +77,6 @@ public class SortingService {
         if (checkResults == null) {
             return new HashMap<>();
         }
-
-        int i = 0;
         HashMap<String, String> map = Config.getTags();
         HashMap<String, Long> res = new HashMap<>();
         for (CheckResult checkResult : checkResults) {
@@ -99,6 +90,12 @@ public class SortingService {
             }
         }
         return res;
+    }
+
+    public boolean searchFilter(ProjectSchema s, String query) {
+        boolean matchesNamespace = s.getNameSpace() != null && s.getNameSpace().toLowerCase().contains(query.toLowerCase());
+        boolean matchesName = s.getName() != null && s.getName().toLowerCase().contains(query.toLowerCase());
+        return matchesNamespace || matchesName;
     }
 
 }

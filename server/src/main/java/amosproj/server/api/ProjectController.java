@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Der ProjectController ist die API-Schnittstelle nach außen.
@@ -60,10 +61,17 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false, defaultValue = "false") Boolean delta,
                                            @RequestParam(name = "name", required = false, defaultValue = "") String name,
                                            Pageable pageable) {
+
         // get sort criteria
         List<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toList();
         // get result set
-        List<ProjectSchema> res = sortingService.cachedProjects(name, delta, allProperties);
+        List<ProjectSchema> res = sortingService.cachedSorting(delta, allProperties);
+        // name search
+        if (!name.equals("")) {
+            res = res.stream().filter(
+                    (x) -> sortingService.searchFilter(x, name)
+            ).collect(Collectors.toList());
+        }
         // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
