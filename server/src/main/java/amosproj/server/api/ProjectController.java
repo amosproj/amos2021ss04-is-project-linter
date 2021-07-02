@@ -9,8 +9,6 @@ import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,7 +63,7 @@ public class ProjectController {
         for (Sort.Order next : pageable.getSort()) {
             allProperties.add(next.getProperty());
         }
-
+        // get result set
         LinkedList<ProjectSchema> res = cachedProjects(name, delta, allProperties);
         // do pagination stuff
         int start = (int) pageable.getOffset();
@@ -319,9 +317,14 @@ public class ProjectController {
         } else {
             projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
         }
-        // run query and sorting
+        // calculate sorting parameters
         LinkedList<ProjectSchema> res = new LinkedList<>();
         for (Project projAlt : projectList) {
+            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
+            res.add(proj);
+        }
+        
+        /*for (Project projAlt : projectList) {
             // create schema
             ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
             // calculate properties required for sorting
@@ -364,7 +367,7 @@ public class ProjectController {
             res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
         } else {
             res.sort(Comparator.comparingInt(x -> -x.getDelta()));
-        }
+        }*/
         return res;
     }
 }
