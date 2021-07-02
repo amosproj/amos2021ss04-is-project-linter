@@ -65,7 +65,7 @@ export class RepositoryDetailsComponent implements OnInit {
       this.latestLintingIndex = this.project.lintingResults.length - 1;
       this.latestLintingResultsSortedPriority = new Array<CheckResults>();
       this.initializeClassValuesAndTiles();
-      for (var i = 0; i < this.tags.length + 1; i++) {
+      for (let i = 0; i < this.tags.length + 1; i++) {
         this.renderChart(
           this.chartNames[i],
           i,
@@ -83,7 +83,7 @@ export class RepositoryDetailsComponent implements OnInit {
     );
     canvas.width = 150;
     canvas.height = 150;
-    var ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
 
     this.myChart = new Chart(ctx, {
       type: 'doughnut',
@@ -121,8 +121,6 @@ export class RepositoryDetailsComponent implements OnInit {
     this.myChart.update();
   }
 
- 
-
   initializeClassValuesAndTiles() {
     this.latestLintingResults =
       this.project.lintingResults[this.latestLintingIndex].checkResults;
@@ -153,13 +151,13 @@ export class RepositoryDetailsComponent implements OnInit {
 
   getTagsArray(latestLintingResults) {
     // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
-    var tags = [];
-    for (var i = 0; i < latestLintingResults.length; i++) {
-      var tagAlreadyThere = false;
+    let tags = [];
+    for (let i = 0; i < latestLintingResults.length; i++) {
+      let tagAlreadyThere = false;
       // Prüfe ob tags Werte hat
       if (tags) {
         // Prüfe ob Kategorien die momentane Kategorie enthält
-        for (var j = 0; j < tags.length; j++) {
+        for (let j = 0; j < tags.length; j++) {
           if (tags[j] == latestLintingResults[i].tag) {
             tagAlreadyThere = true;
           }
@@ -179,14 +177,14 @@ export class RepositoryDetailsComponent implements OnInit {
     latestLintingResults
   ) {
     // Gibt einmal ein Array der Testergebnisse sortiert nach Kategorien (numberOfTestsPerSeverityInTags) zurück, sowie die Tests soriert nach Kategorien(LintingResultsInTags)
-    var numberOfTestsPerSeverityInTags = new Array(tags.length + 1)
+    let numberOfTestsPerSeverityInTags = new Array(tags.length + 1)
       .fill(0)
       .map(() => new Array(4).fill(0)); // 2D array der Größe [tags+1, 4], 1 dim = tags, 2te dim [korrekt, niedrig, medium, hoch]
     // Gruppiere die linting Ergebnisse nach deren korrespondierenden tags
-    var LintingResultsInTags = new Array(tags.length);
-    for (var i = 0; i < latestLintingResults.length; i++) {
+    let LintingResultsInTags = new Array(tags.length);
+    for (let i = 0; i < latestLintingResults.length; i++) {
       // Hole index des tag in tags
-      var index = tags.indexOf(latestLintingResults[i].tag);
+      let index = tags.indexOf(latestLintingResults[i].tag);
       // Check ob der Array initalisiert werden muss
       if (!LintingResultsInTags[index]) {
         LintingResultsInTags[index] = [];
@@ -228,8 +226,8 @@ export class RepositoryDetailsComponent implements OnInit {
 
   addTilesForCategoryGraphAndTipps() {
     // Erstellt zusätzliche Tiles
-    for (var i = 0; i < this.tags.length; i++) {
-      var t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
+    for (let i = 0; i < this.tags.length; i++) {
+      let t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
       this.tiles.push(t);
     }
     this.tiles.push(<Tile>{
@@ -267,7 +265,7 @@ export class RepositoryDetailsComponent implements OnInit {
 
   removePassedChecks() {
     this.latestLintingResultsFailedChecks = new Array();
-    for (var i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
+    for (let i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
       if (!this.latestLintingResultsSortedPriority[i].result) {
         this.latestLintingResultsFailedChecks.push(
           this.latestLintingResultsSortedPriority[i]
@@ -298,4 +296,3 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 }
-

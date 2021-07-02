@@ -71,10 +71,10 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   processStats(results: Statistics, apiCall: string, typ: string) {
-    var timestamps: string[] = new Array(); // X-Axis values
-    var tags: String[] = new Array(); // Number of lines in plot
-    var keys: string[] = new Array(); // Name/key of the lines for access in result
-    var values: number[][] = new Array(); // Y-Axis values 2D in shape of [lines][y-axisValues]
+    let timestamps: string[] = new Array(); // X-Axis values
+    let tags: String[] = new Array(); // Number of lines in plot
+    let keys: string[] = new Array(); // Name/key of the lines for access in result
+    let values: number[][] = new Array(); // Y-Axis values 2D in shape of [lines][y-axisValues]
 
     if (Object.keys(results).length == 0) {
       this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK');
@@ -91,9 +91,9 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   inPlaceFillTimestamps(results: Statistics, xAxisValues: String[]) {
-    var daysWhichAlreadyWereAdded: string[] = new Array();
+    let daysWhichAlreadyWereAdded: string[] = new Array();
     for (let curr_x in results) {
-      var timestamp = dayjs(curr_x).format('DD.MM.YYYY');
+      let timestamp = dayjs(curr_x).format('DD.MM.YYYY');
       if (daysWhichAlreadyWereAdded.includes(timestamp)) {
         continue;
       }
@@ -136,21 +136,21 @@ export class StatisticsTabComponent implements OnInit {
   ) {
     for (let x_val = 0; x_val < xAxisValues.length; x_val++) {
       for (let line_idx = 0; line_idx < keys.length; line_idx++) {
-        var curr_timestamp = results[String(xAxisValues[x_val])];
+        let curr_timestamp = results[String(xAxisValues[x_val])];
         yAxisValues[line_idx][x_val] = curr_timestamp[keys[line_idx]];
       }
     }
   }
 
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
-    var chartInterface: chartCanvasOptionsDataset;
-    var yAxisLabel = '';
-    var ticksFunction;
-    var yAxisMaximum: number;
-    var canvasElementID: string;
+    let chartInterface: chartCanvasOptionsDataset;
+    let yAxisLabel = '';
+    let ticksFunction;
+    let yAxisMaximum: number;
+    let canvasElementID: string;
     if (type == 'absolute') {
       ticksFunction = this.unchangedTicks;
-      var max_y_values = this.getMaximum(seriesValues);
+      let max_y_values = this.getMaximum(seriesValues);
       yAxisMaximum = Math.ceil(max_y_values + 0.1 * max_y_values);
       if (apiCall == 'top') {
         canvasElementID = 'importantChecks';
@@ -206,7 +206,7 @@ export class StatisticsTabComponent implements OnInit {
     ticksCallbackFunction,
     yAxisMaximum
   ) {
-    var options = {
+    let options = {
       responsive: true,
       plugins: {
         legend: {
@@ -248,9 +248,9 @@ export class StatisticsTabComponent implements OnInit {
         },
       },
     };
-    var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
-    var datasets = [];
-    for (var i = 0; i < tags.length; i++) {
+    let canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
+    let datasets = [];
+    for (let i = 0; i < tags.length; i++) {
       datasets.push({
         label: tags[i],
         data: seriesValues[i],
@@ -260,8 +260,8 @@ export class StatisticsTabComponent implements OnInit {
         fill: false,
       });
     }
-    var dataset = datasets;
-    var x: chartCanvasOptionsDataset = {
+    let dataset = datasets;
+    let x: chartCanvasOptionsDataset = {
       options: options,
       canvas: canvas,
       dataset: dataset,
@@ -280,10 +280,10 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   getMaximum(Arr2D: number[][]) {
-    var maxGlobal = 0;
-    for (var i = 0; i < Arr2D.length; i++) {
-      var maxLocal = 0;
-      for (var j = 0; j < Arr2D[i].length; j++) {
+    let maxGlobal = 0;
+    for (let i = 0; i < Arr2D.length; i++) {
+      let maxLocal = 0;
+      for (let j = 0; j < Arr2D[i].length; j++) {
         maxLocal = Arr2D[i][j] > maxLocal ? Arr2D[i][j] : maxLocal;
       }
       maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
