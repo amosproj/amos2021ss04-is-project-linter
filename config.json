@@ -11,7 +11,8 @@
       "status": {
         "init": "GitLab API wird angefragt",
         "active": "Crawler läuft",
-        "inactive": "Crawler ist inaktiv"
+        "inactive": "Crawler ist inaktiv",
+        "cache": "Caches werden kompiliert"
       },
       "maxProjects": 50
     },

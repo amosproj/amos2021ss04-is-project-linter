@@ -91,8 +91,10 @@ public class Crawler {
         logger.info(progress);
         idx = 0L;
         cachingService.clearAllCaches(); // Clear all caches as they have inaccurate data in them
-        crawlerActive.set(false);
+        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("cache").asText();
+        logger.info(progress);
         cachingService.repopulateCaches(); // reload caches on the server side, so it's always instant for the end user
+        crawlerActive.set(false);
     }
 
     public boolean getCrawlerActive() {
