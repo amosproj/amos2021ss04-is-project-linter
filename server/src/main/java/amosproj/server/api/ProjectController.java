@@ -22,7 +22,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -40,6 +39,9 @@ public class ProjectController {
 
     @Autowired
     private LintingResultRepository lintingResultRepository;
+
+    @Autowired
+    private SortingService sortingService;
 
     @Autowired
     private Linter linter;
@@ -61,7 +63,7 @@ public class ProjectController {
         // get sort criteria
         List<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toList();
         // get result set
-        List<ProjectSchema> res = projectRepository.cachedProjects(name, delta, allProperties);
+        List<ProjectSchema> res = sortingService.cachedProjects(name, delta, allProperties);
         // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
