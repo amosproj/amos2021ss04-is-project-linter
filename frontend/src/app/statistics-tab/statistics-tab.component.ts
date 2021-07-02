@@ -21,10 +21,12 @@ export class StatisticsTabComponent implements OnInit {
   // Class variables
   //----------------------------------------------------
   csvExportLink = environment.baseURL + '/export/csv';
-  chartImportantChecks;
-  chartImportantChecksPercentage;
-  chartCheckPerCategorie;
-  chartCheckPerCategoriePercentage;
+  charts = {
+    'ImportantChecks': Chart,
+    'ImportantChecksPercentage': Chart,
+    'CheckPerCategorie': Chart,
+    'CheckPerCategoriePercentage': Chart,
+  }
   chartNames = [
     'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
     'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
@@ -162,113 +164,58 @@ export class StatisticsTabComponent implements OnInit {
 
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
     var chartInterface: chartCanvasOptionsDataset;
-    if (apiCall == 'top') {
-      if (type == 'absolute') {
-        var yAxisLabel = ''; //'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-        var canvasElementID = 'importantChecks';
-        var yAxisMaximum: number =
-          this.getMaximumAndAddTenPercent(seriesValues);
-        chartInterface = this.getChartInterfaceForCanvasChart(
-          tags,
-          seriesValues,
-          yAxisLabel,
-          canvasElementID,
-          this.unchangedTicks,
-          yAxisMaximum
-        );
-        this.chartImportantChecks = new Chart(
-          chartInterface.canvas.getContext('2d'),
-          {
-            type: 'line',
-            data: null,
-            options: chartInterface.options,
-          }
-        );
-        this.chartImportantChecks.data.labels = timestamps;
-        this.chartImportantChecks.data.datasets = chartInterface.dataset;
-        this.chartImportantChecks.update();
-      } else if (type == 'percentage') {
-        var yAxisLabel = ''; //'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-        var canvasElementID = 'importantChecksPercentage';
-        var yAxisMaximum: number = 100;
-        chartInterface = this.getChartInterfaceForCanvasChart(
-          tags,
-          seriesValues,
-          yAxisLabel,
-          canvasElementID,
-          this.percentageTicks,
-          yAxisMaximum
-        );
-        this.chartImportantChecksPercentage = new Chart(
-          chartInterface.canvas.getContext('2d'),
-          {
-            type: 'line',
-            data: null,
-            options: chartInterface.options,
-          }
-        );
-        this.chartImportantChecksPercentage.data.labels = timestamps;
-        this.chartImportantChecksPercentage.data.datasets =
-          chartInterface.dataset;
-        this.chartImportantChecksPercentage.update();
-      } else {
+    var yAxisLabel = '';
+    var ticksFunction;
+    var yAxisMaximum: number;
+    var canvasElementID: string;
+    if (type == 'absolute') {
+      ticksFunction = this.unchangedTicks;
+      var max_y_values =this.getMaximum(seriesValues)
+      yAxisMaximum = Math.ceil(max_y_values + (0.1*max_y_values));
+      if (apiCall == 'top') {
+        canvasElementID = 'importantChecks';
+      }else if (apiCall == 'allTags') {
+        canvasElementID = 'checksPerCategorie';
+      }else{
         this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
+        return;
       }
-    } else if (apiCall == 'allTags') {
-      if (type == 'absolute') {
-        var yAxisLabel = ''; //'Anzahl an Projekten, die alle Test der Kategorie X bestanden haben';
-        var canvasElementID = 'checksPerCategorie';
-        var yAxisMaximum: number =
-          this.getMaximumAndAddTenPercent(seriesValues);
-        chartInterface = this.getChartInterfaceForCanvasChart(
-          tags,
-          seriesValues,
-          yAxisLabel,
-          canvasElementID,
-          this.unchangedTicks,
-          yAxisMaximum
-        );
-        this.chartCheckPerCategorie = new Chart(
-          chartInterface.canvas.getContext('2d'),
-          {
-            type: 'line',
-            data: null,
-            options: chartInterface.options,
-          }
-        );
-        this.chartCheckPerCategorie.data.labels = timestamps;
-        this.chartCheckPerCategorie.data.datasets = chartInterface.dataset;
-        this.chartCheckPerCategorie.update();
-      } else if (type == 'percentage') {
-        var yAxisLabel = ''; // 'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben';
-        var canvasElementID = 'checksPerCategoriePercentage';
-        var yAxisMaximum = 100;
-        chartInterface = this.getChartInterfaceForCanvasChart(
-          tags,
-          seriesValues,
-          yAxisLabel,
-          canvasElementID,
-          this.percentageTicks,
-          yAxisMaximum
-        );
-        this.chartImportantChecksPercentage = new Chart(
-          chartInterface.canvas.getContext('2d'),
-          {
-            type: 'line',
-            data: null,
-            options: chartInterface.options,
-          }
-        );
-        this.chartImportantChecksPercentage.data.labels = timestamps;
-        this.chartImportantChecksPercentage.data.datasets =
-          chartInterface.dataset;
-        this.chartImportantChecksPercentage.update();
-      } else {
+    }else if (type == 'percentage') {
+      ticksFunction = this.percentageTicks;
+      yAxisMaximum = 100;
+      if (apiCall == 'top') {
+        canvasElementID = 'importantChecksPercentage';
+      }else if (apiCall == 'allTags') {
+        canvasElementID = 'checksPerCategoriePercentage';
+      }else{
         this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
+        return;
       }
-    } else {
+    }else{
       this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
+      return;
     }
+
+    chartInterface = this.getChartInterfaceForCanvasChart(
+      tags,
+      seriesValues,
+      yAxisLabel,
+      canvasElementID,
+      ticksFunction,
+      yAxisMaximum
+    );
+    this.charts[canvasElementID] = new Chart(
+      chartInterface.canvas.getContext('2d'),
+      {
+        type: 'line',
+        data: null,
+        options: chartInterface.options,
+      }
+    );
+    
+    this.charts[canvasElementID].data.labels = timestamps;
+    this.charts[canvasElementID].data.datasets = chartInterface.dataset;
+    this.charts[canvasElementID].update();
   }
 
   getChartInterfaceForCanvasChart(
@@ -324,25 +271,14 @@ export class StatisticsTabComponent implements OnInit {
     var canvas = <HTMLCanvasElement>document.getElementById(canvasElementID);
     var datasets = [];
     for (var i = 0; i < tags.length; i++) {
-      if (i != tags.length - 1) {
-        datasets.push({
-          label: tags[i],
-          data: seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 3,
-          fill: false,
-        });
-      } else {
-        datasets.push({
-          label: tags[i],
-          data: seriesValues[i],
-          backgroundColor: this.chartColors[i % this.chartColors.length],
-          borderColor: this.chartColors[i % this.chartColors.length],
-          pointRadius: 3,
-          fill: false,
-        });
-      }
+      datasets.push({
+        label: tags[i],
+        data: seriesValues[i],
+        backgroundColor: this.chartColors[i % this.chartColors.length],
+        borderColor: this.chartColors[i % this.chartColors.length],
+        pointRadius: 3,
+        fill: false,
+      });
     }
     var dataset = datasets;
     var x: chartCanvasOptionsDataset = {
@@ -363,19 +299,19 @@ export class StatisticsTabComponent implements OnInit {
     return value + '%';
   }
 
-  getMaximumAndAddTenPercent(seriesValues) {
+  getMaximum(Arr2D: number[][]) {
     var maxGlobal = 0;
-    for (var i = 0; i < seriesValues.length; i++) {
+    for (var i = 0; i < Arr2D.length; i++) {
       var maxLocal = 0;
-      for (var j = 0; j < seriesValues[i].length; j++) {
+      for (var j = 0; j < Arr2D[i].length; j++) {
         maxLocal =
-          seriesValues[i][j] > maxLocal ? seriesValues[i][j] : maxLocal;
+        Arr2D[i][j] > maxLocal ? Arr2D[i][j] : maxLocal;
       }
       maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
     }
-    maxGlobal = maxGlobal + (maxGlobal * 10) / 100;
-    return Math.ceil(maxGlobal);
+    return maxGlobal;
   }
+
 }
 
 interface chartCanvasOptionsDataset {
