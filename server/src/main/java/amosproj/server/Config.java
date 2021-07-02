@@ -11,7 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 @Service
 public class Config {
@@ -45,6 +47,25 @@ public class Config {
         return null;
     }
 
+    /**
+     * gets all unique tags
+     *
+     * @return list of tags
+     */
+    public static Set<String> getAllTags() {
+        JsonNode node = Config.getConfigNode().get("checks");
+        Set<String> res = new HashSet<>();
+        for (JsonNode n : node) {
+            res.add(n.get("tag").asText());
+        }
+        return res;
+    }
+
+    /**
+     * Gets tags for all checks
+     *
+     * @return Map(checkName, tag)
+     */
     public static HashMap<String, String> getTags() {
         HashMap<String, String> map = new HashMap<>();
         JsonNode node = Config.getConfigNode().get("checks");
