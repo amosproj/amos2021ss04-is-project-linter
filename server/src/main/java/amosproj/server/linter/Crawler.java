@@ -1,8 +1,10 @@
 package amosproj.server.linter;
 
+import amosproj.server.CachingService;
 import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.Scheduler;
+import amosproj.server.api.ProjectController;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import org.gitlab4j.api.GitLabApiException;
 import org.slf4j.Logger;
@@ -23,6 +25,7 @@ public class Crawler {
     // autowired
     private final GitLab gitLab;
     private final Linter linter;
+    private final CachingService cachingService;
     // end autowired
 
     private volatile AtomicBoolean crawlerActive;
@@ -33,10 +36,11 @@ public class Crawler {
     private volatile LocalDateTime errorTime;
     private volatile Long size;
 
-    public Crawler(GitLab gitLab, Scheduler scheduler, Linter linter) {
+    public Crawler(GitLab gitLab, Scheduler scheduler, Linter linter, CachingService cachingService) {
         // set autowired
         this.gitLab = gitLab;
         this.linter = linter;
+        this.cachingService = cachingService;
         // init crawler status
         crawlerActive = new AtomicBoolean(false);
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
@@ -86,8 +90,9 @@ public class Crawler {
         }
         progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         logger.info(progress);
-        crawlerActive.set(false);
         idx = 0L;
+        cachingService.clearAllCaches(); // Clear all caches as they have inaccurate data in them
+        crawlerActive.set(false);
     }
 
     public boolean getCrawlerActive() {

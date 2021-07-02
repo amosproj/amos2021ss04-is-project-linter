@@ -9,6 +9,9 @@ import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -57,64 +60,7 @@ public class ProjectController {
     public Page<ProjectSchema> allProjects(@RequestParam(name = "delta", required = false) Boolean delta,
                                            @RequestParam(name = "name", required = false) String name,
                                            Pageable pageable) {
-        // get sort criteria
-        LinkedList<String> allProperties = new LinkedList<>();
-        for (Sort.Order next : pageable.getSort()) {
-            allProperties.add(next.getProperty());
-        }
-        // get projects (matching name if present)
-        Iterable<Project> projectList;
-        if (name == null || name.equals("")) {
-            projectList = projectRepository.findAll();
-        } else {
-            projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
-        }
-        // run query and sorting
-        LinkedList<ProjectSchema> res = new LinkedList<>();
-        for (Project projAlt : projectList) {
-            // create schema
-            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
-            // calculate properties required for sorting
-            LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
-
-            List<LintingResult> lr = projAlt.getResults();
-            LintingResult lrs = null;
-            for (LintingResult lintingResult : lr) {
-                if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
-                    lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
-                    break;
-                }
-            }
-            int lastIdx = Math.max(lr.size() - 1, 0);
-            if (lastIdx < lr.size()) { // At least one LintingResult exists
-                proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
-                if (lrs != null) {
-                    proj.setPassedByTag30DaysAgo(checksPassedByTags(lrs.getCheckResults()));
-                }
-            } else {
-                proj.setLatestPassedByTag(new HashMap<>());
-                proj.setPassedByTag30DaysAgo(new HashMap<>());
-            }
-
-            int allRequestedProperties = 0;
-            int allRequested30DaysAgo = 0;
-            HashMap<String, Long> latest = proj.getLatestPassedByTag();
-            HashMap<String, Long> oldest = proj.getPassedByTag30DaysAgo();
-            for (String property : allProperties) {
-                allRequestedProperties += latest.getOrDefault(property, 0L);
-                allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
-            }
-            proj.setLatestPassedTotal(allRequestedProperties);
-            proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
-
-            res.add(proj);
-        }
-        // Sort by checks passed in tag
-        if (delta == null || !delta) {
-            res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
-        } else {
-            res.sort(Comparator.comparingInt(x -> -x.getDelta()));
-        }
+        LinkedList<ProjectSchema> res = cachedProjects(name, delta, pageable);
         // do pagination stuff
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), res.size());
@@ -130,6 +76,7 @@ public class ProjectController {
      *
      * @return TreeMap, die, sortiert nach lintTime, die Anzahl der Projekte mit bestandenen checks ausgibt
      */
+    @Cacheable("allTags")
     @GetMapping("/projects/allTags")
     public TreeMap<LocalDateTime, HashMap<String, Object>> projectsByAllTags(@RequestParam(name = "type") String type) {
         if (type == null) {
@@ -193,6 +140,7 @@ public class ProjectController {
         return percentage;
     }
 
+    @Cacheable("top")
     @GetMapping("/projects/top")
     public TreeMap<LocalDateTime, TreeMap<Long, Object>> topXProjects(@RequestParam(name = "type") String type) {
         if (type == null)
@@ -352,6 +300,69 @@ public class ProjectController {
                 res.putIfAbsent(checkCategory, 0L);
                 res.compute(checkCategory, (key, value) -> value + 1L);
             }
+        }
+        return res;
+    }
+
+    @Cacheable("projectList")
+    public LinkedList<ProjectSchema> cachedProjects(String name, Boolean delta, Pageable pageable) {
+        // get sort criteria
+        LinkedList<String> allProperties = new LinkedList<>();
+        for (Sort.Order next : pageable.getSort()) {
+            allProperties.add(next.getProperty());
+        }
+        // get projects (matching name if present)
+        Iterable<Project> projectList;
+        if (name == null || name.equals("")) {
+            projectList = projectRepository.findAll();
+        } else {
+            projectList = projectRepository.findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(name, name);
+        }
+        // run query and sorting
+        LinkedList<ProjectSchema> res = new LinkedList<>();
+        for (Project projAlt : projectList) {
+            // create schema
+            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
+            // calculate properties required for sorting
+            LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());
+
+            List<LintingResult> lr = projAlt.getResults();
+            LintingResult lrs = null;
+            for (LintingResult lintingResult : lr) {
+                if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
+                    lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
+                    break;
+                }
+            }
+            int lastIdx = Math.max(lr.size() - 1, 0);
+            if (lastIdx < lr.size()) { // At least one LintingResult exists
+                proj.setLatestPassedByTag(checksPassedByTags(lr.get(lastIdx).getCheckResults()));
+                if (lrs != null) {
+                    proj.setPassedByTag30DaysAgo(checksPassedByTags(lrs.getCheckResults()));
+                }
+            } else {
+                proj.setLatestPassedByTag(new HashMap<>());
+                proj.setPassedByTag30DaysAgo(new HashMap<>());
+            }
+
+            int allRequestedProperties = 0;
+            int allRequested30DaysAgo = 0;
+            HashMap<String, Long> latest = proj.getLatestPassedByTag();
+            HashMap<String, Long> oldest = proj.getPassedByTag30DaysAgo();
+            for (String property : allProperties) {
+                allRequestedProperties += latest.getOrDefault(property, 0L);
+                allRequested30DaysAgo += oldest.getOrDefault(property, 0L);
+            }
+            proj.setLatestPassedTotal(allRequestedProperties);
+            proj.setDelta(allRequestedProperties - allRequested30DaysAgo);
+
+            res.add(proj);
+        }
+        // Sort by checks passed in tag
+        if (delta == null || !delta) {
+            res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
+        } else {
+            res.sort(Comparator.comparingInt(x -> -x.getDelta()));
         }
         return res;
     }
