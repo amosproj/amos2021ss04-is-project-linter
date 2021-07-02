@@ -1,15 +1,14 @@
 import { Component } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { MatChip } from '@angular/material/chips';
-import { environment } from 'src/environments/environment';
 import { Chart } from 'chart.js';
-import * as dateFns from 'date-fns';
 import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Observable } from 'rxjs';
+
+import { environment } from 'src/environments/environment';
 import { ApiService } from '../api.service';
 import { Statistics } from '../schemas';
-import { newArray } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-statistics-tab',
@@ -17,16 +16,13 @@ import { newArray } from '@angular/compiler/src/util';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  //---------------------------------------------------
-  // Class variables
-  //----------------------------------------------------
   csvExportLink = environment.baseURL + '/export/csv';
   charts = {
-    'ImportantChecks': Chart,
-    'ImportantChecksPercentage': Chart,
-    'CheckPerCategorie': Chart,
-    'CheckPerCategoriePercentage': Chart,
-  }
+    ImportantChecks: Chart,
+    ImportantChecksPercentage: Chart,
+    CheckPerCategorie: Chart,
+    CheckPerCategoriePercentage: Chart,
+  };
   chartNames = [
     'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
     'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
@@ -34,25 +30,14 @@ export class StatisticsTabComponent implements OnInit {
     'Prozentzahl an Projekten, die alle Test der Kategorie X bestanden haben',
   ];
   chartColors = [
-    //green:
-    'rgb(75, 192, 192)',
-    //red:
-    'rgb(255, 99, 132)',
-    //orange:
-    'rgb(255, 159, 64)',
-    //yellow:
-    'rgb(255, 205, 86)',
-    //blue:
-    'rgb(54, 162, 235)',
-    //purple:
-    'rgb(153, 102, 255)',
-    //grey:
-    'rgb(231,233,237)',
+    'rgb(75, 192, 192)', //green
+    'rgb(255, 99, 132)', //red
+    'rgb(255, 159, 64)', //orange
+    'rgb(255, 205, 86)', //yellow
+    'rgb(54, 162, 235)', //blue
+    'rgb(153, 102, 255)', //purple
+    'rgb(231,233,237)', //grey
   ];
-
-  //---------------------------------------------------
-  // Init Methods
-  //---------------------------------------------------
 
   constructor(private api: ApiService, private _snackBar: MatSnackBar) {}
 
@@ -68,25 +53,21 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   getChartData(apiCall: string, typ: string) {
+    let res: Observable<Statistics>;
     if (apiCall == 'allTags') {
-      this.api.getProjectsByAllTags(typ).subscribe(
-        (data) => {
-          this.processStats(data, apiCall, typ);
-        },
-        (error) => {
-          this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
-        }
-      );
+      res = this.api.getProjectsByAllTags(typ);
     } else if (apiCall == 'top') {
-      this.api.getProjectsByTop(typ).subscribe(
-        (data) => {
-          this.processStats(data, apiCall, typ);
-        },
-        (error) => {
-          this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
-        }
-      );
+      res = this.api.getProjectsByTop(typ);
     }
+
+    res.subscribe(
+      (data) => {
+        this.processStats(data, apiCall, typ);
+      },
+      (error) => {
+        this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
+      }
+    );
   }
 
   processStats(results: Statistics, apiCall: string, typ: string) {
@@ -169,28 +150,28 @@ export class StatisticsTabComponent implements OnInit {
     var canvasElementID: string;
     if (type == 'absolute') {
       ticksFunction = this.unchangedTicks;
-      var max_y_values =this.getMaximum(seriesValues)
-      yAxisMaximum = Math.ceil(max_y_values + (0.1*max_y_values));
+      var max_y_values = this.getMaximum(seriesValues);
+      yAxisMaximum = Math.ceil(max_y_values + 0.1 * max_y_values);
       if (apiCall == 'top') {
         canvasElementID = 'importantChecks';
-      }else if (apiCall == 'allTags') {
+      } else if (apiCall == 'allTags') {
         canvasElementID = 'checksPerCategorie';
-      }else{
+      } else {
         this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
         return;
       }
-    }else if (type == 'percentage') {
+    } else if (type == 'percentage') {
       ticksFunction = this.percentageTicks;
       yAxisMaximum = 100;
       if (apiCall == 'top') {
         canvasElementID = 'importantChecksPercentage';
-      }else if (apiCall == 'allTags') {
+      } else if (apiCall == 'allTags') {
         canvasElementID = 'checksPerCategoriePercentage';
-      }else{
+      } else {
         this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
         return;
       }
-    }else{
+    } else {
       this.openSnackBar('Fehler beim rendern der Statistikcharts.', 'OK');
       return;
     }
@@ -211,7 +192,7 @@ export class StatisticsTabComponent implements OnInit {
         options: chartInterface.options,
       }
     );
-    
+
     this.charts[canvasElementID].data.labels = timestamps;
     this.charts[canvasElementID].data.datasets = chartInterface.dataset;
     this.charts[canvasElementID].update();
@@ -303,14 +284,12 @@ export class StatisticsTabComponent implements OnInit {
     for (var i = 0; i < Arr2D.length; i++) {
       var maxLocal = 0;
       for (var j = 0; j < Arr2D[i].length; j++) {
-        maxLocal =
-        Arr2D[i][j] > maxLocal ? Arr2D[i][j] : maxLocal;
+        maxLocal = Arr2D[i][j] > maxLocal ? Arr2D[i][j] : maxLocal;
       }
       maxGlobal = maxLocal > maxGlobal ? maxLocal : maxGlobal;
     }
     return maxGlobal;
   }
-
 }
 
 interface chartCanvasOptionsDataset {
