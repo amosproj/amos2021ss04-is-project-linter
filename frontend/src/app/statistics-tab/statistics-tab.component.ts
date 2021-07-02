@@ -17,7 +17,6 @@ import { newArray } from '@angular/compiler/src/util';
   styleUrls: ['./statistics-tab.component.css'],
 })
 export class StatisticsTabComponent implements OnInit {
-  
   //---------------------------------------------------
   // Class variables
   //----------------------------------------------------
@@ -30,7 +29,7 @@ export class StatisticsTabComponent implements OnInit {
   chartCheckPerCategorie;
 
   chartCheckPerCategoriePercentage;
-  
+
   chartNames = [
     'Anzahl an Projekten, die die X wichtigsten Tests bestanden haben',
     'Prozentzahl an Projekten, die die X wichtigsten Tests bestanden haben',
@@ -65,9 +64,7 @@ export class StatisticsTabComponent implements OnInit {
     this.initStats();
   }
 
-
   ngAfterViewInit(): void {}
-
 
   initStats() {
     this.getChartData('top', 'absolute');
@@ -81,7 +78,6 @@ export class StatisticsTabComponent implements OnInit {
     this._snackBar.open(message, action);
   }
 
-  
   //---------------------------------------------------
   // Fetch Data for Charts
   //---------------------------------------------------
@@ -109,24 +105,26 @@ export class StatisticsTabComponent implements OnInit {
   }
 
   processStats(results: Statistics, apiCall: string, typ: string) {
-    var timestamps: string[] = new Array();     // X-Axis values
-    var tags: String[] = new Array();           // Number of lines in plot
-    var keys: string[] = new Array();           // Name/key of the lines for access in result
-    var values: number[][] = new Array();       // Y-Axis values 2D in shape of [lines][y-axisValues] 
+    var timestamps: string[] = new Array(); // X-Axis values
+    var tags: String[] = new Array(); // Number of lines in plot
+    var keys: string[] = new Array(); // Name/key of the lines for access in result
+    var values: number[][] = new Array(); // Y-Axis values 2D in shape of [lines][y-axisValues]
 
-    if(Object.keys(results).length == 0){
+    if (Object.keys(results).length == 0) {
       this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK');
       return;
     }
 
     this.inPlaceFillTimestamps(results, timestamps);
     this.inPlaceFillKeysAndLines(results, apiCall, timestamps, tags, keys);
-    values = new Array(tags.length).fill(0).map(() => new Array(timestamps.length).fill(0));
+    values = new Array(tags.length)
+      .fill(0)
+      .map(() => new Array(timestamps.length).fill(0));
     this.inPlaceFillValues(results, apiCall, timestamps, keys, values);
     this.renderStatisticCharts(timestamps, tags, values, apiCall, typ);
   }
-  
-  inPlaceFillTimestamps(results: Statistics, xAxisValues: String[]){
+
+  inPlaceFillTimestamps(results: Statistics, xAxisValues: String[]) {
     var daysWhichAlreadyWereAdded: string[] = new Array();
     for (let curr_x in results) {
       var timestamp = dayjs(curr_x).format('DD.MM.YYYY');
@@ -138,42 +136,51 @@ export class StatisticsTabComponent implements OnInit {
     }
   }
 
-  inPlaceFillKeysAndLines(results: Statistics, apiCall: string, xAxisValues: String[], lines: String[], keys: string[]){
+  inPlaceFillKeysAndLines(
+    results: Statistics,
+    apiCall: string,
+    xAxisValues: String[],
+    lines: String[],
+    keys: string[]
+  ) {
     for (let y in results[String(xAxisValues[0])]) {
       if (apiCall == 'top') {
         if (!lines.includes(y + ' wichtigsten')) {
           lines.push(y + ' wichtigsten');
           keys.push(y);
-        }else{
+        } else {
           this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK'); // double labels for a single timestamp
         }
       } else {
         if (!lines.includes(y)) {
-         lines.push(y);
-         keys.push(y);
-        }else{
+          lines.push(y);
+          keys.push(y);
+        } else {
           this.openSnackBar('Fehler in den empfangenen Statistikdaten.', 'OK'); // double labels for a single timestamp
         }
       }
     }
   }
 
-  inPlaceFillValues(results: Statistics, apiCall: string, xAxisValues: String[], keys: string[], yAxisValues: number[][]){
-    for (let x_val = 0; x_val < xAxisValues.length; x_val++){
-      for(let line_idx = 0; line_idx < keys.length; line_idx++){
+  inPlaceFillValues(
+    results: Statistics,
+    apiCall: string,
+    xAxisValues: String[],
+    keys: string[],
+    yAxisValues: number[][]
+  ) {
+    for (let x_val = 0; x_val < xAxisValues.length; x_val++) {
+      for (let line_idx = 0; line_idx < keys.length; line_idx++) {
         var curr_timestamp = results[String(xAxisValues[x_val])];
         yAxisValues[line_idx][x_val] = curr_timestamp[keys[line_idx]];
       }
     }
   }
 
-  
-  
   //---------------------------------------------------
   // Create Charts
   //---------------------------------------------------
 
-  
   renderStatisticCharts(timestamps, tags, seriesValues, apiCall, type) {
     // API Call for statistics are either top or allTags (best ones, or all sorted via category)
     // type is either absolute or in percentage
@@ -288,8 +295,6 @@ export class StatisticsTabComponent implements OnInit {
     }
   }
 
-  
-
   getChartInterfaceForCanvasChart(
     tags,
     seriesValues,
@@ -382,7 +387,6 @@ export class StatisticsTabComponent implements OnInit {
     return value + '%';
   }
 
-  
   getMaximumAndAddTenPercent(seriesValues) {
     var maxGlobal = 0;
     for (var i = 0; i < seriesValues.length; i++) {
