@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class SortingService {
@@ -24,7 +21,7 @@ public class SortingService {
     private ProjectRepository projectRepository;
 
     @Cacheable(value = "cachedSorting")
-    public List<ProjectSchema> cachedSorting(Boolean delta, List<String> allProperties) {
+    public List<ProjectSchema> cachedSorting(Boolean delta, Set<String> allProperties) {
         Iterable<Project> projectList = projectRepository.findAll();
         // calculate properties required for sorting
         LocalDateTime localDateTime = LocalDateTime.now(Clock.systemUTC());

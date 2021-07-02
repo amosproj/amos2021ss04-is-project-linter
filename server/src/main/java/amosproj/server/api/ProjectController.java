@@ -1,5 +1,6 @@
 package amosproj.server.api;
 
+import amosproj.server.CachingService;
 import amosproj.server.Config;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
@@ -63,7 +64,7 @@ public class ProjectController {
                                            Pageable pageable) {
 
         // get sort criteria
-        List<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toList();
+        Set<String> allProperties = pageable.getSort().map(Sort.Order::getProperty).toSet();
         // get result set
         List<ProjectSchema> res = sortingService.cachedSorting(delta, allProperties);
         // name search

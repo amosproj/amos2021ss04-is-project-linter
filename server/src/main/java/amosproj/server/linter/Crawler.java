@@ -4,7 +4,6 @@ import amosproj.server.CachingService;
 import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.Scheduler;
-import amosproj.server.api.ProjectController;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import org.gitlab4j.api.GitLabApiException;
 import org.slf4j.Logger;
@@ -93,6 +92,7 @@ public class Crawler {
         idx = 0L;
         cachingService.clearAllCaches(); // Clear all caches as they have inaccurate data in them
         crawlerActive.set(false);
+        cachingService.repopulateCaches(); // reload caches on the server side, so it's always instant for the end user
     }
 
     public boolean getCrawlerActive() {

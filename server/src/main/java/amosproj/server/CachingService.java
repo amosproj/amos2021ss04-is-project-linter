@@ -23,26 +23,20 @@ public class CachingService {
         cacheManager.getCacheNames().forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName)).clear());
     }
 
-    //    public void repopulateCaches() {
-//        //Set<String> tags = Config.getAllTags();
-//        Set<String> tags = new HashSet<>();
-//        tags.add("kek");
-//        tags.add("kek2");
-//        tags.add("lel3");
-//        List<List<String>> tagsPermutated = allTagSets(tags.toArray(new String[0]));
-//        System.out.println(tagsPermutated);
-//
+    public void repopulateCaches() {
+        Set<String> tags = Config.getAllTags();
+        List<Set<String>> tagsPermutated = allTagSets(tags);
 //        projectController.projectsByAllTags("absolute");
 //        projectController.projectsByAllTags("percentage");
 //        projectController.topXProjects("absolute");
 //        projectController.topXProjects("percentage");
-//        for (List<String> tag : tagsPermutated) {
-//            sortingService.cachedSorting(true, tag);
-//            sortingService.cachedSorting(false, tag);
-//        }
-//    }
+        for (Set<String> tag : tagsPermutated) {
+            sortingService.cachedSorting(true, tag);
+            sortingService.cachedSorting(false, tag);
+        }
+    }
 
-    public static List<Set<String>> allTagSets(Set<String> tags) {
+    private static List<Set<String>> allTagSets(Set<String> tags) {
         List<Set<String>> res = new LinkedList<>();
         String[] set = tags.toArray(new String[0]);
         int n = tags.size();
@@ -57,5 +51,5 @@ public class CachingService {
         }
         return res;
     }
-    
+
 }
