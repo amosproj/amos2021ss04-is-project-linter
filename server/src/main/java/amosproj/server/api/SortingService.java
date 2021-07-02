@@ -23,7 +23,7 @@ public class SortingService {
     @Autowired
     private ProjectRepository projectRepository;
 
-    @Cacheable(value = "cachedSorting", key = "{#delta, #allProperties.toArray()}")
+    @Cacheable(value = "cachedSorting")
     public List<ProjectSchema> cachedSorting(Boolean delta, List<String> allProperties) {
         Iterable<Project> projectList = projectRepository.findAll();
         // calculate properties required for sorting
