@@ -320,11 +320,6 @@ public class ProjectController {
         // calculate sorting parameters
         LinkedList<ProjectSchema> res = new LinkedList<>();
         for (Project projAlt : projectList) {
-            ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
-            res.add(proj);
-        }
-        
-        /*for (Project projAlt : projectList) {
             // create schema
             ProjectSchema proj = new ProjectSchema(projAlt, new LinkedList<>());
             // calculate properties required for sorting
@@ -367,7 +362,7 @@ public class ProjectController {
             res.sort(Comparator.comparingInt(x -> -x.getLatestPassedTotal()));
         } else {
             res.sort(Comparator.comparingInt(x -> -x.getDelta()));
-        }*/
+        }
         return res;
     }
 }
