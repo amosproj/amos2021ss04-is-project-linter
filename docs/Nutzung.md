@@ -3,20 +3,40 @@ Die Applikation ermöglicht es Nutzern, verschiedene Inner Source Repositories a
 
 ## Startseite
 
-Auf der Startseite werden alle analysierten Repositories angezeigt. In der oberen Suchleisten kann man nach Repository suchen und diese werden unterhalb der Tableiste angezeigt. Ebenso ist es möglich nach bestimmten Kategorien sowie anderen Kriterien zu sortieren.
-![current_state_dashboard](assets/Homepage.PNG)
+Auf der Startseite werden alle analysierten Repositories angezeigt. \
+(1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen zu Filtern. \
+(2) Reitermenü 
+- Projekte: zeigt die Projekte und Informationen dazu.
+- Statistiken: zeigt Statistiken zu den Projekten und ermöglicht es die Ergebnisse als csv zu exportieren
+- Status: zeigt den Status des Crawlers und ermöglicht es ihn manuell zu starten. 
+
+(3) Einstellungen für die Sortierung der unten angezeigten Projekte.\
+(4) Änderung der Anzeige wie viele Projekte pro Seite angezeigt werden und wechseln der Seiten. \
+(5) Kurze Übersicht zu den Projekten und die möglichkeit sich details zu dem Projekt anzusehen mit dem Anzeigen knopf.
+![current_state_dashboard](assets/homepage_new.PNG)
 
 ## Ergebnisse ansehen
 
-Wenn man auf den Knopf "Anzeigen" eines bestimmten Repository klickt, öffnet sich ein Dialog auf dem folgende Informationen angezeigt werden:
-![current_state_dialog](assets/RepositoryDetails.PNG)
-Zur linken hat man die einzelnen Checks die nach den Tags sortiert sind, dafür muss man den entsprechenden Tag anklicken. Zusätzlich dazu gibt es eine kurze Beschreibung des Checks und falls dieser nicht erfolgreich war eine Fehlermeldung und ein Hinweis wie man den Fehler möglicherweise beheben könnte.  
-Auf der rechten Seite sieht man Doughnutcharts die die gesamten Checkergebnisse des Repository abbilden und die Checkergebnisse sortiert nach dem jeweiligen Tag.
-![current_state_dialog2](assets/RepositoryDetails1.PNG)
-Unten im Dialog werden drei Tipps angezeigt, die Verbesserungen vorschlagen basierend auf fehlgeschlagene Tests mit hoher Priorität.
+Wenn man auf den Knopf "Anzeigen" eines bestimmten Repository klickt, öffnet sich ein Dialog auf dem folgende Informationen angezeigt werden: \
+(1) Aus-/Einklappbare Reiter für die Tests, sortiert nach der Rubrik. \
+(2) Ergebnisse der Spezifischen Tests. \
+&emsp;&emsp; Grüne Tests sind bestanden und benötigen keine weitere Arbeit. \
+&emsp;&emsp; Gelb, Orange, Rot sind nicht bestandene Tests und sollten bearbeitet werden. Hier wird direkt angezeigt wie der Fehler behoben werden kann. \
+(3) Der Info-Button zeigt an, was genau bei dem Test überprüft wird.\
+(4) Ein Donut-Graph für eine schnellübersicht wie viele Tests dieses Projekt in der jeweilgen Kategorie bestanden hat.\
+(5) Tipps für das Projekt wie man am besten das Repo verbessert.\
+(6) Meta Informationen zu dem Projekt.\
+![current_state_dialog](assets/RepositoryDetails_new.PNG)
 
 ## Statistiken ansehen
 
 Im Tab Statistiken kann man zum einem alle Ergebnisse als .csv downloaden, sowie die Entwicklung der Repositories über die Zeit betrachten.
 ![current_state_dialog](assets/Statistics.PNG)
 ![current_state_dialog](assets/Statistics1.PNG)
+
+## Crawler Status
+
+Hier wird der Status des Crawlers angezeigt. \
+Zum einen wird der aktuelle Arbeitsschritt angezeigt, darunter befindet sich ein Fortschrittsbalken und wie lange der letzte Dirchlauf gebraucht hat. \
+Am unteren Ende kann man dann noch den Crawler mit dem "Los"-Button manuell starten. \
+![current_state_dialog](assets/status.png)
