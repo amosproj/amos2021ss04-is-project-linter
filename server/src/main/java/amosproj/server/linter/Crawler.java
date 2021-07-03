@@ -28,7 +28,7 @@ public class Crawler {
     // end autowired
 
     private volatile AtomicBoolean crawlerActive;
-    private volatile String progress;
+    private volatile String status;
     private volatile Long timeTaken;
     private volatile Long idx;
     private volatile String lastError;
@@ -42,7 +42,7 @@ public class Crawler {
         this.cachingService = cachingService;
         // init crawler status
         crawlerActive = new AtomicBoolean(false);
-        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
+        status = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         timeTaken = 0L;
         idx = 0L;
         lastError = "";
@@ -59,14 +59,14 @@ public class Crawler {
     public synchronized void runCrawler() {
         crawlerActive.set(true);
         lastError = ""; // clear error message, but not error time as the maintainer might need to see what went wrong
-        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
-        logger.info(progress);
+        status = Config.getConfigNode().get("settings").get("crawler").get("status").get("init").asText();
+        logger.info(status);
         try {
             int maxProjects = Config.getConfigNode().get("settings").get("crawler").get("maxProjects").asInt(Integer.MAX_VALUE);
             var projects = gitLab.getApi().getProjectApi().getProjects(50);
             size = Math.min((long) projects.getTotalItems(), maxProjects);
-            progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
-            logger.info(progress);
+            status = Config.getConfigNode().get("settings").get("crawler").get("status").get("active").asText();
+            logger.info(status);
             LocalDateTime start = LocalDateTime.now(Clock.systemUTC());
 
             int currentPage = 1;
@@ -87,13 +87,13 @@ public class Crawler {
             errorTime = LocalDateTime.now(Clock.systemUTC());
             e.printStackTrace();
         }
-        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
-        logger.info(progress);
         idx = 0L;
+        status = Config.getConfigNode().get("settings").get("crawler").get("status").get("cache").asText();
+        logger.info(status);
         cachingService.clearAllCaches(); // Clear all caches as they have inaccurate data in them
-        progress = Config.getConfigNode().get("settings").get("crawler").get("status").get("cache").asText();
-        logger.info(progress);
         cachingService.repopulateCaches(); // reload caches on the server side, so it's always instant for the end user
+        status = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
+        logger.info(status);
         crawlerActive.set(false);
     }
 
@@ -102,6 +102,6 @@ public class Crawler {
     }
 
     public CrawlerStatusSchema crawlerStatus() {
-        return new CrawlerStatusSchema(progress, lastError, errorTime, crawlerActive.get(), size, idx, timeTaken);
+        return new CrawlerStatusSchema(status, lastError, errorTime, crawlerActive.get(), size, idx, timeTaken);
     }
 }
