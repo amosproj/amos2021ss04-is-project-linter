@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-//import { Chart } from 'chart.js';
 import Chart from 'chart.js/auto';
 import * as dayjs from 'dayjs';
 
@@ -24,7 +23,7 @@ export class RepositoryDetailsComponent implements OnInit {
     bug: '🐛',
   };
   getdata = false;
-  myChart;
+  doughnutChart;
   canvas;
   context;
   lastLintTime;
@@ -59,6 +58,26 @@ export class RepositoryDetailsComponent implements OnInit {
     });
   }
 
+  addTilesForCategoryGraphAndTipps() {
+    // Erstellt zusätzliche Tiles
+    for (let i = 0; i < this.tags.length; i++) {
+      let t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
+      this.tiles.push(t);
+    }
+    this.tiles.push(<Tile>{
+      color: 'white',
+      cols: 5, // set to 5 (maxColsForTiles should not change)
+      rows: 1,
+      text: 'Informationen',
+    });
+    this.tiles.push(<Tile>{
+      color: 'white',
+      cols: 4, // set to 5 (maxColsForTiles should not change)
+      rows: 1,
+      text: 'Top 3 Tipps',
+    });
+  }
+
   load(): void {
     this.api.getProject(this.projectId).subscribe((proj) => {
       this.project = proj;
@@ -71,105 +90,40 @@ export class RepositoryDetailsComponent implements OnInit {
           i,
           this.numberOfTestsPerSeverityInTags
         );
-        this.myChart.update();
+        this.doughnutChart.update();
       }
     });
-  }
-
-  renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
-    //rendert eine Chart
-    const canvas = <HTMLCanvasElement>(
-      document.getElementById(String(chartName))
-    );
-    canvas.width = 150;
-    canvas.height = 150;
-    let ctx = canvas.getContext('2d');
-
-    this.myChart = new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        labels: [
-          'Bestanden',
-          'unwichtiger Test nicht bestanden',
-          'Test nicht bestanden',
-          'wichtiger Test nicht bestanden',
-        ],
-        datasets: [
-          {
-            label: 'My First Dataset',
-            data: numberOfTestsPerSeverityInTags[index],
-            backgroundColor: [
-              'rgb(51, 209, 40)', // green
-              'rgb(252, 236, 3)', // yellow
-              'rgb(252, 169, 3)', // orange
-              'rgb(252, 32, 3)', // rot
-            ],
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        plugins: {
-          legend: {
-            display: false,
-          },
-        },
-        maintainAspectRatio: false,
-      },
-    });
-
-    this.myChart.update();
   }
 
   initializeClassValuesAndTiles() {
     this.latestLintingResults =
       this.project.lintingResults[this.latestLintingIndex].checkResults;
-    //this.tags = this.getTagsArray(this.latestLintingResults);
 
-    this.LintingResultsInTags =
-      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
-        this.tags,
-        this.latestLintingResults
-      )[1];
-    // Speichere Informationen
+    //extrahiere den Zeitpunkt des letzten Linterdurchlaufs
     this.lastLintTime = dayjs(
       this.project.lintingResults[this.latestLintingIndex].lintTime
     ).format('DD.MM.YYYY - HH:mm');
+
+    
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
       this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
         this.tags,
         this.project.lintingResults[this.latestLintingIndex].checkResults
       )[0];
-    // sortiere die Checks um die 3 besten Tipps darzustellen
+    this.LintingResultsInTags =
+      this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
+        this.tags,
+        this.latestLintingResults
+      )[1];
+
     this.latestLintingResults.forEach((val) =>
       this.latestLintingResultsSortedPriority.push(Object.assign({}, val))
     );
+    // sortiere die Checks um die 3 besten Tipps darzustellen
     this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
-    this.removePassedChecks();
-  }
-
-  getTagsArray(latestLintingResults) {
-    // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
-    let tags = [];
-    for (let i = 0; i < latestLintingResults.length; i++) {
-      let tagAlreadyThere = false;
-      // Prüfe ob tags Werte hat
-      if (tags) {
-        // Prüfe ob Kategorien die momentane Kategorie enthält
-        for (let j = 0; j < tags.length; j++) {
-          if (tags[j] == latestLintingResults[i].tag) {
-            tagAlreadyThere = true;
-          }
-        }
-      } else {
-        tags = new Array<String>();
-      }
-      if (!tagAlreadyThere) {
-        tags.push(latestLintingResults[i].tag);
-      }
-    }
-    return tags;
+     // entferne bestandene Tests, da für diese kein Tipp notwendig ist
+     this.removePassedChecks();
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(
@@ -224,35 +178,7 @@ export class RepositoryDetailsComponent implements OnInit {
     return numberOfTestsPerSeverityInTags;
   }
 
-  addTilesForCategoryGraphAndTipps() {
-    // Erstellt zusätzliche Tiles
-    for (let i = 0; i < this.tags.length; i++) {
-      let t = <Tile>{ color: 'white', cols: 2, rows: 2, text: this.tags[i] };
-      this.tiles.push(t);
-    }
-    this.tiles.push(<Tile>{
-      color: 'white',
-      cols: 5, // set to 5 (maxColsForTiles should not change)
-      rows: 1,
-      text: 'Informationen',
-    });
-    this.tiles.push(<Tile>{
-      color: 'white',
-      cols: 4, // set to 5 (maxColsForTiles should not change)
-      rows: 1,
-      text: 'Top 3 Tipps',
-    });
-  }
-
-  returnEmojiBasedOnSeverity(input) {
-    // Benutzt die Emojimap
-    if (input.result) return this.emojiMap.correct;
-    else if (input.severity == 'HIGH') return this.emojiMap.false;
-    else if (input.severity == 'MEDIUM') return this.emojiMap.warning;
-    else if (input.severity == 'LOW') return this.emojiMap.notImportant;
-    else return this.emojiMap.bug;
-  }
-
+  //compare Funktion zum Sortieren nach Priorität des Checks
   compareCheckResults(a, b) {
     if (a.priority < b.priority) {
       return -1;
@@ -263,6 +189,54 @@ export class RepositoryDetailsComponent implements OnInit {
     return 0;
   }
 
+  //rendert eine Doughnut-Chart
+  renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
+
+    const canvas = <HTMLCanvasElement>(
+      document.getElementById(String(chartName))
+    );
+    canvas.width = 150;
+    canvas.height = 150;
+    let ctx = canvas.getContext('2d');
+
+    this.doughnutChart = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: [
+          'Bestanden',
+          'unwichtiger Test nicht bestanden',
+          'Test nicht bestanden',
+          'wichtiger Test nicht bestanden',
+        ],
+        datasets: [
+          {
+            label: 'My First Dataset',
+            data: numberOfTestsPerSeverityInTags[index],
+            backgroundColor: [
+              'rgb(51, 209, 40)', // green
+              'rgb(252, 236, 3)', // yellow
+              'rgb(252, 169, 3)', // orange
+              'rgb(252, 32, 3)', // rot
+            ],
+            hoverOffset: 4,
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        maintainAspectRatio: false,
+      },
+    });
+
+    this.doughnutChart.update();
+  }
+
+  //lösche bestandene Tests aus dem Tipp Array
+  //Passe den Header der Tipps ahängig von der Menge der Tipps an 
   removePassedChecks() {
     this.latestLintingResultsFailedChecks = new Array();
     for (let i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
@@ -283,6 +257,19 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 
+  //liefere das passende Emoji anhand der Priorität des Tests
+  //Wird von repository-details.html aufgrufen
+  returnEmojiBasedOnSeverity(input) {
+    // Benutzt die Emojimap
+    if (input.result) return this.emojiMap.correct;
+    else if (input.severity == 'HIGH') return this.emojiMap.false;
+    else if (input.severity == 'MEDIUM') return this.emojiMap.warning;
+    else if (input.severity == 'LOW') return this.emojiMap.notImportant;
+    else return this.emojiMap.bug;
+  }
+
+  //Passe bei Randfällen (keine Beschreibung, zu lange Beschreibung) die Beschreibung an
+  //Wird von repository-details.html aufgrufen
   truncateDescription() {
     if (!this.project) {
       return '';
@@ -295,4 +282,30 @@ export class RepositoryDetailsComponent implements OnInit {
       return this.project.description.substring(0, 300) + '...';
     }
   }
+
+  //Wird momentan nicht benötigt
+  /*
+  getTagsArray(latestLintingResults) {
+    // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
+    let tags = [];
+    for (let i = 0; i < latestLintingResults.length; i++) {
+      let tagAlreadyThere = false;
+      // Prüfe ob tags Werte hat
+      if (tags) {
+        // Prüfe ob Kategorien die momentane Kategorie enthält
+        for (let j = 0; j < tags.length; j++) {
+          if (tags[j] == latestLintingResults[i].tag) {
+            tagAlreadyThere = true;
+          }
+        }
+      } else {
+        tags = new Array<String>();
+      }
+      if (!tagAlreadyThere) {
+        tags.push(latestLintingResults[i].tag);
+      }
+    }
+    return tags;
+  }
+  */
 }
