@@ -44,7 +44,6 @@ export class StatusTabComponent implements OnInit, OnDestroy {
   }
 
   startCrawler(): void {
-    // TODO always error
     this.api.startCrawler().subscribe(
       (res) => {
         console.log(res);

@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -143,6 +142,7 @@ public class ProjectController {
     //                POST
     //**********************************
 
+    // TODO delete
     @PostMapping("/projects")
     public @ResponseBody
     String lintProject(@RequestBody String url) {
@@ -155,12 +155,11 @@ public class ProjectController {
     }
 
     @PostMapping("/crawler")
-    public ResponseEntity<String> crawl() {
+    public void crawl() {
         if (!crawler.getCrawlerActive()) {
             crawler.runCrawler();
-            return new ResponseEntity<>("ok", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("Crawler is already running, slow down!", HttpStatus.TOO_MANY_REQUESTS);
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
         }
     }
 
