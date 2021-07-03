@@ -18,7 +18,7 @@ public class LintingResult {
     private Long projectId;
     private LocalDateTime lintTime;
 
-    @OneToMany(targetEntity = CheckResult.class)
+    @OneToMany(targetEntity = CheckResult.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "lintId")
     private List<CheckResult> checkResults;
 
