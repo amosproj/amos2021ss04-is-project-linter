@@ -14,3 +14,8 @@ mat-icon {
 .example-radio-button {
   margin: 5px;
 }
+
+.no-projects {
+  text-align: center;
+  font-size: 20pt;
+}
