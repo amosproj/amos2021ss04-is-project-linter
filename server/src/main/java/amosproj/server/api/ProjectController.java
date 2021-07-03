@@ -1,5 +1,6 @@
 package amosproj.server.api;
 
+import amosproj.server.CachingService;
 import amosproj.server.Config;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;
@@ -52,6 +53,9 @@ public class ProjectController {
 
     @Autowired
     private CSVExport csvExport;
+
+    @Autowired
+    private CachingService cachingService;
 
     //**********************************
     //                GET
@@ -161,6 +165,12 @@ public class ProjectController {
         } else {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
         }
+    }
+
+    @PostMapping("/cache")
+    public void cache() {
+        cachingService.clearAllCaches();
+        cachingService.repopulateCaches();
     }
 
 }
