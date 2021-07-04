@@ -104,7 +104,6 @@ export class RepositoryDetailsComponent implements OnInit {
       this.project.lintingResults[this.latestLintingIndex].lintTime
     ).format('DD.MM.YYYY - HH:mm');
 
-    
     // erstelle dynamisch fehlende tiles für die grid Liste korrespondierend zu ihrer grid Liste
     this.numberOfTestsPerSeverityInTags =
       this.groupLintingResultsInTagsAndFillNumTestsPerSeverity(
@@ -122,8 +121,8 @@ export class RepositoryDetailsComponent implements OnInit {
     );
     // sortiere die Checks um die 3 besten Tipps darzustellen
     this.latestLintingResultsSortedPriority.sort(this.compareCheckResults);
-     // entferne bestandene Tests, da für diese kein Tipp notwendig ist
-     this.removePassedChecks();
+    // entferne bestandene Tests, da für diese kein Tipp notwendig ist
+    this.removePassedChecks();
   }
 
   groupLintingResultsInTagsAndFillNumTestsPerSeverity(
@@ -191,7 +190,6 @@ export class RepositoryDetailsComponent implements OnInit {
 
   //rendert eine Doughnut-Chart
   renderChart(chartName, index, numberOfTestsPerSeverityInTags) {
-
     const canvas = <HTMLCanvasElement>(
       document.getElementById(String(chartName))
     );
@@ -236,7 +234,7 @@ export class RepositoryDetailsComponent implements OnInit {
   }
 
   //lösche bestandene Tests aus dem Tipp Array
-  //Passe den Header der Tipps ahängig von der Menge der Tipps an 
+  //Passe den Header der Tipps ahängig von der Menge der Tipps an
   removePassedChecks() {
     this.latestLintingResultsFailedChecks = new Array();
     for (let i = 0; i < this.latestLintingResultsSortedPriority.length; i++) {
