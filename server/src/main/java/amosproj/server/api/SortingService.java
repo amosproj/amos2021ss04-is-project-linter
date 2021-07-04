@@ -106,6 +106,7 @@ public class SortingService {
             return null;
         }
         HashMap<String, String> map = Config.getTags();
+        Set<String> tags = Config.getAllTags();
 
         Iterable<Project> projectList = projectRepository.findAll();
         Iterator<Project> it = projectList.iterator();
@@ -117,6 +118,9 @@ public class SortingService {
             for (LintingResult lr : lintingResults) {
                 List<CheckResult> checkResults = lr.getCheckResults();
                 HashMap<String, Boolean> allChecksPassed = new HashMap<String, Boolean>();
+                for (String tag : tags) {
+                    allChecksPassed.put(tag, true);
+                }
                 for (CheckResult checkResult : checkResults) {
                     String checkCategory = map.getOrDefault(checkResult.getCheckName(), null);
                     if (checkCategory == null) { // Check was deleted from config file
@@ -127,13 +131,10 @@ public class SortingService {
                         if (allChecksPassed.values().stream().allMatch(x -> x.equals(false))) { //No category passed all checks
                             break;
                         }
-                    } else {
-                        allChecksPassed.putIfAbsent(checkCategory, true); // So far all checks have passed in this category
                     }
                 }
-                Set<String> categories = allChecksPassed.keySet();
                 res.putIfAbsent(lr.getLintTime(), new HashMap<String, Object>());
-                for (String category : categories) {
+                for (String category : tags) {
                     HashMap<String, Object> resMap = res.get(lr.getLintTime());
                     resMap.putIfAbsent(category, 0L);
                     if (allChecksPassed.get(category)) {
