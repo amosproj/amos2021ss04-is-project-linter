@@ -2,8 +2,14 @@ from datetime import datetime, timedelta, timezone
 import random
 import csv
 
-start_time = datetime(2021, 6, 6, 15, 0, 0)
+start_time = datetime(2021, 6, 1, 15, 0, 0)
 dates = [start_time + timedelta(n) for n in range(7)]
+
+
+def next_result(dt : datetime):
+    x = random.randint(start_time.day, dt.day + 3)
+    return x > 3
+
 
 checks = [
     'CheckContributingExistence',
@@ -72,24 +78,21 @@ for lr in linting_results:
             "id": check_result_id,
             "check_name": check,
             "lint_id": lr['id'],
-            "result": bool(random.getrandbits(1)),
+            "result": next_result(datetime.fromisoformat(lr['lint_time'])),
         })
 
 # export stuff
 with open('projects.csv', 'w', encoding='UTF8') as f:
     w = csv.writer(f)
-    w.writerow(projects[0].keys())  # header
     for p in projects:
         w.writerow(p.values())
 
 with open('linting_results.csv', 'w', encoding='UTF8') as f:
     w = csv.writer(f)
-    w.writerow(linting_results[0].keys())  # header
     for lr in linting_results:
         w.writerow(lr.values())
 
 with open('check_results.csv', 'w', encoding='UTF8') as f:
     w = csv.writer(f)
-    w.writerow(check_results[0].keys())  # header
     for cr in check_results:
         w.writerow(cr.values())
