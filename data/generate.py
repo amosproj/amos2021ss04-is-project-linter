@@ -1,12 +1,13 @@
 from datetime import datetime, timedelta, timezone
 import random
 import csv
+import json
 
 start_time = datetime(2021, 6, 1, 15, 0, 0)
 dates = [start_time + timedelta(n) for n in range(7)]
 
 
-def next_result(dt : datetime):
+def next_result(dt: datetime):
     x = random.randint(start_time.day, dt.day + 3)
     return x > 3
 
@@ -33,32 +34,15 @@ checks = [
     'HasMergeRequestEnabled',
 ]
 
-projects = [
-    {
-        "id": 1,
-        "description": "Test repo where we want everything to be true when linted.",
-        "fork_count": 0,
-        "gitlab_project_id": 19386,
-        "last_commit": "2021-06-16 21:11:21.597000",
-        "name": "AllChecksTrue",
-        "name_space": "uv59uxut",
-        "url": "https://gitlab.cs.fau.de/uv59uxut/allcheckstrue"
-    },
-    {
-        "id": 2,
-        "description": "Mixture Density Networks for PyTorch",
-        "fork_count": 0,
-        "gitlab_project_id": 19277,
-        "last_commit": "2021-06-04 15:04:03.972000",
-        "name": "pytorch-mdn",
-        "name_space": "oc81adow",
-        "url": "https://gitlab.cs.fau.de/oc81adow/pytorch-mdn"
-    }
-]
+projects = []
 linting_result_id = 0
 linting_results = []
 check_result_id = 0
 check_results = []
+
+# load project refereences
+with open('projects_ref.json', 'r') as f:
+    projects = json.load(f)
 
 # generate linting results
 for project in projects:
