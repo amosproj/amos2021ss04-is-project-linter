@@ -5,6 +5,7 @@ import amosproj.server.api.schemas.ProjectSchema;
 import amosproj.server.data.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,12 @@ public class SortingService {
 
     @Autowired
     private LintingResultRepository lintingResultRepository;
+
+    @CachePut("cachedSorting")
+    public List<ProjectSchema> updateCachedSorting(Boolean delta, Set<String> allProperties) {
+        return cachedSorting(delta, allProperties);
+    }
+
 
     @Cacheable(value = "cachedSorting")
     public List<ProjectSchema> cachedSorting(Boolean delta, Set<String> allProperties) {
@@ -96,6 +103,11 @@ public class SortingService {
         return matchesNamespace || matchesName;
     }
 
+    @CachePut("allTags")
+    public TreeMap<LocalDateTime, HashMap<String, Object>> updateProjectsByAllTags(String type) {
+        return projectsByAllTags(type);
+    }
+
 
     @Cacheable("allTags")
     public TreeMap<LocalDateTime, HashMap<String, Object>> projectsByAllTags(String type) {
@@ -161,6 +173,10 @@ public class SortingService {
         return percentage;
     }
 
+    @CachePut("top")
+    public TreeMap<LocalDateTime, TreeMap<Long, Object>> updateTopXProjects(String type) {
+        return topXProjects(type);
+    }
 
     @Cacheable("top")
     public TreeMap<LocalDateTime, TreeMap<Long, Object>> topXProjects(String type) {

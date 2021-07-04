@@ -169,7 +169,6 @@ public class ProjectController {
 
     @PostMapping("/cache")
     public void cache() {
-        cachingService.clearAllCaches();
         cachingService.repopulateCaches();
     }
 

@@ -90,7 +90,6 @@ public class Crawler {
         idx = 0L;
         status = Config.getConfigNode().get("settings").get("crawler").get("status").get("cache").asText();
         logger.info(status);
-        cachingService.clearAllCaches(); // Clear all caches as they have inaccurate data in them
         cachingService.repopulateCaches(); // reload caches on the server side, so it's always instant for the end user
         status = Config.getConfigNode().get("settings").get("crawler").get("status").get("inactive").asText();
         logger.info(status);

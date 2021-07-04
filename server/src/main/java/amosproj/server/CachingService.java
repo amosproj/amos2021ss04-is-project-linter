@@ -2,7 +2,6 @@ package amosproj.server;
 
 import amosproj.server.api.SortingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,25 +10,19 @@ import java.util.*;
 public class CachingService {
 
     @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
     private SortingService sortingService;
 
-    public void clearAllCaches() {
-        cacheManager.getCacheNames().forEach(cacheName -> Objects.requireNonNull(cacheManager.getCache(cacheName)).clear());
-    }
 
     public void repopulateCaches() {
         Set<String> tags = Config.getAllTags();
         List<Set<String>> tagsPermutated = allTagSets(tags);
-        sortingService.projectsByAllTags("absolute");
-        sortingService.projectsByAllTags("percentage");
-        sortingService.topXProjects("absolute");
-        sortingService.topXProjects("percentage");
+        sortingService.updateTopXProjects("absolute");
+        sortingService.updateTopXProjects("percentage");
+        sortingService.updateProjectsByAllTags("percentage");
+        sortingService.updateProjectsByAllTags("absolute");
         for (Set<String> tag : tagsPermutated) {
-            sortingService.cachedSorting(true, tag);
-            sortingService.cachedSorting(false, tag);
+            sortingService.updateCachedSorting(true, tag);
+            sortingService.updateCachedSorting(false, tag);
         }
     }
 
