@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import random
-import json
+import csv
 
 start_time = datetime(2021, 6, 6, 15, 0, 0)
 dates = [start_time + timedelta(n) for n in range(7)]
@@ -75,12 +75,21 @@ for lr in linting_results:
             "result": bool(random.getrandbits(1)),
         })
 
-# export shit
-with open('projects.json', 'w', encoding='UTF8') as f:
-    json.dump(projects, f)
+# export stuff
+with open('projects.csv', 'w', encoding='UTF8') as f:
+    w = csv.writer(f)
+    w.writerow(projects[0].keys())  # header
+    for p in projects:
+        w.writerow(p.values())
 
-with open('linting_results.json', 'w', encoding='UTF8') as f:
-    json.dump(linting_results, f)
+with open('linting_results.csv', 'w', encoding='UTF8') as f:
+    w = csv.writer(f)
+    w.writerow(linting_results[0].keys())  # header
+    for lr in linting_results:
+        w.writerow(lr.values())
 
-with open('check_results.json', 'w', encoding='UTF8') as f:
-    json.dump(check_results, f)
+with open('check_results.csv', 'w', encoding='UTF8') as f:
+    w = csv.writer(f)
+    w.writerow(check_results[0].keys())  # header
+    for cr in check_results:
+        w.writerow(cr.values())
