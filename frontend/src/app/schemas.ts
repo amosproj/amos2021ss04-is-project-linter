@@ -9,6 +9,7 @@ export interface Project {
   gitlabProjectId: number;
   id: number;
   name: string;
+  nameSpace: string;
   description: string;
   results: [];
   url: string;

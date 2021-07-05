@@ -1,7 +1,21 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import random
 import csv
 import json
+import requests
+
+
+def get_projects():
+    with open('../config.json', 'r') as f:
+        config = json.load(f)
+        gitlab_host = config['settings']['gitLabHost']
+
+    res = requests.get(f'{gitlab_host}/api/v4/projects?per_page=100')
+    if res.status_code == 200:
+        return res.json()
+    else:
+        return None
+
 
 start_time = datetime(2021, 6, 1, 15, 0, 0)
 dates = [start_time + timedelta(n) for n in range(7)]
@@ -34,15 +48,26 @@ checks = [
     'HasMergeRequestEnabled',
 ]
 
+project_id = 0
 projects = []
 linting_result_id = 0
 linting_results = []
 check_result_id = 0
 check_results = []
 
-# load project refereences
-with open('projects_ref.json', 'r') as f:
-    projects = json.load(f)
+# generate projects
+for p in get_projects():
+    project_id += 1
+    projects.append({
+        "id": project_id,
+        "description": str(p['description']).replace('\r\n', ' ').replace(',', ' '),
+        "fork_count": p['forks_count'],
+        "gitlab_project_id": p['id'],
+        "last_commit": p['last_activity_at'],
+        "name": p['name'],
+        "name_space": p['namespace']['path'],
+        "url": p['web_url']
+    })
 
 # generate linting results
 for project in projects:

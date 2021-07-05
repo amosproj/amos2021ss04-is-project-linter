@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject, timer } from 'rxjs';
-import { concatMap, retry, share, takeUntil } from 'rxjs/operators';
+import { concatMap, share, takeUntil } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from '../api.service';
@@ -25,7 +25,6 @@ export class StatusTabComponent implements OnInit, OnDestroy {
     timer(1, 2000)
       .pipe(
         concatMap((_) => this.api.crawlerStatus()),
-        retry(),
         share(),
         takeUntil(this.stopPolling)
       )
