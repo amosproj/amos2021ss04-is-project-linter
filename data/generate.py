@@ -60,7 +60,7 @@ for p in get_projects():
     project_id += 1
     projects.append({
         "id": project_id,
-        "description": p['description'],
+        "description": str(p['description']).replace('\r\n', ' '),
         "fork_count": p['forks_count'],
         "gitlab_project_id": p['id'],
         "last_commit": p['last_activity_at'],
