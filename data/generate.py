@@ -10,7 +10,7 @@ def get_projects():
         config = json.load(f)
         gitlab_host = config['settings']['gitLabHost']
 
-    res = requests.get(f'{gitlab_host}/api/v4/projects')
+    res = requests.get(f'{gitlab_host}/api/v4/projects?per_page=100')
     if res.status_code == 200:
         return res.json()
     else:
@@ -60,7 +60,7 @@ for p in get_projects():
     project_id += 1
     projects.append({
         "id": project_id,
-        "description": str(p['description']).replace('\r\n', ' '),
+        "description": str(p['description']).replace('\r\n', ' ').replace(',', ' '),
         "fork_count": p['forks_count'],
         "gitlab_project_id": p['id'],
         "last_commit": p['last_activity_at'],
