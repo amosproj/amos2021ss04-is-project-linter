@@ -68,8 +68,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
     "url": "https://gitlab.domain.de/user/amos-test", 
                                         // Die URL zum Repository
     "gitlabProjectId": 4711,            // Die Projekt-ID auf der GitLab Instanz
-    "gitlabInstance": "https://gitlab.domain.de", 
-                                        // Die URL der GitLab Instanz
+    "nameSpace": "be15piel",            // Der Namespace des Projekts
     "description": "",                  // Die Beschreibung des Projekts
     "forkCount": 1,                     // Anzahl der Forks des Projekts
     "lastCommit": "2021-05-29T00:10:11.411+00:00", 
