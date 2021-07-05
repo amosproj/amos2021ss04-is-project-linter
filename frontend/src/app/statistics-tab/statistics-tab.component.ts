@@ -4,13 +4,15 @@ import { Chart } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import * as dayjs from 'dayjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 
 import { environment } from 'src/environments/environment';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { ApiService } from '../api.service';
 import { Statistics } from '../schemas';
+
+// FIXME basically refactor whole thing so apiCall and type are not always passed around ...
 
 @Component({
   selector: 'app-statistics-tab',
@@ -55,35 +57,31 @@ export class StatisticsTabComponent implements OnInit {
       panelClass: 'custom-dialog-container',
     });
 
-    this.getChartData('top', 'absolute');
-    this.getChartData('top', 'percentage');
-    this.getChartData('allTags', 'absolute');
-    this.getChartData('allTags', 'percentage');
-
-    // close spinner
-    dialogRef.close();
+    combineLatest([
+      this.api.getProjectsByAllTags('absolute'),
+      this.api.getProjectsByAllTags('percentage'),
+      this.api.getProjectsByTop('absolute'),
+      this.api.getProjectsByTop('percentage'),
+    ])
+      .subscribe(
+        ([res1, res2, res3, res4]) => {
+          this.processStats(res1, 'allTags', 'absolute');
+          this.processStats(res2, 'allTags', 'percentage');
+          this.processStats(res3, 'top', 'absolute');
+          this.processStats(res4, 'top', 'percentage');
+        },
+        (error) => {
+          this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
+        }
+      )
+      .add(() => {
+        // finally close spinner
+        dialogRef.close();
+      });
   }
 
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action);
-  }
-
-  getChartData(apiCall: string, typ: string) {
-    let res: Observable<Statistics>;
-    if (apiCall == 'allTags') {
-      res = this.api.getProjectsByAllTags(typ);
-    } else if (apiCall == 'top') {
-      res = this.api.getProjectsByTop(typ);
-    }
-
-    res.subscribe(
-      (data) => {
-        this.processStats(data, apiCall, typ);
-      },
-      (error) => {
-        this.openSnackBar('Fehler beim Holen der Statistik-Datein', 'OK');
-      }
-    );
   }
 
   processStats(results: Statistics, apiCall: string, typ: string) {
