@@ -281,29 +281,4 @@ export class RepositoryDetailsComponent implements OnInit {
     }
   }
 
-  //Wird momentan nicht benötigt
-  /*
-  getTagsArray(latestLintingResults) {
-    // Erstellt ein Array aus allen in latestLintingResults enthaltenen Tags
-    let tags = [];
-    for (let i = 0; i < latestLintingResults.length; i++) {
-      let tagAlreadyThere = false;
-      // Prüfe ob tags Werte hat
-      if (tags) {
-        // Prüfe ob Kategorien die momentane Kategorie enthält
-        for (let j = 0; j < tags.length; j++) {
-          if (tags[j] == latestLintingResults[i].tag) {
-            tagAlreadyThere = true;
-          }
-        }
-      } else {
-        tags = new Array<String>();
-      }
-      if (!tagAlreadyThere) {
-        tags.push(latestLintingResults[i].tag);
-      }
-    }
-    return tags;
-  }
-  */
 }
