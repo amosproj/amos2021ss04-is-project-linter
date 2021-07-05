@@ -5,30 +5,11 @@
 ### Python
 
 Es wird python3 benötigt mit diesen Paketen:
-`json, csv, datetime, random`
+`json, csv, datetime, random, requests`
 
-### Json Datei mit Referenzprojekten
+### Konfigurationsdatei
 
-Es wird eine Datei `projects_ref.json` in diesem Ordner benötigt.
-Diese Datei enthält eine JSON-Formatierte liste an Projekten, für die Test-Daten Generiert werden.
-
-Beispiel mit einem Projekt:
-`projects_ref.json`
-
-```json
-[
-	{
-		"id": 1,
-		"description": "Test repo where we want everything to be true when linted.",
-		"fork_count": 0,
-		"gitlab_project_id": 19386,
-		"last_commit": "2021-06-16 21:11:21.597000",
-		"name": "AllChecksTrue",
-		"name_space": "uv59uxut",
-		"url": "https://gitlab.cs.fau.de/uv59uxut/allcheckstrue"
-	}
-]
-```
+Die Testdaten werden zum teil aus `../config.json` geholt. Stellen sie sicher dass dort ein `gitLabHost` gesetzt ist.
 
 ## Daten generieren
 
