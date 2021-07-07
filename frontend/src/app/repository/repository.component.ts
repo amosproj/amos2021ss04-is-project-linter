@@ -37,11 +37,11 @@ export class RepositoryComponent {
 
   truncateName() {
     if (this.project.name == '') {
-      return 'Kein Name Vorhanden'
+      return 'Kein Name Vorhanden';
     } else if (this.project.name.length <= 40) {
       return this.project.name;
     } else {
-      return this.project.name.substring(0, 40) + '...'
+      return this.project.name.substring(0, 40) + '...';
     }
   }
 }
