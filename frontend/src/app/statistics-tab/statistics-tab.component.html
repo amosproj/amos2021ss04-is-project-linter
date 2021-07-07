@@ -1,53 +1,29 @@
 <!-- stats -->
 <mat-card>
-  <mat-grid-list cols="2" style="margin-bottom: 3%">
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-      <mat-card-content class="chart">
-        <div
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          style="height: 100%"
-        >
-          <mat-card-title>{{ chartNames[0] }}</mat-card-title>
-          <canvas id="importantChecks"></canvas>
-        </div>
-      </mat-card-content>
+  <mat-grid-list cols="2" rowHeight="20:12" gutterSize="1em">
+    <mat-grid-tile>
+      <div fxLayout="column" fxLayoutAlign="center center" class="chart">
+        <mat-card-title>{{ chartNames[0] }}</mat-card-title>
+        <canvas id="importantChecks"></canvas>
+      </div>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-      <mat-card-content class="chart">
-        <div
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          style="height: 100%"
-        >
-          <mat-card-title>{{ chartNames[1] }}</mat-card-title>
-          <canvas id="importantChecksPercentage"></canvas>
-        </div>
-      </mat-card-content>
+    <mat-grid-tile>
+      <div fxLayout="column" fxLayoutAlign="center center" class="chart">
+        <mat-card-title>{{ chartNames[1] }}</mat-card-title>
+        <canvas id="importantChecksPercentage"></canvas>
+      </div>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-      <mat-card-content class="chart">
-        <div
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          style="height: 100%"
-        >
-          <mat-card-title>{{ chartNames[2] }}</mat-card-title>
-          <canvas id="checksPerCategorie"></canvas>
-        </div>
-      </mat-card-content>
+    <mat-grid-tile>
+      <div fxLayout="column" fxLayoutAlign="center center" class="chart">
+        <mat-card-title>{{ chartNames[2] }}</mat-card-title>
+        <canvas id="checksPerCategorie"></canvas>
+      </div>
     </mat-grid-tile>
-    <mat-grid-tile [colspan]="1" [rowspan]="1">
-      <mat-card-content class="chart">
-        <div
-          fxLayout="column"
-          fxLayoutAlign="center center"
-          style="height: 100%"
-        >
-          <mat-card-title>{{ chartNames[3] }}</mat-card-title>
-          <canvas id="checksPerCategoriePercentage"></canvas>
-        </div>
-      </mat-card-content>
+    <mat-grid-tile>
+      <div fxLayout="column" fxLayoutAlign="center center" class="chart">
+        <mat-card-title>{{ chartNames[3] }}</mat-card-title>
+        <canvas id="checksPerCategoriePercentage"></canvas>
+      </div>
     </mat-grid-tile>
   </mat-grid-list>
 </mat-card>
