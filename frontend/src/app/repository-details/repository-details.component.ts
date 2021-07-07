@@ -24,8 +24,7 @@ export class RepositoryDetailsComponent implements OnInit {
   };
   getdata = false;
   doughnutChart;
-  canvas;
-  context;
+ 
   lastLintTime;
   latestLintingIndex: number;
   latestLintingResults: CheckResults[];
