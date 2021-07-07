@@ -4,7 +4,7 @@ Die Applikation ermöglicht es Nutzern, verschiedene Inner Source Repositories a
 ## Startseite
 
 Auf der Startseite werden alle analysierten Repositories angezeigt. \
-(1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen zu Filtern. \
+(1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen oder dem Namespace zu Filtern. \
 (2) Reitermenü 
 - Projekte: zeigt die Projekte und Informationen dazu.
 - Statistiken: zeigt Statistiken zu den Projekten und ermöglicht es die Ergebnisse als csv zu exportieren
