@@ -55,20 +55,11 @@
 
 <!-- csv export -->
 <mat-card style="padding-bottom: 4%">
-  <mat-card-content
-    style="
-      background-color: white;
-      padding-top: 3%;
-      padding-left: 2%;
-      font-size: large;
-      padding-bottom: 2%;
-      border-bottom: 2px solid lightgray;
-    "
-  >
-    Ergebnisse des Linters als .csv exportieren:
-    <a mat-raised-button download href="{{ csvExportLink }}" color="primary"
-      >Download</a
-    >
+  <mat-card-content class="csv-export">
+    Alle Ergebnisse als .csv exportieren:
+    <a mat-raised-button download href="{{ csvExportLink }}" color="primary">
+      Download
+    </a>
   </mat-card-content>
 </mat-card>
 <!-- END csv export -->
