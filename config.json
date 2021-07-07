@@ -14,7 +14,7 @@
         "inactive": "Crawler ist inaktiv",
         "cache": "Caches werden kompiliert"
       },
-      "maxProjects": 10
+      "maxProjects": 20
     },
     "mostImportantChecks": [
       3,

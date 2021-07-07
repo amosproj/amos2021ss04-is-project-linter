@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { PageEvent } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Config, PagedProjects } from '../schemas';
@@ -36,6 +36,7 @@ export class ProjectsTabComponent implements OnInit {
   config: Config;
   projects: PagedProjects = <PagedProjects>{ content: [], totalElements: 0 };
   // paging
+  @ViewChild('paginator') paginator: MatPaginator;
   pageSizeOptions: number[] = [10, 25, 100];
   currentPage: number = 0;
   pageSize: number = this.pageSizeOptions[0];
@@ -111,6 +112,9 @@ export class ProjectsTabComponent implements OnInit {
       .subscribe(
         (data) => {
           this.projects = data;
+          if (this.searchQuery != '') {
+            this.paginator.firstPage();
+          }
         },
         (error) => {
           this.openSnackBar('Fehler beim Laden der Projekte', 'OK');
