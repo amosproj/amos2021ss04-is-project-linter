@@ -34,4 +34,14 @@ export class RepositoryComponent {
       return this.project.description.substring(0, 100) + '...';
     }
   }
+
+  truncateName() {
+    if (this.project.name == '') {
+      return 'Kein Name Vorhanden'
+    } else if (this.project.name.length <= 40) {
+      return this.project.name;
+    } else {
+      return this.project.name.substring(0, 40) + '...'
+    }
+  }
 }
