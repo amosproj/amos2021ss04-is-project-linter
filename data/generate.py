@@ -14,7 +14,7 @@ def get_projects():
     if res.status_code == 200:
         return res.json()
     else:
-        return None
+        return []
 
 
 start_time = datetime(2021, 6, 1, 15, 0, 0)

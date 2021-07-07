@@ -280,5 +280,4 @@ export class RepositoryDetailsComponent implements OnInit {
       return this.project.description.substring(0, 300) + '...';
     }
   }
-
 }
