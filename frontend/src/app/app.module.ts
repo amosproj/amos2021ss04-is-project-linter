@@ -18,7 +18,6 @@ import { HeaderComponent } from './header/header.component';
 import { ProjectsTabComponent } from './projects-tab/projects-tab.component';
 import { StatisticsTabComponent } from './statistics-tab/statistics-tab.component';
 import { StatusTabComponent } from './status-tab/status-tab.component';
-import { SearchComponent } from './search/search.component';
 import { NavComponent } from './nav/nav.component';
 
 export function init_app(state: StateService) {
@@ -36,7 +35,6 @@ export function init_app(state: StateService) {
     ProjectsTabComponent,
     StatisticsTabComponent,
     StatusTabComponent,
-    SearchComponent,
     NavComponent,
   ],
   entryComponents: [RepositoryDetailsComponent],

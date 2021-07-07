@@ -19,3 +19,11 @@ mat-icon {
   text-align: center;
   font-size: 20pt;
 }
+
+.search-bar {
+  vertical-align: top;
+  text-align: center;
+  padding-top: 20px;
+
+  vertical-align: top;
+}

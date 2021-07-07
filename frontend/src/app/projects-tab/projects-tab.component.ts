@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PageEvent } from '@angular/material/paginator';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { Config, PagedProjects } from '../schemas';
 import { SpinnerComponent } from '../spinner/spinner.component';
@@ -21,8 +22,11 @@ export class ProjectsTabComponent implements OnInit {
     'Bestandene Tests',
     'Neue bestandene Tests in den letzten 30 Tagen',
   ];
-  chipsControl = new FormControl('');
-  searchCriteria = new FormControl(this.availableSearchCriteria[0]);
+  searchQueryForm: FormControl = new FormControl('');
+  chipsControl: FormControl = new FormControl('');
+  searchCriteria: FormControl = new FormControl(
+    this.availableSearchCriteria[0]
+  );
   // query, sorting parameters
   delta: boolean = false; // whether the bottom radio button is selected
   searchQuery: string = ''; // query from the search bar
@@ -63,15 +67,17 @@ export class ProjectsTabComponent implements OnInit {
     this.getProjects();
 
     // search query
-    this.state.searchQuery.subscribe(
-      (query) => {
-        this.searchQuery = query;
-        this.getProjects();
-      },
-      (error) => {
-        this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
-      }
-    );
+    this.searchQueryForm.valueChanges
+      .pipe(debounceTime(500), distinctUntilChanged())
+      .subscribe(
+        (query) => {
+          this.searchQuery = query;
+          this.getProjects();
+        },
+        (error) => {
+          this.openSnackBar('Die Suche ist fehlgeschlagen', 'OK');
+        }
+      );
   }
 
   ngAfterViewInit() {
