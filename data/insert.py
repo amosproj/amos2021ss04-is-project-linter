@@ -55,31 +55,15 @@ def get_projects():
         return []
 
 
-checks = [
-    'CheckContributingExistence',
-    'EitherOwnersOrMaintainersExist',
-    'GuestRoleDisabled',
-    'HasSquashingDisabled',
-    'HasAvatar',
-    'CheckReadmeHasLinks',
-    'CheckReadmeHasPicture',
-    'HasForkingEnabled',
-    'GitlabWikiDisabled',
-    'HasServiceDeskDisabled',
-    'HasBadges',
-    'HasDescription',
-    'IsPublic',
-    'CheckReadmeExistence',
-    'DeveloperRoleDisabled',
-    'CheckNoContributingChain',
-    'HasIssuesEnabled',
-    'NotDefaultReadme',
-    'HasMergeRequestEnabled',
-]
+def get_checks():
+    with open('../config.json', 'r') as f:
+        config = json.load(f)
+        return config['checks'].keys()
 
 ###################
 # insert into database
 ###################
+
 
 for p in get_projects():
     projects.insert().values().execute({
@@ -102,7 +86,7 @@ for project in projects.select().execute():
 
 # generate check results
 for lr in linting_results.select().execute():
-    for check in checks:
+    for check in get_checks():
         check_results.insert().values().execute({
             "check_name": check,
             "lint_id": lr['id'],

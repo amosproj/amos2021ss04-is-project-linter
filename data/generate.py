@@ -26,27 +26,11 @@ def next_result(dt: datetime):
     return x > 3
 
 
-checks = [
-    'CheckContributingExistence',
-    'EitherOwnersOrMaintainersExist',
-    'GuestRoleDisabled',
-    'HasSquashingDisabled',
-    'HasAvatar',
-    'CheckReadmeHasLinks',
-    'CheckReadmeHasPicture',
-    'HasForkingEnabled',
-    'GitlabWikiDisabled',
-    'HasServiceDeskDisabled',
-    'HasBadges',
-    'HasDescription',
-    'IsPublic',
-    'CheckReadmeExistence',
-    'DeveloperRoleDisabled',
-    'CheckNoContributingChain',
-    'HasIssuesEnabled',
-    'NotDefaultReadme',
-    'HasMergeRequestEnabled',
-]
+def get_checks():
+    with open('../config.json', 'r') as f:
+        config = json.load(f)
+        return config['checks'].keys()
+
 
 project_id = 0
 projects = []
@@ -81,7 +65,7 @@ for project in projects:
 
 # generate check results
 for lr in linting_results:
-    for check in checks:
+    for check in get_checks():
         check_result_id += 1
         check_results.append({
             "id": check_result_id,
