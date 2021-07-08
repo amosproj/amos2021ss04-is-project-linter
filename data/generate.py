@@ -1,35 +1,7 @@
-from datetime import datetime, timedelta
-import random
 import csv
-import json
-import requests
+from datetime import datetime
 
-
-def get_projects():
-    with open('../config.json', 'r') as f:
-        config = json.load(f)
-        gitlab_host = config['settings']['gitLabHost']
-
-    res = requests.get(f'{gitlab_host}/api/v4/projects?per_page=100')
-    if res.status_code == 200:
-        return res.json()
-    else:
-        return []
-
-
-start_time = datetime(2021, 6, 1, 15, 0, 0)
-dates = [start_time + timedelta(n) for n in range(7)]
-
-
-def next_result(dt: datetime):
-    x = random.randint(start_time.day, dt.day + 3)
-    return x > 3
-
-
-def get_checks():
-    with open('../config.json', 'r') as f:
-        config = json.load(f)
-        return config['checks'].keys()
+from util import dates, get_checks, get_projects, next_result
 
 
 project_id = 0
