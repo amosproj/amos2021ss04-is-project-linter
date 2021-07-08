@@ -1,17 +1,30 @@
 # Test Data Generator
 
-## Voraussetzungen
+Erstellt eine Menge an Daten die sie nutzen könen um sofort anzufangen die software zu nutzen oder zum weiterentwickeln.
 
-### Python
+# Voraussetzungen
+
+## Python
 
 Es wird python3 benötigt mit diesen Paketen:
-`json, csv, datetime, random, requests`
+`json, csv, datetime, random, requests, sqlalchemy`
 
-### Konfigurationsdatei
+Automatisch installierbar per: `pip install -r requirements.txt`
 
-Die Testdaten werden zum teil aus `../config.json` geholt. Stellen sie sicher dass dort ein `gitLabHost` gesetzt ist.
+## Konfigurationsdatei
 
-## Daten generieren
+Die Testdaten werden zum teil aus `../config.json` geholt. Stellen sie sicher dass dort der `gitLabHost` gesetzt ist.
+
+# Daten generieren
+
+Sie haben zwei möglichkeiten was mit den generierten Daten passiert:
+
+## 1. Direkt in die Datenbank eingefügt
+
+Führen sie `python3 insert.py` aus und folgen sie den Anweisungen.
+Die Daten werden automatisch in die Datenbank eingefügt.
+
+## 2. als CSV generiert
 
 Mit dem Kommando `python3 generate.py` werden die Daten generiert.
 
@@ -21,14 +34,9 @@ Sie erhalten folgende Dateien:
 - `linting_results.csv` für das LintingResult-Schema
 - `check_results.csv` für das CheckResult-Schema
 
-## Daten importieren
+Die könen sie auf folgende Arten importieren:
 
-### IntelliJ
-
-In der IDE IntelliJ können sie die Daten importieren.
-Folgen sie dieser Anleitung und importieren sie die entsprechende Json-Datei für jedes Schema: https://www.jetbrains.com/help/idea/import-data.html#import_csv
-
-### Bash
-
-mit `sh copy.sh` können sie ein script nutzen welches automatisch die daten in die Datenbank einfügt.
-Geben sie einfach Datenbanknamen-, nutzernamen und passwort nach Aufforderung ein.
+- In der IDE IntelliJ können sie die Daten importieren.
+  Folgen sie dieser Anleitung und importieren sie die entsprechende Json-Datei für jedes Schema. [Siehe hier](https://www.jetbrains.com/help/idea/import-data.html#import_csv)
+- mit `sh copy.sh` können sie ein script nutzen welches automatisch die daten in die Datenbank einfügt.
+  Geben sie einfach Datenbanknamen-, nutzernamen und passwort nach Aufforderung ein.
