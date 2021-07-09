@@ -1,3 +1,4 @@
-sqlalchemy
 datetime
 requests
+psycopg2-binary
+sqlalchemy
