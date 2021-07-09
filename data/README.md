@@ -1,6 +1,6 @@
 # Test Data Generator
 
-Erstellt eine Menge an Daten die sie nutzen könen um sofort anzufangen die software zu nutzen oder zum weiterentwickeln.
+Erstellt eine Menge an Daten, die Sie nutzen können um sofort anzufangen die Software zu nutzen oder zum weiterentwickeln.
 
 # Voraussetzungen
 
@@ -13,11 +13,16 @@ Automatisch installierbar per: `pip install -r requirements.txt`
 
 ## Konfigurationsdatei
 
-Die Testdaten werden zum teil aus `../config.json` geholt. Stellen sie sicher dass dort der `gitLabHost` gesetzt ist.
+Die Testdaten werden zum teil aus `../config.json` geholt. Stellen Sie sicher, dass dort der `gitLabHost` gesetzt ist.
+
+## Datenbank
+
+Es muss eine Posgres-Datenbank existieren mit den Relationen `check_result`, `project` und `linting_result`.
+Dafür genügt es, die Java-Applikation zu starten. Diese generiert automatisch die Relationen mit den benötigten Attributen.
 
 # Daten generieren
 
-Sie haben zwei möglichkeiten was mit den generierten Daten passiert:
+Sie haben zwei Möglichkeiten was mit den generierten Daten passiert:
 
 ## 1. Direkt in die Datenbank eingefügt
 
