@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy import MetaData, Table
-
+import getpass
 from util import dates, get_checks, get_projects, next_result
 
 
@@ -10,7 +10,8 @@ from util import dates, get_checks, get_projects, next_result
 
 db_name = input('db_name: ')
 db_user = input('db_user: ')
-db_pass = input('db_pass: ')
+db_pass = getpass.getpass('db_pass : ')
+
 
 db = create_engine(f'postgresql://{db_user}:{db_pass}@localhost/{db_name}')
 meta = MetaData(db)
@@ -58,3 +59,6 @@ for lr in linting_results.select().execute():
             "lint_id": lr['id'],
             "result": next_result(lr['lint_time']),
         })
+
+
+print('done')

@@ -61,3 +61,6 @@ with open('check_results.csv', 'w', encoding='UTF8') as f:
     w = csv.writer(f)
     for cr in check_results:
         w.writerow(cr.values())
+
+
+print('done')
