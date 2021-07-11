@@ -1,6 +1,5 @@
 package amosproj.server.api;
 
-import amosproj.server.CachingService;
 import amosproj.server.Config;
 import amosproj.server.api.schemas.CrawlerStatusSchema;
 import amosproj.server.api.schemas.ProjectSchema;

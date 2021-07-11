@@ -1,6 +1,6 @@
 package amosproj.server.linter;
 
-import amosproj.server.CachingService;
+import amosproj.server.api.CachingService;
 import amosproj.server.Config;
 import amosproj.server.GitLab;
 import amosproj.server.Scheduler;

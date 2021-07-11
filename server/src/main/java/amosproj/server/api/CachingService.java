@@ -1,5 +1,6 @@
-package amosproj.server;
+package amosproj.server.api;
 
+import amosproj.server.Config;
 import amosproj.server.api.SortingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
