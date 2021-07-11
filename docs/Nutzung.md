@@ -31,9 +31,14 @@ Wenn man auf den Knopf "Anzeigen" eines bestimmten Repository klickt, öffnet si
 
 ## Statistiken ansehen
 
-Im Tab Statistiken kann man zum einem alle Ergebnisse als .csv downloaden, sowie die Entwicklung der Repositories über die Zeit betrachten.
-![current_state_dialog](assets/Statistics.PNG)
-![current_state_dialog](assets/Statistics1.PNG)
+In diesem Tab kann man sich verschiedene Statistiken ansehen. \
+Aktuelle Statistiken sind die Anzahl an Projekten die X wichtige tests bestanden haben und die alle Tests einer Kategorie bestanden haben.
+Die ergebnisse sind in der Anzahl und in Prozent anzeigbar. 
+
+![current_state_dialog](assets/statistics_new.PNG)
+
+Wenn man Selbst statistiken erstellen möchte, kann man sich die Ergebnisse auch als CSV Datei exportieren lassen.
+![current_state_dialog](assets/statistics1_new.PNG)
 
 ## Crawler Status
 
