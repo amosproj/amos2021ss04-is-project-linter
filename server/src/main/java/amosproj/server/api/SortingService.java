@@ -43,10 +43,12 @@ public class SortingService {
                 // TODO performance
                 if (delta) {
                     LintingResult lrs = null;
-                    for (LintingResult lintingResult : lr) { // TODO go backwards to increase search speed
+                    for (int idx = lr.size() - 1; idx >= 0; idx--) {
+                        LintingResult lintingResult = lr.get(idx);
                         if (lintingResult.getLintTime().isAfter(localDateTime.minusDays(31))) {
-                            lrs = lintingResult; // Found the first LintingResult that's at least 30 days old
-                            break;
+                            lrs = lintingResult; // Found a LintingResult that's at least 30 days old
+                        } else {
+                            break; // No LintingResult is younger than 30 days any more
                         }
                     }
                     if (lrs != null) {
