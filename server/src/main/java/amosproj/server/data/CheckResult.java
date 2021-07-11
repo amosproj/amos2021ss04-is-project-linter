@@ -43,17 +43,10 @@ public class CheckResult {
         return checkName;
     }
 
-    public void setCheckName(String checkName) {
-        this.checkName = checkName;
-    }
-
     public Boolean getResult() {
         return result;
     }
 
-    public void setResult(Boolean result) {
-        this.result = result;
-    }
 
 
     @Override

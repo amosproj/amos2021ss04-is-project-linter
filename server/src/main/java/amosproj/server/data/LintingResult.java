@@ -38,25 +38,14 @@ public class LintingResult {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
     public LocalDateTime getLintTime() {
         return lintTime;
-    }
-
-    public void setLintTime(LocalDateTime lintTime) {
-        this.lintTime = lintTime;
     }
 
     public List<CheckResult> getCheckResults() {
         return checkResults;
     }
 
-    public void setCheckResults(List<CheckResult> checkResults) {
-        this.checkResults = checkResults;
-    }
 
     @Override
     public String toString() {

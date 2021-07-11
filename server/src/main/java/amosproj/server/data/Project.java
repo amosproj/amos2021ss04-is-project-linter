@@ -57,32 +57,16 @@ public class Project {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public Integer getGitlabProjectId() {
         return gitlabProjectId;
-    }
-
-    public void setGitlabProjectId(Integer gitlabProjectId) {
-        this.gitlabProjectId = gitlabProjectId;
     }
 
     public String getNameSpace() {
         return nameSpace;
     }
 
-    public void setNameSpace(String nameSpace) {
-        this.nameSpace = nameSpace;
-    }
-
     public List<LintingResult> getResults() {
         return results;
-    }
-
-    public void setResults(List<LintingResult> results) {
-        this.results = results;
     }
 
     public String getDescription() {
