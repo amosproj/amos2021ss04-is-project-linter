@@ -5,10 +5,11 @@ Die Applikation ermöglicht es Nutzern, verschiedene Inner Source Repositories a
 
 Auf der Startseite werden alle analysierten Repositories angezeigt. \
 (1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen oder dem Namespace zu Filtern. \
-(2) Reitermenü 
+(2) Reitermenü
+
 - Projekte: zeigt die Projekte und Informationen dazu.
 - Statistiken: zeigt Statistiken zu den Projekten und ermöglicht es die Ergebnisse als csv zu exportieren
-- Status: zeigt den Status des Crawlers und ermöglicht es ihn manuell zu starten. 
+- Status: zeigt den Status des Crawlers und ermöglicht es ihn manuell zu starten.
 
 (3) Einstellungen für die Sortierung der unten angezeigten Projekte.\
 (4) Änderung der Anzeige wie viele Projekte pro Seite angezeigt werden und wechseln der Seiten. \
