@@ -1,10 +1,10 @@
 Willkommen bei Inner-Source Project Linter!
-Die Applikation ermöglicht es Nutzern, verschiedene Inner Source Repositories anzeigen und vergleichen zu lassen. Somit kann analysiert werden, ob es möglich ist, die Qualität des Projekts zu verbessern.
+Die Applikation ermöglicht es Nutzern, verschiedene Inner-Source Repositories anzeigen und vergleichen zu lassen. Somit kann analysiert werden, ob es möglich ist, die Qualität des Projekts zu verbessern.
 
 ## Startseite
 
 Auf der Startseite werden alle analysierten Repositories angezeigt. \
-(1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen oder dem Namespace zu Filtern. \
+(1) Hier ist es möglich, die unten angezeigten Repositories, nach Namen oder dem Namespace zu filtern. \
 (2) Reitermenü
 
 - Projekte: zeigt die Projekte und Informationen dazu.
@@ -24,7 +24,7 @@ Wenn man auf den Knopf "Anzeigen" eines bestimmten Repository klickt, öffnet si
 &emsp;&emsp; Grüne Tests sind bestanden und benötigen keine weitere Arbeit. \
 &emsp;&emsp; Gelb, Orange, Rot sind nicht bestandene Tests und sollten bearbeitet werden. Hier wird direkt angezeigt wie der Fehler behoben werden kann. \
 (3) Der Info-Button zeigt an, was genau bei dem Test überprüft wird.\
-(4) Ein Donut-Graph für eine schnellübersicht wie viele Tests dieses Projekt in der jeweilgen Kategorie bestanden hat.\
+(4) Ein Donut-Graph für eine Schnellübersicht wie viele Tests dieses Projekt in der jeweilgen Kategorie bestanden hat.\
 (5) Tipps für das Projekt wie man am besten das Repo verbessert.\
 (6) Meta Informationen zu dem Projekt.\
 ![current_state_dialog](assets/RepositoryDetails_new.PNG)
@@ -32,12 +32,12 @@ Wenn man auf den Knopf "Anzeigen" eines bestimmten Repository klickt, öffnet si
 ## Statistiken ansehen
 
 In diesem Tab kann man sich verschiedene Statistiken ansehen. \
-Aktuelle Statistiken sind die Anzahl an Projekten die X wichtige tests bestanden haben und die alle Tests einer Kategorie bestanden haben.
-Die ergebnisse sind in der Anzahl und in Prozent anzeigbar. 
+Aktuelle Statistiken sind die Anzahl an Projekten die X wichtige Tests bestanden haben und die alle Tests einer Kategorie bestanden haben.
+Die Ergebnisse sind in der Anzahl und in Prozent anzeigbar. 
 
 ![current_state_dialog](assets/statistics_new.PNG)
 
-Wenn man Selbst statistiken erstellen möchte, kann man sich die Ergebnisse auch als CSV Datei exportieren lassen.
+Wenn man selbst Statistiken erstellen möchte, kann man sich die Ergebnisse auch als CSV Datei exportieren lassen.
 ![current_state_dialog](assets/statistics1_new.PNG)
 
 ## Crawler Status
