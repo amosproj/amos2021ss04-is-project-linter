@@ -13,7 +13,7 @@ Auf der Startseite werden alle analysierten Repositories angezeigt. \
 
 (3) Einstellungen für die Sortierung der unten angezeigten Projekte.\
 (4) Änderung der Anzeige wie viele Projekte pro Seite angezeigt werden und wechseln der Seiten. \
-(5) Kurze Übersicht zu den Projekten und die möglichkeit sich details zu dem Projekt anzusehen mit dem Anzeigen knopf.
+(5) Kurze Übersicht zu den Projekten und die Möglichkeit Details zum Projekt anzeigen zu lassen. Um zum Projekt zu kommen, klicken Sie auf das Code-Zeichen in der rechten Oberen Ecke. 
 ![current_state_dashboard](assets/homepage_new.PNG)
 
 ## Ergebnisse ansehen
