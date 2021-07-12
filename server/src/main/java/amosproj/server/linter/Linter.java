@@ -70,7 +70,7 @@ public class Linter {
         LintingResult lintingResult = new LintingResult(currLintingProject, timestamp);
         lintingResultRepository.save(lintingResult);
 
-        // TODO multithreaded in ThreadPool oder ExecutorService
+        // TODO performance: multithreaded in ThreadPool oder ExecutorService
         runChecks(apiProject, lintingResult);
     }
 

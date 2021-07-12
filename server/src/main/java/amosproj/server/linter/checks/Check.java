@@ -34,7 +34,7 @@ public abstract class Check {
             Method method = obj.getDeclaredMethod("evaluate", GitLab.class, Project.class);
             result = (boolean) method.invoke(obj.getConstructor().newInstance(), gitLab, project);
         } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException | InstantiationException e) {
-            // TODO handle some of the exceptions differently (e.g. return false upon ClassNotFound Exception.
+            // TODO handle some of the exceptions differently (e.g. return false upon ClassNotFound Exception).
             e.printStackTrace();
         }
         CheckResult cr = new CheckResult(lintingResult, checkName, result);

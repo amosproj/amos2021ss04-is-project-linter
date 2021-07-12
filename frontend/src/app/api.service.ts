@@ -19,7 +19,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  // Handle Errors -- TODO use it
+  // Handle Errors -- TODO use it to have better and consistent error messages. (but do we need them?)
   error(error: HttpErrorResponse): Observable<String> {
     let errorMessage: string = '';
     if (error.error instanceof ErrorEvent) {
