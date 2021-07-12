@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:test.properties")
-public class ProjectControllerTest {
+public class APIControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -63,21 +63,6 @@ public class ProjectControllerTest {
         // do test requests
         this.mockMvc.perform(get("/project/" + proj.getId().toString())).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/project/9999999999")).andDo(print()).andExpect(status().isNotFound());
-    }
-
-    @Test
-    public void testLintProject() throws Exception {
-        JsonNode node = TestUtil.getTestConfig();
-        for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
-            String repo = it.next();
-
-            mockMvc.perform(post("/projects").contentType(MediaType.TEXT_PLAIN_VALUE)
-                    .content(repo)).andExpect(status().isOk());
-        }
-
-        mockMvc.perform(post("/projects").contentType(MediaType.TEXT_PLAIN_VALUE)
-                .content(node.get("https://gitlab.cs.fau.de/ib49uquh/allcheckstrue").get("gitlabInstance").asText() + "/be15piel/repo-welches-garantiert-nicht-existiert"))
-                .andExpect(status().isNotFound());
     }
 
     @Test

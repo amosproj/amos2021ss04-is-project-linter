@@ -9,7 +9,6 @@ import amosproj.server.data.ProjectRepository;
 import amosproj.server.linter.Crawler;
 import amosproj.server.linter.Linter;
 import com.fasterxml.jackson.databind.JsonNode;
-import org.gitlab4j.api.GitLabApiException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -27,13 +26,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * Der ProjectController ist die API-Schnittstelle nach außen.
+ * Der APIController ist die API-Schnittstelle nach außen.
  * <p>
  * Die Dokumentation der API-Endpoints finden sie im ordner docs/
  */
 @RestController
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST}, maxAge = 600L)
-public class ProjectController {
+public class APIController {
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -145,18 +144,6 @@ public class ProjectController {
     //                POST
     //**********************************
 
-    // TODO delete
-    @PostMapping("/projects")
-    public @ResponseBody
-    String lintProject(@RequestBody String url) {
-        try {
-            linter.runLint(url);
-            return "OK";
-        } catch (GitLabApiException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "gitlab repo doesn't exist");
-        }
-    }
-
     @PostMapping("/crawler")
     public void crawl() {
         if (!crawler.getCrawlerActive()) {
@@ -164,11 +151,6 @@ public class ProjectController {
         } else {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
         }
-    }
-
-    @PostMapping("/cache")
-    public void cache() {
-        cachingService.repopulateCaches();
     }
 
 }

@@ -50,6 +50,8 @@ public class Crawler {
         size = 0L;
         // init scheduling
         scheduler.scheduling(this::runCrawler);
+        // populate caches on startup
+        cachingService.repopulateCaches();
     }
 
     /**

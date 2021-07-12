@@ -1,19 +1,20 @@
 package amosproj.server.api;
 
 import amosproj.server.Config;
-import amosproj.server.api.SortingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 @Service
 public class CachingService {
 
     @Autowired
     private SortingService sortingService;
-
-
+    
     public void repopulateCaches() {
         Set<String> tags = Config.getAllTags();
         List<Set<String>> tagsPermutated = allTagSets(tags);
