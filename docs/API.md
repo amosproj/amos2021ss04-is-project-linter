@@ -1,64 +1,64 @@
+# REST-API
+
 Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 
-### GET - `/projects` - Übersicht aller Projekte
+## GET - `/projects` - Übersicht aller Projekte
 
 - Query:
-  - `delta=true|false` Soll nach dem Delta oder dem letzten Ergebnis sortiert werden?
-  - `name=String` Der partielle oder ganze Name des Projekts oder Name-Spaces, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet
-  - `Pageable` Für die Paging-Parameter zuständig, z.B. `page=0`, `size=10`, `sort=Benutzerfreundlichkeit`
+  - `delta=true|false` Soll nach dem Delta (der letzten 30 Tage) oder dem letzten Ergebnis sortiert werden?
+  - `name=String` Der partielle oder ganze Name des Projekts oder Namespaces, nach dem gesucht werden soll. Groß-Kleinschreibung wird nicht beachtet.
+  - `page` z.B. 2
+  - `size` z.B. 10
+  - `sort` z.B. Benutzerfreundlichkeit
 - Body: nichts
-- Response: Json(Page(ProjectSchema))
+- Response: `Json(Page(ProjectSchema))`
 
-### GET - `/projects/allTags` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle Checks eines Tags bestanden haben
+## GET - `/projects/allTags` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle Checks eines Tags bestanden haben
 
 - Query:
   - `type=percentage|absolute` Liefert je nach `type` die Prozentzahl oder die absolute Anzahl der Projekte, die alle Checks eines Tags bestanden haben. Wird ein anderer Parameter als `percentage` oder `absolute` übergeben, wird nichts zurückgegeben.
 - Body: nichts
-- Response: Json(TreeMap<LocalDateTime, HashMap<String, `Typ`>>); `Typ` ist dabei entweder ein `Long` bei `absolute` oder ein `float` bei `percentage`
+- Response: `Json(TreeMap<LocalDateTime, HashMap<String, number>>)`
 
-### GET - `/projects/top` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle der Top 3, 5 und 10 wichtigsten Checks bestanden haben
+## GET - `/projects/top` - Übersicht über die zeitliche Entwicklung der Anzahl der Projekte, die alle der Top 3, 5 und 10 wichtigsten Checks bestanden haben
 
 - Query:
   - `type=percentage|absolute` Liefert je nach `type` die Prozentzahl oder die absolute Anzahl der Projekte, die alle der wichtigsten Checks bestanden haben. Wird ein anderer Parameter als `percentage` oder `absolute` übergeben, wird nichts zurückgegeben.
 - Body: nichts
-- Response: Json(TreeMap<LocalDateTime, TreeMap<Long, `Typ`>>); `Typ` ist dabei entweder ein `Long` bei `absolute` oder ein `float` bei `percentage`
+- Response: `Json(TreeMap<LocalDateTime, TreeMap<number, number>>)`
 
-### POST - `/projects` - Linted ein einzelnes Repo
-
-- Body: url des zu lintenden Repos
-- Response: 'ok' falls ok, HTTP Fehlercode sonst
-
-### GET - `/project/{Id}` - Ergebnisse für das Projekt mit der Id
+## GET - `/project/{Id}` - Ergebnisse für das Projekt mit der Id
 
 - Hinweis: Es handelt sich bei der Id um eine interne Benennung der Datenbank, nicht die GitLab Project-Id.
 - Body: nichts
-- Response: Json(ProjectSchema)
+- Response: `Json(ProjectSchema)`
 
-### GET - `/crawler` - aktuellen Crawler Status abfragen
+## GET - `/crawler` - aktuellen Crawler Status abfragen
 
 - Body: nichts
-- Response: Json(CrawlerStatusSchema)
+- Response: `Json(CrawlerStatusSchema)`
 
-### POST - `/crawler` - Crawler manuell anstoßen
+## POST - `/crawler` - Crawler manuell anstoßen
 
 - Body: nichts
 - Response:
-  - `Http:OK` falls crawler gestartet wurde
-  - `Http:Too_Many_Requests` falls crawler bereits aktiv war, bevor der Aufruf ankam
+  - `200` falls crawler gestartet wurde
+  - `429` falls crawler bereits aktiv ist.
 
-### GET - `/export/csv` - Exportiert Ergebnisse Als CSV-Datei
+## GET - `/export/csv` - Exportiert Ergebnisse Als CSV-Datei
 
 - Body: nichts
-- Response: Eine CSV Datei, direkt zum Download, also am besten per `<a download href="http://<HOST>/6969/api/export/csv">download</a>` einbetten
+- Response: Eine CSV Datei, direkt zum Download
+- Hinweis: Am besten per `<a download href="http://<HOST>/6969/api/export/csv">download</a>` einbetten.
 
-### GET - `/config` - Holt die Config Datei
+## GET - `/config` - Holt die Config Datei
 
 - Body: nichts
 - Response: Eine JSON antwort mit der config.
 
 # Schemas
 
-#### CrawlerStatusSchema
+### CrawlerStatusSchema
 
 ```jsonc
 {
@@ -72,7 +72,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 }
 ```
 
-#### ProjectSchema
+### ProjectSchema
 
 ```jsonc
 {
@@ -104,7 +104,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 }
 ```
 
-#### LintingResultSchema
+### LintingResultSchema
 
 ```jsonc
 {
@@ -115,7 +115,7 @@ Die API ist prinzipiell unter `http://<HOST>/6969/api` erreichtbar.
 }
 ```
 
-#### CheckResultSchema
+### CheckResultSchema
 
 ```jsonc
 {

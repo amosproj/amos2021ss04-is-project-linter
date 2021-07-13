@@ -12,6 +12,7 @@
     - `init`: Der Status, der während des Initialisierens (also holen der Projekte) angezeigt wird
     - `active`: Der Status, der angezeigt wird, während der Crawler läuft
     - `inactive`: Der Status, der angezeigt wird, wenn der Crawlingprozess abgeschlossen wurde
+    - `cache`: Der Status, der angezeigt wird, wenn die caches berechnet werden.
   - `maxProjects`: Die Maximale Anzahl der Projekte, die beim Crawlingprozess gelintet werden sollen.
 - `mostImportantChecks`: Die wichtigsten Checks, nach welchen im Frontend der Graph erstellt werden soll.
 
@@ -44,7 +45,8 @@ Jedes Check Objekt hat folgende Parameter:
       "status": {
         "init": "GitLab API wird angefragt",
         "active": "Crawler läuft",
-        "inactive": "Crawler ist inaktiv"
+        "inactive": "Crawler ist inaktiv",
+        "cache": "Caches werden kompiliert"
       },
       "maxProjects": 10
     },

@@ -30,7 +30,6 @@ public class HasBadges extends Check {
         return false;
     }
 }
-
 ```
 
 Damit der Check ausgeführt wird, muss in der `config.json` in `checks` noch der neue Check hinzugefügt und `enabled=true` gesetzt werden (siehe [Config](Config-File.md)).
