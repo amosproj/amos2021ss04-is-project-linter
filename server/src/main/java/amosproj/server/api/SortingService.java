@@ -27,6 +27,7 @@ public class SortingService {
         return cachedSorting(delta, allProperties);
     }
 
+
     @Cacheable(value = "cachedSorting")
     public List<ProjectSchema> cachedSorting(Boolean delta, Set<String> allProperties) {
         Iterable<Project> projectList = projectRepository.findAll();
