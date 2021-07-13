@@ -1,5 +1,7 @@
 package amosproj.server.data;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -8,18 +10,16 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * Der Name der Methoden ist die SQL query.
  */
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
-
-    /**
-     * @param url URL zum GitLab repo.
-     * @return das erste Project welches zu url gehört
-     */
-    Project findFirstByUrl(String url);
-
     /**
      * @param Id ID des GitLab Projektes (nicht Id des JPA Objekts)
      * @return das erste Project welches zu Id gehört
      */
     Project findFirstByGitlabProjectId(Integer Id);
 
-    Iterable<Project> findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(String name, String nameSpace);
+    @Cacheable("projects")
+    Iterable<Project> findAll();
+
+    @CacheEvict(value = "projects", allEntries = true)
+    default void clearAllProjects() {}
+
 }

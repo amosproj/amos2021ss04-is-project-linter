@@ -51,6 +51,7 @@ public class APIControllerTest {
     public void testAllProjects() throws Exception {
         // insert test data
         projectRepository.save(new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com", "", 0, LocalDateTime.now(Clock.systemUTC())));
+        projectRepository.updateFindAll();
         // do test request
         this.mockMvc.perform(get("/projects")).andDo(print()).andExpect(status().isOk());
     }
@@ -60,6 +61,7 @@ public class APIControllerTest {
         // insert test data
         Project proj = projectRepository.save(new Project("meme-repo", "https://gitlab.com/be15piel/meme-repo", 69, "gitlab.com", "", 0, LocalDateTime.now(Clock.systemUTC())));
         LintingResult lintingResult = lintingResultRepository.save(new LintingResult(proj, LocalDateTime.now()));
+        projectRepository.updateFindAll();
         // do test requests
         this.mockMvc.perform(get("/project/" + proj.getId().toString())).andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/project/9999999999")).andDo(print()).andExpect(status().isNotFound());
@@ -73,6 +75,8 @@ public class APIControllerTest {
         LocalDateTime timeStamp = LocalDateTime.now(Clock.systemUTC());
         LintingResult lintingResult = new LintingResult(project, timeStamp);
         lintingResultRepository.save(lintingResult);
+
+        projectRepository.updateFindAll();
 
         JsonNode node = Config.getConfigNode();
         var checkNames = node.fieldNames();
@@ -94,6 +98,8 @@ public class APIControllerTest {
         LocalDateTime timeStamp = LocalDateTime.now(Clock.systemUTC());
         LintingResult lintingResult = new LintingResult(project, timeStamp);
         lintingResultRepository.save(lintingResult);
+
+        projectRepository.updateFindAll();
 
         JsonNode node = Config.getConfigNode();
         var checkNames = node.fieldNames();

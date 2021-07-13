@@ -44,9 +44,6 @@ public class APIController {
     private SortingService sortingService;
 
     @Autowired
-    private Linter linter;
-
-    @Autowired
     private Crawler crawler;
 
     @Autowired
@@ -151,6 +148,11 @@ public class APIController {
         } else {
             throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Crawler is already running, slow down!");
         }
+    }
+
+    @PostMapping("/cache")
+    public void cache() {
+        cachingService.repopulateCaches();
     }
 
 }

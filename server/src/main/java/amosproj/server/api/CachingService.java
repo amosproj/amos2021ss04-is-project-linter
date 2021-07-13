@@ -1,6 +1,7 @@
 package amosproj.server.api;
 
 import amosproj.server.Config;
+import amosproj.server.data.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,18 @@ public class CachingService {
 
     @Autowired
     private SortingService sortingService;
+
+    @Autowired
+    private ProjectRepository projectRepository;
     
     public void repopulateCaches() {
         Set<String> tags = Config.getAllTags();
         List<Set<String>> tagsPermutated = allTagSets(tags);
+
+        // Cache the new projects as they are used by all SortingService calls
+        projectRepository.clearAllProjects();
+        projectRepository.findAll();
+
         sortingService.updateTopXProjects("absolute");
         sortingService.updateTopXProjects("percentage");
         sortingService.updateProjectsByAllTags("percentage");
