@@ -1,5 +1,6 @@
 package amosproj.server.data;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.time.LocalDateTime;
@@ -19,16 +20,10 @@ public interface LintingResultRepository extends CrudRepository<LintingResult, L
      */
     LintingResult findFirstByProjectIdOrderByLintTimeDesc(Long projectId);
 
-    /**
-     * @param start     Startzeitpunkt
-     * @param end       Endzeitpunkt
-     * @param projectId Foreign-Key für das zugehörige Project
-     * @return eine Liste an LintingResults die zwischen start und end liegen und zu dem Projekt mit der ID projectId gehören.
-     */
-    LinkedList<LintingResult> findByLintTimeBetweenAndProjectIdIs(LocalDateTime start, LocalDateTime end, Long projectId);
-
-
     List<LintingResult> findAllByOrderByLintTimeAsc();
 
     Integer countLintingResultsByLintTime(LocalDateTime localDateTime);
+
+    @Query("SELECT l FROM LintingResult l JOIN FETCH l.checkResults")
+    Iterable<LintingResult> findAll();
 }

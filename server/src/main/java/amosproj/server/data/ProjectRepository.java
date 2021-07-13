@@ -1,5 +1,6 @@
 package amosproj.server.data;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -10,16 +11,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface ProjectRepository extends PagingAndSortingRepository<Project, Long> {
 
     /**
-     * @param url URL zum GitLab repo.
-     * @return das erste Project welches zu url gehört
-     */
-    Project findFirstByUrl(String url);
-
-    /**
      * @param Id ID des GitLab Projektes (nicht Id des JPA Objekts)
      * @return das erste Project welches zu Id gehört
      */
     Project findFirstByGitlabProjectId(Integer Id);
 
-    Iterable<Project> findAllByNameContainsIgnoreCaseOrNameSpaceContainsIgnoreCase(String name, String nameSpace);
+    @Query("SELECT p FROM Project p JOIN FETCH p.results")
+    Iterable<Project> findAll();
 }

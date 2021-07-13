@@ -23,7 +23,7 @@ public class Project {
     private Integer forkCount;
     private LocalDateTime lastCommit;
 
-    @OneToMany(targetEntity = LintingResult.class, fetch = FetchType.EAGER)
+    @OneToMany(targetEntity = LintingResult.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "projectId")
     private List<LintingResult> results;
 
