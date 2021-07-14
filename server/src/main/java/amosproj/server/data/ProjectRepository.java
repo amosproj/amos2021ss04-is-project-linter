@@ -16,6 +16,4 @@ public interface ProjectRepository extends PagingAndSortingRepository<Project, L
      */
     Project findFirstByGitlabProjectId(Integer Id);
 
-    @Query("SELECT p FROM Project p JOIN FETCH p.results")
-    Iterable<Project> findAll();
 }
